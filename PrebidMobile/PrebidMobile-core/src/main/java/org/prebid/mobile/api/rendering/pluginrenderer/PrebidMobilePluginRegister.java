@@ -58,20 +58,22 @@ public class PrebidMobilePluginRegister {
     }
 
     public void registerEventListener(
-            AdUnitConfiguration adUnitConfiguration,
             PluginEventListener pluginEventListener,
-            String prebidMobilePluginRendererName
+            String listenerKey
     ) {
-        if (plugins.containsKey(prebidMobilePluginRendererName)) {
-            plugins.get(prebidMobilePluginRendererName).registerEventListener(pluginEventListener, adUnitConfiguration);
+        if (plugins.containsKey(pluginEventListener.getPluginRendererName())) {
+            plugins.get(pluginEventListener.getPluginRendererName()).registerEventListener(pluginEventListener, listenerKey);
         } else {
-            LogUtil.debug("PluginRegister", "Skipping plugin renderer with name" + prebidMobilePluginRendererName + ", such key does not exist");
+            LogUtil.debug("PluginRegister", "Skipping PluginEventListener with name" + pluginEventListener.getPluginRendererName() + ", such key does not exist");
         }
     }
 
-    public void unregisterEventListener(AdUnitConfiguration adUnitConfiguration, String prebidMobilePluginRendererName) {
-        if (plugins.containsKey(prebidMobilePluginRendererName)) {
-            plugins.get(prebidMobilePluginRendererName).unregisterEventListener(adUnitConfiguration);
+    public void unregisterEventListener(
+            PluginEventListener pluginEventListener,
+            String listenerKey
+    ) {
+        if (plugins.containsKey(pluginEventListener.getPluginRendererName())) {
+            plugins.get(pluginEventListener.getPluginRendererName()).unregisterEventListener(listenerKey);
         }
     }
 

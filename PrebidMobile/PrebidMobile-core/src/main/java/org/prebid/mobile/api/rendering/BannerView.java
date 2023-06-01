@@ -74,11 +74,11 @@ public class BannerView extends FrameLayout {
     private BidLoader bidLoader;
     private BidResponse bidResponse;
 
-    private String prebidMobilePluginRendererName;
-
     private final ScreenStateReceiver screenStateReceiver = new ScreenStateReceiver();
 
     @Nullable private BannerViewListener bannerViewListener;
+
+    @Nullable private PluginEventListener pluginEventListener;
 
     private int refreshIntervalSec = 0;
 
@@ -288,8 +288,8 @@ public class BannerView extends FrameLayout {
         }
 
         // TODO Unregister listener when not needed anymore
-        if (prebidMobilePluginRendererName != null) {
-            PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig, prebidMobilePluginRendererName);
+        if (pluginEventListener != null) {
+            PrebidMobilePluginRegister.getInstance().unregisterEventListener(pluginEventListener, adUnitConfig.getFingerprint());
         }
 
         screenStateReceiver.unregister();
@@ -324,9 +324,9 @@ public class BannerView extends FrameLayout {
         bannerViewListener = bannerListener;
     }
 
-    public void setPluginEventListener(PluginEventListener pluginEventListener, String prebidMobilePluginRendererName) {
-        this.prebidMobilePluginRendererName = prebidMobilePluginRendererName;
-        PrebidMobilePluginRegister.getInstance().registerEventListener(adUnitConfig, pluginEventListener, prebidMobilePluginRendererName);
+    public void setPluginEventListener(PluginEventListener pluginEventListener) {
+        this.pluginEventListener = pluginEventListener;
+        PrebidMobilePluginRegister.getInstance().registerEventListener(pluginEventListener, adUnitConfig.getFingerprint());
     }
 
     public void setVideoPlacementType(VideoPlacementType videoPlacement) {

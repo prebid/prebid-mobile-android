@@ -39,7 +39,7 @@ open class PpmInterstitialFragment : BaseBidInterstitialFragment(), SampleCustom
             InterstitialAdUnit(requireContext(), configId)
         }
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
-        interstitialAdUnit?.setPluginEventListener(this, SampleCustomRenderer.RENDERER_NAME)  // TODO set PluginEventListener
+        interstitialAdUnit?.setPluginEventListener(this)  // TODO set PluginEventListener
         interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
         interstitialAdUnit?.let {
             CommandLineArgumentParser.addAdUnitSpecificData(it)

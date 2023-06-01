@@ -20,6 +20,7 @@ import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener
 
 // TODO implement your own events for your plugin renderer
 interface SampleCustomRendererEventListener : PluginEventListener {
+    override fun getPluginRendererName(): String = SampleCustomRenderer.RENDERER_NAME
     fun onImpression()
     fun onUnMute()
     fun onMute()

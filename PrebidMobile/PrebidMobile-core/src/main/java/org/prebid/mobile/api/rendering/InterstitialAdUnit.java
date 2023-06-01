@@ -62,10 +62,9 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
     @Nullable private InterstitialAdUnitListener adUnitEventsListener;
 
     /**
-     * Plugin renderer name for a subscribed listener
-     * that is used later to unregister it during onDestroy
+     * Plugin event listener that is used later to unregister it during onDestroy
      */
-    @Nullable private String prebidMobilePluginRendererName;
+    @Nullable private PluginEventListener pluginEventListener;
 
     /**
      * Instantiates an HTML InterstitialAdUnit for the given configurationId.
@@ -172,9 +171,9 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         this.adUnitEventsListener = adUnitEventsListener;
     }
 
-    public void setPluginEventListener(PluginEventListener pluginEventListener, String prebidMobilePluginRendererName) {
-        this.prebidMobilePluginRendererName = prebidMobilePluginRendererName;
-        PrebidMobilePluginRegister.getInstance().registerEventListener(adUnitConfig, pluginEventListener, prebidMobilePluginRendererName);
+    public void setPluginEventListener(PluginEventListener pluginEventListener) {
+        this.pluginEventListener = pluginEventListener;
+        PrebidMobilePluginRegister.getInstance().registerEventListener(pluginEventListener, adUnitConfig.getFingerprint());
     }
 
     public void setMinSizePercentage(AdSize minSizePercentage) {
@@ -188,8 +187,8 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
             eventHandler.destroy();
         }
         // TODO Unregister listener when not needed anymore
-        if (prebidMobilePluginRendererName != null) {
-            PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig, prebidMobilePluginRendererName);
+        if (pluginEventListener != null) {
+            PrebidMobilePluginRegister.getInstance().unregisterEventListener(pluginEventListener, adUnitConfig.getFingerprint());
         }
     }
 

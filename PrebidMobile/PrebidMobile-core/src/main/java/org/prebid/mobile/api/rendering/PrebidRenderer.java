@@ -55,10 +55,10 @@ public class PrebidRenderer implements PrebidMobilePluginRenderer {
     }
 
     @Override
-    public void registerEventListener(PluginEventListener pluginEventListener, AdUnitConfiguration adUnitConfiguration) {}
+    public void registerEventListener(PluginEventListener pluginEventListener, String listenerKey) {}
 
     @Override
-    public void unregisterEventListener(AdUnitConfiguration adUnitConfiguration) {}
+    public void unregisterEventListener(String listenerKey) {}
 
     @Override
     public View createBannerAdView(

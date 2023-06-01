@@ -38,14 +38,14 @@ public interface PrebidMobilePluginRenderer {
     String getToken();
 
     /**
-     * Register a listener related to a specific ad unit config in order to dispatch specific ad events
+     * Register a listener related to a specific ad unit config fingerprint in order to dispatch specific ad events
      */
-    void registerEventListener(PluginEventListener pluginEventListener, AdUnitConfiguration adUnitConfiguration);
+    void registerEventListener(PluginEventListener pluginEventListener, String listenerKey);
 
     /**
-     * Unregister a listener based on an ad unit config
+     * Unregister a listener based on an ad unit config fingerprint
      */
-    void unregisterEventListener(AdUnitConfiguration adUnitConfiguration);
+    void unregisterEventListener(String listenerKey);
 
     /**
      * Creates and returns Banner View for a given Bid Response.

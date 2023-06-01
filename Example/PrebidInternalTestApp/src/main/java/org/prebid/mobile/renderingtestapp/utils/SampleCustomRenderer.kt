@@ -38,7 +38,7 @@ import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener
 
 class SampleCustomRenderer : PrebidMobilePluginRenderer {
 
-    private val pluginEventListenerMap = mutableMapOf<AdUnitConfiguration, SampleCustomRendererEventListener>()
+    private val pluginEventListenerMap = mutableMapOf<String, SampleCustomRendererEventListener>()
 
     override fun getName(): String = RENDERER_NAME
 
@@ -46,12 +46,17 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
 
     override fun getToken(): String? = null
 
-    override fun registerEventListener(pluginEventListener: PluginEventListener, adUnitConfiguration: AdUnitConfiguration) {
-        pluginEventListenerMap[adUnitConfiguration] = pluginEventListener as SampleCustomRendererEventListener
+    override fun registerEventListener(
+        pluginEventListener: PluginEventListener,
+        listenerKey: String
+    ) {
+        (pluginEventListener as? SampleCustomRendererEventListener)?.let {
+            pluginEventListenerMap[listenerKey] = it
+        }
     }
 
-    override fun unregisterEventListener(adUnitConfiguration: AdUnitConfiguration?) {
-        pluginEventListenerMap.remove(adUnitConfiguration)
+    override fun unregisterEventListener(listenerKey: String) {
+        pluginEventListenerMap.remove(listenerKey)
     }
 
     override fun createBannerAdView(
@@ -82,7 +87,7 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
         })
 
         // TODO Propagate events whenever necessary
-        pluginEventListenerMap[adUnitConfiguration]?.onImpression()
+        pluginEventListenerMap[adUnitConfiguration.fingerprint]?.onImpression()
 
         return bannerView
     }
@@ -111,7 +116,7 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
                     interstitialControllerListener.onInterstitialReadyForDisplay()
 
                     // TODO Propagate events whenever necessary
-                    pluginEventListenerMap[adUnitConfiguration]?.onImpression()
+                    pluginEventListenerMap[adUnitConfiguration.fingerprint]?.onImpression()
                 }
             }
 
