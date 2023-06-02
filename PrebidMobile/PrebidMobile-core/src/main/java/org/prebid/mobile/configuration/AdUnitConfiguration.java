@@ -54,7 +54,7 @@ public class AdUnitConfiguration {
     private String pbAdSlot;
     private String interstitialSize;
     private String impressionUrl;
-    private String fingerprint = Utils.generateSHA256Hash(String.valueOf(System.currentTimeMillis())); // TODO find where and how to init a fingerprint
+    private String fingerprint = Utils.generateUUIDTimeBased();
 
     private Position closeButtonPosition = Position.TOP_RIGHT;
     private Position skipButtonPosition = Position.TOP_RIGHT;

@@ -147,27 +147,14 @@ public final class Utils {
     }
 
     /**
-     * Generate SHA256 for string expression
-     *
-     * @param exp is string expression
-     * @return SHA256 code
+     * Generate time-based UUID
+     * @return  RFC 4122 high-quality random number
      */
-    public static String generateSHA256Hash(String exp) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedHash = digest.digest(exp.getBytes(Charset.forName("UTF-8")));
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : encodedHash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1)
-                    hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (Exception e) {
-            e.getStackTrace();
-        }
-        return null;
+    public static String generateUUIDTimeBased() {
+        UUID timeUUID = UUID.randomUUID();
+        long timestamp = System.currentTimeMillis();
+        timeUUID = new UUID(timeUUID.getMostSignificantBits(), timestamp);
+        return timeUUID.toString();
     }
 
     /**
