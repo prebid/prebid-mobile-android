@@ -23,8 +23,8 @@ import java.util.Random;
 public class GamOriginalApiMultiformatInterstitial extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-intestitial-multiformat";
-    private static final String CONFIG_ID_BANNER = "prebid-demo-display-interstitial-320-480";
-    private static final String CONFIG_ID_VIDEO = "prebid-demo-video-interstitial-320-480-original-api";
+    private static final String CONFIG_ID_BANNER = "prebid-ita-display-interstitial-320-480";
+    private static final String CONFIG_ID_VIDEO = "prebid-ita-video-interstitial-320-480-original-api";
 
     private InterstitialAdUnit adUnit;
 

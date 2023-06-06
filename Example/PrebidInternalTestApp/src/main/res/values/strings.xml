@@ -338,32 +338,32 @@
     <string name="prebid_config_id_no_bids">28259226-68de-49f8-88d6-f0f2fab846e3</string>
     <string name="prebid_config_id_qa_native_styles">51fe68ba-aff2-401e-9e15-f3ed89d5c036</string>
 
-    <string name="imp_prebid_id_banner_320x50">prebid-demo-banner-320-50</string>
+    <string name="imp_prebid_id_banner_320x50">prebid-ita-banner-320-50</string>
     <string name="imp_prebid_id_banner_320x50_deeplink">prebid-demo-banner-deeplink</string>
     <string name="imp_prebid_id_banner_320x50_vast">prebid-demo-banner-incorrect-vast</string>
-    <string name="imp_prebid_id_banner_300x250">prebid-demo-banner-300-250</string>
-    <string name="adimp_prebid_id_banner_300x250">prebid-demo-banner-300-250</string>
+    <string name="imp_prebid_id_banner_300x250">prebid-ita-banner-300-250</string>
+    <string name="adimp_prebid_id_banner_300x250">prebid-ita-banner-300-250</string>
     <string name="imp_prebid_id_banner_728x90">prebid-demo-banner-728-90</string>
     <string name="imp_prebid_id_banner_multisize">prebid-demo-banner-multisize</string>
-    <string name="imp_prebid_id_interstitial_320_480">prebid-demo-display-interstitial-320-480</string>
+    <string name="imp_prebid_id_interstitial_320_480">prebid-ita-display-interstitial-320-480</string>
 
     <string name="imp_prebid_dynamic">Imp id set in another place</string>
-    <string name="imp_prebid_id_video_outstream">prebid-demo-video-outstream</string>
-    <string name="imp_prebid_id_video_outstream_original_api">prebid-demo-video-outstream-original-api</string>
+    <string name="imp_prebid_id_video_outstream">prebid-ita-video-outstream</string>
+    <string name="imp_prebid_id_video_outstream_original_api">prebid-ita-video-outstream-original-api</string>
     <string name="imp_prebid_id_video_instream">1001-1</string>
     <string name="imp_prebid_id_video_outstream_end_card">prebid-demo-video-outstream-with-end-card</string>
-    <string name="imp_prebid_id_video_interstitial_320_480">prebid-demo-video-interstitial-320-480</string>
+    <string name="imp_prebid_id_video_interstitial_320_480">prebid-ita-video-interstitial-320-480</string>
     <string name="imp_prebid_id_video_interstitial_320_480_with_ad_configuration">prebid-demo-video-interstitial-320-480-with-ad-configuration</string>
-    <string name="imp_prebid_id_video_interstitial_320_480_original_api">prebid-demo-video-interstitial-320-480-original-api</string>
+    <string name="imp_prebid_id_video_interstitial_320_480_original_api">prebid-ita-video-interstitial-320-480-original-api</string>
     <string name="imp_prebid_id_video_interstitial_320_480_with_end_card">prebid-demo-video-interstitial-320-480-with-end-card</string>
     <string name="imp_prebid_id_video_interstitial_320_480_with_end_card_with_ad_configuration">prebid-demo-video-interstitial-320-480-with-end-card-with-ad-configuration</string>
     <string name="imp_prebid_id_video_interstitial_deeplink">prebid-demo-video-interstitial-320-480-deeplink</string>
     <string name="imp_prebid_id_video_interstitial_skipoffset">prebid-demo-video-interstitial-320-480-skip-offset</string>
     <string name="imp_prebid_id_video_interstitial_mraid_end_card">prebid-demo-video-interstitial-mraid-end-card</string>
     <string name="imp_prebid_id_video_interstitial_vertical">prebid-demo-video-interstitial-vertical-with-end-card</string>
-    <string name="imp_prebid_id_video_rewarded_end_card_320_480">prebid-demo-video-rewarded-320-480</string>
+    <string name="imp_prebid_id_video_rewarded_end_card_320_480">prebid-ita-video-rewarded-320-480</string>
     <string name="imp_prebid_id_video_rewarded_end_card_320_480_with_ad_configuration">prebid-demo-video-rewarded-320-480-with-end-card-with-ad-configuration</string>
-    <string name="imp_prebid_id_video_rewarded_end_card_320_480_original_api">prebid-demo-video-rewarded-320-480-original-api</string>
+    <string name="imp_prebid_id_video_rewarded_end_card_320_480_original_api">prebid-ita-video-rewarded-320-480-original-api</string>
     <string name="imp_prebid_id_video_rewarded_320_480">prebid-demo-video-rewarded-320-480-without-end-card</string>
     <string name="imp_prebid_id_video_rewarded_320_480_with_ad_configuration">prebid-demo-video-rewarded-320-480-with-ad-configuration</string>
     <string name="imp_prebid_id_mraid_resize">prebid-demo-mraid-resize</string>
@@ -378,7 +378,7 @@
     <string name="imp_prebid_id_mraid_ox_test_properties">prebid-demo-mraid-test-properties-3</string>
     <string name="imp_prebid_id_mraid_ox_test_methods">prebid-demo-mraid-test-methods-3</string>
     <string name="imp_prebid_id_mraid_ox_resize_expandable">prebid-demo-mraid-resize-expandable</string>
-    <string name="imp_prebid_id_native_styles">prebid-demo-banner-native-styles</string>
+    <string name="imp_prebid_id_native_styles">prebid-ita-banner-native-styles</string>
     <string name="imp_prebid_id_native_links">prebid-demo-native-links</string>
     <string name="imp_prebid_id_no_bids">prebid-demo-no-bids</string>
 

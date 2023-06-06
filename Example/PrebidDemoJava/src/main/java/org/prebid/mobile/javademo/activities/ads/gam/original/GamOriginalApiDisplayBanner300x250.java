@@ -22,7 +22,7 @@ import java.util.Collections;
 public class GamOriginalApiDisplayBanner300x250 extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_banner_300x250_order";
-    private static final String CONFIG_ID = "prebid-demo-banner-300-250";
+    private static final String CONFIG_ID = "prebid-ita-banner-300-250";
     private static final int WIDTH = 300;
     private static final int HEIGHT = 250;
 
