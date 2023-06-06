@@ -392,7 +392,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     private void initBidLoader() {
-        bidLoader = new BidLoader(getContext(), adUnitConfig, bidRequesterListener);
+        bidLoader = new BidLoader(adUnitConfig, bidRequesterListener);
     }
 
     private Bid getWinnerBid() {

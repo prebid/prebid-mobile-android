@@ -37,6 +37,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
+import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.util.ArrayList;
@@ -135,7 +136,7 @@ public abstract class AdUnit {
             }
         }
 
-        Context context = PrebidMobile.getApplicationContext();
+        Context context = PrebidContextHolder.getContext();
         if (context != null) {
             ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             if (conMgr != null && context.checkCallingOrSelfPermission("android.permission.ACCESS_NETWORK_STATE") == PackageManager.PERMISSION_GRANTED) {
@@ -154,7 +155,6 @@ public abstract class AdUnit {
         if (Util.supportedAdObject(adObj)) {
             adObject = adObj;
             bidLoader = new BidLoader(
-                    context,
                     configuration,
                     createBidListener(listener)
             );

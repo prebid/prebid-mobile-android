@@ -16,8 +16,10 @@
 
 package org.prebid.mobile.rendering.bidding.loader;
 
-import android.content.Context;
+import static java.lang.Math.max;
+
 import androidx.annotation.NonNull;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
@@ -32,11 +34,8 @@ import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
 
-import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static java.lang.Math.max;
 
 public class BidLoader {
 
@@ -45,7 +44,6 @@ public class BidLoader {
     private final static String TMAX_REQUEST_KEY = "tmaxrequest";
     private static boolean sTimeoutHasChanged = false;
 
-    private WeakReference<Context> contextReference;
     private AdUnitConfiguration adConfiguration;
     private BidRequester bidRequester;
     private AtomicBoolean currentlyLoading;
@@ -110,8 +108,7 @@ public class BidLoader {
         load();
     });
 
-    public BidLoader(Context context, AdUnitConfiguration adConfiguration, BidRequesterListener requestListener) {
-        contextReference = new WeakReference<>(context);
+    public BidLoader(AdUnitConfiguration adConfiguration, BidRequesterListener requestListener) {
         this.adConfiguration = adConfiguration;
         this.requestListener = requestListener;
         currentlyLoading = new AtomicBoolean();
@@ -123,26 +120,26 @@ public class BidLoader {
 
     public void load() {
         if (requestListener == null) {
-            LogUtil.warning(TAG, "Listener is null");
+            LogUtil.error(TAG, "Listener is null");
             return;
         }
         if (adConfiguration == null) {
-            LogUtil.warning(TAG, "No ad request configuration to load");
+            LogUtil.error(TAG, "No ad request configuration to load");
             return;
         }
-        if (contextReference.get() == null) {
-            LogUtil.warning(TAG, "Context is null");
+        if (!PrebidMobile.isSdkInitialized()) {
+            LogUtil.error(TAG, "SDK wasn't initialized. Context is null.");
             return;
         }
 
         // If currentlyLoading == false, set it to true and return true; else return false
         // If compareAndSet returns false, it means currentlyLoading was already true and therefore we should skip loading
         if (!currentlyLoading.compareAndSet(false, true)) {
-            LogUtil.warning(TAG, "Previous load is in progress. Load() ignored.");
+            LogUtil.error(TAG, "Previous load is in progress. Load() ignored.");
             return;
         }
 
-        sendBidRequest(contextReference.get(), adConfiguration);
+        sendBidRequest(adConfiguration);
     }
 
     public void setupRefreshTimer() {
@@ -186,10 +183,10 @@ public class BidLoader {
         bidRefreshListener = null;
     }
 
-    private void sendBidRequest(Context context, AdUnitConfiguration config) {
+    private void sendBidRequest(AdUnitConfiguration config) {
         currentlyLoading.set(true);
         if (bidRequester == null) {
-            bidRequester = new BidRequester(context, config, new AdRequestInput(), responseHandler);
+            bidRequester = new BidRequester(config, new AdRequestInput(), responseHandler);
         }
         bidRequester.startAdRequest();
     }

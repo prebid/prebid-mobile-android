@@ -303,7 +303,7 @@ public abstract class MediationBaseAdUnit {
     }
 
     protected void initBidLoader() {
-        bidLoader = new BidLoader(contextWeakReference.get(), adUnitConfig, bidRequesterListener);
+        bidLoader = new BidLoader(adUnitConfig, bidRequesterListener);
     }
 
     private void initSdk(Context context) {

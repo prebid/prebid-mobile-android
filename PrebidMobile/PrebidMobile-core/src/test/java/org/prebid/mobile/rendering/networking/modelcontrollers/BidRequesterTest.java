@@ -61,7 +61,7 @@ public class BidRequesterTest {
     @Test
     public void whenStartAdRequestAndContextNull_OnErrorWithExceptionCalled() {
         adConfiguration.setConfigId("test");
-        BidRequester requester = new BidRequester(null, adConfiguration, adRequestInput, mockResponseHandler);
+        BidRequester requester = new BidRequester(adConfiguration, adRequestInput, mockResponseHandler);
         requester.startAdRequest();
         verify(mockResponseHandler).onErrorWithException(any(AdException.class), anyLong());
     }
@@ -69,7 +69,7 @@ public class BidRequesterTest {
     @Test
     public void whenStartAdRequestAndNoConfigId_OnErrorCalled() {
         adConfiguration.setConfigId(null);
-        BidRequester requester = new BidRequester(context, adConfiguration, adRequestInput, mockResponseHandler);
+        BidRequester requester = new BidRequester(adConfiguration, adRequestInput, mockResponseHandler);
         requester.startAdRequest();
         verify(mockResponseHandler).onError(anyString(), anyLong());
     }
@@ -77,7 +77,7 @@ public class BidRequesterTest {
     @Test
     public void whenStartAdRequestAndInitValid_InitAdId() {
         adConfiguration.setConfigId("test");
-        BidRequester requester = spy(new BidRequester(context, adConfiguration, adRequestInput, mockResponseHandler));
+        BidRequester requester = spy(new BidRequester(adConfiguration, adRequestInput, mockResponseHandler));
         requester.startAdRequest();
         verify(requester).makeAdRequest();
     }
