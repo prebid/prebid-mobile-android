@@ -23,7 +23,7 @@ import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 class InAppDisplayBanner320x50Activity : BaseAdActivity() {
 
     companion object {
-        const val CONFIG_ID = "prebid-demo-banner-320-50"
+        const val CONFIG_ID = "prebid-ita-banner-320-50"
         const val WIDTH = 320
         const val HEIGHT = 50
     }

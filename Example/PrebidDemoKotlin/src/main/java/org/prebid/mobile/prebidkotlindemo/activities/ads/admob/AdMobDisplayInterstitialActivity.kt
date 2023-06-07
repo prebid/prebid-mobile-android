@@ -32,7 +32,7 @@ class AdMobDisplayInterstitialActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "ca-app-pub-1875909575462531/6393291067"
-        const val CONFIG_ID = "prebid-demo-display-interstitial-320-480"
+        const val CONFIG_ID = "prebid-ita-display-interstitial-320-480"
     }
 
     private var adUnit: MediationInterstitialAdUnit? = null

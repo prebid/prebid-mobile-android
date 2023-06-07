@@ -26,8 +26,8 @@ import java.util.Random;
 public class GamOriginalApiMultiformatBanner extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-original-banner-multiformat";
-    private static final String CONFIG_ID_BANNER = "prebid-demo-banner-300-250";
-    private static final String CONFIG_ID_VIDEO = "prebid-demo-video-outstream-original-api";
+    private static final String CONFIG_ID_BANNER = "prebid-ita-banner-300-250";
+    private static final String CONFIG_ID_VIDEO = "prebid-ita-video-outstream-original-api";
     private static final int WIDTH = 300;
     private static final int HEIGHT = 250;
 
