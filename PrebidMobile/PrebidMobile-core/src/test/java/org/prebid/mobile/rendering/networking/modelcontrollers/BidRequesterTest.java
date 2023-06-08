@@ -25,6 +25,7 @@ import static org.mockito.Mockito.verify;
 import android.app.Activity;
 import android.content.Context;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +36,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
+import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -47,7 +49,13 @@ public class BidRequesterTest {
     private AdUnitConfiguration adConfiguration;
     private AdRequestInput adRequestInput;
 
-    @Mock private ResponseHandler mockResponseHandler;
+    @Mock
+    private ResponseHandler mockResponseHandler;
+
+    @After
+    public void clean() {
+        PrebidContextHolder.clearContext();
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -76,6 +84,8 @@ public class BidRequesterTest {
 
     @Test
     public void whenStartAdRequestAndInitValid_InitAdId() {
+        PrebidContextHolder.setContext(context);
+
         adConfiguration.setConfigId("test");
         BidRequester requester = spy(new BidRequester(adConfiguration, adRequestInput, mockResponseHandler));
         requester.startAdRequest();

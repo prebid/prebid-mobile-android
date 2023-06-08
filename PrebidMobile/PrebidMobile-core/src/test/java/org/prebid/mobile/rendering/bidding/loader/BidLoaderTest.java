@@ -22,7 +22,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import android.app.Activity;
 import android.content.Context;
 
 import org.junit.After;
@@ -38,7 +37,6 @@ import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
 import org.prebid.mobile.test.utils.WhiteBox;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -49,7 +47,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class BidLoaderTest {
 
     private BidLoader bidLoader;
-    private Context context;
     @Mock
     private AdUnitConfiguration mockAdConfiguration;
     @Mock
@@ -62,7 +59,9 @@ public class BidLoaderTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        context = Robolectric.buildActivity(Activity.class).create().get();
+
+        PrebidContextHolder.setContext(mock(Context.class));
+
         when(mockAdConfiguration.isAdType(any(AdFormat.class))).thenReturn(true);
         when(mockAdConfiguration.getAutoRefreshDelay()).thenReturn(60000);
         bidLoader = createBidLoader(mockAdConfiguration, bidRequesterListener);
@@ -82,6 +81,8 @@ public class BidLoaderTest {
 
     @Test
     public void whenLoadAndNoAdConfiguration_NoStartAdRequestCall() {
+        PrebidContextHolder.clearContext();
+
         bidLoader = createBidLoader(mockAdConfiguration, bidRequesterListener);
         bidLoader.load();
         verify(mockRequester, never()).startAdRequest();
@@ -96,8 +97,6 @@ public class BidLoaderTest {
 
     @Test
     public void whenFreshLoadAndAdUnitConfigPassed_CallStartAdRequest() {
-        PrebidContextHolder.setContext(mock(Context.class));
-
         bidLoader.load();
         verify(mockRequester).startAdRequest();
     }
