@@ -36,6 +36,7 @@ import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.BannerAdPosition;
 import org.prebid.mobile.api.data.VideoPlacementType;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.listeners.DisplayVideoListener;
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
@@ -75,6 +76,7 @@ public class BannerView extends FrameLayout {
     private final ScreenStateReceiver screenStateReceiver = new ScreenStateReceiver();
 
     @Nullable private BannerViewListener bannerViewListener;
+    @Nullable private DisplayVideoListener displayVideoListener;
 
     private int refreshIntervalSec = 0;
 
@@ -315,6 +317,10 @@ public class BannerView extends FrameLayout {
 
     public void setBannerListener(BannerViewListener bannerListener) {
         bannerViewListener = bannerListener;
+    }
+
+    public void setDisplayVideoListener(DisplayVideoListener displayVideoListener) {
+        this.displayVideoListener = displayVideoListener;
     }
 
     public void setVideoPlacementType(VideoPlacementType videoPlacement) {
@@ -578,7 +584,7 @@ public class BannerView extends FrameLayout {
         removeAllViews();
 
         final Pair<Integer, Integer> sizePair = bidResponse.getWinningBidWidthHeightPairDips(getContext());
-        displayView = new DisplayView(getContext(), displayViewListener, adUnitConfig, bidResponse);
+        displayView = new DisplayView(getContext(), displayViewListener, displayVideoListener, adUnitConfig, bidResponse);
         addView(displayView, sizePair.first, sizePair.second);
     }
 

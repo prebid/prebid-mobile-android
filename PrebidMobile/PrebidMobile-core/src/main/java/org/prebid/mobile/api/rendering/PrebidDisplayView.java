@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.listeners.DisplayVideoListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
@@ -49,6 +50,9 @@ public class PrebidDisplayView extends FrameLayout {
 
     @Nullable
     private DisplayViewListener displayViewListener;
+
+    @Nullable
+    private DisplayVideoListener displayVideoListener;
 
     @Nullable
     private InterstitialManager interstitialManager;
@@ -106,37 +110,63 @@ public class PrebidDisplayView extends FrameLayout {
                 AdDetails adDetails
         ) {
             videoAdView.setContentDescription(CONTENT_DESCRIPTION_AD_VIEW);
-            notifyListenerLoaded();
+            notifyVideoListenerLoaded();
         }
         @Override
         public void onLoadFailed(
                 @NonNull VideoView videoAdView,
                 AdException error
         ) {
-            notifyListenerError(error);
+            notifyVideoListenerError(error);
         }
         @Override
         public void onDisplayed(
                 @NonNull VideoView videoAdView
         ) {
-            notifyListenerDisplayed();
+            notifyVideoListenerDisplayed();
         }
         @Override
         public void onClickThroughOpened(
                 @NonNull VideoView videoAdView
         ) {
-            notifyListenerClicked();
+            notifyVideoListenerClicked();
         }
         @Override
         public void onClickThroughClosed(
                 @NonNull VideoView videoAdView
         ) {
-            notifyListenerClose();
+            notifyVideoListenerClose();
+        }
+
+        @Override
+        public void onPlayBackCompleted(@NonNull VideoView videoAdView) {
+            notifyVideoCompleted();
+        }
+
+        @Override
+        public void onPlaybackPaused() {
+            notifyVideoPaused();
+        }
+
+        @Override
+        public void onPlaybackResumed() {
+            notifyVideoResumed();
+        }
+
+        @Override
+        public void onVideoUnMuted() {
+            notifyVideoUnMuted();
+        }
+
+        @Override
+        public void onVideoMuted() {
+            notifyVideoMuted();
         }
     };
     public PrebidDisplayView(
             @NonNull Context context,
             @NonNull DisplayViewListener listener,
+            @Nullable DisplayVideoListener displayVideoListener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse response
     ) {
@@ -144,6 +174,7 @@ public class PrebidDisplayView extends FrameLayout {
         interstitialManager = new InterstitialManager();
         this.adUnitConfiguration = adUnitConfiguration;
         displayViewListener = listener;
+        this.displayVideoListener = displayVideoListener;
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(response, () -> {
             try {
@@ -163,10 +194,11 @@ public class PrebidDisplayView extends FrameLayout {
     public PrebidDisplayView(
             @NonNull Context context,
             DisplayViewListener listener,
+            DisplayVideoListener displayVideoListener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull String responseId
     ) throws AdException {
-        this(context, listener, adUnitConfiguration, getBidResponseFromCache(responseId));
+        this(context, listener, displayVideoListener, adUnitConfiguration, getBidResponseFromCache(responseId));
     }
 
     @Override
@@ -218,10 +250,30 @@ public class PrebidDisplayView extends FrameLayout {
         }
     }
 
+    private void notifyVideoListenerError(AdException e) {
+        LogUtil.debug(TAG, "onAdFailed");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoLoadFailed(e);
+        }
+        else {
+            notifyListenerError(e);
+        }
+    }
+
     private void notifyListenerClicked() {
         LogUtil.debug(TAG, "onAdClicked");
         if (displayViewListener != null) {
             displayViewListener.onAdClicked();
+        }
+    }
+
+    private void notifyVideoListenerClicked() {
+        LogUtil.debug(TAG, "onAdClicked");
+        if (videoViewListener != null) {
+            displayVideoListener.onVideoClicked();
+        }
+        else {
+            notifyListenerClicked();
         }
     }
 
@@ -232,6 +284,16 @@ public class PrebidDisplayView extends FrameLayout {
         }
     }
 
+    private void notifyVideoListenerClose() {
+        LogUtil.debug(TAG, "onAdClosed");
+        if (videoViewListener != null) {
+            displayVideoListener.onVideoClosed();
+        }
+        else {
+            notifyListenerClose();
+        }
+    }
+
     private void notifyListenerDisplayed() {
         LogUtil.debug(TAG, "onAdDisplayed");
         if (displayViewListener != null) {
@@ -239,10 +301,65 @@ public class PrebidDisplayView extends FrameLayout {
         }
     }
 
+    private void notifyVideoListenerDisplayed() {
+        LogUtil.debug(TAG, "onAdDisplayed");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoDisplayed();
+        }
+        else {
+            notifyListenerDisplayed();
+        }
+    }
+
     private void notifyListenerLoaded() {
         LogUtil.debug(TAG, "onAdLoaded");
         if (displayViewListener != null) {
             displayViewListener.onAdLoaded();
+        }
+    }
+
+    private void notifyVideoListenerLoaded() {
+        LogUtil.debug(TAG, "onAdLoaded");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoLoaded();
+        }
+        else {
+            notifyListenerLoaded();
+        }
+    }
+
+    private void notifyVideoPaused() {
+        LogUtil.debug(TAG, "onVideoPaused");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoPaused();
+        }
+    }
+
+    private void notifyVideoResumed() {
+        LogUtil.debug(TAG, "onVideoResumed");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoResumed();
+        }
+    }
+
+    private void notifyVideoMuted() {
+        LogUtil.debug(TAG, "onVideoMuted");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoMuted();
+        }
+    }
+
+    private void notifyVideoUnMuted() {
+        LogUtil.debug(TAG, "onVideoUnMuted");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoUnMuted();
+        }
+    }
+
+    private void notifyVideoCompleted() {
+        LogUtil.debug(TAG, "onVideoCompleted");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoCompleted();
         }
     }
 
