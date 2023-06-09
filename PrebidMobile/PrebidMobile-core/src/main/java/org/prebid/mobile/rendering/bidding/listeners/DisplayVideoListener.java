@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.api.rendering.listeners;
+package org.prebid.mobile.rendering.bidding.listeners;
 
 import androidx.annotation.NonNull;
 
@@ -25,23 +25,18 @@ import org.prebid.mobile.api.exceptions.AdException;
  * All methods will be invoked on the main thread.
  */
 public interface DisplayVideoListener {
-    void  onVideoLoaded();
-
-    void  onVideoLoadFailed(AdException error);
-
-    void  onVideoDisplayed();
-
+    // Called when the video complete its playback
     void  onVideoCompleted();
 
-    void  onVideoClicked();
-
-    void  onVideoClosed();
-
+    // Called when the video playback is not visible
     void  onVideoPaused();
 
+    // Called when the video is paused and visibility constraints are satisfied again
     void  onVideoResumed();
 
+    // Called when the video playback is unmuted
     void  onVideoUnMuted();
 
+    // Called when the video playback is muted
     void  onVideoMuted();
 }

@@ -22,7 +22,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
-import org.prebid.mobile.api.rendering.listeners.DisplayVideoListener;
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
