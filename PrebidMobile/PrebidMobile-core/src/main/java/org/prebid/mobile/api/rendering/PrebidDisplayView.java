@@ -25,10 +25,10 @@ import androidx.annotation.Nullable;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.networking.WinNotifier;
@@ -110,32 +110,32 @@ public class PrebidDisplayView extends FrameLayout {
                 AdDetails adDetails
         ) {
             videoAdView.setContentDescription(CONTENT_DESCRIPTION_AD_VIEW);
-            notifyListenerLoaded();
+            notifyVideoListenerLoaded();
         }
         @Override
         public void onLoadFailed(
                 @NonNull VideoView videoAdView,
                 AdException error
         ) {
-            notifyListenerError(error);
+            notifyVideoListenerError(error);
         }
         @Override
         public void onDisplayed(
                 @NonNull VideoView videoAdView
         ) {
-            notifyListenerDisplayed();
+            notifyVideoListenerDisplayed();
         }
         @Override
         public void onClickThroughOpened(
                 @NonNull VideoView videoAdView
         ) {
-            notifyListenerClicked();
+            notifyVideoListenerClicked();
         }
         @Override
         public void onClickThroughClosed(
                 @NonNull VideoView videoAdView
         ) {
-            notifyListenerClose();
+            notifyVideoListenerClose();
         }
 
         @Override
@@ -250,10 +250,30 @@ public class PrebidDisplayView extends FrameLayout {
         }
     }
 
+    private void notifyVideoListenerError(AdException e) {
+        LogUtil.debug(TAG, "onAdFailed");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoFailed(e);
+        }
+        else {
+            notifyListenerError(e);
+        }
+    }
+
     private void notifyListenerClicked() {
         LogUtil.debug(TAG, "onAdClicked");
         if (displayViewListener != null) {
             displayViewListener.onAdClicked();
+        }
+    }
+
+    private void notifyVideoListenerClicked() {
+        LogUtil.debug(TAG, "onAdClicked");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoClicked();
+        }
+        else {
+            notifyListenerClicked();
         }
     }
 
@@ -264,6 +284,16 @@ public class PrebidDisplayView extends FrameLayout {
         }
     }
 
+    private void notifyVideoListenerClose() {
+        LogUtil.debug(TAG, "onAdClosed");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoClosed();
+        }
+        else {
+            notifyListenerClose();
+        }
+    }
+
     private void notifyListenerDisplayed() {
         LogUtil.debug(TAG, "onAdDisplayed");
         if (displayViewListener != null) {
@@ -271,10 +301,30 @@ public class PrebidDisplayView extends FrameLayout {
         }
     }
 
+    private void notifyVideoListenerDisplayed() {
+        LogUtil.debug(TAG, "onAdDisplayed");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoDisplayed();
+        }
+        else {
+            notifyListenerDisplayed();
+        }
+    }
+
     private void notifyListenerLoaded() {
         LogUtil.debug(TAG, "onAdLoaded");
         if (displayViewListener != null) {
             displayViewListener.onAdLoaded();
+        }
+    }
+
+    private void notifyVideoListenerLoaded() {
+        LogUtil.debug(TAG, "onAdLoaded");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoLoaded();
+        }
+        else {
+            notifyListenerLoaded();
         }
     }
 

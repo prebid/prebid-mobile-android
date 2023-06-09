@@ -78,6 +78,7 @@ public class BannerView extends FrameLayout {
 
     @Nullable private BannerViewListener bannerViewListener;
     @Nullable private BannerVideoListener bannerVideoListener;
+    @Nullable private DisplayVideoListener displayVideoListener;
 
     private int refreshIntervalSec = 0;
 
@@ -121,43 +122,6 @@ public class BannerView extends FrameLayout {
         public void onAdClosed() {
             if (bannerViewListener != null) {
                 bannerViewListener.onAdClosed(BannerView.this);
-            }
-        }
-    };
-
-    private final DisplayVideoListener displayVideoListener = new DisplayVideoListener() {
-        @Override
-        public void onVideoCompleted() {
-            if (bannerVideoListener != null) {
-                bannerVideoListener.onVideoCompleted(BannerView.this);
-            }
-        }
-
-        @Override
-        public void onVideoPaused() {
-            if (bannerVideoListener != null) {
-                bannerVideoListener.onVideoPaused(BannerView.this);
-            }
-        }
-
-        @Override
-        public void onVideoResumed() {
-            if (bannerVideoListener != null) {
-                bannerVideoListener.onVideoResumed(BannerView.this);
-            }
-        }
-
-        @Override
-        public void onVideoUnMuted() {
-            if (bannerVideoListener != null) {
-                bannerVideoListener.onVideoUnMuted(BannerView.this);
-            }
-        }
-
-        @Override
-        public void onVideoMuted() {
-            if (bannerVideoListener != null) {
-                bannerVideoListener.onVideoMuted(BannerView.this);
             }
         }
     };
@@ -359,6 +323,78 @@ public class BannerView extends FrameLayout {
 
     public void setBannerVideoListener(BannerVideoListener bannerVideoListener) {
         this.bannerVideoListener = bannerVideoListener;
+        displayVideoListener = new DisplayVideoListener() {
+            @Override
+            public void onVideoLoaded() {
+                if (bannerVideoListener != null) {
+                    bannerVideoListener.onVideoLoaded(BannerView.this);
+                }
+            }
+
+            @Override
+            public void onVideoDisplayed() {
+                if (bannerVideoListener != null) {
+                    bannerVideoListener.onVideoDisplayed(BannerView.this);
+                    eventHandler.trackImpression();
+                }
+            }
+
+            @Override
+            public void onVideoFailed(AdException exception) {
+                if (bannerVideoListener != null) {
+                    bannerVideoListener.onVideoFailed(BannerView.this, exception);
+                }
+            }
+
+            @Override
+            public void onVideoClicked() {
+                if (bannerVideoListener != null) {
+                    bannerVideoListener.onVideoClicked(BannerView.this);
+                }
+            }
+
+            @Override
+            public void onVideoClosed() {
+                if (bannerVideoListener != null) {
+                    bannerVideoListener.onVideoClosed(BannerView.this);
+                }
+            }
+
+            @Override
+            public void onVideoCompleted() {
+                if (bannerVideoListener != null) {
+                    bannerVideoListener.onVideoCompleted(BannerView.this);
+                }
+            }
+
+            @Override
+            public void onVideoPaused() {
+                if (bannerVideoListener != null) {
+                    bannerVideoListener.onVideoPaused(BannerView.this);
+                }
+            }
+
+            @Override
+            public void onVideoResumed() {
+                if (bannerVideoListener != null) {
+                    bannerVideoListener.onVideoResumed(BannerView.this);
+                }
+            }
+
+            @Override
+            public void onVideoUnMuted() {
+                if (bannerVideoListener != null) {
+                    bannerVideoListener.onVideoUnMuted(BannerView.this);
+                }
+            }
+
+            @Override
+            public void onVideoMuted() {
+                if (bannerVideoListener != null) {
+                    bannerVideoListener.onVideoMuted(BannerView.this);
+                }
+            }
+        };
     }
 
     public void setVideoPlacementType(VideoPlacementType videoPlacement) {

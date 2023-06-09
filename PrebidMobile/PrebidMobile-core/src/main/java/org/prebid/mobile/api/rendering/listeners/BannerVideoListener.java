@@ -16,6 +16,7 @@
 
 package org.prebid.mobile.api.rendering.listeners;
 
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.BannerView;
 
 /**
@@ -23,6 +24,42 @@ import org.prebid.mobile.api.rendering.BannerView;
  * All methods will be invoked on the main thread.
  */
 public interface BannerVideoListener {
+    /**
+     * Executed when the video is loaded and is ready for display.
+     *
+     * @param bannerView view of the corresponding event.
+     */
+    void onVideoLoaded(BannerView bannerView);
+
+    /**
+     * Executed when the video is displayed on screen.
+     *
+     * @param bannerView view of the corresponding event.
+     */
+    void onVideoDisplayed(BannerView bannerView);
+
+    /**
+     * Executed when an error is encountered on initialization / loading or display step.
+     *
+     * @param bannerView view of the corresponding event.
+     * @param exception  exception containing detailed message and error type.
+     */
+    void onVideoFailed(BannerView bannerView, AdException exception);
+
+    /**
+     * Executed when video is clicked.
+     *
+     * @param bannerView view of the corresponding event.
+     */
+    void onVideoClicked(BannerView bannerView);
+
+    /**
+     * Executed when modal window (e.g. browser) on top of video is closed.
+     *
+     * @param bannerView view of the corresponding event.
+     */
+    void onVideoClosed(BannerView bannerView);
+
     /**
      * Executed when the video complete its playback
      *

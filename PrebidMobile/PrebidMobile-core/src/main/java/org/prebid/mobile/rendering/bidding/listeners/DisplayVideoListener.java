@@ -25,6 +25,21 @@ import org.prebid.mobile.api.exceptions.AdException;
  * All methods will be invoked on the main thread.
  */
 public interface DisplayVideoListener {
+    // Called every time a video had loaded and is ready for display
+    void onVideoLoaded();
+
+    // Called every time the video is displayed on the screen
+    void onVideoDisplayed();
+
+    // Called whenever the load process fails to produce a viable video
+    void onVideoFailed(AdException exception);
+
+    // Called when the video will launch a dialog on top of the current view
+    void onVideoClicked();
+
+    // Called when the video view has dismissed the modal on top of the current view
+    void onVideoClosed();
+
     // Called when the video complete its playback
     void  onVideoCompleted();
 
