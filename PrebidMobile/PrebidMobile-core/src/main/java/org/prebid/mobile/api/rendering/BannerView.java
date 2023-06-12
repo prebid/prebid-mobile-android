@@ -546,7 +546,7 @@ public class BannerView extends FrameLayout {
     }
 
     private void initBidLoader() {
-        bidLoader = new BidLoader(getContext(), adUnitConfig, bidRequesterListener);
+        bidLoader = new BidLoader(adUnitConfig, bidRequesterListener);
         final VisibilityTrackerOption visibilityTrackerOption = new VisibilityTrackerOption(NativeEventTracker.EventType.IMPRESSION);
         final VisibilityChecker visibilityChecker = new VisibilityChecker(visibilityTrackerOption);
 

@@ -16,8 +16,15 @@
 
 package org.prebid.mobile.rendering.bidding.loader;
 
-import android.app.Activity;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import android.content.Context;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,53 +34,63 @@ import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
+import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
 import org.prebid.mobile.test.utils.WhiteBox;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class BidLoaderTest {
 
     private BidLoader bidLoader;
-    private Context context;
-    @Mock private AdUnitConfiguration mockAdConfiguration;
-    @Mock private BidRequesterListener bidRequesterListener;
-    @Mock private BidRequester mockRequester;
-    @Mock private RefreshTimerTask mockTimerTask;
+    @Mock
+    private AdUnitConfiguration mockAdConfiguration;
+    @Mock
+    private BidRequesterListener bidRequesterListener;
+    @Mock
+    private BidRequester mockRequester;
+    @Mock
+    private RefreshTimerTask mockTimerTask;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        context = Robolectric.buildActivity(Activity.class).create().get();
+
+        PrebidContextHolder.setContext(mock(Context.class));
+
         when(mockAdConfiguration.isAdType(any(AdFormat.class))).thenReturn(true);
         when(mockAdConfiguration.getAutoRefreshDelay()).thenReturn(60000);
-        bidLoader = createBidLoader(context, mockAdConfiguration, bidRequesterListener);
+        bidLoader = createBidLoader(mockAdConfiguration, bidRequesterListener);
+    }
+
+    @After
+    public void clean() {
+        PrebidContextHolder.clearContext();
     }
 
     @Test
     public void whenLoadAndNoContext_NoStartAdRequestCall() {
-        bidLoader = createBidLoader(context, null, bidRequesterListener);
+        bidLoader = createBidLoader(null, bidRequesterListener);
         bidLoader.load();
         verify(mockRequester, never()).startAdRequest();
     }
 
     @Test
     public void whenLoadAndNoAdConfiguration_NoStartAdRequestCall() {
-        bidLoader = createBidLoader(null, mockAdConfiguration, bidRequesterListener);
+        PrebidContextHolder.clearContext();
+
+        bidLoader = createBidLoader(mockAdConfiguration, bidRequesterListener);
         bidLoader.load();
         verify(mockRequester, never()).startAdRequest();
     }
 
     @Test
     public void whenLoadAndNoListener_NoStartAdRequestCall() {
-        bidLoader = createBidLoader(context, mockAdConfiguration, null);
+        bidLoader = createBidLoader(mockAdConfiguration, null);
         bidLoader.load();
         verify(mockRequester, never()).startAdRequest();
     }
@@ -106,8 +123,8 @@ public class BidLoaderTest {
         verify(mockTimerTask).cancelRefreshTimer();
     }
 
-    private BidLoader createBidLoader(Context context, AdUnitConfiguration adConfiguration, BidRequesterListener requestListener) {
-        BidLoader bidLoader = new BidLoader(context, adConfiguration, requestListener);
+    private BidLoader createBidLoader(AdUnitConfiguration adConfiguration, BidRequesterListener requestListener) {
+        BidLoader bidLoader = new BidLoader(adConfiguration, requestListener);
         WhiteBox.setInternalState(bidLoader, "bidRequester", mockRequester);
         WhiteBox.setInternalState(bidLoader, "refreshTimerTask", mockTimerTask);
         return bidLoader;
