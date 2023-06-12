@@ -399,6 +399,34 @@ public class BannerViewTest {
     }
 
     @Test
+    public void whenDisplayVideoOnVideoPaused_CallBannerVideoListenerOnVideoPaused()
+            throws IllegalAccessException {
+        getDisplayVideoListener().onVideoPaused();
+        verify(mockBannerVideoListener).onVideoPaused(bannerView);
+    }
+
+    @Test
+    public void whenDisplayVideoOnVideoResumed_CallBannerVideoListenerOnVideoResumed()
+            throws IllegalAccessException {
+        getDisplayVideoListener().onVideoResumed();
+        verify(mockBannerVideoListener).onVideoResumed(bannerView);
+    }
+
+    @Test
+    public void whenDisplayVideoOnVideoUnMuted_CallBannerVideoListenerOnVideoUnMuted()
+            throws IllegalAccessException {
+        getDisplayVideoListener().onVideoUnMuted();
+        verify(mockBannerVideoListener).onVideoUnMuted(bannerView);
+    }
+
+    @Test
+    public void whenDisplayVideoOnVideoMuted_CallBannerVideoListenerOnVideoMuted()
+            throws IllegalAccessException {
+        getDisplayVideoListener().onVideoMuted();
+        verify(mockBannerVideoListener).onVideoMuted(bannerView);
+    }
+
+    @Test
     public void whenStopRefresh_BidLoaderCancelRefresh() {
         bannerView.stopRefresh();
 
