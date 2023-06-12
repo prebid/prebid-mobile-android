@@ -392,11 +392,10 @@ public class BannerViewTest {
     }
 
     @Test
-    public void whenDisplayViewOnAdDisplayed_CallBannerVideoListenerOnVideoDisplayedAndTrackImpression()
+    public void whenDisplayVideoOnVideoCompleted_CallBannerVideoListenerOnVideoCompleted()
             throws IllegalAccessException {
-        getDisplayVideoListener().onVideoDisplayed();
-        verify(mockBannerVideoListener).onVideoDisplayed(bannerView);
-        verify(mockEventHandler).trackImpression();
+        getDisplayVideoListener().onVideoCompleted();
+        verify(mockBannerVideoListener).onVideoCompleted(bannerView);
     }
 
     @Test

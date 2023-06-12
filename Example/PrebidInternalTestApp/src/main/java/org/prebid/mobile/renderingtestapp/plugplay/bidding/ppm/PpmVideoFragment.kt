@@ -112,31 +112,6 @@ open class PpmVideoFragment : AdFragment(), BannerViewListener, BannerVideoListe
         events.displayed(true)
     }
 
-    override fun onVideoLoaded(bannerView: BannerView?) {
-        LogUtil.debug(TAG, "onVideoLoaded")
-        events.loaded(true)
-    }
-
-    override fun onVideoDisplayed(bannerView: BannerView?) {
-        LogUtil.debug(TAG, "onVideoDisplayed")
-        events.displayed(true)
-    }
-
-    override fun onVideoFailed(bannerView: BannerView?, exception: AdException?) {
-        LogUtil.debug(TAG, "onVideoFailed")
-        events.failed(true)
-    }
-
-    override fun onVideoClicked(bannerView: BannerView?) {
-        LogUtil.debug(TAG, "onVideoClicked")
-        events.clicked(true)
-    }
-
-    override fun onVideoClosed(bannerView: BannerView?) {
-        LogUtil.debug(TAG, "onVideoClosed")
-        events.closed(true)
-    }
-
     override fun onVideoCompleted(bannerView: BannerView?) {
         LogUtil.debug(TAG, "onVideoCompleted")
     }
