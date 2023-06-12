@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.loading;
 
 import android.util.Log;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.ServerWrongStatusCode;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
@@ -36,6 +37,8 @@ public class FileDownloadTask extends BaseNetworkTask {
     private static final String TAG = "LibraryDownloadTask";
     protected FileDownloadListener listener;
     protected File file;
+
+    private boolean ignoreContentLength = false;
 
     /**
      * Creates a network object
@@ -80,14 +83,16 @@ public class FileDownloadTask extends BaseNetworkTask {
             return result;
         }
         try {
-            int contentLength = urlConnection.getContentLength();
-            if (contentLength > getMaxFileSize()) {
-                result.setException(new Exception("FileDownloader encountered a file larger than SDK cap of " + getMaxFileSize()));
-                return result;
-            }
-            if (contentLength <= 0) {
-                result.setException(new Exception("FileDownloader encountered file with " + contentLength + " content length"));
-                return result;
+            if (!ignoreContentLength) {
+                int contentLength = urlConnection.getContentLength();
+                if (contentLength > getMaxFileSize()) {
+                    result.setException(new Exception("FileDownloader encountered a file larger than SDK cap of " + getMaxFileSize()));
+                    return result;
+                }
+                if (contentLength <= 0) {
+                    result.setException(new Exception("FileDownloader encountered file with " + contentLength + " content length"));
+                    return result;
+                }
             }
             processData(urlConnection, result);
         }
@@ -143,4 +148,9 @@ public class FileDownloadTask extends BaseNetworkTask {
             listener.onFileDownloaded(beginIndex != -1 ? path.substring(beginIndex) : path);
         }
     }
+
+    public void setIgnoreContentLength(boolean value) {
+        ignoreContentLength = value;
+    }
+
 }
