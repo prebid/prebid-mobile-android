@@ -75,7 +75,7 @@ public class CreativeModelMakerBids {
         Context context = PrebidContextHolder.getContext();
         JSLibraryManager jsScriptsManager = JSLibraryManager.getInstance(context);
         if (!jsScriptsManager.checkIfScriptsDownloadedAndStartDownloadingIfNot()) {
-            notifyErrorListener("JS libraries has not been downloaded yet.");
+            notifyErrorListener("JS libraries has not been downloaded yet. Starting downloading...");
             return;
         }
 

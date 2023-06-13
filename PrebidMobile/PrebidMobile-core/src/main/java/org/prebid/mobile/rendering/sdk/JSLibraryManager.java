@@ -21,7 +21,8 @@ import android.content.Context;
 import org.prebid.mobile.rendering.sdk.scripts.JsScriptData;
 
 /**
- * Downloads and provides JS scripts in the SDK.
+ * Downloader and fetcher for JS scripts needed for the Prebid SDK (omsdk.js, mraid.js).
+ * Top level class for working with JS scripts.
  */
 public class JSLibraryManager {
 

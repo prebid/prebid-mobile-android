@@ -24,6 +24,8 @@ import java.util.TreeSet;
 
 /**
  * Downloader and fetcher for JS scripts needed for the Prebid SDK (omsdk.js, mraid.js).
+ * If you need to work with JS scripts from the SDK use {@link JSLibraryManager},
+ * because this class contains internal implementation.
  */
 public class JsScriptsDownloader {
 
