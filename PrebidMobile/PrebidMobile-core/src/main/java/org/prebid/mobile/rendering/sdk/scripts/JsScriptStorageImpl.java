@@ -25,14 +25,7 @@ public class JsScriptStorageImpl implements JsScriptStorage {
     }
 
     public boolean isFileAlreadyDownloaded(File file, String preferencesKey) {
-        boolean isFileAlreadyDownloaded = file.exists() && preferences.contains(preferencesKey);
-
-        if (isFileAlreadyDownloaded) return true;
-
-        if (file.exists()) {
-            removeFile(file);
-        }
-        return false;
+        return file.exists() && preferences.contains(preferencesKey);
     }
 
     public void createParentFolders(File file) {
