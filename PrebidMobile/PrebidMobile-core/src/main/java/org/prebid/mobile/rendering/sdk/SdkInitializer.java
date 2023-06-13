@@ -53,7 +53,7 @@ public class SdkInitializer {
 
             ManagersResolver.getInstance().prepare(applicationContext);
 
-            JsScriptsDownloader.runDownloading(applicationContext);
+            JSLibraryManager.getInstance(applicationContext).checkIfScriptsDownloadedAndStartDownloadingIfNot();
         } catch (Throwable throwable) {
             onInitializationFailed("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable), listener);
             return;
