@@ -3,6 +3,7 @@ package org.prebid.mobile.rendering.sdk;
 import android.content.Context;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import java.lang.ref.WeakReference;
 
@@ -23,7 +24,8 @@ public class PrebidContextHolder {
         return null;
     }
 
-    protected static void setContext(Context context) {
+    @VisibleForTesting
+    public static void setContext(Context context) {
         contextReference = new WeakReference<>(context);
     }
 
@@ -31,7 +33,8 @@ public class PrebidContextHolder {
      * It clears Context reference and thereby SDK will skip any fetch demand calls.
      * Must be called only if initialization is failed.
      */
-    protected static void clearContext() {
+    @VisibleForTesting
+    public static void clearContext() {
         contextReference = null;
     }
 

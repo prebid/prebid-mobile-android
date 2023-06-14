@@ -235,6 +235,7 @@ public class PrebidMobile {
         SdkInitializer.init(context, listener);
     }
 
+    @Deprecated
     public static Context getApplicationContext() {
         return PrebidContextHolder.getContext();
     }

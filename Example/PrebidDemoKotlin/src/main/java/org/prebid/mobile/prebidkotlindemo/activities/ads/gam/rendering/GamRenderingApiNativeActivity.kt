@@ -42,7 +42,7 @@ class GamRenderingApiNativeActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/apollo_custom_template_native_ad_unit"
-        const val CONFIG_ID = "prebid-demo-banner-native-styles"
+        const val CONFIG_ID = "prebid-ita-banner-native-styles"
         const val CUSTOM_FORMAT_ID = "11934135"
     }
 

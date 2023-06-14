@@ -21,7 +21,7 @@ import java.util.Collections;
 public class GamOriginalApiVideoRewarded extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-video-interstitial";
-    private static final String CONFIG_ID = "prebid-demo-video-rewarded-320-480-original-api";
+    private static final String CONFIG_ID = "prebid-ita-video-rewarded-320-480-original-api";
 
     private RewardedVideoAdUnit adUnit;
 

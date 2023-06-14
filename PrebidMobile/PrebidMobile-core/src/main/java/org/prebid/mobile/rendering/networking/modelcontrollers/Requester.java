@@ -39,6 +39,7 @@ import org.prebid.mobile.rendering.networking.urlBuilder.PathBuilderBase;
 import org.prebid.mobile.rendering.networking.urlBuilder.URLBuilder;
 import org.prebid.mobile.rendering.networking.urlBuilder.URLComponents;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
+import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.ConnectionInfoManager;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
@@ -46,7 +47,6 @@ import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,20 +55,17 @@ public abstract class Requester {
     private static final String TAG = Requester.class.getSimpleName();
 
     protected String requestName;
-    protected WeakReference<Context> contextReference;
     protected AdUnitConfiguration adConfiguration;
     protected URLBuilder urlBuilder;
     protected ResponseHandler adResponseCallBack;
     protected BaseNetworkTask networkTask;
 
     Requester(
-            Context context,
             AdUnitConfiguration config,
             AdRequestInput adRequestInput,
             ResponseHandler responseHandler
     ) {
         requestName = "";
-        contextReference = new WeakReference<>(context);
         adConfiguration = config;
 
         /*
@@ -93,7 +90,7 @@ public abstract class Requester {
     }
 
     protected List<ParameterBuilder> getParameterBuilders() {
-        Context context = contextReference.get();
+        Context context = PrebidContextHolder.getContext();
         Resources resources = null;
         if (context != null) {
             resources = context.getResources();
@@ -117,7 +114,7 @@ public abstract class Requester {
      * must attempt to grab and honor the latest LMT value for each ad request
      */
     protected void getAdId() {
-        final Context context = contextReference.get();
+        final Context context = PrebidContextHolder.getContext();
         if (context == null) {
             sendAdException(
                 "Context is null",

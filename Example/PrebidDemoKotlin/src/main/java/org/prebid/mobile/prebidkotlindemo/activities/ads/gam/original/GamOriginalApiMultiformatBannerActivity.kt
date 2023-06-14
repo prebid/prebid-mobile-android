@@ -35,8 +35,8 @@ class GamOriginalApiMultiformatBannerActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-original-banner-multiformat"
-        const val CONFIG_ID_BANNER = "prebid-demo-banner-300-250"
-        const val CONFIG_ID_VIDEO = "prebid-demo-video-outstream-original-api"
+        const val CONFIG_ID_BANNER = "prebid-ita-banner-300-250"
+        const val CONFIG_ID_VIDEO = "prebid-ita-video-outstream-original-api"
         const val WIDTH = 300
         const val HEIGHT = 250
     }
