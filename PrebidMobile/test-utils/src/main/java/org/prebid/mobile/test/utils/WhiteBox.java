@@ -41,9 +41,22 @@ public class WhiteBox {
             Field f = org.prebid.mobile.test.utils.WhiteBoxHelpers.getFieldFromHierarchy(c, field);
             f.setAccessible(true);
             f.set(target, value);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Unable to set internal state on a private field. Please report to mockito mailing list.", e);
+        }
+    }
+
+    public static void setStaticVariableTo(
+            Class classType,
+            String fieldName,
+            Object objectToPut
+    ) {
+        try {
+            Field field = classType.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(null, objectToPut);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new NullPointerException("Can't set static field using reflection: " + fieldName + " " + classType);
         }
     }
 
