@@ -65,12 +65,23 @@ public class DisplayViewTest {
         when(mockBid.getAdm()).thenReturn("adm");
         when(mockResponse.getWinningBid()).thenReturn(mockBid);
         when(mockResponse.getPreferredPluginRendererName()).thenReturn(PREBID_MOBILE_RENDERER_NAME);
-
-        displayView = new DisplayView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
     }
 
     @Test
     public void onDisplayViewWinNotification_returnBannerAdView() {
+        displayView = new DisplayView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
+
+
+        verify(adUnitConfiguration).modifyUsingBidResponse(mockResponse);
+        verify(fakePrebidMobilePluginRenderer).createBannerAdView(context, mockDisplayViewListener, null, adUnitConfiguration, mockResponse);
+        // bannerAdView added to view hierarchy
+        assertEquals(1, displayView.getChildCount());
+    }
+
+    @Test
+    public void onDisplayViewWithVideoListenerWinNotification_returnBannerAdView() {
+        displayView = new DisplayView(context, mockDisplayViewListener, mockDisplayVideoListener, adUnitConfiguration, mockResponse);
+
         verify(adUnitConfiguration).modifyUsingBidResponse(mockResponse);
         verify(fakePrebidMobilePluginRenderer).createBannerAdView(context, mockDisplayViewListener, mockDisplayVideoListener, adUnitConfiguration, mockResponse);
         // bannerAdView added to view hierarchy
