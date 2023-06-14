@@ -38,7 +38,7 @@ public class FakePrebidMobilePluginRenderer {
             public View createBannerAdView(
                     @NonNull Context context,
                     @NonNull DisplayViewListener displayViewListener,
-                    @NonNull DisplayVideoListener displayVideoListener,
+                    @Nullable DisplayVideoListener displayVideoListener,
                     @NonNull AdUnitConfiguration adUnitConfiguration,
                     @NonNull BidResponse bidResponse
             ) {
