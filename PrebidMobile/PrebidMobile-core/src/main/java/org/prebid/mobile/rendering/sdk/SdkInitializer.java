@@ -52,6 +52,8 @@ public class SdkInitializer {
             OmAdSessionManager.activateOmSdk(applicationContext);
 
             ManagersResolver.getInstance().prepare(applicationContext);
+
+            JSLibraryManager.getInstance(applicationContext).checkIfScriptsDownloadedAndStartDownloadingIfNot();
         } catch (Throwable throwable) {
             onInitializationFailed("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable), listener);
             return;

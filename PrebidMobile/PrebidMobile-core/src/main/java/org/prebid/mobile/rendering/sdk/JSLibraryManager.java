@@ -17,25 +17,23 @@
 package org.prebid.mobile.rendering.sdk;
 
 import android.content.Context;
-import android.content.res.Resources;
-import org.prebid.mobile.core.R;
-import org.prebid.mobile.rendering.utils.helpers.Utils;
+
+import org.prebid.mobile.rendering.sdk.scripts.JsScriptData;
 
 /**
- * Manages the JS files in SDK
- * Provides JS scripts extracted from bundled resource
+ * Downloader and fetcher for JS scripts needed for the Prebid SDK (omsdk.js, mraid.js).
+ * Top level class for working with JS scripts.
  */
 public class JSLibraryManager {
 
     private static JSLibraryManager sInstance;
 
-    private Context context;
-    private String MRAIDscript;
-    private String OMSDKscirpt;
+    private String MRAIDscript = "";
+    private String OMSDKscirpt = "";
+    private JsScriptsDownloader scriptsDownloader;
 
     private JSLibraryManager(Context context) {
-        this.context = context.getApplicationContext();
-        initScriptStrings();
+        this.scriptsDownloader = JsScriptsDownloader.createDownloader(context);
     }
 
     public static JSLibraryManager getInstance(Context context) {
@@ -49,6 +47,29 @@ public class JSLibraryManager {
         return sInstance;
     }
 
+    public boolean checkIfScriptsDownloadedAndStartDownloadingIfNot() {
+        if (scriptsDownloader.areScriptsDownloadedAlready()) {
+            initScriptVariables();
+            return true;
+        }
+
+        scriptsDownloader.downloadScripts(
+                (path) -> new JsScriptsDownloader.ScriptDownloadListener(path, scriptsDownloader.storage)
+        );
+        return false;
+    }
+
+    public void initScriptVariables() {
+        if (scriptsDownloader.areScriptsDownloadedAlready()) {
+            if (OMSDKscirpt.isEmpty()) {
+                OMSDKscirpt = scriptsDownloader.readFile(JsScriptData.openMeasurementData);
+            }
+            if (MRAIDscript.isEmpty()) {
+                MRAIDscript = scriptsDownloader.readFile(JsScriptData.mraidData);
+            }
+        }
+    }
+
     public String getMRAIDScript() {
         return MRAIDscript;
     }
@@ -57,9 +78,4 @@ public class JSLibraryManager {
         return OMSDKscirpt;
     }
 
-    private void initScriptStrings() {
-        Resources resources = context.getResources();
-        MRAIDscript = Utils.loadStringFromFile(resources, R.raw.mraid);
-        OMSDKscirpt = Utils.loadStringFromFile(resources, R.raw.omsdk_v1);
-    }
 }

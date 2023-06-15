@@ -16,8 +16,11 @@
 
 package org.prebid.mobile.rendering.models;
 
+import android.content.Context;
 import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -28,6 +31,8 @@ import org.prebid.mobile.rendering.loading.AdLoadListener;
 import org.prebid.mobile.rendering.loading.VastParserExtractor;
 import org.prebid.mobile.rendering.models.internal.VastExtractorResult;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
+import org.prebid.mobile.rendering.sdk.JSLibraryManager;
+import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.video.OmEventTracker;
 
 import java.util.ArrayList;
@@ -64,6 +69,13 @@ public class CreativeModelMakerBids {
         final Bid winningBid = bidResponse.getWinningBid();
         if (winningBid == null || TextUtils.isEmpty(winningBid.getAdm())) {
             notifyErrorListener("No ad was found.");
+            return;
+        }
+
+        Context context = PrebidContextHolder.getContext();
+        JSLibraryManager jsScriptsManager = JSLibraryManager.getInstance(context);
+        if (!jsScriptsManager.checkIfScriptsDownloadedAndStartDownloadingIfNot()) {
+            notifyErrorListener("JS libraries has not been downloaded yet. Starting downloading...");
             return;
         }
 
