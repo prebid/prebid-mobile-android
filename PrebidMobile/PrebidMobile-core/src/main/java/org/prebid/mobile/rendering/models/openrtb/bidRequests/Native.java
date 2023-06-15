@@ -66,8 +66,9 @@ public class Native extends BaseBid {
 
     private JSONArray getAssetsJsonArray(List<NativeAsset> assetList) throws JSONException {
         JSONArray assetJsonArray = new JSONArray();
+        int idCount = 0;
         for (NativeAsset asset : assetList) {
-            assetJsonArray.put(asset.getJsonObject());
+            assetJsonArray.put(asset.getJsonObject(++idCount));
         }
         return assetJsonArray;
     }
