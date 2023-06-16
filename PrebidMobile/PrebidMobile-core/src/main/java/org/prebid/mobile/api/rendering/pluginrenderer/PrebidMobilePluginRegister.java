@@ -58,12 +58,12 @@ public class PrebidMobilePluginRegister {
     }
 
     // Returns the list of available renderers for the given ad unit for RT request
-    public List<String> getRTBListOfRenderersFor(AdUnitConfiguration adUnitConfiguration) {
-        List<String> compliantPlugins = new ArrayList<>();
+    public List<PrebidMobilePluginRenderer> getRTBListOfRenderersFor(AdUnitConfiguration adUnitConfiguration) {
+        List<PrebidMobilePluginRenderer> compliantPlugins = new ArrayList<>();
         for (Map.Entry<String, PrebidMobilePluginRenderer> entry : plugins.entrySet()) {
             PrebidMobilePluginRenderer renderer = entry.getValue();
             if (renderer.isSupportRenderingFor(adUnitConfiguration)) {
-                compliantPlugins.add(renderer.getName());
+                compliantPlugins.add(renderer);
             }
         }
         return compliantPlugins;

@@ -37,7 +37,7 @@ public class BidRequest extends BaseBid {
     private Regs regs = null;
     private User user = null;
     private Source source = null;
-    private PluginRenderers pluginRenderers = null;
+    private PluginRendererList pluginRendererList = null;
 
     private Ext ext = null;
 
@@ -63,7 +63,7 @@ public class BidRequest extends BaseBid {
         toJSON(jsonObject, "source", source != null ? source.getJsonObject() : null);
         toJSON(jsonObject, "ext", ext != null ? ext.getJsonObject() : null);
         toJSON(jsonObject, "test", PrebidMobile.getPbsDebug() ? 1 : null);
-        toJSON(jsonObject, "data", pluginRenderers != null ? pluginRenderers.getJsonObject() : null);
+        toJSON(jsonObject, "data", pluginRendererList != null ? pluginRendererList.getJsonObject() : null);
 
         return jsonObject;
     }
@@ -159,11 +159,11 @@ public class BidRequest extends BaseBid {
         return ext;
     }
 
-    public void setPluginRenderers(PluginRenderers pluginRenderers) {
-        this.pluginRenderers = pluginRenderers;
+    public void setPluginRendererList(PluginRendererList pluginRendererList) {
+        this.pluginRendererList = pluginRendererList;
     }
 
-    public PluginRenderers getPluginRenderers() {
-        return pluginRenderers;
+    public PluginRendererList getPluginRenderers() {
+        return pluginRendererList;
     }
 }
