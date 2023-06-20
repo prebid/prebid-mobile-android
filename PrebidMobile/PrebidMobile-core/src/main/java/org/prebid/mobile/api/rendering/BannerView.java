@@ -36,6 +36,7 @@ import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.BannerAdPosition;
 import org.prebid.mobile.api.data.VideoPlacementType;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.listeners.BannerVideoListener;
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
@@ -45,6 +46,7 @@ import org.prebid.mobile.rendering.bidding.interfaces.BannerEventHandler;
 import org.prebid.mobile.rendering.bidding.interfaces.StandaloneBannerEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
@@ -75,6 +77,7 @@ public class BannerView extends FrameLayout {
     private final ScreenStateReceiver screenStateReceiver = new ScreenStateReceiver();
 
     @Nullable private BannerViewListener bannerViewListener;
+    @Nullable private BannerVideoListener bannerVideoListener;
 
     private int refreshIntervalSec = 0;
 
@@ -118,6 +121,43 @@ public class BannerView extends FrameLayout {
         public void onAdClosed() {
             if (bannerViewListener != null) {
                 bannerViewListener.onAdClosed(BannerView.this);
+            }
+        }
+    };
+
+    private final DisplayVideoListener displayVideoListener = new DisplayVideoListener() {
+        @Override
+        public void onVideoCompleted() {
+            if (bannerVideoListener != null) {
+                bannerVideoListener.onVideoCompleted(BannerView.this);
+            }
+        }
+
+        @Override
+        public void onVideoPaused() {
+            if (bannerVideoListener != null) {
+                bannerVideoListener.onVideoPaused(BannerView.this);
+            }
+        }
+
+        @Override
+        public void onVideoResumed() {
+            if (bannerVideoListener != null) {
+                bannerVideoListener.onVideoResumed(BannerView.this);
+            }
+        }
+
+        @Override
+        public void onVideoUnMuted() {
+            if (bannerVideoListener != null) {
+                bannerVideoListener.onVideoUnMuted(BannerView.this);
+            }
+        }
+
+        @Override
+        public void onVideoMuted() {
+            if (bannerVideoListener != null) {
+                bannerVideoListener.onVideoMuted(BannerView.this);
             }
         }
     };
@@ -315,6 +355,10 @@ public class BannerView extends FrameLayout {
 
     public void setBannerListener(BannerViewListener bannerListener) {
         bannerViewListener = bannerListener;
+    }
+
+    public void setBannerVideoListener(BannerVideoListener bannerVideoListener) {
+        this.bannerVideoListener = bannerVideoListener;
     }
 
     public void setVideoPlacementType(VideoPlacementType videoPlacement) {
@@ -578,7 +622,7 @@ public class BannerView extends FrameLayout {
         removeAllViews();
 
         final Pair<Integer, Integer> sizePair = bidResponse.getWinningBidWidthHeightPairDips(getContext());
-        displayView = new DisplayView(getContext(), displayViewListener, adUnitConfig, bidResponse);
+        displayView = new DisplayView(getContext(), displayViewListener, displayVideoListener, adUnitConfig, bidResponse);
         addView(displayView, sizePair.first, sizePair.second);
     }
 

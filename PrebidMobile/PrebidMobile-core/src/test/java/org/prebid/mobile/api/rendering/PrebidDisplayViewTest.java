@@ -30,6 +30,7 @@ import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.views.AdViewManager;
@@ -50,6 +51,7 @@ public class PrebidDisplayViewTest {
     private AdUnitConfiguration adUnitConfiguration;
     @Mock private BidResponse bidResponse;
     @Mock private DisplayViewListener mockDisplayViewListener;
+    @Mock private DisplayVideoListener mockDisplayVideoListener;
     @Mock private AdViewManager mockAdViewManager;
 
     @Before
@@ -66,7 +68,7 @@ public class PrebidDisplayViewTest {
         when(mockBid.getAdm()).thenReturn("adm");
         when(mockResponse.getWinningBid()).thenReturn(mockBid);
 
-        prebidDisplayView = new PrebidDisplayView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
+        prebidDisplayView = new PrebidDisplayView(context, mockDisplayViewListener, mockDisplayVideoListener, adUnitConfiguration, mockResponse);
         reset(mockDisplayViewListener);
     }
 
