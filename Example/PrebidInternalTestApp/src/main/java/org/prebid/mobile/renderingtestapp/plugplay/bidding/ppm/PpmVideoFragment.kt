@@ -19,9 +19,11 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 import android.os.Bundle
 import android.view.View
 import org.prebid.mobile.AdSize
+import org.prebid.mobile.LogUtil
 import org.prebid.mobile.api.data.VideoPlacementType
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
+import org.prebid.mobile.api.rendering.listeners.BannerVideoListener
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
@@ -29,9 +31,9 @@ import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerVideo
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 
-open class PpmVideoFragment : AdFragment(), BannerViewListener {
+open class PpmVideoFragment : AdFragment(), BannerViewListener, BannerVideoListener {
 
-    private val TAG = PpmBannerFragment::class.java.simpleName
+    private val TAG = PpmVideoFragment::class.java.simpleName
 
     override val layoutRes = R.layout.fragment_bidding_banner_video
 
@@ -68,6 +70,7 @@ open class PpmVideoFragment : AdFragment(), BannerViewListener {
         )
         bannerView?.videoPlacementType = VideoPlacementType.IN_BANNER
         bannerView?.setBannerListener(this)
+        bannerView?.setBannerVideoListener(this)
         binding.viewContainer.addView(bannerView)
         return bannerView
     }
@@ -81,27 +84,52 @@ open class PpmVideoFragment : AdFragment(), BannerViewListener {
     }
 
     override fun onAdFailed(bannerView: BannerView?, exception: AdException?) {
+        LogUtil.debug(TAG, "onAdFailed")
         resetEventButtons()
         events.failed(true)
         binding.btnLoad.isEnabled = true
     }
 
     override fun onAdLoaded(bannerView: BannerView?) {
+        LogUtil.debug(TAG, "onAdLoaded")
         resetEventButtons()
         events.loaded(true)
         binding.btnLoad.isEnabled = true
     }
 
     override fun onAdClicked(bannerView: BannerView?) {
+        LogUtil.debug(TAG, "onAdClicked")
         events.clicked(true)
     }
 
     override fun onAdClosed(bannerView: BannerView?) {
+        LogUtil.debug(TAG, "onAdClosed")
         events.closed(true)
     }
 
     override fun onAdDisplayed(bannerView: BannerView?) {
+        LogUtil.debug(TAG, "onAdDisplayed")
         events.displayed(true)
+    }
+
+    override fun onVideoCompleted(bannerView: BannerView?) {
+        LogUtil.debug(TAG, "onVideoCompleted")
+    }
+
+    override fun onVideoPaused(bannerView: BannerView?) {
+        LogUtil.debug(TAG, "onVideoPaused")
+    }
+
+    override fun onVideoResumed(bannerView: BannerView?) {
+        LogUtil.debug(TAG, "onVideoResumed")
+    }
+
+    override fun onVideoUnMuted(bannerView: BannerView?) {
+        LogUtil.debug(TAG, "onVideoUnMuted")
+    }
+
+    override fun onVideoMuted(bannerView: BannerView?) {
+        LogUtil.debug(TAG, "onVideoMuted")
     }
 
     override fun onDestroyView() {
@@ -119,5 +147,4 @@ open class PpmVideoFragment : AdFragment(), BannerViewListener {
         fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
 
     }
-
 }

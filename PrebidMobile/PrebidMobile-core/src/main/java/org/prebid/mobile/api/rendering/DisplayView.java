@@ -22,6 +22,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -33,6 +34,7 @@ public class DisplayView extends FrameLayout {
     private View adView;
     private AdUnitConfiguration adUnitConfiguration;
     private DisplayViewListener displayViewListener;
+    private DisplayVideoListener displayVideoListener;
 
     public DisplayView(
             @NonNull Context context,
@@ -45,12 +47,35 @@ public class DisplayView extends FrameLayout {
         this.adUnitConfiguration = adUnitConfiguration;
         this.displayViewListener = displayViewListener;
 
+        createBannerAdView(context, bidResponse);
+    }
+
+    public DisplayView(
+            @NonNull Context context,
+            DisplayViewListener displayViewListener,
+            DisplayVideoListener displayVideoListener,
+            @NonNull AdUnitConfiguration adUnitConfiguration,
+            @NonNull BidResponse bidResponse
+    ) {
+        super(context);
+
+        this.adUnitConfiguration = adUnitConfiguration;
+        this.displayViewListener = displayViewListener;
+        this.displayVideoListener = displayVideoListener;
+
+        createBannerAdView(context, bidResponse);
+    }
+
+    private void createBannerAdView(
+            @NonNull Context context,
+            @NonNull BidResponse bidResponse
+    ) {
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {
             PrebidMobilePluginRenderer plugin = PrebidMobilePluginRegister.getInstance().getPluginForPreferredRenderer(bidResponse);
             if (plugin != null) {
                 adUnitConfiguration.modifyUsingBidResponse(bidResponse);
-                adView = plugin.createBannerAdView(context, displayViewListener, adUnitConfiguration, bidResponse);
+                adView = plugin.createBannerAdView(context, displayViewListener, displayVideoListener, adUnitConfiguration, bidResponse);
                 addView(adView);
             }
         });
@@ -59,5 +84,6 @@ public class DisplayView extends FrameLayout {
     public void destroy() {
         adUnitConfiguration = null;
         displayViewListener = null;
+        displayVideoListener = null;
     }
 }

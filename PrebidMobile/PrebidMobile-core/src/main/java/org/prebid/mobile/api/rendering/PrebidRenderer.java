@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.BuildConfig;
@@ -57,10 +58,11 @@ public class PrebidRenderer implements PrebidMobilePluginRenderer {
     public View createBannerAdView(
             @NonNull Context context,
             @NonNull DisplayViewListener displayViewListener,
+            @Nullable DisplayVideoListener displayVideoListener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse bidResponse
     ) {
-        return new PrebidDisplayView(context, displayViewListener, adUnitConfiguration, bidResponse);
+        return new PrebidDisplayView(context, displayViewListener, displayVideoListener, adUnitConfiguration, bidResponse);
     }
 
     @Override

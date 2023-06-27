@@ -14,6 +14,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
 public class FakePrebidMobilePluginRenderer {
@@ -37,6 +38,7 @@ public class FakePrebidMobilePluginRenderer {
             public View createBannerAdView(
                     @NonNull Context context,
                     @NonNull DisplayViewListener displayViewListener,
+                    @Nullable DisplayVideoListener displayVideoListener,
                     @NonNull AdUnitConfiguration adUnitConfiguration,
                     @NonNull BidResponse bidResponse
             ) {

@@ -51,10 +51,14 @@ public class NativeTitleAsset extends NativeAsset {
     }
 
     @Override
-    public JSONObject getJsonObject() {
+    public JSONObject getJsonObject(int idCount) {
         JSONObject result = new JSONObject();
 
         try {
+            if (PrebidMobile.shouldAssignNativeAssetID()) {
+                result.putOpt("id", idCount);
+            }
+
             result.putOpt("required", required ? 1 : 0);
             result.putOpt("ext", assetExt);
 

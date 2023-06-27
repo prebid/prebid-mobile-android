@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface;
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
@@ -46,6 +47,7 @@ public interface PrebidMobilePluginRenderer {
     View createBannerAdView(
             @NonNull Context context,
             @NonNull DisplayViewListener displayViewListener,
+            @Nullable DisplayVideoListener displayVideoListener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse bidResponse
     );

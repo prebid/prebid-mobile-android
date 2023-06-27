@@ -31,6 +31,7 @@ import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.BannerAdPosition;
 import org.prebid.mobile.api.data.VideoPlacementType;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.listeners.BannerVideoListener;
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -39,6 +40,7 @@ import org.prebid.mobile.rendering.bidding.interfaces.BannerEventHandler;
 import org.prebid.mobile.rendering.bidding.interfaces.StandaloneBannerEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
@@ -72,6 +74,8 @@ public class BannerViewTest {
     @Mock
     private BannerViewListener mockBannerListener;
     @Mock
+    private BannerVideoListener mockBannerVideoListener;
+    @Mock
     private DisplayView mockDisplayView;
     @Mock
     private ScreenStateReceiver mockScreenStateReceiver;
@@ -88,6 +92,7 @@ public class BannerViewTest {
         WhiteBox.field(BannerView.class, "displayView").set(bannerView, mockDisplayView);
         WhiteBox.field(BannerView.class, "screenStateReceiver").set(bannerView, mockScreenStateReceiver);
         bannerView.setBannerListener(mockBannerListener);
+        bannerView.setBannerVideoListener(mockBannerVideoListener);
 
         assertEquals(BannerAdPosition.UNDEFINED.getValue(), bannerView.getAdPosition().getValue());
     }
@@ -387,6 +392,41 @@ public class BannerViewTest {
     }
 
     @Test
+    public void whenDisplayVideoOnVideoCompleted_CallBannerVideoListenerOnVideoCompleted()
+            throws IllegalAccessException {
+        getDisplayVideoListener().onVideoCompleted();
+        verify(mockBannerVideoListener).onVideoCompleted(bannerView);
+    }
+
+    @Test
+    public void whenDisplayVideoOnVideoPaused_CallBannerVideoListenerOnVideoPaused()
+            throws IllegalAccessException {
+        getDisplayVideoListener().onVideoPaused();
+        verify(mockBannerVideoListener).onVideoPaused(bannerView);
+    }
+
+    @Test
+    public void whenDisplayVideoOnVideoResumed_CallBannerVideoListenerOnVideoResumed()
+            throws IllegalAccessException {
+        getDisplayVideoListener().onVideoResumed();
+        verify(mockBannerVideoListener).onVideoResumed(bannerView);
+    }
+
+    @Test
+    public void whenDisplayVideoOnVideoUnMuted_CallBannerVideoListenerOnVideoUnMuted()
+            throws IllegalAccessException {
+        getDisplayVideoListener().onVideoUnMuted();
+        verify(mockBannerVideoListener).onVideoUnMuted(bannerView);
+    }
+
+    @Test
+    public void whenDisplayVideoOnVideoMuted_CallBannerVideoListenerOnVideoMuted()
+            throws IllegalAccessException {
+        getDisplayVideoListener().onVideoMuted();
+        verify(mockBannerVideoListener).onVideoMuted(bannerView);
+    }
+
+    @Test
     public void whenStopRefresh_BidLoaderCancelRefresh() {
         bannerView.stopRefresh();
 
@@ -490,6 +530,15 @@ public class BannerViewTest {
     private DisplayViewListener getDisplayViewListener() {
         try {
             return (DisplayViewListener) WhiteBox.field(BannerView.class, "displayViewListener").get(bannerView);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private DisplayVideoListener getDisplayVideoListener() {
+        try {
+            return (DisplayVideoListener) WhiteBox.field(BannerView.class, "displayVideoListener").get(bannerView);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }

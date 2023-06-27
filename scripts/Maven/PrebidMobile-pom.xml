@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.prebid</groupId>
     <artifactId>prebid-mobile-sdk</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
     <packaging>jar</packaging>
 
     <name>Prebid Mobile Android SDK</name>
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>org.prebid</groupId>
             <artifactId>prebid-mobile-sdk-core</artifactId>
-            <version>2.1.0</version>
+            <version>2.1.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

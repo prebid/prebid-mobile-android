@@ -20,6 +20,6 @@ public abstract class NativeAsset {
         return type;
     }
 
-    public abstract JSONObject getJsonObject();
+    public abstract JSONObject getJsonObject(int idCount);
 
 }
