@@ -16,6 +16,7 @@
 
 package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +28,7 @@ public class PluginRendererList extends BaseBid {
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        toJSON(jsonObject, "plugin_renderers", this.renderers); // TODO it will not handle the list, make a test with proxyman
+        toJSON(jsonObject, "plugin_renderers", this.renderers);
         return jsonObject;
     }
 
@@ -37,5 +38,19 @@ public class PluginRendererList extends BaseBid {
 
     public List<PluginRenderer> getList() {
         return this.renderers;
+    }
+
+    @Override
+    protected void toJSON(JSONObject jsonObject, String key, Object value) throws JSONException {
+        JSONArray jsonArray = new JSONArray();
+        List<PluginRenderer> list = (List<PluginRenderer>) value;
+        for (PluginRenderer plugin : list) {
+            JSONObject pluginObj = new JSONObject();
+            pluginObj.put("name", plugin.getName());
+            pluginObj.put("version", plugin.getVersion());
+            pluginObj.put("token", plugin.getToken());
+            jsonArray.put(pluginObj);
+        }
+        jsonObject.put(key, jsonArray);
     }
 }

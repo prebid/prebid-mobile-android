@@ -16,7 +16,7 @@
 
 package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 
-public class PluginRenderer {
+public class PluginRenderer extends BaseBid {
     private String name;
     private String version;
     private String token;

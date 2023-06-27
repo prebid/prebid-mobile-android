@@ -773,6 +773,29 @@ public class BasicParameterBuilderTest {
         assertNull(video.startDelay);
     }
 
+    @Test
+    public void testPluginRenderers_listIsAvailable() {
+    }
+
+    @Test
+    public void testPluginRenderers_listIsNotAvailable() {
+    }
+
+    @Test
+    public void testPluginRenderers_setPluginRendererListCalled() {
+    }
+
+    @Test
+    public void testPluginRenderers_isDefaultPluginRendererTrue() {
+    }
+
+    @Test
+    public void testPluginRenderers_getPluginRendererListIsNotEmpty() {
+    }
+
+    @Test
+    public void testPluginRenderers_getPluginRendererListIsEmpty() {
+    }
 
     private VideoParameters createFullVideoParameters() {
         ArrayList<String> mimes = new ArrayList<>(2);
