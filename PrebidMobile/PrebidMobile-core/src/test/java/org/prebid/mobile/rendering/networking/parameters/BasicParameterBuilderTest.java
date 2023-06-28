@@ -23,7 +23,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
 import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_NAME;
 import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_VERSION;
 import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.VIDEO_INTERSTITIAL_PLAYBACK_END;
@@ -48,6 +47,8 @@ import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdPosition;
@@ -55,6 +56,7 @@ import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRenderer;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
@@ -64,6 +66,7 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
+import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -89,6 +92,7 @@ public class BasicParameterBuilderTest {
     private static final String USER_CUSTOM = "custom";
     private static final String USER_GENDER = "M";
     private static final String USER_BUYER_ID = "bid";
+    private PrebidMobilePluginRenderer otherPlugin = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, null, true, "FakePlugin");
 
     private Context context;
 
@@ -120,6 +124,8 @@ public class BasicParameterBuilderTest {
         PrebidMobile.isCoppaEnabled = false;
         PrebidMobile.clearStoredBidResponses();
         PrebidMobile.setStoredAuctionResponse(null);
+
+        PrebidMobilePluginRegister.getInstance().unregisterPlugin(otherPlugin);
     }
 
     @Test
@@ -774,27 +780,58 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
-    public void testPluginRenderers_listIsAvailable() {
+    public void whenSetPluginRendererListAndOriginalAdUnitTrue_pluginRendererListIsNull() throws JSONException {
+        // Given
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(true);
+        configuration.setAdFormat(AdFormat.BANNER);
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
+        BidRequest bidRequest = new BidRequest();
+        String actualBidRequest = bidRequest.getJsonObject().toString();
+
+        // When
+        builder.setPluginRendererList(bidRequest);
+
+        // Then
+        assertNull(bidRequest.getPluginRenderers());
+        assertEquals(actualBidRequest, bidRequest.getJsonObject().toString());
     }
 
     @Test
-    public void testPluginRenderers_listIsNotAvailable() {
+    public void whenSetPluginRendererListAndPluginIsDefaultOnly_pluginRendererListIsNull() throws JSONException {
+        // Given
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(false);
+        configuration.setAdFormat(AdFormat.BANNER);
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
+        BidRequest bidRequest = new BidRequest();
+        String actualBidRequest = bidRequest.getJsonObject().toString();
+
+        // When
+        builder.setPluginRendererList(bidRequest);
+
+        // Then
+        assertNull(bidRequest.getPluginRenderers());
+        assertEquals(actualBidRequest, bidRequest.getJsonObject().toString());
     }
 
     @Test
-    public void testPluginRenderers_setPluginRendererListCalled() {
-    }
+    public void whenSetPluginRendererListAndPluginIsDefaultOnly_pluginRendererListSizeIs2() throws JSONException {
+        // Given
+        PrebidMobilePluginRegister.getInstance().registerPlugin(otherPlugin);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(false);
+        configuration.setAdFormat(AdFormat.BANNER);
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
+        BidRequest bidRequest = new BidRequest();
 
-    @Test
-    public void testPluginRenderers_isDefaultPluginRendererTrue() {
-    }
+        // When
+        builder.setPluginRendererList(bidRequest);
 
-    @Test
-    public void testPluginRenderers_getPluginRendererListIsNotEmpty() {
-    }
-
-    @Test
-    public void testPluginRenderers_getPluginRendererListIsEmpty() {
+        // Then
+        List<PluginRenderer> bidRequestPluginRenderers = bidRequest.getPluginRenderers().getList();
+        assertTrue(((JSONObject)(bidRequest.getJsonObject().get("data"))).getJSONArray("plugin_renderers").length() == 2);
+        assertEquals(bidRequestPluginRenderers.get(0).getName(), otherPlugin.getName());
     }
 
     private VideoParameters createFullVideoParameters() {

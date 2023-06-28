@@ -21,11 +21,12 @@ public class FakePrebidMobilePluginRenderer {
     public static PrebidMobilePluginRenderer getFakePrebidRenderer(
             InterstitialController mockInterstitialController,
             View mockBannerAdView,
-            Boolean isSupportRenderingFor
+            Boolean isSupportRenderingFor,
+            String rendererName
     ) {
         return new PrebidMobilePluginRenderer() {
             @Override
-            public String getName() { return PREBID_MOBILE_RENDERER_NAME; }
+            public String getName() { return rendererName; }
 
             @Override
             public String getVersion() { return null; }

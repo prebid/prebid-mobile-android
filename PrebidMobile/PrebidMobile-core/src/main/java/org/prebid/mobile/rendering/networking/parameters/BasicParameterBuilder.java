@@ -435,14 +435,12 @@ public class BasicParameterBuilder extends ParameterBuilder {
         }
     }
 
-    @VisibleForTesting
-    public boolean isDefaultPluginRenderer() {
+    private boolean isDefaultPluginRenderer() {
         List<PluginRenderer> renderers = getPluginRendererList().getList();
         return renderers.size() == 1 && renderers.get(0).getName().equals(PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME);
     }
 
-    @VisibleForTesting
-    public PluginRendererList getPluginRendererList() {
+    private PluginRendererList getPluginRendererList() {
         List<PrebidMobilePluginRenderer> plugins = PrebidMobilePluginRegister.getInstance().getRTBListOfRenderersFor(adConfiguration);
         PluginRendererListMapper mapper = new PluginRendererListMapper();
         PluginRendererList rendererList = new PluginRendererList();
