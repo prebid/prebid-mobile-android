@@ -63,7 +63,6 @@ public class BidRequest extends BaseBid {
         toJSON(jsonObject, "source", source != null ? source.getJsonObject() : null);
         toJSON(jsonObject, "ext", ext != null ? ext.getJsonObject() : null);
         toJSON(jsonObject, "test", PrebidMobile.getPbsDebug() ? 1 : null);
-        toJSON(jsonObject, "data", pluginRendererList != null ? pluginRendererList.getJsonObject() : null);
 
         return jsonObject;
     }

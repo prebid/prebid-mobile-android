@@ -830,7 +830,7 @@ public class BasicParameterBuilderTest {
 
         // Then
         List<PluginRenderer> bidRequestPluginRenderers = bidRequest.getPluginRenderers().getList();
-        assertTrue(((JSONObject)(bidRequest.getJsonObject().get("data"))).getJSONArray("plugin_renderers").length() == 2);
+        assertTrue(((JSONObject)(bidRequest.getJsonObject().get("ext"))).getJSONArray("plugin_renderers").length() == 2);
         assertEquals(bidRequestPluginRenderers.get(0).getName(), otherPlugin.getName());
     }
 

@@ -26,11 +26,13 @@ import android.util.Pair;
 import androidx.annotation.VisibleForTesting;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerParameters;
 import org.prebid.mobile.DataObject;
 import org.prebid.mobile.ExternalUserId;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.TargetingParams;
@@ -432,6 +434,11 @@ public class BasicParameterBuilder extends ParameterBuilder {
     public void setPluginRendererList(BidRequest bidRequest) {
         if (!adConfiguration.isOriginalAdUnit() && !isDefaultPluginRenderer()) {
             bidRequest.setPluginRendererList(getPluginRendererList());
+            try {
+                bidRequest.getExt().put(bidRequest.getPluginRenderers().getJsonObject());
+            } catch (JSONException e) {
+                LogUtil.error("setPluginRendererList", e.getMessage());
+            }
         }
     }
 
