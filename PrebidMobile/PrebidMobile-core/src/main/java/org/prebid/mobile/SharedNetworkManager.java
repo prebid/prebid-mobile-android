@@ -48,6 +48,7 @@ public class SharedNetworkManager {
     private static final String permission = "android.permission.ACCESS_NETWORK_STATE";
     private boolean permitted;
     private ImpressionTrackerListener impressionTrackerListener;
+    private ClickTrackerListener clickTrackerListener;
 
     private SharedNetworkManager(Context context) {
         int permissionStatus = context.getPackageManager().checkPermission(
@@ -78,6 +79,13 @@ public class SharedNetworkManager {
         startTimer(context);
     }
 
+    synchronized void addClickTrackerURL(String url, Context context, ClickTrackerListener clickTrackerListener) {
+        LogUtil.debug("SharedNetworkManager adding URL for Network Retry");
+        this.clickTrackerListener = clickTrackerListener;
+        urls.add(new UrlObject(url));
+        startTimer(context);
+    }
+
     private void startTimer(Context context) {
         if (retryTimer == null) {
             // check Network Connectivity after a certain period
@@ -104,6 +112,10 @@ public class SharedNetworkManager {
                                                     // Nothing more to do just print logs and exit.
                                                     if (impressionTrackerListener != null) {
                                                         impressionTrackerListener.onImpressionTrackerFired();
+                                                    }
+
+                                                    if (clickTrackerListener != null) {
+                                                        clickTrackerListener.onClickTrackerFired();
                                                     }
                                                 }
 

@@ -40,6 +40,7 @@ public class PrebidNativeAd {
     private static final String TAG = "PrebidNativeAd";
 
     private boolean impressionIsNotNotified = true;
+    private boolean clickIsNotNotified = true;
 
     private final ArrayList<NativeTitle> titles = new ArrayList<>();
     private final ArrayList<NativeImage> images = new ArrayList<>();
@@ -47,11 +48,14 @@ public class PrebidNativeAd {
     private String clickUrl;
     @Nullable
     private ArrayList<String> imp_trackers;
+    @Nullable
+    private ArrayList<String> click_trackers;
     private VisibilityDetector visibilityDetector;
     private boolean expired;
     private View registeredView;
     private PrebidNativeAdEventListener listener;
     private ArrayList<ImpressionTracker> impressionTrackers;
+    private ArrayList<ClickTracker> clickTrackers;
     private String winEvent;
     private String impEvent;
 
@@ -78,6 +82,7 @@ public class PrebidNativeAd {
                                 ad.visibilityDetector = null;
                             }
                             ad.impressionTrackers = null;
+                            ad.clickTrackers = null;
                             ad.listener = null;
                         }
                     }
@@ -134,6 +139,20 @@ public class PrebidNativeAd {
                         }
                         ad.setClickUrl(url);
                     }
+
+                    if (link.has("clicktrackers")) {
+                        JSONArray clicktrackers = link.getJSONArray("clicktrackers");
+                        if (clicktrackers.length() > 0) {
+                            ad.click_trackers = new ArrayList<>();
+                            for (int count = 0; count < clicktrackers.length(); count++) {
+                                String clickTrackerUrl = clicktrackers.getString(count);
+                                if (clickTrackerUrl.contains("{AUCTION_PRICE}") && details.has("price")) {
+                                    clickTrackerUrl = clickTrackerUrl.replace("{AUCTION_PRICE}", details.getString("price"));
+                                }
+                                ad.click_trackers.add(clickTrackerUrl);
+                            }
+                        }
+                    }
                 }
 
                 if (adm.has("eventtrackers")) {
@@ -162,8 +181,8 @@ public class PrebidNativeAd {
     }
 
     private static void parseEvents(
-        JSONObject bidJson,
-        PrebidNativeAd ad
+            JSONObject bidJson,
+            PrebidNativeAd ad
     ) {
         ad.winEvent = EventsNotifier.parseEvent("win", bidJson);
         ad.impEvent = EventsNotifier.parseEvent("imp", bidJson);
@@ -398,14 +417,15 @@ public class PrebidNativeAd {
             if (listener != null) {
                 listener.onAdClicked();
             }
+            fireClickTrackers(v.getContext());
             return true;
         }
         return false;
     }
 
     private boolean openNativeIntent(
-        String url,
-        Context context
+            String url,
+            Context context
     ) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -429,6 +449,15 @@ public class PrebidNativeAd {
         if (impressionIsNotNotified) {
             impressionIsNotNotified = false;
             EventsNotifier.notify(impEvent);
+        }
+    }
+
+    private void fireClickTrackers(Context context) {
+        if (click_trackers == null) {
+            return;
+        }
+        for (String url: click_trackers) {
+            ClickTracker.createAndFire(url, context, null);
         }
     }
 
