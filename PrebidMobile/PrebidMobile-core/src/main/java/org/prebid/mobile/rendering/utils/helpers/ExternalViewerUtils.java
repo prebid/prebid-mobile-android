@@ -146,6 +146,9 @@ public class ExternalViewerUtils {
             return;
         }
         Intent intent = new Intent(Intent.ACTION_VIEW);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        }
         intent.setData(Uri.parse(url));
         if (URLUtil.isValidUrl(url) || isActivityCallable(context, intent)) {
             startActivity(context, intent);
