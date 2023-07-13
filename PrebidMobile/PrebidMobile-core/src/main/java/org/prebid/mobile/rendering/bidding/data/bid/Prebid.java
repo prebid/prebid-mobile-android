@@ -124,6 +124,7 @@ public class Prebid {
         if (config.isOriginalAdUnit() && config.getAdFormats().size() > 1) {
             Utils.addValue(targeting, "includeformat", "true");
         }
+        Utils.addValue(targeting, "includewinners", PrebidMobile.getIncludeWinnersFlag());
         Utils.addValue(prebid, "targeting", targeting);
 
         if (!TargetingParams.getAccessControlList().isEmpty()) {
