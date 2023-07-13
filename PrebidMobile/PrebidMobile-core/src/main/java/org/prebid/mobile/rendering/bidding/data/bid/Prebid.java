@@ -125,6 +125,8 @@ public class Prebid {
             Utils.addValue(targeting, "includeformat", "true");
         }
         Utils.addValue(targeting, "includewinners", PrebidMobile.getIncludeWinnersFlag());
+        Utils.addValue(targeting, "includebidderkeys", PrebidMobile.getIncludeBidderKeysFlag());
+
         Utils.addValue(prebid, "targeting", targeting);
 
         if (!TargetingParams.getAccessControlList().isEmpty()) {

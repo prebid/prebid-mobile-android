@@ -125,6 +125,7 @@ public class PrebidMobile {
     private static List<ExternalUserId> externalUserIds = new ArrayList<>();
     private static HashMap<String, String> customHeaders = new HashMap<>();
     private static boolean includeWinners = false;
+    private static boolean includeBidderKeys = false;
 
     private PrebidMobile() {
     }
@@ -366,6 +367,14 @@ public class PrebidMobile {
 
     public static boolean getIncludeWinnersFlag() {
         return PrebidMobile.includeWinners;
+    }
+
+    public static boolean setIncludeBidderKeysFlag(boolean includeBidderKeys) {
+        return PrebidMobile.includeBidderKeys = includeBidderKeys;
+    }
+
+    public static boolean getIncludeBidderKeysFlag() {
+        return PrebidMobile.includeBidderKeys;
     }
 
     // TODO not ready, wait for rendering delegation full release
