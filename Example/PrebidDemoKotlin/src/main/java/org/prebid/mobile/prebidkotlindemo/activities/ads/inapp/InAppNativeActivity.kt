@@ -15,8 +15,6 @@
  */
 package org.prebid.mobile.prebidkotlindemo.activities.ads.inapp
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Button
@@ -24,7 +22,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import org.prebid.mobile.*
-import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 import org.prebid.mobile.prebidkotlindemo.utils.ImageUtils
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
@@ -35,8 +32,7 @@ class InAppNativeActivity : BaseAdActivity() {
         const val CONFIG_ID = "prebid-ita-banner-native-styles"
     }
 
-    private var nativeAdUnit: MediationNativeAdUnit? = null
-
+    private var nativeAdUnit: NativeAdUnit? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,14 +42,14 @@ class InAppNativeActivity : BaseAdActivity() {
 
     private fun createAd() {
         val extras = Bundle()
-        nativeAdUnit = configureNativeAdUnit(extras)
-        nativeAdUnit?.fetchDemand {
+        nativeAdUnit = configureNativeAdUnit()
+        nativeAdUnit?.fetchDemand(extras) {
             inflatePrebidNativeAd(NativeAdProvider.getNativeAd(extras)!!)
         }
     }
 
-    private fun configureNativeAdUnit(extras: Bundle): MediationNativeAdUnit {
-        val nativeAdUnit = MediationNativeAdUnit(CONFIG_ID, extras)
+    private fun configureNativeAdUnit(): NativeAdUnit {
+        val nativeAdUnit = NativeAdUnit(CONFIG_ID)
 
         nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC)
         nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED)
@@ -107,15 +103,18 @@ class InAppNativeActivity : BaseAdActivity() {
         nativeContainer.orientation = LinearLayout.VERTICAL
         val iconAndTitle = LinearLayout(this)
         iconAndTitle.orientation = LinearLayout.HORIZONTAL
+
         val icon = ImageView(this)
         icon.layoutParams = LinearLayout.LayoutParams(160, 160)
         ImageUtils.download(ad.iconUrl, icon)
         iconAndTitle.addView(icon)
+
         val title = TextView(this)
         title.textSize = 20f
         title.text = ad.title
         iconAndTitle.addView(title)
         nativeContainer.addView(iconAndTitle)
+
         val image = ImageView(this)
         image.layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -123,18 +122,28 @@ class InAppNativeActivity : BaseAdActivity() {
         )
         ImageUtils.download(ad.imageUrl, image)
         nativeContainer.addView(image)
+
         val description = TextView(this)
         description.textSize = 18f
         description.text = ad.description
         nativeContainer.addView(description)
+
         val cta = Button(this)
         cta.text = ad.callToAction
-        cta.setOnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://openx.com"))
-            startActivity(browserIntent)
-        }
         nativeContainer.addView(cta)
+
         adWrapperView.addView(nativeContainer)
+
+        ad.registerViewList(
+            adWrapperView,
+            listOf(icon, title, image, description, cta),
+            object : PrebidNativeAdEventListener {
+                override fun onAdClicked() {}
+
+                override fun onAdImpression() {}
+
+                override fun onAdExpired() {}
+            })
     }
 
     override fun onDestroy() {
