@@ -816,7 +816,7 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
-    public void whenSetPluginRendererListAndPluginIsDefaultOnly_pluginRendererListSizeIs2() throws JSONException {
+    public void whenSetPluginRendererList_pluginRendererIsIndexed() throws JSONException {
         // Given
         PrebidMobilePluginRegister.getInstance().registerPlugin(otherPlugin);
         AdUnitConfiguration configuration = new AdUnitConfiguration();
@@ -832,8 +832,10 @@ public class BasicParameterBuilderTest {
         List<PluginRenderer> bidRequestPluginRenderers = bidRequest.getPluginRenderers().getList();
         JSONObject extObj = ((JSONObject)(bidRequest.getJsonObject().get("ext")));
         JSONObject sdkObj = (JSONObject)(extObj.get("sdk"));
+        // Default plugin is indexed and additional plugin is indexed
         assertTrue(sdkObj.getJSONArray("renderers").length() == 2);
         assertEquals(bidRequestPluginRenderers.get(0).getName(), otherPlugin.getName());
+        assertEquals(bidRequestPluginRenderers.get(1).getName(), PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME);
     }
 
     private VideoParameters createFullVideoParameters() {
