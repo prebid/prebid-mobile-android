@@ -16,8 +16,6 @@
 
 package org.prebid.mobile.rendering.bidding.data.bid;
 
-import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PLUGIN_RENDERER_KEY;
-
 import android.content.Context;
 import android.util.Pair;
 
@@ -42,6 +40,8 @@ import java.util.List;
 public class BidResponse {
     private final static String TAG = BidResponse.class.getSimpleName();
     public static final String KEY_CACHE_ID = "hb_cache_id_local";
+    public static final String KEY_RENDERER_NAME = "renderername";
+    public static final String KEY_RENDERER_VERSION = "rendererversion";
 
     // ID of the bid request to which this is a response
     private String id;
@@ -227,7 +227,15 @@ public class BidResponse {
     public String getPreferredPluginRendererName() {
         Bid bid = getWinningBid();
         if (bid != null) {
-            return bid.getPrebid().getTargeting().get(PLUGIN_RENDERER_KEY);
+            return bid.getPrebid().getMeta().get(KEY_RENDERER_NAME);
+        }
+        return null;
+    }
+
+    public String getPreferredPluginRendererVersion() {
+        Bid bid = getWinningBid();
+        if (bid != null) {
+            return bid.getPrebid().getMeta().get(KEY_RENDERER_VERSION);
         }
         return null;
     }

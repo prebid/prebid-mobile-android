@@ -38,7 +38,9 @@ public class PrebidTest {
         assertNotNull(prebid);
         assertNotNull(prebid.getCache());
         assertNotNull(prebid.getTargeting());
+        assertNotNull(prebid.getMeta());
         assertEquals(3, prebid.getTargeting().size());
+        assertEquals(2, prebid.getMeta().size());
         assertEquals("type", prebid.getType());
     }
 

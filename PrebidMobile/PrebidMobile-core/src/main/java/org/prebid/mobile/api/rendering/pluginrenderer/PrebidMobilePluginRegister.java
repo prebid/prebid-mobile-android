@@ -29,7 +29,6 @@ import java.util.Map;
 
 public class PrebidMobilePluginRegister {
 
-    public static final String PLUGIN_RENDERER_KEY = "plugin_renderer_key";
     public static final String PREBID_MOBILE_RENDERER_NAME = "PrebidRenderer";
 
     private static final PrebidMobilePluginRegister instance = new PrebidMobilePluginRegister();
