@@ -40,8 +40,8 @@ import java.util.List;
 public class BidResponse {
     private final static String TAG = BidResponse.class.getSimpleName();
     public static final String KEY_CACHE_ID = "hb_cache_id_local";
-    public static final String KEY_RENDERER_NAME = "renderername";
-    public static final String KEY_RENDERER_VERSION = "rendererversion";
+    public static final String KEY_RENDERER_NAME = "rendererName";
+    public static final String KEY_RENDERER_VERSION = "rendererVersion";
 
     // ID of the bid request to which this is a response
     private String id;
