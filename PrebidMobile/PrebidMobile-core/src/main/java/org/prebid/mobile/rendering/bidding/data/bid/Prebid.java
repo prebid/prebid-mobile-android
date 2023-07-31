@@ -121,11 +121,18 @@ public class Prebid {
         }
 
         JSONObject targeting = new JSONObject();
+
         if (config.isOriginalAdUnit() && config.getAdFormats().size() > 1) {
             Utils.addValue(targeting, "includeformat", "true");
         }
-        Utils.addValue(targeting, "includewinners", PrebidMobile.getIncludeWinnersFlag());
-        Utils.addValue(targeting, "includebidderkeys", PrebidMobile.getIncludeBidderKeysFlag());
+
+        if(PrebidMobile.getIncludeWinnersFlag()){
+            Utils.addValue(targeting, "includewinners", "true");
+        }
+
+        if(PrebidMobile.getIncludeBidderKeysFlag()){
+            Utils.addValue(targeting, "includebidderkeys", "true");
+        }
 
         Utils.addValue(prebid, "targeting", targeting);
 
