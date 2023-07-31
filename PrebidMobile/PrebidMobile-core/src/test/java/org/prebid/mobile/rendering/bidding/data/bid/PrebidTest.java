@@ -17,11 +17,14 @@
 package org.prebid.mobile.rendering.bidding.data.bid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Test;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.test.utils.ResourceUtils;
@@ -30,6 +33,11 @@ import java.io.IOException;
 
 public class PrebidTest {
 
+    @After
+    public void tearDown(){
+        PrebidMobile.setIncludeBidderKeysFlag(false);
+        PrebidMobile.setIncludeWinnersFlag(false);
+    }
     @Test
     public void whenFromJSONObjectAndJSONObjectPassed_ReturnParsedPrebid()
     throws IOException, JSONException {
