@@ -421,6 +421,19 @@ class DemoItemProvider private constructor() {
             )
             demoList.add(
                 DemoItem(
+                    getString(R.string.demo_bidding_in_app_banner_320_50_custom_renderer),
+                    ppmBannerAction,
+                    ppmBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_320x50_custom_renderer,
+                        null,
+                        320,
+                        50
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
                     getString(R.string.demo_bidding_in_app_banner_300_250),
                     ppmBannerAction,
                     ppmBannerTagList,
@@ -899,6 +912,20 @@ class DemoItemProvider private constructor() {
                     ppmInterstitialTagList,
                     createBannerBundle(
                         R.string.imp_prebid_dynamic,
+                        null,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC
+                    )
+                )
+            )
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_interstitial_320_480_custom_renderer),
+                    ppmInterstitialAction,
+                    ppmInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_interstitial_320_480_custom_renderer,
                         null,
                         MIN_WIDTH_PERC,
                         MIN_HEIGHT_PERC
