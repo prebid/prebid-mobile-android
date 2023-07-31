@@ -152,4 +152,25 @@ public class PrebidTest {
         config.setIsOriginalAdUnit(true);
         assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false, config).toString());
     }
+    @Test
+    public void includeWinners_EqualsTrue() throws JSONException {
+        PrebidMobile.setIncludeWinnersFlag(true);
+
+        JSONObject expected = new JSONObject();
+        StoredRequest expectedStoredRequest = new StoredRequest("test");
+        expected.put("storedrequest", expectedStoredRequest.toJSONObject());
+
+        JSONObject expectedCache = new JSONObject();
+        expectedCache.put("bids", new JSONObject());
+        expected.put("cache", expectedCache);
+
+        JSONObject expectedTargeting = new JSONObject();
+        expectedTargeting.put("includewinners", "true");
+
+        expected.put("targeting", expectedTargeting);
+
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setIsOriginalAdUnit(true);
+        assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false, config).toString());
+    }
 }
