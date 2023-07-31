@@ -25,7 +25,7 @@
     <string name="text_show">Show</string>
     <string name="text_retry">Retry</string>
     <string name="text_stop_refresh">Stop refresh</string>
-    <string name="enable_caching">Caching</string>
+    <string name="enable_caching">Enable Caching</string>
     <string name="enable_custom_renderer">CustomRenderer</string>
 
     <string name="title_preload_failed">Preload failed</string>
@@ -326,7 +326,6 @@
     <!--    Bidding configs-->
     <string name="prebid_account_id_prod">0689a263-318d-448b-a3d4-b02e8a709d9d</string>
     <string name="prebid_account_id_prod_no_bids">1768035c-74d3-4786-b056-13bd41f34bde</string>
-    <string name="prebid_account_id_prod_plugin_renderer">prebid-stored-request-custom-rendering-test</string>
     <string name="prebid_account_id_prod_enabled_events">prebid-stored-request-enabled-events</string>
 
     <string name="prebid_config_id_banner_320x50">50699c03-0910-477c-b4a4-911dbe2b9d42</string>
@@ -392,7 +391,7 @@
     <string name="loading">Loading…</string>
 
     <string name="label_auid">AdUnitId: %1$s</string>
-    <string name="text_switch_enable_gdpr">GDPR</string>
+    <string name="text_switch_enable_gdpr">Enable GDPR</string>
 
     <string name="dialog_configurator_title">Configure the Ad</string>
     <string name="dialog_configurator_load">Load the ad</string>

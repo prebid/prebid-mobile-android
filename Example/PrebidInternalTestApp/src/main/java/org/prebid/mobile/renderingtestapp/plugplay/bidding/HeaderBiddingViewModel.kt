@@ -19,13 +19,11 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.renderingtestapp.data.DemoItem
 import org.prebid.mobile.renderingtestapp.data.Tag
 import org.prebid.mobile.renderingtestapp.utils.ConfigurationViewSettings
 import org.prebid.mobile.renderingtestapp.utils.DemoItemProvider
 import org.prebid.mobile.renderingtestapp.utils.GdprHelper
-import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
 
 class HeaderBiddingViewModel(
         private val integrationCategories: Array<String>,
@@ -34,7 +32,6 @@ class HeaderBiddingViewModel(
 ) : ViewModel() {
 
     private var demoItemList: MutableList<DemoItem> = DemoItemProvider.getDemoList()
-    private val sampleCustomRenderer = SampleCustomRenderer()
 
     private var integrationSelectedPosition = 0
     private var adCategorySelectedPosition = 0
@@ -87,27 +84,6 @@ class HeaderBiddingViewModel(
 
     fun onGdprSwitchStateChanged(isChecked: Boolean) {
         gdprHelper.changeGdprState(isChecked)
-    }
-
-    fun isCustomRendererEnabled(): Boolean {
-        // TODO not ready, wait for rendering delegation full release
-//        return PrebidMobile.containsPluginRenderer(sampleCustomRenderer);
-        return false
-    }
-
-    fun onCustomRendererStateChanged(
-        isChecked: Boolean,
-        defaultAccountId: String,
-        customRendererAccountId: String
-    ) {
-        // TODO not ready, wait for rendering delegation full release
-//        if (isChecked) {
-//            PrebidMobile.registerPluginRenderer(sampleCustomRenderer)
-//            PrebidMobile.setPrebidServerAccountId(customRendererAccountId)
-//        } else {
-//            PrebidMobile.unregisterPluginRenderer(sampleCustomRenderer)
-//            PrebidMobile.setPrebidServerAccountId(defaultAccountId)
-//        }
     }
 
     fun onDemoItemClicked(item: DemoItem) {
