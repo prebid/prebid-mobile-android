@@ -111,4 +111,25 @@ public class PrebidTest {
                 Prebid.getJsonObjectForBidRequest("test", false, config).toString()
         );
     }
+
+    @Test
+    public void includeBiddersKeysAndIncludeWinners_EqualsFalse() throws JSONException {
+        PrebidMobile.setIncludeBidderKeysFlag(false);
+        PrebidMobile.setIncludeWinnersFlag(false);
+
+        JSONObject expected = new JSONObject();
+        StoredRequest expectedStoredRequest = new StoredRequest("test");
+        expected.put("storedrequest", expectedStoredRequest.toJSONObject());
+
+        JSONObject expectedCache = new JSONObject();
+        expectedCache.put("bids", new JSONObject());
+        expected.put("cache", expectedCache);
+
+        JSONObject expectedTargeting = new JSONObject();
+        expected.put("targeting", expectedTargeting);
+
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setIsOriginalAdUnit(true);
+        assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false, config).toString());
+    }
 }
