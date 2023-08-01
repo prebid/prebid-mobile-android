@@ -57,7 +57,6 @@ class HeaderBiddingFragment : BaseFragment() {
         initViewModel()
         initGdprSwitch()
         initCacheSwitch()
-        initCustomRendererSwitch()
         initIntegrationsSegmentControl(view)
         initAdCategoriesSegmentControl(view)
         initListView()
@@ -170,22 +169,6 @@ class HeaderBiddingFragment : BaseFragment() {
         switch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onGdprSwitchStateChanged(isChecked)
         }
-    }
-
-    private fun initCustomRendererSwitch() {
-        val switch = binding.switchEnableCustomRenderer
-        val customRendererAccountId = getString(R.string.prebid_account_id_prod_plugin_renderer)
-        val defaultAccountId = getString(R.string.prebid_account_id_prod)
-        switch.isChecked = viewModel.isCustomRendererEnabled()
-        switch.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.onCustomRendererStateChanged(
-                isChecked = isChecked,
-                customRendererAccountId = customRendererAccountId,
-                defaultAccountId =  defaultAccountId
-            )
-        }
-        // TODO not ready, wait for rendering delegation full release
-        switch.isEnabled = false
     }
 
     private fun initCacheSwitch() {

@@ -21,6 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -139,7 +140,8 @@ public class PrebidMobileTest extends BaseSetup {
         PrebidMobilePluginRenderer fakePrebidMobilePluginRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(
                 null,
                 null,
-                true
+                true,
+                PREBID_MOBILE_RENDERER_NAME
         );
 
         // When
@@ -157,7 +159,8 @@ public class PrebidMobileTest extends BaseSetup {
         PrebidMobilePluginRenderer fakePrebidMobilePluginRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(
                 null,
                 null,
-                true
+                true,
+                PREBID_MOBILE_RENDERER_NAME
         );
 
         // When

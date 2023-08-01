@@ -56,7 +56,7 @@ public class DisplayViewTest {
 
         adUnitConfiguration.setAdFormat(AdFormat.BANNER);
 
-        fakePrebidMobilePluginRenderer = Mockito.spy(FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, mockBannerView, true));
+        fakePrebidMobilePluginRenderer = Mockito.spy(FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, mockBannerView, true, PREBID_MOBILE_RENDERER_NAME));
 //        PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
         PrebidMobilePluginRegister.getInstance().registerPlugin(fakePrebidMobilePluginRenderer);
 

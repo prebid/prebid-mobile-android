@@ -29,7 +29,6 @@ import java.util.Map;
 
 public class PrebidMobilePluginRegister {
 
-    public static final String PLUGIN_RENDERER_KEY = "plugin_renderer_key";
     public static final String PREBID_MOBILE_RENDERER_NAME = "PrebidRenderer";
 
     private static final PrebidMobilePluginRegister instance = new PrebidMobilePluginRegister();
@@ -58,12 +57,12 @@ public class PrebidMobilePluginRegister {
     }
 
     // Returns the list of available renderers for the given ad unit for RT request
-    public List<String> getRTBListOfRenderersFor(AdUnitConfiguration adUnitConfiguration) {
-        List<String> compliantPlugins = new ArrayList<>();
+    public List<PrebidMobilePluginRenderer> getRTBListOfRenderersFor(AdUnitConfiguration adUnitConfiguration) {
+        List<PrebidMobilePluginRenderer> compliantPlugins = new ArrayList<>();
         for (Map.Entry<String, PrebidMobilePluginRenderer> entry : plugins.entrySet()) {
             PrebidMobilePluginRenderer renderer = entry.getValue();
             if (renderer.isSupportRenderingFor(adUnitConfiguration)) {
-                compliantPlugins.add(renderer.getName());
+                compliantPlugins.add(renderer);
             }
         }
         return compliantPlugins;

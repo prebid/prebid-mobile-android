@@ -25,7 +25,7 @@
     <string name="text_show">Show</string>
     <string name="text_retry">Retry</string>
     <string name="text_stop_refresh">Stop refresh</string>
-    <string name="enable_caching">Caching</string>
+    <string name="enable_caching">Enable Caching</string>
     <string name="enable_custom_renderer">CustomRenderer</string>
 
     <string name="title_preload_failed">Preload failed</string>
@@ -82,6 +82,7 @@
     <!--In-App Titles-->
     <string name="demo_bidding_in_app_banner_320_50">Banner 320x50 (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_events">Banner 320x50 Events (In-App)</string>
+    <string name="demo_bidding_in_app_banner_320_50_custom_renderer">Banner 320x50 [Custom Renderer] (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_no_bids">Banner 320x50 [noBids] (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_imp_prebid_random_bid"> Banner 320x50 [Bid - RANDOM noBids, Ad - RESPECTIVE]</string>
     <string name="demo_bidding_in_app_banner_300_250">Banner 300x250 (In-App)</string>
@@ -94,6 +95,7 @@
     <string name="demo_bidding_in_app_banner_multisize">Banner Multisize (In-App)</string>
     <string name="demo_bidding_in_app_banners_and_interstitial">Banners and Interstitial (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_320_480">Display Interstitial 320x480 (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_320_480_custom_renderer">Display Interstitial 320x480 [Custom Renderer] (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_320_480_no_bids">Display Interstitial 320x480 [noBids] (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_320_480_multiformat">Multiformat Interstitial 320x480 (In-App)</string>
     <string name="demo_bidding_in_app_banner_video_outstream">Video Outstream (In-App)</string>
@@ -326,7 +328,6 @@
     <!--    Bidding configs-->
     <string name="prebid_account_id_prod">0689a263-318d-448b-a3d4-b02e8a709d9d</string>
     <string name="prebid_account_id_prod_no_bids">1768035c-74d3-4786-b056-13bd41f34bde</string>
-    <string name="prebid_account_id_prod_plugin_renderer">prebid-stored-request-custom-rendering-test</string>
     <string name="prebid_account_id_prod_enabled_events">prebid-stored-request-enabled-events</string>
 
     <string name="prebid_config_id_banner_320x50">50699c03-0910-477c-b4a4-911dbe2b9d42</string>
@@ -343,9 +344,11 @@
     <string name="imp_prebid_id_banner_320x50_vast">prebid-demo-banner-incorrect-vast</string>
     <string name="imp_prebid_id_banner_300x250">prebid-ita-banner-300-250</string>
     <string name="adimp_prebid_id_banner_300x250">prebid-ita-banner-300-250</string>
+    <string name="imp_prebid_id_banner_320x50_custom_renderer">prebid-ita-banner-320-50-meta-custom-renderer</string>
     <string name="imp_prebid_id_banner_728x90">prebid-demo-banner-728-90</string>
     <string name="imp_prebid_id_banner_multisize">prebid-demo-banner-multisize</string>
     <string name="imp_prebid_id_interstitial_320_480">prebid-ita-display-interstitial-320-480</string>
+    <string name="imp_prebid_id_interstitial_320_480_custom_renderer">prebid-ita-display-interstitial-320-480-meta-custom-renderer</string>
 
     <string name="imp_prebid_dynamic">Imp id set in another place</string>
     <string name="imp_prebid_id_video_outstream">prebid-ita-video-outstream</string>
@@ -392,7 +395,7 @@
     <string name="loading">Loading…</string>
 
     <string name="label_auid">AdUnitId: %1$s</string>
-    <string name="text_switch_enable_gdpr">GDPR</string>
+    <string name="text_switch_enable_gdpr">Enable GDPR</string>
 
     <string name="dialog_configurator_title">Configure the Ad</string>
     <string name="dialog_configurator_load">Load the ad</string>

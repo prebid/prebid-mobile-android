@@ -48,7 +48,7 @@ public class PrebidMobilePluginRegisterTest {
         // When
         instance.registerPlugin(mockPlugin);
         instance.registerPlugin(mockPlugin2);
-        List<String> result = instance.getRTBListOfRenderersFor(mockAdUnitConfiguration);
+        List<PrebidMobilePluginRenderer> result = instance.getRTBListOfRenderersFor(mockAdUnitConfiguration);
 
         // Then
         assertTrue(result.isEmpty());
@@ -66,7 +66,7 @@ public class PrebidMobilePluginRegisterTest {
         // When
         instance.registerPlugin(mockPlugin);
         instance.registerPlugin(mockPlugin2);
-        List<String> result = instance.getRTBListOfRenderersFor(mockAdUnitConfiguration);
+        List<PrebidMobilePluginRenderer> result = instance.getRTBListOfRenderersFor(mockAdUnitConfiguration);
 
         // Then
         assertFalse(result.isEmpty());
@@ -85,7 +85,7 @@ public class PrebidMobilePluginRegisterTest {
         // When
         instance.registerPlugin(mockPlugin);
         instance.registerPlugin(mockPlugin2);
-        List<String> result = instance.getRTBListOfRenderersFor(mockAdUnitConfiguration);
+        List<PrebidMobilePluginRenderer> result = instance.getRTBListOfRenderersFor(mockAdUnitConfiguration);
 
         // Then
         assertFalse(result.isEmpty());
@@ -131,7 +131,7 @@ public class PrebidMobilePluginRegisterTest {
         // When
         instance.registerPlugin(mockPlugin);
         instance.unregisterPlugin(mockPlugin);
-        List<String> result = instance.getRTBListOfRenderersFor(mockAdUnitConfiguration);
+        List<PrebidMobilePluginRenderer> result = instance.getRTBListOfRenderersFor(mockAdUnitConfiguration);
 
         // Then
         assertTrue(result.isEmpty());
