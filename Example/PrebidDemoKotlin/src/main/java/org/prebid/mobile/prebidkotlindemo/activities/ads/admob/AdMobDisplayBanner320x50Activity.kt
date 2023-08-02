@@ -31,7 +31,7 @@ class AdMobDisplayBanner320x50Activity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "ca-app-pub-1875909575462531/3793078260"
-        const val CONFIG_ID = "imp-prebid-banner-320-50"
+        const val CONFIG_ID = "prebid-ita-banner-320-50"
         const val WIDTH = 320
         const val HEIGHT = 50
     }

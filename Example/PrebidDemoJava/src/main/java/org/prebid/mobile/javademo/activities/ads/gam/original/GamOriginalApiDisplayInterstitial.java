@@ -18,7 +18,7 @@ import org.prebid.mobile.javademo.activities.BaseAdActivity;
 public class GamOriginalApiDisplayInterstitial extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-display-interstitial";
-    private static final String CONFIG_ID = "imp-prebid-display-interstitial-320-480";
+    private static final String CONFIG_ID = "prebid-ita-display-interstitial-320-480";
 
     private AdUnit adUnit;
 

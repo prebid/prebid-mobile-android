@@ -26,7 +26,7 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid_oxb_html_interstitial"
-        const val CONFIG_ID = "imp-prebid-display-interstitial-320-480"
+        const val CONFIG_ID = "prebid-ita-display-interstitial-320-480"
     }
 
     private var adUnit: InterstitialAdUnit? = null

@@ -27,7 +27,7 @@ import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 class InAppVideoBannerActivity : BaseAdActivity() {
 
     companion object {
-        const val CONFIG_ID = "imp-prebid-video-outstream"
+        const val CONFIG_ID = "prebid-ita-video-outstream"
         const val WIDTH = 300
         const val HEIGHT = 250
     }

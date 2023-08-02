@@ -29,7 +29,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-display-interstitial"
-        const val CONFIG_ID = "imp-prebid-display-interstitial-320-480"
+        const val CONFIG_ID = "prebid-ita-display-interstitial-320-480"
     }
 
     private var adUnit: AdUnit? = null

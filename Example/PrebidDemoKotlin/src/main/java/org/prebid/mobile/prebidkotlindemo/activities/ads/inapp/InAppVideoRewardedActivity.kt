@@ -24,7 +24,7 @@ import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 class InAppVideoRewardedActivity : BaseAdActivity() {
 
     companion object {
-        const val CONFIG_ID = "imp-prebid-video-rewarded-320-480"
+        const val CONFIG_ID = "prebid-ita-video-rewarded-320-480"
     }
 
     private var adUnit: RewardedAdUnit? = null

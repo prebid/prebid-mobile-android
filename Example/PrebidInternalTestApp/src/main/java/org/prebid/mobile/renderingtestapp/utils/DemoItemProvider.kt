@@ -36,6 +36,9 @@ class DemoItemProvider private constructor() {
         private const val MIN_HEIGHT_PERC = 30
 
         private const val ppmBannerAction = R.id.action_header_bidding_to_in_app_banner
+        private const val ppmBannerSpecialSymbolsAction = R.id.action_header_bidding_to_in_app_banner_special_symbols
+        private const val ppmBannerActionMemoryLeakTesting =
+            R.id.action_header_bidding_to_in_app_banner_memory_leak_testing
         private const val ppmInterstitialAction = R.id.action_header_bidding_to_in_app_interstitial
         private const val ppmInterstitialMultiformatAction =
             R.id.action_header_bidding_to_in_app_interstitial_multiformat
@@ -89,12 +92,64 @@ class DemoItemProvider private constructor() {
             return context!!.getString(resId)
         }
 
+        private fun addSdkTestingExamples() {
+            demoList.addAll(
+                arrayListOf(
+                    DemoItem(
+                        getString(R.string.demo_bidding_sdk_testing_memory_leak_rendering_api_interstitial_display),
+                        R.id.action_header_bidding_to_interstitial_memory_leak_testing,
+                        listOf(Tag.ALL, Tag.IN_APP, Tag.INTERSTITIAL, Tag.REMOTE),
+                        createBannerBundle(
+                            R.string.imp_prebid_id_interstitial_320_480,
+                            null,
+                            MIN_WIDTH_PERC,
+                            MIN_HEIGHT_PERC
+                        )
+                    ),
+                    DemoItem(
+                        getString(R.string.demo_bidding_sdk_testing_memory_leak_rendering_api_interstitial_video),
+                        R.id.action_header_bidding_to_interstitial_memory_leak_testing,
+                        listOf(Tag.ALL, Tag.IN_APP, Tag.VIDEO, Tag.REMOTE),
+                        createBannerBundle(
+                            R.string.imp_prebid_id_video_interstitial_320_480,
+                            null,
+                            MIN_WIDTH_PERC,
+                            MIN_HEIGHT_PERC
+                        )
+                    ),
+                    DemoItem(
+                        getString(R.string.demo_bidding_sdk_testing_memory_leak_rendering_api_banner),
+                        ppmBannerActionMemoryLeakTesting,
+                        listOf(Tag.ALL, Tag.IN_APP, Tag.BANNER, Tag.REMOTE),
+                        createBannerBundle(
+                            R.string.imp_prebid_id_banner_320x50,
+                            null,
+                            320,
+                            50
+                        )
+                    ),
+                    DemoItem(
+                        getString(R.string.demo_bidding_sdk_testing_memory_leak_original_api),
+                        R.id.action_header_bidding_to_gam_original_banner_memory_leak_testing,
+                        listOf(Tag.ALL, Tag.ORIGINAL, Tag.BANNER, Tag.REMOTE),
+                        createBannerBundle(
+                            R.string.imp_prebid_id_banner_320x50,
+                            R.string.adunit_gam_banner_320_50_original,
+                            320,
+                            50
+                        )
+                    )
+                )
+            )
+        }
+
         private fun formPbsDemoList() {
             addGamOriginalExamples()
             addInAppPbsExamples()
             addGamPbsExamples()
             addAdMobPbsExamples()
             addApplovinMaxPbsExamples()
+            addSdkTestingExamples()
         }
 
         private fun addGamOriginalExamples() {
@@ -366,6 +421,19 @@ class DemoItemProvider private constructor() {
             )
             demoList.add(
                 DemoItem(
+                    getString(R.string.demo_bidding_in_app_banner_320_50_custom_renderer),
+                    ppmBannerAction,
+                    ppmBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_320x50_custom_renderer,
+                        null,
+                        320,
+                        50
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
                     getString(R.string.demo_bidding_in_app_banner_300_250),
                     ppmBannerAction,
                     ppmBannerTagList,
@@ -435,6 +503,19 @@ class DemoItemProvider private constructor() {
                     R.id.action_header_bidding_to_in_app_banner_in_layout,
                     ppmBannerTagList,
                     createBannerBundle(null, null, 320, 50)
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_banner_320_50_special_symbols),
+                    ppmBannerSpecialSymbolsAction,
+                    ppmBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_320x50,
+                        null,
+                        320,
+                        50
+                    )
                 )
             )
             demoList.add(
@@ -831,6 +912,20 @@ class DemoItemProvider private constructor() {
                     ppmInterstitialTagList,
                     createBannerBundle(
                         R.string.imp_prebid_dynamic,
+                        null,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC
+                    )
+                )
+            )
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_interstitial_320_480_custom_renderer),
+                    ppmInterstitialAction,
+                    ppmInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_interstitial_320_480_custom_renderer,
                         null,
                         MIN_WIDTH_PERC,
                         MIN_HEIGHT_PERC

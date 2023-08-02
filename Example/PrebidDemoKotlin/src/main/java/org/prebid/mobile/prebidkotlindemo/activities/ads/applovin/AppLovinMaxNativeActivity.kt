@@ -31,7 +31,7 @@ class AppLovinMaxNativeActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "f3bdfa9dd8da1c4d"
-        const val CONFIG_ID = "imp-prebid-banner-native-styles"
+        const val CONFIG_ID = "prebid-ita-banner-native-styles"
     }
 
     private var nativeAdLoader: MaxNativeAdLoader? = null

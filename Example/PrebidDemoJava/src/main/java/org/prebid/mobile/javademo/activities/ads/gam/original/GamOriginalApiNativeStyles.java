@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class GamOriginalApiNativeStyles extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-original-native-styles";
-    private static final String CONFIG_ID = "imp-prebid-banner-native-styles";
+    private static final String CONFIG_ID = "prebid-ita-banner-native-styles";
 
     private static NativeAdUnit nativeAdUnit;
 

@@ -45,6 +45,7 @@ import org.robolectric.RobolectricTestRunner;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.*;
+import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
 
 @RunWith(RobolectricTestRunner.class)
 public class RewardedAdUnitTest {
@@ -247,7 +248,7 @@ public class RewardedAdUnitTest {
         final Bid mockBid = mock(Bid.class);
         final RewardedVideoEventListener spyEventListener = spy(getEventListener());
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
-        PrebidMobilePluginRenderer fakePrebidRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(mockInterstitialController, null, true);
+        PrebidMobilePluginRenderer fakePrebidRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(mockInterstitialController, null, true, PREBID_MOBILE_RENDERER_NAME);
 //        PrebidMobile.registerPluginRenderer(fakePrebidRenderer);
         PrebidMobilePluginRegister.getInstance().registerPlugin(fakePrebidRenderer);
 

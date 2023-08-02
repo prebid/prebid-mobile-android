@@ -19,8 +19,10 @@ package org.prebid.mobile.rendering.networking;
 import android.os.AsyncTask;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import org.apache.http.conn.ConnectTimeoutException;
+import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.loading.FileDownloadTask;
@@ -32,6 +34,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -88,10 +91,12 @@ public class BaseNetworkTask
     protected void onPostExecute(GetUrlResult urlResult) {
         if (urlResult == null) {
             LogUtil.debug(TAG, "URL result is null");
+            destroy();
             return;
         }
         if (responseHandler == null) {
             LogUtil.debug(TAG, "No ResponseHandler on: may be a tracking event");
+            destroy();
             return;
         }
 
@@ -103,6 +108,7 @@ public class BaseNetworkTask
         urlResult.responseTime = delta;
         if (urlResult.getException() != null) {
             ((ResponseHandler) responseHandler).onErrorWithException(urlResult.getException(), delta);
+            destroy();
             return;
         }
 
@@ -110,24 +116,30 @@ public class BaseNetworkTask
         //Ex: <VAST version="2.0"> </VAST> is a wrong response for av calls. So should fail
         if (urlResult.responseString != null && urlResult.responseString.length() < 100 && urlResult.responseString.contains("<VAST")) {
             ((ResponseHandler) responseHandler).onError("Invalid VAST Response: less than 100 characters.", delta);
-        }
-        else {
+        } else {
             ((ResponseHandler) responseHandler).onResponse(urlResult);
         }
+
+        destroy();
     }
 
     @Override
-    protected void onCancelled() {
-        super.onCancelled();
+    protected void onCancelled(GetUrlResult getUrlResult) {
+        super.onCancelled(getUrlResult);
         LogUtil.debug(TAG, "Request cancelled. Disconnecting connection");
-        if (connection instanceof HttpURLConnection) {
-            ((HttpURLConnection) connection).disconnect();
-        }
+        destroy();
     }
 
     @Override
     protected void onProgressUpdate(Integer... progress) {
         super.onProgressUpdate(progress);
+    }
+
+    public void destroy() {
+        responseHandler = null;
+        if (connection instanceof HttpURLConnection) {
+            ((HttpURLConnection) connection).disconnect();
+        }
     }
 
     /*  NOTE THIS GETS OVERRIDDEN IN CHILD CLASS */
@@ -276,7 +288,7 @@ public class BaseNetworkTask
             try {
                 wr = new DataOutputStream(connection.getOutputStream());
                 if (param.queryParams != null) {
-                    wr.writeBytes(param.queryParams);
+                    sendRequest(param.queryParams, wr);
                 }
             } finally {
                 if (wr != null) {
@@ -290,9 +302,17 @@ public class BaseNetworkTask
         return connection;
     }
 
+    @VisibleForTesting
+    protected static void sendRequest(@NotNull String requestBody, @NotNull OutputStream requestStream) throws IOException {
+        byte[] bytes = requestBody.getBytes();
+        for (byte b : bytes) {
+            requestStream.write(b);
+        }
+    }
+
     private void setCustomHeadersIfAvailable(URLConnection connection) {
-        if(!PrebidMobile.getCustomHeaders().isEmpty()) {
-            for (Map.Entry<String, String> customHeader: PrebidMobile.getCustomHeaders().entrySet()) {
+        if (!PrebidMobile.getCustomHeaders().isEmpty()) {
+            for (Map.Entry<String, String> customHeader : PrebidMobile.getCustomHeaders().entrySet()) {
                 connection.setRequestProperty(customHeader.getKey(), customHeader.getValue());
             }
         }

@@ -14,17 +14,19 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
 public class FakePrebidMobilePluginRenderer {
     public static PrebidMobilePluginRenderer getFakePrebidRenderer(
             InterstitialController mockInterstitialController,
             View mockBannerAdView,
-            Boolean isSupportRenderingFor
+            Boolean isSupportRenderingFor,
+            String rendererName
     ) {
         return new PrebidMobilePluginRenderer() {
             @Override
-            public String getName() { return PREBID_MOBILE_RENDERER_NAME; }
+            public String getName() { return rendererName; }
 
             @Override
             public String getVersion() { return null; }
@@ -37,6 +39,7 @@ public class FakePrebidMobilePluginRenderer {
             public View createBannerAdView(
                     @NonNull Context context,
                     @NonNull DisplayViewListener displayViewListener,
+                    @Nullable DisplayVideoListener displayVideoListener,
                     @NonNull AdUnitConfiguration adUnitConfiguration,
                     @NonNull BidResponse bidResponse
             ) {

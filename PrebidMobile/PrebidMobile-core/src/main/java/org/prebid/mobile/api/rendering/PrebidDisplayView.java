@@ -28,6 +28,7 @@ import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.networking.WinNotifier;
@@ -49,6 +50,9 @@ public class PrebidDisplayView extends FrameLayout {
 
     @Nullable
     private DisplayViewListener displayViewListener;
+
+    @Nullable
+    private DisplayVideoListener displayVideoListener;
 
     @Nullable
     private InterstitialManager interstitialManager;
@@ -133,10 +137,36 @@ public class PrebidDisplayView extends FrameLayout {
         ) {
             notifyListenerClose();
         }
+
+        @Override
+        public void onPlayBackCompleted(@NonNull VideoView videoAdView) {
+            notifyVideoCompleted();
+        }
+
+        @Override
+        public void onPlaybackPaused() {
+            notifyVideoPaused();
+        }
+
+        @Override
+        public void onPlaybackResumed() {
+            notifyVideoResumed();
+        }
+
+        @Override
+        public void onVideoUnMuted() {
+            notifyVideoUnMuted();
+        }
+
+        @Override
+        public void onVideoMuted() {
+            notifyVideoMuted();
+        }
     };
     public PrebidDisplayView(
             @NonNull Context context,
             @NonNull DisplayViewListener listener,
+            @Nullable DisplayVideoListener displayVideoListener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse response
     ) {
@@ -144,6 +174,7 @@ public class PrebidDisplayView extends FrameLayout {
         interstitialManager = new InterstitialManager();
         this.adUnitConfiguration = adUnitConfiguration;
         displayViewListener = listener;
+        this.displayVideoListener = displayVideoListener;
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(response, () -> {
             try {
@@ -163,10 +194,11 @@ public class PrebidDisplayView extends FrameLayout {
     public PrebidDisplayView(
             @NonNull Context context,
             DisplayViewListener listener,
+            DisplayVideoListener displayVideoListener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull String responseId
     ) throws AdException {
-        this(context, listener, adUnitConfiguration, getBidResponseFromCache(responseId));
+        this(context, listener, displayVideoListener, adUnitConfiguration, getBidResponseFromCache(responseId));
     }
 
     @Override
@@ -243,6 +275,41 @@ public class PrebidDisplayView extends FrameLayout {
         LogUtil.debug(TAG, "onAdLoaded");
         if (displayViewListener != null) {
             displayViewListener.onAdLoaded();
+        }
+    }
+
+    private void notifyVideoPaused() {
+        LogUtil.debug(TAG, "onVideoPaused");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoPaused();
+        }
+    }
+
+    private void notifyVideoResumed() {
+        LogUtil.debug(TAG, "onVideoResumed");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoResumed();
+        }
+    }
+
+    private void notifyVideoMuted() {
+        LogUtil.debug(TAG, "onVideoMuted");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoMuted();
+        }
+    }
+
+    private void notifyVideoUnMuted() {
+        LogUtil.debug(TAG, "onVideoUnMuted");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoUnMuted();
+        }
+    }
+
+    private void notifyVideoCompleted() {
+        LogUtil.debug(TAG, "onVideoCompleted");
+        if (displayVideoListener != null) {
+            displayVideoListener.onVideoCompleted();
         }
     }
 

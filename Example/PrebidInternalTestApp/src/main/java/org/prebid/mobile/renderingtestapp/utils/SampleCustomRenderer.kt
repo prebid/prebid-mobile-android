@@ -29,6 +29,7 @@ import android.widget.ImageButton
 import org.prebid.mobile.api.data.AdFormat
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener
 import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer
 import org.prebid.mobile.configuration.AdUnitConfiguration
@@ -38,9 +39,9 @@ import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener
 
 class SampleCustomRenderer : PrebidMobilePluginRenderer {
 
-    private val pluginEventListenerMap = mutableMapOf<String, SampleCustomRendererEventListener>()
-
     override fun getName(): String = RENDERER_NAME
+
+    private val pluginEventListenerMap = mutableMapOf<String, SampleCustomRendererEventListener>()
 
     override fun getVersion(): String = "1.0.0"
 
@@ -62,6 +63,7 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
     override fun createBannerAdView(
         context: Context,
         displayViewListener: DisplayViewListener,
+        displayVideoListener: DisplayVideoListener?,
         adUnitConfiguration: AdUnitConfiguration,
         bidResponse: BidResponse
     ): View {

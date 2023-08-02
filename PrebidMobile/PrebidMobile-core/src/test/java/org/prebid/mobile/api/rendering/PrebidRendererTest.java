@@ -22,6 +22,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -65,7 +66,8 @@ public class PrebidRendererTest {
     @Test
     public void createBannerAdView_returnPrebidDisplayViewInstance() {
         DisplayViewListener mockDisplayViewListener = mock(DisplayViewListener.class);
-        View result = prebidRenderer.createBannerAdView(context, mockDisplayViewListener, mockAdUnitConfiguration, mockBidResponse);
+        DisplayVideoListener mockDisplayVideoListener = mock(DisplayVideoListener.class);
+        View result = prebidRenderer.createBannerAdView(context, mockDisplayViewListener, mockDisplayVideoListener, mockAdUnitConfiguration, mockBidResponse);
         assertTrue(result instanceof PrebidDisplayView);
     }
 

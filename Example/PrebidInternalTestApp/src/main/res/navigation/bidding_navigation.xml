@@ -36,6 +36,24 @@
             app:popUpTo="@+id/headerBiddingFragment" />
 
         <action
+            android:id="@+id/action_header_bidding_to_in_app_banner_special_symbols"
+            app:destination="@id/navigation_in_app_banner_special_symbols"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_banner_memory_leak_testing"
+            app:destination="@id/navigation_in_app_banner_memory_leak_testing"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
             android:id="@+id/action_header_bidding_to_in_app_multisize_banner"
             app:destination="@id/navigation_in_app_multisize_banner"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -56,6 +74,15 @@
         <action
             android:id="@+id/action_header_bidding_to_in_app_interstitial"
             app:destination="@id/navigation_in_app_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_interstitial_memory_leak_testing"
+            app:destination="@id/navigation_interstitial_memory_leak_testing"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -439,6 +466,9 @@
             android:id="@+id/action_header_bidding_to_gam_original_banner"
             app:destination="@id/gamOriginalBannerFragment" />
         <action
+            android:id="@+id/action_header_bidding_to_gam_original_banner_memory_leak_testing"
+            app:destination="@id/gamOriginalBannerMemoryLeakTestingFragment" />
+        <action
             android:id="@+id/action_header_bidding_to_gam_original_banner_multiformat"
             app:destination="@id/gamOriginalBannerFragmentMultiformat" />
         <action
@@ -480,6 +510,16 @@
         android:label="In-App Banner" />
 
     <fragment
+        android:id="@+id/navigation_in_app_banner_special_symbols"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannerSpecialSymbolsFragment"
+        android:label="In-App Banner" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_banner_memory_leak_testing"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.testing.MemoryLeakTestingRenderingApiBannerFragment"
+        android:label="In-App Banner Memory Leak Testing" />
+
+    <fragment
         android:id="@+id/navigation_in_app_banner_in_layout"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannerInLayoutFragment"
         android:label="In-App Banner In Layout" />
@@ -500,6 +540,11 @@
     <fragment
         android:id="@+id/navigation_in_app_interstitial"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmInterstitialFragment"
+        android:label="In-App Interstitial" />
+
+    <fragment
+        android:id="@+id/navigation_interstitial_memory_leak_testing"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.testing.MemoryLeakTestingRenderingApiInterstitialFragment"
         android:label="In-App Interstitial" />
 
     <fragment
@@ -667,6 +712,10 @@
         android:id="@+id/gamOriginalBannerFragment"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalBannerFragment"
         android:label="GamOriginalBannerFragment" />
+    <fragment
+        android:id="@+id/gamOriginalBannerMemoryLeakTestingFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.testing.MemoryLeakTestingOriginalApiBannerFragment"
+        android:label="GamOriginalBannerMemoryLeakTestingFragment" />
     <fragment
         android:id="@+id/gamOriginalBannerFragmentMultiformat"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalBannerRandomMultiformatFragment"

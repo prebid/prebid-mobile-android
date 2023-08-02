@@ -26,7 +26,7 @@ class GamRenderingApiVideoBannerActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid_oxb_300x250_banner"
-        const val CONFIG_ID = "imp-prebid-video-outstream"
+        const val CONFIG_ID = "prebid-ita-video-outstream"
         const val WIDTH = 300
         const val HEIGHT = 250
     }

@@ -30,7 +30,7 @@ class AdMobVideoRewardedActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "ca-app-pub-1875909575462531/1908212572"
-        const val CONFIG_ID = "imp-prebid-video-rewarded-320-480"
+        const val CONFIG_ID = "prebid-ita-video-rewarded-320-480"
     }
 
     private var rewardedAd: RewardedAd? = null

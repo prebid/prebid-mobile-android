@@ -16,27 +16,32 @@
 
 package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+public class PluginRenderer extends BaseBid {
+    private String name;
+    private String version;
+    private String token;
 
-import java.util.List;
-
-public class PluginRenderers extends BaseBid {
-
-    private List<String> renderers = null;
-
-    public PluginRenderers(List<String> renderers) {
-        this.renderers = renderers;
+    public String getName() {
+        return name;
     }
 
-    public JSONObject getJsonObject() throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-
-        toJSON(jsonObject, "plugin_renderers", this.renderers);
-        return jsonObject;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public List<String> getRenderers() {
-        return renderers;
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

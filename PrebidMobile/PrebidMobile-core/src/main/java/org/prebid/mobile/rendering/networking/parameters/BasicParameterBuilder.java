@@ -21,31 +21,37 @@ import static org.prebid.mobile.PrebidMobile.SDK_VERSION;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 
+import androidx.annotation.VisibleForTesting;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerParameters;
 import org.prebid.mobile.DataObject;
 import org.prebid.mobile.ExternalUserId;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRenderers;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRenderer;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRendererList;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.mapper.PluginRendererListMapper;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
@@ -147,9 +153,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
         if (PrebidMobile.isCoppaEnabled) {
             bidRequest.getRegs().coppa = 1;
         }
-        if (!adConfiguration.isOriginalAdUnit() && !isDefaultRenderer()) {
-            bidRequest.setPluginRenderers(getPluginRenderers());
-        }
+        setPluginRendererList(bidRequest);
     }
 
     private void configureSource(Source source, String uuid) {
@@ -426,13 +430,28 @@ public class BasicParameterBuilder extends ParameterBuilder {
         }
     }
 
-    private PluginRenderers getPluginRenderers() {
-        List<String> customRenderers = PrebidMobilePluginRegister.getInstance().getRTBListOfRenderersFor(adConfiguration);
-        return new PluginRenderers(customRenderers);
+    @VisibleForTesting
+    public void setPluginRendererList(BidRequest bidRequest) {
+        if (!adConfiguration.isOriginalAdUnit() && !isDefaultPluginRenderer()) {
+            bidRequest.setPluginRendererList(getPluginRendererList());
+            try {
+                bidRequest.getExt().put(bidRequest.getPluginRenderers().getJsonObject());
+            } catch (JSONException e) {
+                LogUtil.error("setPluginRendererList", e.getMessage());
+            }
+        }
     }
 
-    private boolean isDefaultRenderer() {
-        List<String> renderers = getPluginRenderers().getRenderers();
-        return renderers.size() == 1 && renderers.get(0).equals(PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME);
+    private boolean isDefaultPluginRenderer() {
+        List<PluginRenderer> renderers = getPluginRendererList().getList();
+        return renderers.size() == 1 && renderers.get(0).getName().equals(PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME);
+    }
+
+    private PluginRendererList getPluginRendererList() {
+        List<PrebidMobilePluginRenderer> plugins = PrebidMobilePluginRegister.getInstance().getRTBListOfRenderersFor(adConfiguration);
+        PluginRendererListMapper mapper = new PluginRendererListMapper();
+        PluginRendererList rendererList = new PluginRendererList();
+        rendererList.setList(mapper.map(plugins));
+        return rendererList;
     }
 }

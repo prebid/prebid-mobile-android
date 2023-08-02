@@ -34,7 +34,7 @@ class AppLovinMaxDisplayBanner300x250Activity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "550e6c2fe979a641"
-        const val CONFIG_ID = "imp-prebid-banner-300-250"
+        const val CONFIG_ID = "prebid-ita-banner-300-250"
         const val WIDTH = 300
         const val HEIGHT = 250
     }

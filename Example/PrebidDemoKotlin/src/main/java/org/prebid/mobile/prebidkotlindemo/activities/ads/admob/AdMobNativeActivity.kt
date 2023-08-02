@@ -34,7 +34,7 @@ class AdMobNativeActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "ca-app-pub-1875909575462531/9720985924"
-        const val CONFIG_ID = "imp-prebid-banner-native-styles"
+        const val CONFIG_ID = "prebid-ita-banner-native-styles"
     }
 
     private var nativeAd: NativeAd? = null

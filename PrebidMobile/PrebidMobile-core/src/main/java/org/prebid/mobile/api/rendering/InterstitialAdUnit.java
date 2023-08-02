@@ -181,12 +181,15 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
     }
 
 
+    @Override
     public void destroy() {
         super.destroy();
         if (eventHandler != null) {
             eventHandler.destroy();
         }
+        adUnitEventsListener = null;
         // TODO Unregister listener when not needed anymore
+        // TODO fingerprint only is ok
         if (pluginEventListener != null) {
             PrebidMobilePluginRegister.getInstance().unregisterEventListener(pluginEventListener, adUnitConfig.getFingerprint());
         }
