@@ -80,7 +80,6 @@ public class BannerView extends FrameLayout {
 
     @Nullable private BannerViewListener bannerViewListener;
     @Nullable private BannerVideoListener bannerVideoListener;
-    @Nullable private PluginEventListener pluginEventListener;
 
     private int refreshIntervalSec = 0;
 
@@ -328,11 +327,7 @@ public class BannerView extends FrameLayout {
         }
         bidRequesterListener = null;
 
-        // TODO Unregister listener when not needed anymore
-        // TODO btw by passing fingerprint only should be sufficient
-        if (pluginEventListener != null) {
-            PrebidMobilePluginRegister.getInstance().unregisterEventListener(pluginEventListener, adUnitConfig.getFingerprint());
-        }
+        PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig.getFingerprint());
 
         screenStateReceiver.unregister();
     }
@@ -371,7 +366,6 @@ public class BannerView extends FrameLayout {
     }
 
     public void setPluginEventListener(PluginEventListener pluginEventListener) {
-        this.pluginEventListener = pluginEventListener;
         PrebidMobilePluginRegister.getInstance().registerEventListener(pluginEventListener, adUnitConfig.getFingerprint());
     }
 

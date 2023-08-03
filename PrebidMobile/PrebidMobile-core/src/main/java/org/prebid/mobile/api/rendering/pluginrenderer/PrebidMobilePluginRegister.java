@@ -30,6 +30,7 @@ import java.util.Map;
 public class PrebidMobilePluginRegister {
 
     public static final String PREBID_MOBILE_RENDERER_NAME = "PrebidRenderer";
+    private static final String TAG = PrebidMobilePluginRegister.class.getSimpleName();
 
     private static final PrebidMobilePluginRegister instance = new PrebidMobilePluginRegister();
 
@@ -38,7 +39,7 @@ public class PrebidMobilePluginRegister {
     public void registerPlugin(PrebidMobilePluginRenderer prebidMobilePluginRenderers) {
         String rendererName = prebidMobilePluginRenderers.getName();
         if (plugins.containsKey(rendererName)) {
-            LogUtil.debug("PluginRegister", "New plugin renderer with name" + rendererName + "will replace the previous one with same name");
+            LogUtil.debug(TAG, "New plugin renderer with name" + rendererName + "will replace the previous one with same name");
         }
         plugins.put(prebidMobilePluginRenderers.getName(), prebidMobilePluginRenderers);
     }
@@ -63,16 +64,14 @@ public class PrebidMobilePluginRegister {
         if (plugins.containsKey(pluginEventListener.getPluginRendererName())) {
             plugins.get(pluginEventListener.getPluginRendererName()).registerEventListener(pluginEventListener, listenerKey);
         } else {
-            LogUtil.debug("PluginRegister", "Skipping PluginEventListener with name" + pluginEventListener.getPluginRendererName() + ", such key does not exist");
+            LogUtil.debug(TAG, "Skipping PluginEventListener with name" + pluginEventListener.getPluginRendererName() + ", such key does not exist");
         }
     }
 
-    public void unregisterEventListener(
-            PluginEventListener pluginEventListener,
-            String listenerKey
-    ) {
-        if (plugins.containsKey(pluginEventListener.getPluginRendererName())) {
-            plugins.get(pluginEventListener.getPluginRendererName()).unregisterEventListener(listenerKey);
+    public void unregisterEventListener(String listenerKey) {
+        for (Map.Entry<String, PrebidMobilePluginRenderer> entry : plugins.entrySet()) {
+            PrebidMobilePluginRenderer renderer = entry.getValue();
+            renderer.unregisterEventListener(listenerKey);
         }
     }
 

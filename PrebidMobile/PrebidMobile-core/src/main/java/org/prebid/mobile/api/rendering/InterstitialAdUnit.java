@@ -62,11 +62,6 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
     @Nullable private InterstitialAdUnitListener adUnitEventsListener;
 
     /**
-     * Plugin event listener that is used later to unregister it during onDestroy
-     */
-    @Nullable private PluginEventListener pluginEventListener;
-
-    /**
      * Instantiates an HTML InterstitialAdUnit for the given configurationId.
      */
     public InterstitialAdUnit(
@@ -172,7 +167,6 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
     }
 
     public void setPluginEventListener(PluginEventListener pluginEventListener) {
-        this.pluginEventListener = pluginEventListener;
         PrebidMobilePluginRegister.getInstance().registerEventListener(pluginEventListener, adUnitConfig.getFingerprint());
     }
 
@@ -188,11 +182,8 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
             eventHandler.destroy();
         }
         adUnitEventsListener = null;
-        // TODO Unregister listener when not needed anymore
-        // TODO fingerprint only is ok
-        if (pluginEventListener != null) {
-            PrebidMobilePluginRegister.getInstance().unregisterEventListener(pluginEventListener, adUnitConfig.getFingerprint());
-        }
+
+        PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig.getFingerprint());
     }
 
 
