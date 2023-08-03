@@ -18,18 +18,16 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.pluginrenderer
 
 import android.os.Bundle
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
 import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
-import org.prebid.mobile.renderingtestapp.utils.SampleCustomRendererEventListener
 import java.util.*
 
-open class PpmInterstitialPluginEventListenerFragment : BaseBidInterstitialFragment(), SampleCustomRendererEventListener {
-    private val TAG = PpmInterstitialPluginEventListenerFragment::class.java.simpleName
+open class PpmInterstitialPluginRenderer : BaseBidInterstitialFragment() {
+    private val TAG = PpmInterstitialPluginRenderer::class.java.simpleName
     private val samplePluginRenderer = SampleCustomRenderer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,15 +47,10 @@ open class PpmInterstitialPluginEventListenerFragment : BaseBidInterstitialFragm
             InterstitialAdUnit(requireContext(), configId)
         }
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
-        interstitialAdUnit?.setPluginEventListener(this)
         interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
         interstitialAdUnit?.let {
             CommandLineArgumentParser.addAdUnitSpecificData(it)
         }
-    }
-
-    override fun onImpression() {
-        LogUtil.debug(TAG, "onImpression")
     }
 
     override fun onDestroy() {

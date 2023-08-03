@@ -19,7 +19,6 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.pluginrenderer
 import android.os.Bundle
 import android.view.View
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
@@ -31,10 +30,9 @@ import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFr
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
-import org.prebid.mobile.renderingtestapp.utils.SampleCustomRendererEventListener
 
-open class PpmBannerPluginEventListenerFragment : AdFragment(), BannerViewListener, SampleCustomRendererEventListener {
-    private val TAG = PpmBannerPluginEventListenerFragment::class.java.simpleName
+open class PpmBannerPluginRenderer : AdFragment(), BannerViewListener {
+    private val TAG = PpmBannerPluginRenderer::class.java.simpleName
     private val sampleCustomRenderer = SampleCustomRenderer()
 
     override val layoutRes = R.layout.fragment_bidding_banner
@@ -76,7 +74,6 @@ open class PpmBannerPluginEventListenerFragment : AdFragment(), BannerViewListen
         )
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
-        bannerView?.setPluginEventListener(this) // TODO set PluginEventListener
         bannerView?.let { CommandLineArgumentParser.addAdUnitSpecificData(it) }
         binding.viewContainer.addView(bannerView)
         return bannerView
@@ -117,10 +114,6 @@ open class PpmBannerPluginEventListenerFragment : AdFragment(), BannerViewListen
     override fun onDestroyView() {
         super.onDestroyView()
         bannerView?.destroy()
-    }
-
-    override fun onImpression() {
-        LogUtil.debug(TAG, "onImpression")
     }
 
     protected class Events(parentView: View) : BaseEvents(parentView) {
