@@ -39,6 +39,7 @@ class DemoItemProvider private constructor() {
         private const val ppmBannerSpecialSymbolsAction = R.id.action_header_bidding_to_in_app_banner_special_symbols
         private const val ppmBannerActionMemoryLeakTesting =
             R.id.action_header_bidding_to_in_app_banner_memory_leak_testing
+        private const val ppmBannerPluginEventListenerAction = R.id.action_header_bidding_to_in_app_banner_plugin_event_listener
         private const val ppmInterstitialAction = R.id.action_header_bidding_to_in_app_interstitial
         private const val ppmInterstitialMultiformatAction =
             R.id.action_header_bidding_to_in_app_interstitial_multiformat
@@ -48,6 +49,7 @@ class DemoItemProvider private constructor() {
             R.id.action_header_bidding_to_in_app_interstitial_sound_button
         private const val ppmInterstitialSkipButtonAction =
             R.id.action_header_bidding_to_in_app_interstitial_skip_button
+        private const val ppmInterstitialPluginEventListenerAction = R.id.action_header_bidding_to_in_app_interstitial_plugin_event_listener
         private const val ppmRewardedAction = R.id.action_header_bidding_to_in_app_video_rewarded
 
         private const val gamBannerAction = R.id.action_header_bidding_to_gam_banner
@@ -423,6 +425,19 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_in_app_banner_320_50_custom_renderer),
                     ppmBannerAction,
+                    ppmBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_320x50_custom_renderer,
+                        null,
+                        320,
+                        50
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_banner_320_50_custom_renderer_plugin_event_listener),
+                    ppmBannerPluginEventListenerAction,
                     ppmBannerTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_320x50_custom_renderer,
@@ -923,6 +938,20 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_in_app_interstitial_320_480_custom_renderer),
                     ppmInterstitialAction,
+                    ppmInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_interstitial_320_480_custom_renderer,
+                        null,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC
+                    )
+                )
+            )
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_interstitial_320_480_custom_renderer_plugin_event_listener),
+                    ppmInterstitialPluginEventListenerAction,
                     ppmInterstitialTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_interstitial_320_480_custom_renderer,
