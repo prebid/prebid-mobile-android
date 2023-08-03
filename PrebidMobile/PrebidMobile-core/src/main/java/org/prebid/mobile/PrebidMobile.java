@@ -124,6 +124,8 @@ public class PrebidMobile {
     private static final Map<String, String> storedBidResponses = new LinkedHashMap<>();
     private static List<ExternalUserId> externalUserIds = new ArrayList<>();
     private static HashMap<String, String> customHeaders = new HashMap<>();
+    private static boolean includeWinners = false;
+    private static boolean includeBidderKeys = false;
 
     private PrebidMobile() {
     }
@@ -358,6 +360,21 @@ public class PrebidMobile {
     @Nullable
     public static String getCustomStatusEndpoint() {
         return customStatusEndpoint;
+    }
+    public static void setIncludeWinnersFlag(boolean includeWinners) {
+        PrebidMobile.includeWinners = includeWinners;
+    }
+
+    public static boolean getIncludeWinnersFlag() {
+        return PrebidMobile.includeWinners;
+    }
+
+    public static boolean setIncludeBidderKeysFlag(boolean includeBidderKeys) {
+        return PrebidMobile.includeBidderKeys = includeBidderKeys;
+    }
+
+    public static boolean getIncludeBidderKeysFlag() {
+        return PrebidMobile.includeBidderKeys;
     }
 
     // TODO not ready, wait for rendering delegation full release
