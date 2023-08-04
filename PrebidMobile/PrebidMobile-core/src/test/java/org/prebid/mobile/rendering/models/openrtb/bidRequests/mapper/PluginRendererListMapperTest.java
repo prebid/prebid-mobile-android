@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import org.junit.Test;
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface;
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -17,7 +18,6 @@ import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerList
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRenderer;
-import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +44,12 @@ public class PluginRendererListMapperTest {
         public String getToken() {
             return pluginToken;
         }
+
+        @Override
+        public void registerEventListener(PluginEventListener pluginEventListener, String listenerKey) { }
+
+        @Override
+        public void unregisterEventListener(String listenerKey) { }
 
         @Override
         public View createBannerAdView(@NonNull Context context, @NonNull DisplayViewListener displayViewListener, @Nullable DisplayVideoListener displayVideoListener, @NonNull AdUnitConfiguration adUnitConfiguration, @NonNull BidResponse bidResponse) {
