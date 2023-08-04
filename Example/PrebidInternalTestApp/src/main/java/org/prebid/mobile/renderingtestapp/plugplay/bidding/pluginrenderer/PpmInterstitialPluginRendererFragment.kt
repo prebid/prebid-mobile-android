@@ -26,8 +26,8 @@ import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
 import java.util.*
 
-open class PpmInterstitialPluginRenderer : BaseBidInterstitialFragment() {
-    private val TAG = PpmInterstitialPluginRenderer::class.java.simpleName
+open class PpmInterstitialPluginRendererFragment : BaseBidInterstitialFragment() {
+    private val TAG = PpmInterstitialPluginRendererFragment::class.java.simpleName
     private val samplePluginRenderer = SampleCustomRenderer()
 
     override fun onCreate(savedInstanceState: Bundle?) {

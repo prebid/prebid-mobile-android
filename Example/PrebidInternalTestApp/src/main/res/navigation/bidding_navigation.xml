@@ -552,7 +552,7 @@
 
     <fragment
         android:id="@+id/navigation_in_app_banner_plugin_renderer"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.pluginrenderer.PpmBannerPluginRenderer"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.pluginrenderer.PpmBannerPluginRendererFragment"
         android:label="In-App Banner PluginRenderer" />
 
     <fragment
@@ -595,7 +595,7 @@
 
     <fragment
         android:id="@+id/navigation_in_app_interstitial_plugin_renderer"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.pluginrenderer.PpmInterstitialPluginRenderer"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.pluginrenderer.PpmInterstitialPluginRendererFragment"
         android:label="In-App Interstitial PluginRenderer" />
 
     <fragment

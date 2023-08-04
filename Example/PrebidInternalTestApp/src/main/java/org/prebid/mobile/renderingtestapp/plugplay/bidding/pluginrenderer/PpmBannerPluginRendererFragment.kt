@@ -31,8 +31,8 @@ import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
 
-open class PpmBannerPluginRenderer : AdFragment(), BannerViewListener {
-    private val TAG = PpmBannerPluginRenderer::class.java.simpleName
+open class PpmBannerPluginRendererFragment : AdFragment(), BannerViewListener {
+    private val TAG = PpmBannerPluginRendererFragment::class.java.simpleName
     private val sampleCustomRenderer = SampleCustomRenderer()
 
     override val layoutRes = R.layout.fragment_bidding_banner
