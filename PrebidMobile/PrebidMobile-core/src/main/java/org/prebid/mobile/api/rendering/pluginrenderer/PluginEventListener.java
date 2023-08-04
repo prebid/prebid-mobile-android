@@ -18,7 +18,7 @@ package org.prebid.mobile.api.rendering.pluginrenderer;
 
 public interface PluginEventListener {
     /**
-     * Name must be same as the one registered with the PrebidMobilePluginRenderer
+     * Plugin renderer name, same as the one registered on PrebidMobilePluginRegister
      */
     String getPluginRendererName();
 }

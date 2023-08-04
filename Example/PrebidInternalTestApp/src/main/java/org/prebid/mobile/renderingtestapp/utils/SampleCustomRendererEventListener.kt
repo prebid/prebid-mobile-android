@@ -19,6 +19,6 @@ package org.prebid.mobile.renderingtestapp.utils
 import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener
 
 interface SampleCustomRendererEventListener : PluginEventListener {
-    override fun getPluginRendererName(): String = SampleCustomRenderer.RENDERER_NAME
+    override fun getPluginRendererName(): String = SampleCustomRenderer.SAMPLE_PLUGIN_RENDERER_NAME
     fun onImpression()
 }

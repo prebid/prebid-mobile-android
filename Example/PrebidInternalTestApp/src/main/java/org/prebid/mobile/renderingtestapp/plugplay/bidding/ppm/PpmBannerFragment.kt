@@ -118,4 +118,5 @@ open class PpmBannerFragment : AdFragment(), BannerViewListener {
         fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
 
     }
+    
 }

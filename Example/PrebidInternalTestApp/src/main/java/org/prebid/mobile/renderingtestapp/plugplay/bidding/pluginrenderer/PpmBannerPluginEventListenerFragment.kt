@@ -76,7 +76,7 @@ open class PpmBannerPluginEventListenerFragment : AdFragment(), BannerViewListen
         )
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
-        bannerView?.setPluginEventListener(this) // TODO set PluginEventListener
+        bannerView?.setPluginEventListener(this)
         bannerView?.let { CommandLineArgumentParser.addAdUnitSpecificData(it) }
         binding.viewContainer.addView(bannerView)
         return bannerView

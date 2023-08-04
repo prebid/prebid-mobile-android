@@ -43,7 +43,7 @@ import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener
 
 class SampleCustomRenderer : PrebidMobilePluginRenderer {
 
-    override fun getName(): String = RENDERER_NAME
+    override fun getName(): String = SAMPLE_PLUGIN_RENDERER_NAME
 
     private val pluginEventListenerMap = mutableMapOf<String, SampleCustomRendererEventListener>()
 
@@ -203,7 +203,7 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
 
                     val viewHeight = view.height
                     val visibleHeight = rect.bottom - rect.top
-                    LogUtil.debug("ViewVisibilityObserver", "Visibility percentage: ${(visibleHeight.toFloat() / viewHeight) * 100}%")
+                    LogUtil.debug(SAMPLE_PLUGIN_RENDERER_NAME, "Visibility percentage: ${(visibleHeight.toFloat() / viewHeight) * 100}%")
 
                     visibleHeight >= viewHeight * MIN_VISIBILITY_STATE
                 }
@@ -219,7 +219,7 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
         }
 
         fun startObserving() {
-            isObserving = true // TODO how to stop the handler properly?
+            isObserving = true
             handler.postDelayed(runnable, CHECK_INTERVAL.toLong())
         }
 
@@ -230,7 +230,7 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
     }
 
     companion object {
-        const val RENDERER_NAME = "SampleCustomRenderer"
+        const val SAMPLE_PLUGIN_RENDERER_NAME = "SampleCustomRenderer"
     }
 }
 
