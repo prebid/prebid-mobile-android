@@ -1,7 +1,5 @@
 package org.prebid.mobile.testutils;
 
-import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
-
 import android.content.Context;
 import android.view.View;
 

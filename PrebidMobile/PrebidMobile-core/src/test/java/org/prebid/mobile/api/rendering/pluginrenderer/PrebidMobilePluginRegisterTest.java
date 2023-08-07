@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
 
@@ -190,5 +192,50 @@ public class PrebidMobilePluginRegisterTest {
 
         // Then
         assertFalse(result);
+    }
+
+    @Test
+    public void registerEventListener_withExistedPlugin_triggerRegisteringCorrectly() {
+        // Given
+        String pluginName = "MockPlugin";
+        String fakeFingerprint = "fingerprint";
+        PluginEventListener fakePluginEventListener = () -> pluginName;
+        when(mockPlugin.getName()).thenReturn(pluginName);
+
+        // When
+        instance.registerPlugin(mockPlugin);
+        instance.registerEventListener(fakePluginEventListener, fakeFingerprint);
+
+        // Then
+        verify(mockPlugin, times(1)).registerEventListener(fakePluginEventListener, fakeFingerprint);
+    }
+
+    @Test
+    public void registerEventListener_withWrongPluginEventListerName_failsOnRegistering() {
+        // Given
+        String pluginName = "MockPlugin";
+        String fakeFingerprint = "fingerprint";
+        PluginEventListener fakePluginEventListener = () -> "";
+        when(mockPlugin.getName()).thenReturn(pluginName);
+
+        // When
+        instance.registerPlugin(mockPlugin);
+        instance.registerEventListener(fakePluginEventListener, fakeFingerprint);
+
+        // Then
+        verify(mockPlugin, times(0)).registerEventListener(fakePluginEventListener, fakeFingerprint);
+    }
+
+    @Test
+    public void unregisterEventListener_triggerUnregisteringCorrectly() {
+        // Given
+        String fakeFingerprint = "fingerprint";
+
+        // When
+        instance.registerPlugin(mockPlugin);
+        instance.unregisterEventListener(fakeFingerprint);
+
+        // Then
+        verify(mockPlugin, times(1)).unregisterEventListener(fakeFingerprint);
     }
 }
