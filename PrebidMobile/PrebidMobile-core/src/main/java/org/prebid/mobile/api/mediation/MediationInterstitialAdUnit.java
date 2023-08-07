@@ -22,7 +22,6 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
 import org.prebid.mobile.AdSize;
-import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
@@ -44,7 +43,7 @@ public class MediationInterstitialAdUnit extends MediationBaseFullScreenAdUnit {
         PrebidMediationDelegate mediationDelegate
     ) {
         super(context, configId, minSizePercentage, mediationDelegate);
-        adUnitConfig.setAdFormat(AdFormat.INTERSTITIAL);
+        adUnitConfig.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
     }
 
     /**
