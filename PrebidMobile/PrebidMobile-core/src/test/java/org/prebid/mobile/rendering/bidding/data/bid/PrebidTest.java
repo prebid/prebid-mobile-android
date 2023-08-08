@@ -17,11 +17,14 @@
 package org.prebid.mobile.rendering.bidding.data.bid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Test;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.test.utils.ResourceUtils;
@@ -30,6 +33,11 @@ import java.io.IOException;
 
 public class PrebidTest {
 
+    @After
+    public void tearDown(){
+        PrebidMobile.setIncludeBidderKeysFlag(false);
+        PrebidMobile.setIncludeWinnersFlag(false);
+    }
     @Test
     public void whenFromJSONObjectAndJSONObjectPassed_ReturnParsedPrebid()
     throws IOException, JSONException {
@@ -104,5 +112,67 @@ public class PrebidTest {
                 "{\"storedrequest\":{\"id\":\"test\"},\"cache\":{\"bids\":{}},\"targeting\":{}}",
                 Prebid.getJsonObjectForBidRequest("test", false, config).toString()
         );
+    }
+
+    @Test
+    public void includeBiddersKeysAndIncludeWinners_EqualsFalse() throws JSONException {
+        PrebidMobile.setIncludeBidderKeysFlag(false);
+        PrebidMobile.setIncludeWinnersFlag(false);
+
+        JSONObject expected = new JSONObject();
+        StoredRequest expectedStoredRequest = new StoredRequest("test");
+        expected.put("storedrequest", expectedStoredRequest.toJSONObject());
+
+        JSONObject expectedCache = new JSONObject();
+        expectedCache.put("bids", new JSONObject());
+        expected.put("cache", expectedCache);
+
+        JSONObject expectedTargeting = new JSONObject();
+        expected.put("targeting", expectedTargeting);
+
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setIsOriginalAdUnit(true);
+        assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false, config).toString());
+    }
+    @Test
+    public void includeBiddersKeys_EqualsTrue() throws JSONException {
+        PrebidMobile.setIncludeBidderKeysFlag(true);
+
+        JSONObject expected = new JSONObject();
+        StoredRequest expectedStoredRequest = new StoredRequest("test");
+        expected.put("storedrequest", expectedStoredRequest.toJSONObject());
+
+        JSONObject expectedCache = new JSONObject();
+        expectedCache.put("bids", new JSONObject());
+        expected.put("cache", expectedCache);
+
+        JSONObject expectedTargeting = new JSONObject();
+        expectedTargeting.put("includebidderkeys", "true");
+        expected.put("targeting", expectedTargeting);
+
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setIsOriginalAdUnit(true);
+        assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false, config).toString());
+    }
+    @Test
+    public void includeWinners_EqualsTrue() throws JSONException {
+        PrebidMobile.setIncludeWinnersFlag(true);
+
+        JSONObject expected = new JSONObject();
+        StoredRequest expectedStoredRequest = new StoredRequest("test");
+        expected.put("storedrequest", expectedStoredRequest.toJSONObject());
+
+        JSONObject expectedCache = new JSONObject();
+        expectedCache.put("bids", new JSONObject());
+        expected.put("cache", expectedCache);
+
+        JSONObject expectedTargeting = new JSONObject();
+        expectedTargeting.put("includewinners", "true");
+
+        expected.put("targeting", expectedTargeting);
+
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setIsOriginalAdUnit(true);
+        assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false, config).toString());
     }
 }

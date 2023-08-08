@@ -68,7 +68,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         Context context,
         String configId
     ) {
-        this(context, configId, EnumSet.of(AdUnitFormat.DISPLAY), null);
+        this(context, configId, EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), null);
     }
 
     /**
@@ -90,7 +90,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         String configId,
         InterstitialEventHandler eventHandler
     ) {
-        this(context, configId, EnumSet.of(AdUnitFormat.DISPLAY), eventHandler);
+        this(context, configId, EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), eventHandler);
     }
 
     /**

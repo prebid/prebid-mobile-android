@@ -16,8 +16,11 @@
 
 package org.prebid.mobile.api.mediation;
 
+import static org.junit.Assert.assertEquals;
+
 import android.app.Activity;
 import android.content.Context;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,8 +36,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.EnumSet;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -61,8 +62,19 @@ public class MediationInterstitialAdUnitTest {
         mediationInterstitialAdUnit.initAdConfig("config", adSize);
         AdUnitConfiguration adConfiguration = mediationInterstitialAdUnit.adUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
-        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL), adConfiguration.getAdFormats());
+        assertEquals(EnumSet.of(AdFormat.VAST, AdFormat.INTERSTITIAL), adConfiguration.getAdFormats());
         assertEquals(adSize, adConfiguration.getMinSizePercentage());
+    }
+
+    @Test
+    public void whenConstructorAndAdUnitFormatBanner_AdUnitIdentifierTypeInterstitial() {
+        mediationInterstitialAdUnit = new MediationInterstitialAdUnit(
+                context,
+                "config",
+                EnumSet.of(AdUnitFormat.BANNER),
+                new MockMediationUtils()
+        );
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL), mediationInterstitialAdUnit.adUnitConfig.getAdFormats());
     }
 
     @Test
