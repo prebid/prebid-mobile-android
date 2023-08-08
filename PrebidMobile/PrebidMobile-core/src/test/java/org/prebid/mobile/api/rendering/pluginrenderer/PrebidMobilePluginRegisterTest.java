@@ -98,8 +98,10 @@ public class PrebidMobilePluginRegisterTest {
     public void getPluginForPreferredRenderer_withMatchingRenderer_returnsPreferredRenderer() {
         // Given
         when(mockPlugin.getName()).thenReturn("MockPlugin");
+        when(mockPlugin.getVersion()).thenReturn("1.0");
         when(mockPlugin.isSupportRenderingFor(any())).thenReturn(true);
         when(mockBidResponse.getPreferredPluginRendererName()).thenReturn("MockPlugin");
+        when(mockBidResponse.getPreferredPluginRendererVersion()).thenReturn("1.0");
 
         // When
         instance.registerPlugin(mockPlugin);
@@ -107,6 +109,23 @@ public class PrebidMobilePluginRegisterTest {
         // Then
         PrebidMobilePluginRenderer preferredRendered = instance.getPluginForPreferredRenderer(mockBidResponse);
         assertEquals(mockPlugin.getName(), preferredRendered.getName());
+    }
+
+    @Test
+    public void getPluginForPreferredRenderer_withDifferentRendererVersion_returnsPrebidRenderer() {
+        // Given
+        when(mockPlugin.getName()).thenReturn("MockPlugin");
+        when(mockPlugin.getVersion()).thenReturn("1.0");
+        when(mockPlugin.isSupportRenderingFor(any())).thenReturn(true);
+        when(mockBidResponse.getPreferredPluginRendererName()).thenReturn("MockPlugin");
+        when(mockBidResponse.getPreferredPluginRendererVersion()).thenReturn("2.0"); // version from bid response is greater
+
+        // When
+        instance.registerPlugin(mockPlugin);
+
+        // Then
+        PrebidMobilePluginRenderer preferredRendered = instance.getPluginForPreferredRenderer(mockBidResponse);
+        assertEquals(PREBID_MOBILE_RENDERER_NAME, preferredRendered.getName());
     }
 
     @Test

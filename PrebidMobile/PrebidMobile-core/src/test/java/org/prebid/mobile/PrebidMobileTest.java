@@ -141,7 +141,8 @@ public class PrebidMobileTest extends BaseSetup {
                 null,
                 null,
                 true,
-                PREBID_MOBILE_RENDERER_NAME
+                PREBID_MOBILE_RENDERER_NAME,
+                "1.0"
         );
 
         // When
@@ -158,7 +159,8 @@ public class PrebidMobileTest extends BaseSetup {
                 null,
                 null,
                 true,
-                PREBID_MOBILE_RENDERER_NAME
+                PREBID_MOBILE_RENDERER_NAME,
+                "1.0"
         );
 
         // When

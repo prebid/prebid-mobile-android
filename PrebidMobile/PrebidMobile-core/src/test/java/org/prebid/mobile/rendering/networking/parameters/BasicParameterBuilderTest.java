@@ -92,7 +92,7 @@ public class BasicParameterBuilderTest {
     private static final String USER_CUSTOM = "custom";
     private static final String USER_GENDER = "M";
     private static final String USER_BUYER_ID = "bid";
-    private PrebidMobilePluginRenderer otherPlugin = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, null, true, "FakePlugin");
+    private PrebidMobilePluginRenderer otherPlugin = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, null, true, "FakePlugin", "1.0");
 
     private Context context;
 

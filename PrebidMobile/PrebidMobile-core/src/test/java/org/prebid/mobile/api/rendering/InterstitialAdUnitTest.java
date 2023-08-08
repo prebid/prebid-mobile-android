@@ -308,7 +308,7 @@ public class InterstitialAdUnitTest {
         final Bid mockBid = mock(Bid.class);
         final InterstitialEventListener spyEventListener = spy(getEventListener());
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
-        PrebidMobilePluginRenderer fakePrebidRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(mockInterstitialController, null, true, PREBID_MOBILE_RENDERER_NAME);
+        PrebidMobilePluginRenderer fakePrebidRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(mockInterstitialController, null, true, PREBID_MOBILE_RENDERER_NAME, "1.0");
         PrebidMobile.registerPluginRenderer(fakePrebidRenderer);
 
         WhiteBox.setInternalState(interstitialAdUnit, "bidResponse", mockBidResponse);
