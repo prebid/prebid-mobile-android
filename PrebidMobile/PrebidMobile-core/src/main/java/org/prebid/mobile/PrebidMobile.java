@@ -360,7 +360,6 @@ public class PrebidMobile {
         return customStatusEndpoint;
     }
 
-    // TODO not ready, wait for rendering delegation full release
     public static void registerPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         PrebidMobilePluginRegister.getInstance().registerPlugin(prebidMobilePluginRenderer);
     }
