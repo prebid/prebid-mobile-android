@@ -68,6 +68,10 @@ public class PrebidMobileTest extends BaseSetup {
         assertTrue(PrebidMobile.getStoredBidResponses().isEmpty());
         PrebidMobile.setPbsDebug(true);
         assertTrue(PrebidMobile.getPbsDebug());
+        PrebidMobile.setCreativeFactoryTimeout(7000);
+        assertEquals(7000, PrebidMobile.getCreativeFactoryTimeout());
+        PrebidMobile.setCreativeFactoryTimeoutPreRenderContent(25000);
+        assertEquals(25000, PrebidMobile.getCreativeFactoryTimeoutPreRenderContent());
     }
 
     @Test
