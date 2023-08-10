@@ -127,6 +127,9 @@ public class PrebidMobile {
     private static boolean includeWinners = false;
     private static boolean includeBidderKeys = false;
 
+    private static int creativeFactoryTimeout = 0;
+    private static int creativeFactoryTimeoutPreRenderContent = 0;
+
     private PrebidMobile() {
     }
 
@@ -375,6 +378,20 @@ public class PrebidMobile {
 
     public static boolean getIncludeBidderKeysFlag() {
         return PrebidMobile.includeBidderKeys;
+    }
+
+    public static int getCreativeFactoryTimeout() { return creativeFactoryTimeout; }
+
+    public static void setCreativeFactoryTimeout(int creativeFactoryTimeout) {
+        PrebidMobile.creativeFactoryTimeout = creativeFactoryTimeout;
+    }
+
+    public static int getCreativeFactoryTimeoutPreRenderContent() {
+        return creativeFactoryTimeoutPreRenderContent;
+    }
+
+    public static void setCreativeFactoryTimeoutPreRenderContent(int creativeFactoryTimeoutPreRenderContent) {
+        PrebidMobile.creativeFactoryTimeoutPreRenderContent = creativeFactoryTimeoutPreRenderContent;
     }
 
     // TODO not ready, wait for rendering delegation full release

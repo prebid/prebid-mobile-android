@@ -89,6 +89,12 @@ public class MobileSdkPassThrough {
         if (fromBid.skipButtonPosition == null) {
             fromBid.skipButtonPosition = fromRoot.skipButtonPosition;
         }
+        if (fromBid.bannerTimeout == null) {
+            fromBid.bannerTimeout = fromRoot.bannerTimeout;
+        }
+        if (fromBid.prerenderTimeout == null) {
+            fromBid.prerenderTimeout = fromRoot.prerenderTimeout;
+        }
         return fromBid;
     }
 
@@ -130,6 +136,12 @@ public class MobileSdkPassThrough {
         if (result.closeButtonPosition == null) {
             result.closeButtonPosition = configuration.getCloseButtonPosition();
         }
+        if (result.bannerTimeout == null) {
+            result.bannerTimeout = configuration.getBannerTimeout();
+        }
+        if (result.prerenderTimeout == null) {
+            result.prerenderTimeout = configuration.getPrerenderTimeout();
+        }
         return result;
     }
 
@@ -144,6 +156,9 @@ public class MobileSdkPassThrough {
 
     public Position closeButtonPosition;
     public Position skipButtonPosition;
+
+    public Integer bannerTimeout;
+    public Integer prerenderTimeout;
 
     private JSONObject configuration;
 
@@ -161,6 +176,8 @@ public class MobileSdkPassThrough {
                 getAndSave("skipbuttonarea", Double.class, it -> skipButtonArea = it);
                 getAndSave("closebuttonposition", String.class, it -> closeButtonPosition = Position.fromString(it));
                 getAndSave("skipbuttonposition", String.class, it -> skipButtonPosition = Position.fromString(it));
+                getAndSave("cftbanner", Integer.class, it -> bannerTimeout = it);
+                getAndSave("cftprerender", Integer.class, it -> prerenderTimeout = it);
             }
         } catch (JSONException exception) {
             LogUtil.error(TAG, "Can't parse configuration");
@@ -189,6 +206,12 @@ public class MobileSdkPassThrough {
         }
         if (skipButtonPosition != null) {
             adUnitConfiguration.setSkipButtonPosition(skipButtonPosition);
+        }
+        if (bannerTimeout != null) {
+            adUnitConfiguration.setBannerTimeout(bannerTimeout);
+        }
+        if (prerenderTimeout != null) {
+            adUnitConfiguration.setPrerenderTimeout(prerenderTimeout);
         }
     }
 

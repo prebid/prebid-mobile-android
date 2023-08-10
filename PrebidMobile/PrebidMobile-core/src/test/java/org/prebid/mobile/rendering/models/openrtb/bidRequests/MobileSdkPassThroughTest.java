@@ -55,6 +55,8 @@ public class MobileSdkPassThroughTest {
             assertNull(subject.skipButtonArea);
             assertNull(subject.closeButtonArea);
             assertNull(subject.closeButtonPosition);
+            assertNull(subject.bannerTimeout);
+            assertNull(subject.prerenderTimeout);
         }
     }
 
@@ -63,7 +65,7 @@ public class MobileSdkPassThroughTest {
         if (!BuildConfig.DEBUG) {
 
             JSONObject jsonObject = new JSONObject(
-                "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\n\"ismuted\": false,\n\"maxvideoduration\": 15,\n\"closebuttonarea\": 0.3,\n\"closebuttonposition\": \"topleft\",\n\"skipbuttonarea\": 0.3,\n\"skipbuttonposition\": \"topleft\",\n\"skipdelay\": 0}}]}}");
+                "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\n\"ismuted\": false,\n\"maxvideoduration\": 15,\n\"closebuttonarea\": 0.3,\n\"closebuttonposition\": \"topleft\",\n\"skipbuttonarea\": 0.3,\n\"skipbuttonposition\": \"topleft\",\n\"skipdelay\": 0,\n\"cftbanner\": 6000,\n\"cftprerender\": 30000}}]}}");
 
             MobileSdkPassThrough subject = MobileSdkPassThrough.create(jsonObject);
 
@@ -76,6 +78,8 @@ public class MobileSdkPassThroughTest {
             assertEquals((Double) 0.3, subject.skipButtonArea);
             assertEquals((Double) 0.3, subject.closeButtonArea);
             assertEquals(Position.TOP_LEFT, subject.closeButtonPosition);
+            assertEquals((Integer) 6000, subject.bannerTimeout);
+            assertEquals((Integer) 30000, subject.prerenderTimeout);
         }
     }
 
@@ -84,7 +88,7 @@ public class MobileSdkPassThroughTest {
         if (!BuildConfig.DEBUG) {
 
             JSONObject jsonObject = new JSONObject(
-                "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\n\"ismuted\": false,\n\"maxvideoduration\": 15,\n\"closebuttonarea\": 0.3,\n\"closebuttonposition\": \"topleft\",\n\"skipbuttonarea\": 0.3,\n\"skipbuttonposition\": \"topleft\",\n\"skipdelay\": 0}}]}}");
+                "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\n\"ismuted\": false,\n\"maxvideoduration\": 15,\n\"closebuttonarea\": 0.3,\n\"closebuttonposition\": \"topleft\",\n\"skipbuttonarea\": 0.3,\n\"skipbuttonposition\": \"topleft\",\n\"skipdelay\": 0,\n\"cftbanner\": 6000,\n\"cftprerender\": 30000}}]}}");
 
             MobileSdkPassThrough subject = MobileSdkPassThrough.create(jsonObject);
             AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
@@ -100,6 +104,8 @@ public class MobileSdkPassThroughTest {
             assertEquals(0.3, adUnitConfiguration.getSkipButtonArea(), 0);
             assertEquals(0.3, adUnitConfiguration.getCloseButtonArea(), 0);
             assertEquals(Position.TOP_LEFT, adUnitConfiguration.getCloseButtonPosition());
+            assertEquals(6000, adUnitConfiguration.getBannerTimeout());
+            assertEquals(30000, adUnitConfiguration.getPrerenderTimeout());
         }
     }
 
