@@ -55,8 +55,6 @@ public class MobileSdkPassThroughTest {
             assertNull(subject.skipButtonArea);
             assertNull(subject.closeButtonArea);
             assertNull(subject.closeButtonPosition);
-            assertNull(subject.bannerTimeout);
-            assertNull(subject.prerenderTimeout);
         }
     }
 
@@ -78,8 +76,6 @@ public class MobileSdkPassThroughTest {
             assertEquals((Double) 0.3, subject.skipButtonArea);
             assertEquals((Double) 0.3, subject.closeButtonArea);
             assertEquals(Position.TOP_LEFT, subject.closeButtonPosition);
-            assertEquals((Integer) 6000, subject.bannerTimeout);
-            assertEquals((Integer) 30000, subject.prerenderTimeout);
         }
     }
 
@@ -127,6 +123,22 @@ public class MobileSdkPassThroughTest {
             assertEquals((Integer) 15, result.maxVideoDuration);
             /* In fromBid = 0.1, in fromRoot = 0.2, fromBid have higher priority, so must be 0.1 */
             assertEquals((Double) 0.1, result.closeButtonArea);
+        }
+    }
+
+    @Test
+    public void create_putObjectWithSdkConfiguration_returnFullObject() throws JSONException {
+        if (!BuildConfig.DEBUG) {
+
+            JSONObject jsonObject = new JSONObject(
+                    "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\n\"ismuted\": false,\n\"maxvideoduration\": 15,\n\"closebuttonarea\": 0.3,\n\"closebuttonposition\": \"topleft\",\n\"skipbuttonarea\": 0.3,\n\"skipbuttonposition\": \"topleft\",\n\"skipdelay\": 0}, \n\"sdkconfiguration\": {\n\"cftbanner\": 7800, \n\"cftprerender\": 21000}}]}}");
+
+            MobileSdkPassThrough subject = MobileSdkPassThrough.create(jsonObject);
+
+            assertNotNull(subject);
+            assertEquals((Integer) 7800, subject.bannerTimeout);
+            assertEquals((Integer) 21000, subject.preRenderTimeout);
+
         }
     }
 

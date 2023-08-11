@@ -399,7 +399,7 @@ public class PrebidMobile {
      */
     public static int getCreativeFactoryTimeout() {
         if (pbsConfig != null){
-            if (pbsConfig.getBannerTimeout() != null) {
+            if (pbsConfig.getBannerTimeout() != 0) {
                 return pbsConfig.getBannerTimeout();
             }
         }
@@ -416,7 +416,7 @@ public class PrebidMobile {
      */
     public static int getCreativeFactoryTimeoutPreRenderContent() {
         if (pbsConfig != null) {
-            if (pbsConfig.getPreRenderTimeout() != null) {
+            if (pbsConfig.getPreRenderTimeout() != 0) {
                 return pbsConfig.getPreRenderTimeout();
             }
         }

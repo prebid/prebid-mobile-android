@@ -140,10 +140,8 @@ public class CreativeFactory {
         } else {
             listener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Tracking info not found"));
         }
-        long creativeDownloadTimeout = 0;
-        AdUnitConfiguration configuration = creativeModel.getAdConfiguration();
-        creativeDownloadTimeout = PrebidMobile.getCreativeFactoryTimeout();
-        if (configuration.isAdType(AdFormat.INTERSTITIAL)) {
+        long creativeDownloadTimeout = PrebidMobile.getCreativeFactoryTimeout();
+        if (creativeModel.getAdConfiguration().isAdType(AdFormat.INTERSTITIAL)) {
             creativeDownloadTimeout = PrebidMobile.getCreativeFactoryTimeoutPreRenderContent();
         }
         markWorkStart(creativeDownloadTimeout);

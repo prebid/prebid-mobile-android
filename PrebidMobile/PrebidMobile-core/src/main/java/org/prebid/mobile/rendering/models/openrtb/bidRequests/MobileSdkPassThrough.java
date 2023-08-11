@@ -147,8 +147,8 @@ public class MobileSdkPassThrough {
     public Position closeButtonPosition;
     public Position skipButtonPosition;
 
-    private int bannerTimeout;
-    private int preRenderTimeout;
+    public Integer bannerTimeout;
+    public Integer preRenderTimeout;
 
     private JSONObject configuration;
 

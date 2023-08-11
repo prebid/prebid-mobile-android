@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
+import org.prebid.mobile.configuration.PBSConfig;
 import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.testutils.BaseSetup;
@@ -185,32 +186,25 @@ public class PrebidMobileTest extends BaseSetup {
     }
 
     @Test
-    public void getCreativeFactoryTimeout_usePbsConfig() {
+    public void getCreativeFactoryTimeouts_usePbsConfig() {
+        PrebidMobile.setPbsConfig(new PBSConfig(6000, 20000));
 
+        assertEquals(6000, PrebidMobile.getCreativeFactoryTimeout());
+        assertEquals(20000, PrebidMobile.getCreativeFactoryTimeoutPreRenderContent());
     }
 
     @Test
-    public void getCreativeFactoryTimeout_useSdk() {
-
+    public void getCreativeFactoryTimeouts_useSdk() {
+        PrebidMobile.setPbsConfig(new PBSConfig(6000, 20000));
+        PrebidMobile.setCreativeFactoryTimeout(8000);
+        PrebidMobile.setCreativeFactoryTimeoutPreRenderContent(21000);
+        assertEquals(8000, PrebidMobile.getCreativeFactoryTimeout());
+        assertEquals(21000, PrebidMobile.getCreativeFactoryTimeoutPreRenderContent());
     }
 
     @Test
-    public void getCreativeFactoryTimeout_useDefault() {
-
-    }
-
-    @Test
-    public void getCreativeFactoryPreRenderTimeout_usePbsConfig() {
-
-    }
-
-    @Test
-    public void getCreativeFactoryPreRenderTimeout_useSdk() {
-
-    }
-
-    @Test
-    public void getCreativeFactoryPreRenderTimeout_useDefault() {
-
+    public void getCreativeFactoryTimeouts_useDefault() {
+        assertEquals(6000, PrebidMobile.getCreativeFactoryTimeout());
+        assertEquals(30000, PrebidMobile.getCreativeFactoryTimeoutPreRenderContent());
     }
 }
