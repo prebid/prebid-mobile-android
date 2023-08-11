@@ -22,6 +22,7 @@ import android.os.Handler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -112,7 +113,7 @@ public class CreativeFactoryTest {
         when(mockModel.getName()).thenReturn(HTML_CREATIVE_TAG);
         when(mockModel.getImpressionUrl()).thenReturn("impressionUrl");
         when(mockModel.getClickUrl()).thenReturn("clickUrl");
-
+        PrebidMobile.setCreativeFactoryTimeout(7000);
         //Run the creativeFactory
         CreativeFactory creativeFactory = new CreativeFactory(mockContext,
                 mockModel,
@@ -126,7 +127,7 @@ public class CreativeFactoryTest {
         AbstractCreative creative = creativeFactory.getCreative();
         assertNotNull(creative);
         assertTrue(creative instanceof HTMLCreative);
-        verify(mockHandler).postDelayed(any(Runnable.class), eq(6_000L));
+        verify(mockHandler).postDelayed(any(Runnable.class), eq(7_000L));
     }
 
     @Test
@@ -135,6 +136,7 @@ public class CreativeFactoryTest {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         Handler mockHandler = mock(Handler.class);
         adConfiguration.setAdFormat(AdFormat.VAST);
+        PrebidMobile.setCreativeFactoryTimeoutPreRenderContent(25000);
         HashMap<VideoAdEvent.Event, ArrayList<String>> videoEventsUrls = new HashMap<>();
         videoEventsUrls.put(VideoAdEvent.Event.AD_EXPAND, new ArrayList<>(Arrays.asList("AD_EXPAND")));
         when(mockVideoModel.getVideoEventUrls()).thenReturn(videoEventsUrls);
@@ -166,7 +168,7 @@ public class CreativeFactoryTest {
         AbstractCreative creative = creativeFactory.getCreative();
         assertNotNull(creative);
         assertTrue(creative instanceof VideoCreative);
-        verify(mockHandler).postDelayed(any(Runnable.class), eq(30_000L));
+        verify(mockHandler).postDelayed(any(Runnable.class), eq(25_000L));
     }
 
     @Test
