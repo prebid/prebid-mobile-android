@@ -43,8 +43,6 @@ public class AdUnitConfiguration {
     private int videoSkipOffset = SKIP_OFFSET_NOT_ASSIGNED;
     private int autoRefreshDelayInMillis = 0;
     private int skipDelay = 10;
-    private int bannerTimeout = 0;
-    private int prerenderTimeout = 0;
     private final int broadcastId = Utils.generateRandomInt();
     private float videoInitialVolume = ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME;
     private double closeButtonArea = 0;
@@ -339,16 +337,6 @@ public class AdUnitConfiguration {
 
     public int getSkipDelay() {
         return skipDelay;
-    }
-
-    public int getBannerTimeout() { return bannerTimeout; }
-
-    public void setBannerTimeout(int bannerTimeout) { this.bannerTimeout = bannerTimeout; }
-
-    public int getPrerenderTimeout() { return prerenderTimeout; }
-
-    public void setPrerenderTimeout(int prerenderTimeout) {
-        this.prerenderTimeout = prerenderTimeout;
     }
 
     public double getSkipButtonArea() {

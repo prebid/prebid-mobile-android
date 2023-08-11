@@ -46,8 +46,6 @@ import java.util.ArrayList;
 public class CreativeFactory {
 
     private static final String TAG = CreativeFactory.class.getSimpleName();
-    private static final int DEFAULT_BANNER_TIMEOUT = 6 * 1000;
-    private static final int DEFAULT_PRERENDER_TIMEOUT = 30 * 1000;
 
     private AbstractCreative creative;
     private CreativeModel creativeModel;
@@ -144,15 +142,9 @@ public class CreativeFactory {
         }
         long creativeDownloadTimeout = 0;
         AdUnitConfiguration configuration = creativeModel.getAdConfiguration();
-        if (configuration.getBannerTimeout() != 0) {
-            creativeDownloadTimeout = configuration.getBannerTimeout();
-        } else if (PrebidMobile.getCreativeFactoryTimeout() != 0) {
-            creativeDownloadTimeout = PrebidMobile.getCreativeFactoryTimeout();
-        } else {
-            creativeDownloadTimeout = DEFAULT_BANNER_TIMEOUT;
-        }
+        creativeDownloadTimeout = PrebidMobile.getCreativeFactoryTimeout();
         if (configuration.isAdType(AdFormat.INTERSTITIAL)) {
-            creativeDownloadTimeout = determinePrerenderTimeout();
+            creativeDownloadTimeout = PrebidMobile.getCreativeFactoryTimeoutPreRenderContent();
         }
         markWorkStart(creativeDownloadTimeout);
         creative.load();
@@ -199,7 +191,7 @@ public class CreativeFactory {
 
             newCreative.setResolutionListener(new CreativeFactoryCreativeResolutionListener(this));
             creative = newCreative;
-            markWorkStart(determinePrerenderTimeout());
+            markWorkStart(PrebidMobile.getCreativeFactoryTimeoutPreRenderContent());
             newCreative.load();
         } catch (Exception exception) {
             LogUtil.error(TAG, "VideoCreative creation failed: " + Log.getStackTraceString(exception));
@@ -218,16 +210,6 @@ public class CreativeFactory {
                 listener.onFailure((new AdException(AdException.INTERNAL_ERROR, "Creative factory Timeout")));
             }
         }, timeout);
-    }
-
-    private int determinePrerenderTimeout() {
-        if (creativeModel.getAdConfiguration().getPrerenderTimeout() != 0) {
-            return creativeModel.getAdConfiguration().getPrerenderTimeout();
-        } else if (PrebidMobile.getCreativeFactoryTimeoutPreRenderContent() != 0) {
-            return PrebidMobile.getCreativeFactoryTimeoutPreRenderContent();
-        } else {
-            return DEFAULT_PRERENDER_TIMEOUT;
-        }
     }
 
     /**

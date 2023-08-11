@@ -28,6 +28,7 @@ import androidx.annotation.Nullable;
 import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
+import org.prebid.mobile.configuration.PBSConfig;
 import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.mraid.MraidEnv;
@@ -127,8 +128,12 @@ public class PrebidMobile {
     private static boolean includeWinners = false;
     private static boolean includeBidderKeys = false;
 
-    private static int creativeFactoryTimeout = 0;
-    private static int creativeFactoryTimeoutPreRenderContent = 0;
+    private static final int DEFAULT_BANNER_TIMEOUT = 6 * 1000;
+    private static final int DEFAULT_PRERENDER_TIMEOUT = 30 * 1000;
+
+    private static PBSConfig pbsConfig;
+    private static int creativeFactoryTimeout = DEFAULT_BANNER_TIMEOUT;
+    private static int creativeFactoryTimeoutPreRenderContent = DEFAULT_PRERENDER_TIMEOUT;
 
     private PrebidMobile() {
     }
@@ -380,13 +385,41 @@ public class PrebidMobile {
         return PrebidMobile.includeBidderKeys;
     }
 
-    public static int getCreativeFactoryTimeout() { return creativeFactoryTimeout; }
+    public static PBSConfig getPbsConfig() {
+        return pbsConfig;
+    }
+
+    public static void setPbsConfig(PBSConfig pbsConfig) {
+        PrebidMobile.pbsConfig = pbsConfig;
+    }
+
+    /**
+     * Priority Policy: PBSConfig > SDKConfig > Default
+     * @return creativeFactoryTimeout in ms
+     */
+    public static int getCreativeFactoryTimeout() {
+        if (pbsConfig != null){
+            if (pbsConfig.getBannerTimeout() != null) {
+                return pbsConfig.getBannerTimeout();
+            }
+        }
+        return creativeFactoryTimeout;
+    }
 
     public static void setCreativeFactoryTimeout(int creativeFactoryTimeout) {
         PrebidMobile.creativeFactoryTimeout = creativeFactoryTimeout;
     }
 
+    /**
+     * Priority Policy: PBSConfig > SDKConfig > Default
+     * @return creativeFactoryTimeoutPreRender in ms
+     */
     public static int getCreativeFactoryTimeoutPreRenderContent() {
+        if (pbsConfig != null) {
+            if (pbsConfig.getPreRenderTimeout() != null) {
+                return pbsConfig.getPreRenderTimeout();
+            }
+        }
         return creativeFactoryTimeoutPreRenderContent;
     }
 

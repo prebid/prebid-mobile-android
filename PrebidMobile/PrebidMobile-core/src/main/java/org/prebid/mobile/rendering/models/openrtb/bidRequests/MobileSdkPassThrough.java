@@ -6,8 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.configuration.PBSConfig;
 import org.prebid.mobile.core.BuildConfig;
 
 /**
@@ -89,12 +91,6 @@ public class MobileSdkPassThrough {
         if (fromBid.skipButtonPosition == null) {
             fromBid.skipButtonPosition = fromRoot.skipButtonPosition;
         }
-        if (fromBid.bannerTimeout == null) {
-            fromBid.bannerTimeout = fromRoot.bannerTimeout;
-        }
-        if (fromBid.prerenderTimeout == null) {
-            fromBid.prerenderTimeout = fromRoot.prerenderTimeout;
-        }
         return fromBid;
     }
 
@@ -136,12 +132,6 @@ public class MobileSdkPassThrough {
         if (result.closeButtonPosition == null) {
             result.closeButtonPosition = configuration.getCloseButtonPosition();
         }
-        if (result.bannerTimeout == null) {
-            result.bannerTimeout = configuration.getBannerTimeout();
-        }
-        if (result.prerenderTimeout == null) {
-            result.prerenderTimeout = configuration.getPrerenderTimeout();
-        }
         return result;
     }
 
@@ -157,8 +147,8 @@ public class MobileSdkPassThrough {
     public Position closeButtonPosition;
     public Position skipButtonPosition;
 
-    public Integer bannerTimeout;
-    public Integer prerenderTimeout;
+    private int bannerTimeout;
+    private int preRenderTimeout;
 
     private JSONObject configuration;
 
@@ -176,12 +166,21 @@ public class MobileSdkPassThrough {
                 getAndSave("skipbuttonarea", Double.class, it -> skipButtonArea = it);
                 getAndSave("closebuttonposition", String.class, it -> closeButtonPosition = Position.fromString(it));
                 getAndSave("skipbuttonposition", String.class, it -> skipButtonPosition = Position.fromString(it));
-                getAndSave("cftbanner", Integer.class, it -> bannerTimeout = it);
-                getAndSave("cftprerender", Integer.class, it -> prerenderTimeout = it);
             }
         } catch (JSONException exception) {
-            LogUtil.error(TAG, "Can't parse configuration");
+            LogUtil.error(TAG, "Can't parse adconfiguration");
         }
+        try {
+            if (passThrough.has("sdkconfiguration")) {
+                configuration = passThrough.getJSONObject("sdkconfiguration");
+                getAndSave("cftbanner", Integer.class, it -> bannerTimeout = it);
+                getAndSave("cftprerender", Integer.class, it -> preRenderTimeout = it);
+                PrebidMobile.setPbsConfig(new PBSConfig(bannerTimeout, preRenderTimeout));
+            }
+        } catch (JSONException exception) {
+            LogUtil.error(TAG, "Can't parse sdkconfiguration");
+        }
+
     }
 
 
@@ -206,12 +205,6 @@ public class MobileSdkPassThrough {
         }
         if (skipButtonPosition != null) {
             adUnitConfiguration.setSkipButtonPosition(skipButtonPosition);
-        }
-        if (bannerTimeout != null) {
-            adUnitConfiguration.setBannerTimeout(bannerTimeout);
-        }
-        if (prerenderTimeout != null) {
-            adUnitConfiguration.setPrerenderTimeout(prerenderTimeout);
         }
     }
 

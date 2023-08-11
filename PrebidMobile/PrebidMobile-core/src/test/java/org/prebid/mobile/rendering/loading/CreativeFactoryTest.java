@@ -107,7 +107,6 @@ public class CreativeFactoryTest {
     public void testAttemptAuidCreative() throws Exception {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.setAdFormat(AdFormat.BANNER);
-        adConfiguration.setBannerTimeout(7000);
         Handler mockHandler = mock(Handler.class);
         when(mockModel.getAdConfiguration()).thenReturn(adConfiguration);
         when(mockModel.getName()).thenReturn(HTML_CREATIVE_TAG);
@@ -127,7 +126,7 @@ public class CreativeFactoryTest {
         AbstractCreative creative = creativeFactory.getCreative();
         assertNotNull(creative);
         assertTrue(creative instanceof HTMLCreative);
-        verify(mockHandler).postDelayed(any(Runnable.class), eq(7_000L));
+        verify(mockHandler).postDelayed(any(Runnable.class), eq(6_000L));
     }
 
     @Test
@@ -136,7 +135,6 @@ public class CreativeFactoryTest {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         Handler mockHandler = mock(Handler.class);
         adConfiguration.setAdFormat(AdFormat.VAST);
-        adConfiguration.setPrerenderTimeout(25000);
         HashMap<VideoAdEvent.Event, ArrayList<String>> videoEventsUrls = new HashMap<>();
         videoEventsUrls.put(VideoAdEvent.Event.AD_EXPAND, new ArrayList<>(Arrays.asList("AD_EXPAND")));
         when(mockVideoModel.getVideoEventUrls()).thenReturn(videoEventsUrls);
@@ -168,7 +166,7 @@ public class CreativeFactoryTest {
         AbstractCreative creative = creativeFactory.getCreative();
         assertNotNull(creative);
         assertTrue(creative instanceof VideoCreative);
-        verify(mockHandler).postDelayed(any(Runnable.class), eq(25_000L));
+        verify(mockHandler).postDelayed(any(Runnable.class), eq(30_000L));
     }
 
     @Test

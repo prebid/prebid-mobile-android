@@ -183,4 +183,34 @@ public class PrebidMobileTest extends BaseSetup {
 //        assertFalse(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
         assertFalse(PrebidMobilePluginRegister.getInstance().containsPlugin(fakePrebidMobilePluginRenderer));
     }
+
+    @Test
+    public void getCreativeFactoryTimeout_usePbsConfig() {
+
+    }
+
+    @Test
+    public void getCreativeFactoryTimeout_useSdk() {
+
+    }
+
+    @Test
+    public void getCreativeFactoryTimeout_useDefault() {
+
+    }
+
+    @Test
+    public void getCreativeFactoryPreRenderTimeout_usePbsConfig() {
+
+    }
+
+    @Test
+    public void getCreativeFactoryPreRenderTimeout_useSdk() {
+
+    }
+
+    @Test
+    public void getCreativeFactoryPreRenderTimeout_useDefault() {
+
+    }
 }
