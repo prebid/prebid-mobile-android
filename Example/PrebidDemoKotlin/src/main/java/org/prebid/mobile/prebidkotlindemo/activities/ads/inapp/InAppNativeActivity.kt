@@ -134,16 +134,11 @@ class InAppNativeActivity : BaseAdActivity() {
 
         adWrapperView.addView(nativeContainer)
 
-        ad.registerViewList(
+        ad.registerView(
             adWrapperView,
             listOf(icon, title, image, description, cta),
-            object : PrebidNativeAdEventListener {
-                override fun onAdClicked() {}
-
-                override fun onAdImpression() {}
-
-                override fun onAdExpired() {}
-            })
+            null
+        )
     }
 
     override fun onDestroy() {

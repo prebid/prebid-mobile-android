@@ -17,8 +17,11 @@
 package org.prebid.mobile;
 
 import android.graphics.Rect;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -27,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 class VisibilityDetector {
     static final long VISIBILITY_THROTTLE_MILLIS = 250;
     private boolean scheduled = false;
-    private View view; // not null
+    private WeakReference<View> viewReference;
     private ArrayList<VisibilityListener> listeners;
     private Runnable visibilityCheck;
     private ScheduledExecutorService tasker;
@@ -45,7 +48,7 @@ class VisibilityDetector {
     }
 
     private VisibilityDetector(View view) {
-        this.view = view;
+        this.viewReference = new WeakReference<>(view);
         this.listeners = new ArrayList<VisibilityListener>();
         scheduleVisibilityCheck();
     }
@@ -85,15 +88,23 @@ class VisibilityDetector {
             }
         };
         tasker = Executors.newSingleThreadScheduledExecutor();
-        tasker.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                view.post(visibilityCheck);
+        tasker.scheduleAtFixedRate(() -> {
+            View view = viewReference.get();
+            if (view == null) {
+                // Run last visibility check
+                new Handler(Looper.getMainLooper()).post(visibilityCheck);
+
+                tasker.shutdownNow();
+                return;
             }
+
+            view.post(visibilityCheck);
+
         }, 0, VISIBILITY_THROTTLE_MILLIS, TimeUnit.MILLISECONDS);
     }
 
     boolean isVisible() {
+        View view = viewReference.get();
         if (view == null || view.getVisibility() != View.VISIBLE || view.getParent() == null) {
             return false;
         }
@@ -115,11 +126,13 @@ class VisibilityDetector {
     }
 
     void destroy() {
-        if (tasker != null) {
+        if (tasker != null && !tasker.isTerminated()) {
             tasker.shutdownNow();
         }
-        view.removeCallbacks(visibilityCheck);
-        view = null;
+        View view = viewReference.get();
+        if (view != null) {
+            view.removeCallbacks(visibilityCheck);
+        }
         listeners = null;
     }
 
