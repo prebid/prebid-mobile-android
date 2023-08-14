@@ -31,6 +31,7 @@ import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer
 import org.prebid.mobile.configuration.PBSConfig;
 import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
+import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.RobolectricTestRunner;
@@ -187,24 +188,19 @@ public class PrebidMobileTest extends BaseSetup {
 
     @Test
     public void getCreativeFactoryTimeouts_usePbsConfig() {
-        PrebidMobile.setPbsConfig(new PBSConfig(6000, 20000));
-
-        assertEquals(6000, PrebidMobile.getCreativeFactoryTimeout());
+        PrebidMobile.setPbsConfig(new PBSConfig(9000, 20000));
+        PrebidMobile.setCreativeFactoryTimeout(8000);
+        PrebidMobile.setCreativeFactoryTimeoutPreRenderContent(21000);
+        assertEquals(9000, PrebidMobile.getCreativeFactoryTimeout());
         assertEquals(20000, PrebidMobile.getCreativeFactoryTimeoutPreRenderContent());
     }
 
     @Test
     public void getCreativeFactoryTimeouts_useSdk() {
-        PrebidMobile.setPbsConfig(new PBSConfig(6000, 20000));
         PrebidMobile.setCreativeFactoryTimeout(8000);
         PrebidMobile.setCreativeFactoryTimeoutPreRenderContent(21000);
         assertEquals(8000, PrebidMobile.getCreativeFactoryTimeout());
         assertEquals(21000, PrebidMobile.getCreativeFactoryTimeoutPreRenderContent());
     }
 
-    @Test
-    public void getCreativeFactoryTimeouts_useDefault() {
-        assertEquals(6000, PrebidMobile.getCreativeFactoryTimeout());
-        assertEquals(30000, PrebidMobile.getCreativeFactoryTimeoutPreRenderContent());
-    }
 }
