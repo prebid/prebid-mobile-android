@@ -39,7 +39,8 @@ public class MobileSdkPassThrough {
                     JSONObject passThrough = passThroughArray.getJSONObject(i);
                     if (passThrough.has("type")) {
                         String currentType = passThrough.getString("type");
-                        if (currentType.equals("prebidmobilesdk") && passThrough.has("adconfiguration")) {
+                        if (currentType.equals("prebidmobilesdk") && (passThrough.has("adconfiguration")
+                        || passThrough.has("sdkconfiguration"))) {
                             return new MobileSdkPassThrough(passThrough);
                         }
                     }
@@ -147,8 +148,8 @@ public class MobileSdkPassThrough {
     public Position closeButtonPosition;
     public Position skipButtonPosition;
 
-    public Integer bannerTimeout;
-    public Integer preRenderTimeout;
+    public Integer bannerTimeout = 0;
+    public Integer preRenderTimeout = 0;
 
     private JSONObject configuration;
 

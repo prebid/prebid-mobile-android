@@ -30,7 +30,7 @@ public class MobileSdkPassThroughTest {
     }
 
     @Test
-    public void create_putObjectWithoutAdConfiguration_returnNull() throws JSONException {
+    public void create_putObjectWithoutAdConfigurationOrSDKConfig_returnNull() throws JSONException {
         JSONObject jsonObject = new JSONObject("{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\"}]}}");
 
         MobileSdkPassThrough subject = MobileSdkPassThrough.create(jsonObject);
