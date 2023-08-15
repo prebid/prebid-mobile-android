@@ -94,6 +94,7 @@
     <string name="demo_bidding_in_app_banner_layout">Banner 320x50 Layout (In-App)</string>
     <string name="demo_bidding_in_app_banner_multisize">Banner Multisize (In-App)</string>
     <string name="demo_bidding_in_app_banners_and_interstitial">Banners and Interstitial (In-App)</string>
+    <string name="demo_bidding_in_app_banner_320_50_creative_factory">Banner 320x50 Server-Side Creative Factory Timeout (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_320_480">Display Interstitial 320x480 (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_320_480_custom_renderer">Display Interstitial 320x480 [Custom Renderer] (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_320_480_no_bids">Display Interstitial 320x480 [noBids] (In-App)</string>
@@ -329,6 +330,7 @@
     <string name="prebid_account_id_prod">0689a263-318d-448b-a3d4-b02e8a709d9d</string>
     <string name="prebid_account_id_prod_no_bids">1768035c-74d3-4786-b056-13bd41f34bde</string>
     <string name="prebid_account_id_prod_enabled_events">prebid-stored-request-enabled-events</string>
+    <string name="prebid_account_id_prod_sdk_config">prebid-stored-request-sdk-config</string>
 
     <string name="prebid_config_id_banner_320x50">50699c03-0910-477c-b4a4-911dbe2b9d42</string>
     <string name="prebid_config_id_mraid_resize">758bef6c-a811-497e-8234-9a583daf92e0</string>
