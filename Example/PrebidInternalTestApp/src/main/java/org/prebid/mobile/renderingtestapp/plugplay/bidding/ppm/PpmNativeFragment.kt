@@ -20,11 +20,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.annotation.IdRes
-import androidx.constraintlayout.widget.ConstraintLayout
 import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.PrebidNativeAdEventListener
 import org.prebid.mobile.api.data.FetchDemandResult
@@ -36,7 +31,6 @@ import org.prebid.mobile.renderingtestapp.databinding.FragmentNativeBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.utils.loadImage
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class PpmNativeFragment : AdFragment() {
 
@@ -57,7 +51,7 @@ open class PpmNativeFragment : AdFragment() {
         if (layoutRes == R.layout.fragment_native) {
             layoutInflater.inflate(
                 getEventButtonViewId(),
-                binding.contentFragmentNative!!,
+                binding.contentFragmentNative,
                 true
             )
         }
@@ -100,7 +94,7 @@ open class PpmNativeFragment : AdFragment() {
     protected open fun getEventButtonViewId(): Int = R.layout.lyt_native_in_app_events
 
     protected open fun inflateViewContent(nativeAd: PrebidNativeAd) {
-        nativeAd.registerViewList(
+        nativeAd.registerView(
             binding.adContainer,
             listOf(
                 binding.tvNativeTitle,
@@ -110,7 +104,7 @@ open class PpmNativeFragment : AdFragment() {
                 binding.ivNativeMain,
                 binding.ivNativeIcon
             ),
-            createNativeListener()
+            NativeListener(events)
         )
 
         binding.tvNativeTitle.text = nativeAd.title
@@ -126,27 +120,22 @@ open class PpmNativeFragment : AdFragment() {
         }
     }
 
-    protected fun createNativeListener(): PrebidNativeAdEventListener {
-        return object : PrebidNativeAdEventListener {
-            override fun onAdClicked() {
-                events.clicked(true)
-            }
+    protected class NativeListener(private val events: Events) : PrebidNativeAdEventListener {
 
-            override fun onAdImpression() {
-                doInMainThread {
-                    events.impression(true)
-                }
-            }
+        override fun onAdClicked() {
+            events.clicked(true)
+        }
 
-            override fun onAdExpired() {
-                events.expired(true)
+        override fun onAdImpression() {
+            Handler(Looper.getMainLooper()).post {
+                events.impression(true)
             }
         }
-    }
 
-    private fun doInMainThread(function: () -> Unit) {
-        val handler = Handler(Looper.getMainLooper())
-        handler.postAtFrontOfQueue(function)
+        override fun onAdExpired() {
+            events.expired(true)
+        }
+
     }
 
     protected class Events(parentView: View) : BaseEvents(parentView) {
