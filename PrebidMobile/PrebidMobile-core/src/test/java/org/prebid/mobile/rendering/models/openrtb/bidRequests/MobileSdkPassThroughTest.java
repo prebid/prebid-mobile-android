@@ -131,7 +131,7 @@ public class MobileSdkPassThroughTest {
         if (!BuildConfig.DEBUG) {
 
             JSONObject jsonObject = new JSONObject(
-                    "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\n\"ismuted\": false,\n\"maxvideoduration\": 15,\n\"closebuttonarea\": 0.3,\n\"closebuttonposition\": \"topleft\",\n\"skipbuttonarea\": 0.3,\n\"skipbuttonposition\": \"topleft\",\n\"skipdelay\": 0}, \n\"sdkconfiguration\": {\n\"cftbanner\": 7800, \n\"cftprerender\": 21000}}]}}");
+                    "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\", \n\"sdkconfiguration\": {\n\"cftbanner\": 7800, \n\"cftprerender\": 21000}}]}}");
 
             MobileSdkPassThrough subject = MobileSdkPassThrough.create(jsonObject);
 
@@ -139,6 +139,34 @@ public class MobileSdkPassThroughTest {
             assertEquals((Integer) 7800, subject.bannerTimeout);
             assertEquals((Integer) 21000, subject.preRenderTimeout);
 
+        }
+    }
+
+    @Test
+    public void create_putObjectWithSdkConfiguration_onlyBannerTimeout() throws JSONException {
+        if (!BuildConfig.DEBUG) {
+
+            JSONObject jsonObject = new JSONObject(
+                    "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\", \n\"sdkconfiguration\": {\n\"cftbanner\": 7900}}]}}");
+
+            MobileSdkPassThrough subject = MobileSdkPassThrough.create(jsonObject);
+
+            assertNotNull(subject);
+            assertEquals((Integer) 7900, subject.bannerTimeout);
+        }
+    }
+
+    @Test
+    public void create_putObjectWithSdkConfiguration_onlyPreRenderTimeout() throws JSONException {
+        if (!BuildConfig.DEBUG) {
+
+            JSONObject jsonObject = new JSONObject(
+                    "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\", \n\"sdkconfiguration\": {\n\"cftprerender\": 22000}}]}}");
+
+            MobileSdkPassThrough subject = MobileSdkPassThrough.create(jsonObject);
+
+            assertNotNull(subject);
+            assertEquals((Integer) 22000, subject.preRenderTimeout);
         }
     }
 

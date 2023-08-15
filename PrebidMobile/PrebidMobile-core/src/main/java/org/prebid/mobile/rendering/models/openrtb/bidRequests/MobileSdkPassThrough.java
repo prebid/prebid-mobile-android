@@ -173,8 +173,12 @@ public class MobileSdkPassThrough {
         try {
             if (passThrough.has("sdkconfiguration")) {
                 configuration = passThrough.getJSONObject("sdkconfiguration");
-                getAndSave("cftbanner", Integer.class, it -> bannerTimeout = it);
-                getAndSave("cftprerender", Integer.class, it -> preRenderTimeout = it);
+                if (configuration.has("cftbanner")) {
+                    getAndSave("cftbanner", Integer.class, it -> bannerTimeout = it);
+                }
+                if (configuration.has("cftprerender")) {
+                    getAndSave("cftprerender", Integer.class, it -> preRenderTimeout = it);
+                }
                 PrebidMobile.setPbsConfig(new PBSConfig(bannerTimeout, preRenderTimeout));
             }
         } catch (JSONException exception) {
