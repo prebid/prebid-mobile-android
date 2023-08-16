@@ -28,8 +28,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
+import org.prebid.mobile.configuration.PBSConfig;
 import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
+import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.RobolectricTestRunner;
@@ -68,6 +70,10 @@ public class PrebidMobileTest extends BaseSetup {
         assertTrue(PrebidMobile.getStoredBidResponses().isEmpty());
         PrebidMobile.setPbsDebug(true);
         assertTrue(PrebidMobile.getPbsDebug());
+        PrebidMobile.setCreativeFactoryTimeout(7000);
+        assertEquals(7000, PrebidMobile.getCreativeFactoryTimeout());
+        PrebidMobile.setCreativeFactoryTimeoutPreRenderContent(25000);
+        assertEquals(25000, PrebidMobile.getCreativeFactoryTimeoutPreRenderContent());
     }
 
     @Test
@@ -179,4 +185,22 @@ public class PrebidMobileTest extends BaseSetup {
 //        assertFalse(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
         assertFalse(PrebidMobilePluginRegister.getInstance().containsPlugin(fakePrebidMobilePluginRenderer));
     }
+
+    @Test
+    public void getCreativeFactoryTimeouts_usePbsConfig() {
+        PrebidMobile.setPbsConfig(new PBSConfig(9000, 20000));
+        PrebidMobile.setCreativeFactoryTimeout(8000);
+        PrebidMobile.setCreativeFactoryTimeoutPreRenderContent(21000);
+        assertEquals(9000, PrebidMobile.getCreativeFactoryTimeout());
+        assertEquals(20000, PrebidMobile.getCreativeFactoryTimeoutPreRenderContent());
+    }
+
+    @Test
+    public void getCreativeFactoryTimeouts_useSdk() {
+        PrebidMobile.setCreativeFactoryTimeout(8000);
+        PrebidMobile.setCreativeFactoryTimeoutPreRenderContent(21000);
+        assertEquals(8000, PrebidMobile.getCreativeFactoryTimeout());
+        assertEquals(21000, PrebidMobile.getCreativeFactoryTimeoutPreRenderContent());
+    }
+
 }
