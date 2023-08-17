@@ -20,6 +20,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
+import com.google.common.collect.Lists;
 
 import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.NativeDataAsset;
@@ -69,34 +70,24 @@ public class GamOriginalApiNativeInApp extends BaseAdActivity {
         ViewGroup wrapper
     ) {
         View nativeContainer = View.inflate(wrapper.getContext(), R.layout.layout_native, null);
-        ad.registerView(nativeContainer, new PrebidNativeAdEventListener() {
-            @Override
-            public void onAdClicked() {
-            }
 
-            @Override
-            public void onAdImpression() {
-            }
-
-            @Override
-            public void onAdExpired() {
-            }
-        });
         ImageView icon = nativeContainer.findViewById(R.id.imgIcon);
-
         ImageUtils.download(ad.getIconUrl(), icon);
 
         TextView title = nativeContainer.findViewById(R.id.tvTitle);
         title.setText(ad.getTitle());
-        ImageView image = nativeContainer.findViewById(R.id.imgImage);
 
+        ImageView image = nativeContainer.findViewById(R.id.imgImage);
         ImageUtils.download(ad.getImageUrl(), image);
 
         TextView description = nativeContainer.findViewById(R.id.tvDesc);
         description.setText(ad.getDescription());
+
         Button cta = nativeContainer.findViewById(R.id.btnCta);
         cta.setText(ad.getCallToAction());
         wrapper.addView(nativeContainer);
+
+        ad.registerView(nativeContainer, Lists.newArrayList(icon, title, image, description, cta), new SafeNativeListener());
     }
 
     private AdLoader createAdLoader(
@@ -203,4 +194,24 @@ public class GamOriginalApiNativeInApp extends BaseAdActivity {
             unifiedNativeAd.destroy();
         }
     }
+
+    /**
+     * It's important to use class implementation instead of anonymous object.
+     */
+    private static class SafeNativeListener implements PrebidNativeAdEventListener {
+
+        @Override
+        public void onAdClicked() {
+        }
+
+        @Override
+        public void onAdImpression() {
+        }
+
+        @Override
+        public void onAdExpired() {
+        }
+
+    }
+
 }

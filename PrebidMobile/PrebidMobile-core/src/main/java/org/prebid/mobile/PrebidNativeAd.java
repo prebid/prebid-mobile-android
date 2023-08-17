@@ -332,6 +332,9 @@ public class PrebidNativeAd {
      *
      * @param container      the native ad container used to track impression
      * @param clickableViews list of views that should handle click
+     * @param listener must not contain any references to View, Activity, because it can be in memory for a long time.
+     *                 Should be class implementation and not anonymous object.
+     *                 If it is anonymous class it can produce memory leak.
      * @return true if views registered successfully
      */
     public boolean registerView(View container, List<View> clickableViews, final PrebidNativeAdEventListener listener) {

@@ -92,11 +92,10 @@ class NativeGamFeedAdapter(
     }
 
     private fun inflateViewContent(nativeAd: PrebidNativeAd) {
-        val listener = createListener()
-        nativeAd.registerViewList(
+        nativeAd.registerView(
             nativeAdLayout,
             listOf(nativeAdLayout?.findViewById(R.id.btnNativeAction)),
-            listener
+            SafeNativeListener()
         )
 
         nativeAdLayout?.apply {
@@ -112,12 +111,10 @@ class NativeGamFeedAdapter(
         }
     }
 
-    private fun createListener(): PrebidNativeAdEventListener {
-        return object : PrebidNativeAdEventListener {
+    private class SafeNativeListener : PrebidNativeAdEventListener {
             override fun onAdClicked() {}
             override fun onAdImpression() {}
             override fun onAdExpired() {}
-        }
     }
 
 }

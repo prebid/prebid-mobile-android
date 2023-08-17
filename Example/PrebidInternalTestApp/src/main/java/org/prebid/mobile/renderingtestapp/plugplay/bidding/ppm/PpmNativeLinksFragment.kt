@@ -31,7 +31,7 @@ class PpmNativeLinksFragment : PpmNativeFragment() {
     override fun inflateViewContent(nativeAd: PrebidNativeAd) {
         findView<EventCounterView>(R.id.btnAdDisplayed).isEnabled = true
 
-        nativeAd.registerViewList(
+        nativeAd.registerView(
             findView(R.id.adContainer),
             listOf(
                 findView(R.id.btnNativeLinkRoot),
@@ -39,7 +39,7 @@ class PpmNativeLinksFragment : PpmNativeFragment() {
                 findView(R.id.btnNativeDeeplinkFallback),
                 findView(R.id.btnNativeLinkUrl)
             ),
-            NativeListener(events)
+            SafeNativeListener(events)
         )
 
         findView<Button>(R.id.btnNativeLinkRoot).text = nativeAd.callToAction
