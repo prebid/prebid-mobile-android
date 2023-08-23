@@ -108,6 +108,7 @@ public class MraidExpand {
         if (expandedDialog != null) {
             expandedDialog.dismiss();
         }
+        webViewBanner = null;
     }
 
     /**
