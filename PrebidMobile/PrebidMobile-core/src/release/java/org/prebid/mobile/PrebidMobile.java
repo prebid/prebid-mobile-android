@@ -377,8 +377,8 @@ public class PrebidMobile {
         return PrebidMobile.includeBidderKeys;
     }
 
-    // TODO not ready, wait for rendering delegation full release
-    private static void registerPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+    //region PluginRenderer methods which are available only on .debug.PredibMobile until feature full release
+    private static void registerPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) throws IllegalAccessException {
         PrebidMobilePluginRegister.getInstance().registerPlugin(prebidMobilePluginRenderer);
     }
 
@@ -389,6 +389,7 @@ public class PrebidMobile {
     private static Boolean containsPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         return PrebidMobilePluginRegister.getInstance().containsPlugin(prebidMobilePluginRenderer);
     }
+    //endregion PluginRenderer methods
 
     /**
      * LogLevel for logging control.

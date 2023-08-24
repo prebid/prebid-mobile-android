@@ -43,6 +43,7 @@ public class SdkInitializer {
             LogUtil.setLogLevel(PrebidMobile.getLogLevel().getValue());
         }
 
+        // TODO since PrebidRenderer must be registered, PrebidMobilePluginRegister will be directly used until PluginRenderer functionality is released
 //        PrebidMobile.registerPluginRenderer(new PrebidRenderer());
         PrebidMobilePluginRegister.getInstance().registerPlugin(new PrebidRenderer());
 

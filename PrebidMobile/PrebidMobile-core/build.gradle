@@ -17,6 +17,20 @@ android {
         buildConfigField "String", "VERSION", "\"${versionName}\""
         buildConfigField "String", "OMSDK_VERSION", "\"${omSdkVersion}\""
     }
+
+    sourceSets {
+        debug {
+            java.srcDirs('src/debug/java')
+            java.srcDirs('src/main/java')
+            res.srcDirs('src/main/res')
+        }
+
+        release {
+            java.srcDirs('src/release/java')
+            java.srcDirs('src/main/java')
+            res.srcDirs('src/main/res')
+        }
+    }
 }
 
 dependencies {
