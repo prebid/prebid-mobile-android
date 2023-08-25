@@ -19,7 +19,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
-import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -58,8 +57,7 @@ public class DisplayViewTest {
         adUnitConfiguration.setAdFormat(AdFormat.BANNER);
 
         fakePrebidMobilePluginRenderer = Mockito.spy(FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, mockBannerView, true, PREBID_MOBILE_RENDERER_NAME, "1.0"));
-//        PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
-        PrebidMobilePluginRegister.getInstance().registerPlugin(fakePrebidMobilePluginRenderer);
+        PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
 
         mockResponse = mock(BidResponse.class);
         Bid mockBid = mock(Bid.class);

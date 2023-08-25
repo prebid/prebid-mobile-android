@@ -428,15 +428,15 @@ public class PrebidMobile {
     }
 
     //region PluginRenderer methods are disabled until feature release
-    private static void registerPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+    public static void registerPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         PrebidMobilePluginRegister.getInstance().registerPlugin(prebidMobilePluginRenderer);
     }
 
-    private static void unregisterPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+    public static void unregisterPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         PrebidMobilePluginRegister.getInstance().unregisterPlugin(prebidMobilePluginRenderer);
     }
 
-    private static Boolean containsPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+    public static Boolean containsPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         return PrebidMobilePluginRegister.getInstance().containsPlugin(prebidMobilePluginRenderer);
     }
     //endregion
