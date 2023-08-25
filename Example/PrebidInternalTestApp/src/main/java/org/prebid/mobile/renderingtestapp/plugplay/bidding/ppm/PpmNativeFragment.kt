@@ -31,6 +31,7 @@ import org.prebid.mobile.renderingtestapp.databinding.FragmentNativeBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.utils.loadImage
+import java.lang.ref.WeakReference
 
 open class PpmNativeFragment : AdFragment() {
 
@@ -104,7 +105,7 @@ open class PpmNativeFragment : AdFragment() {
                 binding.ivNativeMain,
                 binding.ivNativeIcon
             ),
-            NativeListener(events)
+            SafeNativeListener(events)
         )
 
         binding.tvNativeTitle.text = nativeAd.title
@@ -120,20 +121,22 @@ open class PpmNativeFragment : AdFragment() {
         }
     }
 
-    protected class NativeListener(private val events: Events) : PrebidNativeAdEventListener {
+    protected class SafeNativeListener(events: Events) : PrebidNativeAdEventListener {
+
+        private val eventsReference = WeakReference(events)
 
         override fun onAdClicked() {
-            events.clicked(true)
+            eventsReference.get()?.clicked(true)
         }
 
         override fun onAdImpression() {
             Handler(Looper.getMainLooper()).post {
-                events.impression(true)
+                eventsReference.get()?.impression(true)
             }
         }
 
         override fun onAdExpired() {
-            events.expired(true)
+            eventsReference.get()?.expired(true)
         }
 
     }

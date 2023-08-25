@@ -70,7 +70,7 @@ class NativeFeedAdapter(
         this.nativeAd = nativeAd
 
         nativeAdLayout?.let {
-            nativeAd.registerViewList(
+            nativeAd.registerView(
                 it,
                 listOf(
                     it.findViewById(R.id.tvNativeTitle),
@@ -80,7 +80,7 @@ class NativeFeedAdapter(
                     it.findViewById(R.id.ivNativeIcon),
                     it.findViewById(R.id.ivNativeMain)
                 ),
-                createListener()
+                SafeNativeListener()
             )
 
             it.findViewById<TextView>(R.id.tvNativeTitle)?.text = nativeAd.title
@@ -93,12 +93,10 @@ class NativeFeedAdapter(
         }
     }
 
-    private fun createListener(): PrebidNativeAdEventListener {
-        return object : PrebidNativeAdEventListener {
-            override fun onAdClicked() {}
-            override fun onAdImpression() {}
-            override fun onAdExpired() {}
-        }
+    private class SafeNativeListener : PrebidNativeAdEventListener {
+        override fun onAdClicked() {}
+        override fun onAdImpression() {}
+        override fun onAdExpired() {}
     }
 
 }

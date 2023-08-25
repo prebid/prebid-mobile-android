@@ -2,12 +2,15 @@ package com.applovin.mediation.adapters.prebid;
 
 import android.os.Bundle;
 import android.view.View;
+
 import com.applovin.mediation.adapter.listeners.MaxNativeAdAdapterListener;
 import com.applovin.mediation.nativeAds.MaxNativeAd;
 import com.applovin.mediation.nativeAds.MaxNativeAdView;
+
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdEventListener;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -43,20 +46,37 @@ public class PrebidMaxNativeAd extends MaxNativeAd {
                 maxView.getCallToActionButton(),
                 maxView.getMediaContentViewGroup()
         ));
-        prebidNativeAd.registerViewList(maxView, views, new PrebidNativeAdEventListener() {
-            @Override
-            public void onAdClicked() {
-                maxListener.onNativeAdClicked();
-            }
+        prebidNativeAd.registerView(maxView, views, new SafeNativeListener(maxListener));
+    }
 
-            @Override
-            public void onAdImpression() {
-                maxListener.onNativeAdDisplayed(new Bundle());
-            }
+    private static class SafeNativeListener implements PrebidNativeAdEventListener {
 
-            @Override
-            public void onAdExpired() {}
-        });
+        private final WeakReference<MaxNativeAdAdapterListener> listenerReference;
+
+        public SafeNativeListener(MaxNativeAdAdapterListener maxListener) {
+            this.listenerReference = new WeakReference(maxListener);
+        }
+
+        @Override
+        public void onAdClicked() {
+            MaxNativeAdAdapterListener listener = listenerReference.get();
+            if (listener != null) {
+                listener.onNativeAdClicked();
+            }
+        }
+
+        @Override
+        public void onAdImpression() {
+            MaxNativeAdAdapterListener listener = listenerReference.get();
+            if (listener != null) {
+                listener.onNativeAdDisplayed(new Bundle());
+            }
+        }
+
+        @Override
+        public void onAdExpired() {
+        }
+
     }
 
 }

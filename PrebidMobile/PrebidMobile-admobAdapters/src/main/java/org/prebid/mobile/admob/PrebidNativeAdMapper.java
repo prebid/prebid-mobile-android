@@ -26,6 +26,7 @@ import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdEventListener;
 
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,9 +35,8 @@ import java.util.Map;
 public class PrebidNativeAdMapper extends UnifiedNativeAdMapper {
 
     private final PrebidNativeAd prebidAd;
-    private final PrebidNativeAdEventListener prebidListener = createListener();
     @Nullable
-    private MediationNativeAdCallback adMobNativeListener;
+    private PrebidNativeAdEventListener prebidListener;
 
     public PrebidNativeAdMapper(PrebidNativeAd prebidAd) {
         super();
@@ -46,17 +46,21 @@ public class PrebidNativeAdMapper extends UnifiedNativeAdMapper {
     @Override
     public void trackViews(@NonNull View view, @NonNull Map<String, View> map, @NonNull Map<String, View> map1) {
         super.trackViews(view, map, map1);
-        prebidAd.registerViewList(view, new ArrayList<>(map.values()), createListener());
+        prebidAd.registerView(view, new ArrayList<>(map.values()), prebidListener);
     }
 
     @Override
     public void recordImpression() {
-        prebidListener.onAdImpression();
+        if (prebidListener != null) {
+            prebidListener.onAdImpression();
+        }
     }
 
     @Override
     public void handleClick(@NonNull View view) {
-        prebidListener.onAdClicked();
+        if (prebidListener != null) {
+            prebidListener.onAdClicked();
+        }
     }
 
     public void configure(
@@ -75,31 +79,39 @@ public class PrebidNativeAdMapper extends UnifiedNativeAdMapper {
         setOverrideClickHandling(true);
         setOverrideImpressionRecording(false);
 
-        adMobNativeListener = adMobLoadListener.onSuccess(this);
+        MediationNativeAdCallback adMobListener = adMobLoadListener.onSuccess(this);
+        prebidListener = new SafeNativeListener(adMobListener);
     }
 
-    private PrebidNativeAdEventListener createListener() {
-        return new PrebidNativeAdEventListener() {
-            @Override
-            public void onAdClicked() {
-                if (adMobNativeListener != null) {
-                    adMobNativeListener.reportAdClicked();
-                    adMobNativeListener.onAdOpened();
-                }
-            }
+    private static class SafeNativeListener implements PrebidNativeAdEventListener {
 
-            @Override
-            public void onAdImpression() {
-                if (adMobNativeListener != null) {
-                    Runnable reportImpression = () -> adMobNativeListener.reportAdImpression();
-                    new Handler(Looper.getMainLooper()).post(reportImpression);
-                }
-            }
+        private final WeakReference<MediationNativeAdCallback> listenerReference;
 
-            @Override
-            public void onAdExpired() {
+        public SafeNativeListener(MediationNativeAdCallback adMobNativeListener) {
+            listenerReference = new WeakReference<>(adMobNativeListener);
+        }
+
+        @Override
+        public void onAdClicked() {
+            MediationNativeAdCallback listener = listenerReference.get();
+            if (listener != null) {
+                listener.reportAdClicked();
+                listener.onAdOpened();
             }
-        };
+        }
+
+        @Override
+        public void onAdImpression() {
+            MediationNativeAdCallback listener = listenerReference.get();
+            if (listener != null) {
+                Runnable reportImpression = listener::reportAdImpression;
+                new Handler(Looper.getMainLooper()).post(reportImpression);
+            }
+        }
+
+        @Override
+        public void onAdExpired() {
+        }
     }
 
     private static class PrebidImage extends NativeAd.Image {
