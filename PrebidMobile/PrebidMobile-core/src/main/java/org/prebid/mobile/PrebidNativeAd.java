@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,7 @@ import org.json.JSONObject;
 import org.prebid.mobile.rendering.bidding.events.EventsNotifier;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,6 @@ public class PrebidNativeAd {
     private static final String TAG = "PrebidNativeAd";
 
     private boolean impressionIsNotNotified = true;
-    private boolean clickIsNotNotified = true;
 
     private final ArrayList<NativeTitle> titles = new ArrayList<>();
     private final ArrayList<NativeImage> images = new ArrayList<>();
@@ -52,7 +53,7 @@ public class PrebidNativeAd {
     private ArrayList<String> click_trackers;
     private VisibilityDetector visibilityDetector;
     private boolean expired;
-    private View registeredView;
+    private WeakReference<View> registeredView;
     private PrebidNativeAdEventListener listener;
     private ArrayList<ImpressionTracker> impressionTrackers;
     private ArrayList<ClickTracker> clickTrackers;
@@ -69,24 +70,7 @@ public class PrebidNativeAd {
                 JSONObject adm = new JSONObject(admStr);
                 JSONArray asset = adm.getJSONArray("assets");
                 final PrebidNativeAd ad = new PrebidNativeAd();
-                CacheManager.registerCacheExpiryListener(cacheId, new CacheManager.CacheExpiryListener() {
-                    @Override
-                    public void onCacheExpired() {
-                        if (ad.registeredView == null) {
-                            if (ad.listener != null) {
-                                ad.listener.onAdExpired();
-                            }
-                            ad.expired = true;
-                            if (ad.visibilityDetector != null) {
-                                ad.visibilityDetector.destroy();
-                                ad.visibilityDetector = null;
-                            }
-                            ad.impressionTrackers = null;
-                            ad.clickTrackers = null;
-                            ad.listener = null;
-                        }
-                    }
-                });
+                CacheManager.registerCacheExpiryListener(cacheId, new CacheExpireListenerImpl(ad));
                 for (int i = 0; i < asset.length(); i++) {
                     JSONObject adObject = asset.getJSONObject(i);
                     if (adObject.has("title")) {
@@ -300,11 +284,9 @@ public class PrebidNativeAd {
     }
 
     /**
-     * This API is used to register the view for Ad Events (#onAdClicked(), #onAdImpression, #onAdExpired)
-     *
-     * @param view
-     * @param listener
+     * @deprecated use {@link PrebidNativeAd#registerView(View, List, PrebidNativeAdEventListener)}
      */
+    @Deprecated
     public boolean registerView(View view, final PrebidNativeAdEventListener listener) {
         if (!expired && view != null) {
             this.listener = listener;
@@ -314,7 +296,7 @@ public class PrebidNativeAd {
             }
 
             if (imp_trackers != null) {
-                impressionTrackers = new ArrayList<ImpressionTracker>(imp_trackers.size());
+                impressionTrackers = new ArrayList<>(imp_trackers.size());
                 for (String url : imp_trackers) {
                     ImpressionTracker impressionTracker = ImpressionTracker.create(url, visibilityDetector, view.getContext(), new ImpressionTrackerListener() {
                         @Override
@@ -329,28 +311,31 @@ public class PrebidNativeAd {
                 }
             }
 
-            this.registeredView = view;
+            registeredView = new WeakReference<>(view);
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    handleClick(v, listener);
-                }
-            });
+            view.setOnClickListener(v -> handleClick(v, listener));
             return true;
         }
         return false;
     }
 
     /**
-     * This API is used to register a list of views for Ad Events (#onAdClicked(), #onAdImpression, #onAdExpired)
-     *
-     * @param container
-     * @param viewList
-     * @param listener
+     * @deprecated use {@link PrebidNativeAd#registerView(View, List, PrebidNativeAdEventListener)}
      */
+    @Deprecated
     public boolean registerViewList(View container, List<View> viewList, final PrebidNativeAdEventListener listener) {
-        if (container == null || viewList == null || viewList.isEmpty()) {
+        return registerView(container, viewList, listener);
+    }
+
+    /**
+     * This API is used to register the view for Ad Events (#onAdClicked(), #onAdImpression, #onAdExpired).
+     *
+     * @param container      the native ad container used to track impression
+     * @param clickableViews list of views that should handle click
+     * @return true if views registered successfully
+     */
+    public boolean registerView(View container, List<View> clickableViews, final PrebidNativeAdEventListener listener) {
+        if (container == null || clickableViews == null || clickableViews.isEmpty()) {
             return false;
         }
         if (!expired && container != null) {
@@ -361,7 +346,7 @@ public class PrebidNativeAd {
             }
 
             if (imp_trackers != null) {
-                impressionTrackers = new ArrayList<ImpressionTracker>(imp_trackers.size());
+                impressionTrackers = new ArrayList<>(imp_trackers.size());
                 for (String url : imp_trackers) {
                     ImpressionTracker impressionTracker = ImpressionTracker.create(url, visibilityDetector, container.getContext(), new ImpressionTrackerListener() {
                         @Override
@@ -376,24 +361,14 @@ public class PrebidNativeAd {
                 }
             }
 
-            this.registeredView = container;
+            registeredView = new WeakReference<>(container);
 
-            container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    handleClick(v, listener);
-                }
-            });
+            container.setOnClickListener(v -> handleClick(v, listener));
 
-            if (viewList != null && viewList.size() > 0) {
-                for (View views : viewList) {
+            if (clickableViews != null && clickableViews.size() > 0) {
+                for (View views : clickableViews) {
                     if (views != null) {
-                        views.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                handleClick(v, listener);
-                            }
-                        });
+                        views.setOnClickListener(v -> handleClick(v, listener));
                     }
                 }
             }
@@ -459,6 +434,38 @@ public class PrebidNativeAd {
         for (String url: click_trackers) {
             ClickTracker.createAndFire(url, context, null);
         }
+    }
+
+    static class CacheExpireListenerImpl implements CacheManager.CacheExpiryListener {
+
+        private PrebidNativeAd ad;
+
+        public CacheExpireListenerImpl(PrebidNativeAd ad) {
+            this.ad = ad;
+        }
+
+        @Override
+        public void onCacheExpired() {
+            Log.e(TAG, "onCacheExpired");
+            WeakReference<View> weakReference = ad.registeredView;
+            if (weakReference == null) return;
+
+            View view = weakReference.get();
+            if (view != null) return;
+
+            if (ad.listener != null) {
+                ad.listener.onAdExpired();
+            }
+            ad.expired = true;
+            if (ad.visibilityDetector != null) {
+                ad.visibilityDetector.destroy();
+                ad.visibilityDetector = null;
+            }
+            ad.impressionTrackers = null;
+            ad.clickTrackers = null;
+            ad.listener = null;
+        }
+
     }
 
 }

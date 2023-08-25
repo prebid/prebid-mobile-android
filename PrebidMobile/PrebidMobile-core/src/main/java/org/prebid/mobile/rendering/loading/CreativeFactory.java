@@ -22,6 +22,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -45,9 +46,6 @@ import java.util.ArrayList;
 public class CreativeFactory {
 
     private static final String TAG = CreativeFactory.class.getSimpleName();
-    private static final long BANNER_TIMEOUT = 6 * 1000;
-    private static final long VAST_TIMEOUT = 30 * 1000;
-    private static final long INTERSTITIAL_TIMEOUT = 30 * 1000;
 
     private AbstractCreative creative;
     private CreativeModel creativeModel;
@@ -142,10 +140,9 @@ public class CreativeFactory {
         } else {
             listener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Tracking info not found"));
         }
-
-        long creativeDownloadTimeout = BANNER_TIMEOUT;
+        long creativeDownloadTimeout = PrebidMobile.getCreativeFactoryTimeout();
         if (creativeModel.getAdConfiguration().isAdType(AdFormat.INTERSTITIAL)) {
-            creativeDownloadTimeout = INTERSTITIAL_TIMEOUT;
+            creativeDownloadTimeout = PrebidMobile.getCreativeFactoryTimeoutPreRenderContent();
         }
         markWorkStart(creativeDownloadTimeout);
         creative.load();
@@ -192,7 +189,7 @@ public class CreativeFactory {
 
             newCreative.setResolutionListener(new CreativeFactoryCreativeResolutionListener(this));
             creative = newCreative;
-            markWorkStart(VAST_TIMEOUT);
+            markWorkStart(PrebidMobile.getCreativeFactoryTimeoutPreRenderContent());
             newCreative.load();
         } catch (Exception exception) {
             LogUtil.error(TAG, "VideoCreative creation failed: " + Log.getStackTraceString(exception));

@@ -30,7 +30,7 @@ public class MobileSdkPassThroughTest {
     }
 
     @Test
-    public void create_putObjectWithoutAdConfiguration_returnNull() throws JSONException {
+    public void create_putObjectWithoutAdConfigurationOrSDKConfig_returnNull() throws JSONException {
         JSONObject jsonObject = new JSONObject("{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\"}]}}");
 
         MobileSdkPassThrough subject = MobileSdkPassThrough.create(jsonObject);
@@ -123,6 +123,50 @@ public class MobileSdkPassThroughTest {
             assertEquals((Integer) 15, result.maxVideoDuration);
             /* In fromBid = 0.1, in fromRoot = 0.2, fromBid have higher priority, so must be 0.1 */
             assertEquals((Double) 0.1, result.closeButtonArea);
+        }
+    }
+
+    @Test
+    public void create_putObjectWithSdkConfiguration_returnFullObject() throws JSONException {
+        if (!BuildConfig.DEBUG) {
+
+            JSONObject jsonObject = new JSONObject(
+                    "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\", \n\"sdkconfiguration\": {\n\"cftbanner\": 7800, \n\"cftprerender\": 21000}}]}}");
+
+            MobileSdkPassThrough subject = MobileSdkPassThrough.create(jsonObject);
+
+            assertNotNull(subject);
+            assertEquals((Integer) 7800, subject.bannerTimeout);
+            assertEquals((Integer) 21000, subject.preRenderTimeout);
+
+        }
+    }
+
+    @Test
+    public void create_putObjectWithSdkConfiguration_onlyBannerTimeout() throws JSONException {
+        if (!BuildConfig.DEBUG) {
+
+            JSONObject jsonObject = new JSONObject(
+                    "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\", \n\"sdkconfiguration\": {\n\"cftbanner\": 7900}}]}}");
+
+            MobileSdkPassThrough subject = MobileSdkPassThrough.create(jsonObject);
+
+            assertNotNull(subject);
+            assertEquals((Integer) 7900, subject.bannerTimeout);
+        }
+    }
+
+    @Test
+    public void create_putObjectWithSdkConfiguration_onlyPreRenderTimeout() throws JSONException {
+        if (!BuildConfig.DEBUG) {
+
+            JSONObject jsonObject = new JSONObject(
+                    "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\", \n\"sdkconfiguration\": {\n\"cftprerender\": 22000}}]}}");
+
+            MobileSdkPassThrough subject = MobileSdkPassThrough.create(jsonObject);
+
+            assertNotNull(subject);
+            assertEquals((Integer) 22000, subject.preRenderTimeout);
         }
     }
 

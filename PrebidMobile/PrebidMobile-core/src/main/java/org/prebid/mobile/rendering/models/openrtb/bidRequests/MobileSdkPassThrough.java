@@ -6,8 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.configuration.PBSConfig;
 import org.prebid.mobile.core.BuildConfig;
 
 /**
@@ -37,7 +39,8 @@ public class MobileSdkPassThrough {
                     JSONObject passThrough = passThroughArray.getJSONObject(i);
                     if (passThrough.has("type")) {
                         String currentType = passThrough.getString("type");
-                        if (currentType.equals("prebidmobilesdk") && passThrough.has("adconfiguration")) {
+                        if (currentType.equals("prebidmobilesdk") && (passThrough.has("adconfiguration")
+                        || passThrough.has("sdkconfiguration"))) {
                             return new MobileSdkPassThrough(passThrough);
                         }
                     }
@@ -145,6 +148,9 @@ public class MobileSdkPassThrough {
     public Position closeButtonPosition;
     public Position skipButtonPosition;
 
+    public Integer bannerTimeout = 0;
+    public Integer preRenderTimeout = 0;
+
     private JSONObject configuration;
 
     private MobileSdkPassThrough() {}
@@ -163,8 +169,23 @@ public class MobileSdkPassThrough {
                 getAndSave("skipbuttonposition", String.class, it -> skipButtonPosition = Position.fromString(it));
             }
         } catch (JSONException exception) {
-            LogUtil.error(TAG, "Can't parse configuration");
+            LogUtil.error(TAG, "Can't parse adconfiguration");
         }
+        try {
+            if (passThrough.has("sdkconfiguration")) {
+                configuration = passThrough.getJSONObject("sdkconfiguration");
+                if (configuration.has("cftbanner")) {
+                    getAndSave("cftbanner", Integer.class, it -> bannerTimeout = it);
+                }
+                if (configuration.has("cftprerender")) {
+                    getAndSave("cftprerender", Integer.class, it -> preRenderTimeout = it);
+                }
+                PrebidMobile.setPbsConfig(new PBSConfig(bannerTimeout, preRenderTimeout));
+            }
+        } catch (JSONException exception) {
+            LogUtil.error(TAG, "Can't parse sdkconfiguration");
+        }
+
     }
 
 

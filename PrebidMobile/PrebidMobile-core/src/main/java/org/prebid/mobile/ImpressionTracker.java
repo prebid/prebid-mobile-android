@@ -44,7 +44,7 @@ class ImpressionTracker {
         this.url = url;
         this.visibilityDetector = visibilityDetector;
         this.listener = new ImpressionListener();
-        this.context = context;
+        this.context = context.getApplicationContext();
         this.impressionTrackerListener = impressionTrackerListener;
     }
 

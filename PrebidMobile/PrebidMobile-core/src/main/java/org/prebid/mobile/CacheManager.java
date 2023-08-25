@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import java.util.HashMap;
@@ -63,6 +64,10 @@ public class CacheManager {
         expiryIntervalMap.clear();
     }
 
+    /**
+     * Return cached ad content by cache id.
+     */
+    @Nullable
     protected static String get(String cacheId) {
         return savedValues.remove(cacheId);
     }

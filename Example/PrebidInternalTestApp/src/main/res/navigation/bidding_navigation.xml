@@ -242,6 +242,15 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@+id/headerBiddingFragment" />
 
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_banner_sdk_config"
+            app:destination="@id/navigation_in_app_banner_sdk_config"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
 
         <!--GAM actions-->
         <action
@@ -569,6 +578,11 @@
         android:id="@+id/navigation_in_app_banner_in_layout"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannerInLayoutFragment"
         android:label="In-App Banner In Layout" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_banner_sdk_config"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannerCreativeFactoryFragment"
+        android:label="In-App Banner Sdk Config" />
 
     <fragment
         android:id="@+id/navigation_in_app_banner_scrollable"

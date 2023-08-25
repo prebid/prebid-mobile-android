@@ -39,7 +39,7 @@ class PpmNativeLinksFragment : PpmNativeFragment() {
                 findView(R.id.btnNativeDeeplinkFallback),
                 findView(R.id.btnNativeLinkUrl)
             ),
-            createNativeListener()
+            NativeListener(events)
         )
 
         findView<Button>(R.id.btnNativeLinkRoot).text = nativeAd.callToAction

@@ -1117,6 +1117,24 @@ class DemoItemProvider private constructor() {
                     }
                 )
             )
+            demoList.add(
+                    DemoItem(
+                            getString(R.string.demo_bidding_in_app_banner_320_50_creative_factory),
+                            R.id.action_header_bidding_to_in_app_banner_sdk_config,
+                            ppmBannerTagList,
+                            createBannerBundle(
+                                    R.string.imp_prebid_id_banner_320x50,
+                                    null,
+                                    320,
+                                    50
+                            ).apply {
+                                putString(
+                                        AdFragment.ARGUMENT_ACCOUNT_ID,
+                                        getString(R.string.prebid_account_id_prod_sdk_config)
+                                )
+                            }
+                    )
+            )
         }
 
         private fun addGamPbsExamples() {

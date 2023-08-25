@@ -36,7 +36,7 @@ class ClickTracker {
 
     private ClickTracker(String url, Context context, ClickTrackerListener clickTrackerListener) {
         this.url = url;
-        this.context = context;
+        this.context = context.getApplicationContext();
         this.clickTrackerListener = clickTrackerListener;
     }
 
