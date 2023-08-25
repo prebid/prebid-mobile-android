@@ -377,17 +377,19 @@ public class PrebidMobile {
         return PrebidMobile.includeBidderKeys;
     }
 
-    public static void registerPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+    //region PluginRenderer methods are disabled until feature release
+    private static void registerPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         PrebidMobilePluginRegister.getInstance().registerPlugin(prebidMobilePluginRenderer);
     }
 
-    public static void unregisterPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+    private static void unregisterPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         PrebidMobilePluginRegister.getInstance().unregisterPlugin(prebidMobilePluginRenderer);
     }
 
-    public static Boolean containsPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+    private static Boolean containsPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         return PrebidMobilePluginRegister.getInstance().containsPlugin(prebidMobilePluginRenderer);
     }
+    //endregion
 
     /**
      * LogLevel for logging control.

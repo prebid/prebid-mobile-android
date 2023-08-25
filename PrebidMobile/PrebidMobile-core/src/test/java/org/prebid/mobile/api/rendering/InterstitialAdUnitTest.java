@@ -45,7 +45,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.api.data.AdFormat;
-import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener;
@@ -309,7 +308,8 @@ public class InterstitialAdUnitTest {
         final InterstitialEventListener spyEventListener = spy(getEventListener());
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
         PrebidMobilePluginRenderer fakePrebidRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(mockInterstitialController, null, true, PREBID_MOBILE_RENDERER_NAME, "1.0");
-        PrebidMobile.registerPluginRenderer(fakePrebidRenderer);
+//        PrebidMobile.registerPluginRenderer(fakePrebidRenderer);
+        PrebidMobilePluginRegister.getInstance().registerPlugin(fakePrebidRenderer);
 
         WhiteBox.setInternalState(interstitialAdUnit, "bidResponse", mockBidResponse);
         WhiteBox.setInternalState(interstitialAdUnit, "interstitialController", mockInterstitialController);
