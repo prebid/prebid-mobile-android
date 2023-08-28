@@ -38,6 +38,8 @@ import org.prebid.mobile.api.data.VideoPlacementType;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.BannerVideoListener;
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -325,6 +327,8 @@ public class BannerView extends FrameLayout {
         }
         bidRequesterListener = null;
 
+        PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig.getFingerprint());
+
         screenStateReceiver.unregister();
     }
 
@@ -359,6 +363,10 @@ public class BannerView extends FrameLayout {
 
     public void setBannerVideoListener(BannerVideoListener bannerVideoListener) {
         this.bannerVideoListener = bannerVideoListener;
+    }
+
+    public void setPluginEventListener(PluginEventListener pluginEventListener) {
+        PrebidMobilePluginRegister.getInstance().registerEventListener(pluginEventListener, adUnitConfig.getFingerprint());
     }
 
     public void setVideoPlacementType(VideoPlacementType videoPlacement) {

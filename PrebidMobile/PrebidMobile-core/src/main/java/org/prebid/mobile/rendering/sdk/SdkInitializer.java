@@ -43,6 +43,7 @@ public class SdkInitializer {
             LogUtil.setLogLevel(PrebidMobile.getLogLevel().getValue());
         }
 
+        // todo using internal api until pluginrenderer feature is released
 //        PrebidMobile.registerPluginRenderer(new PrebidRenderer());
         PrebidMobilePluginRegister.getInstance().registerPlugin(new PrebidRenderer());
 

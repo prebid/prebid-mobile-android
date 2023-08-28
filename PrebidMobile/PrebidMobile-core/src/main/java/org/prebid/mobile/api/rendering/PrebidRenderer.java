@@ -28,6 +28,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.BuildConfig;
@@ -53,6 +54,12 @@ public class PrebidRenderer implements PrebidMobilePluginRenderer {
     public String getToken() {
         return null;
     }
+
+    @Override
+    public void registerEventListener(PluginEventListener pluginEventListener, String listenerKey) {}
+
+    @Override
+    public void unregisterEventListener(String listenerKey) {}
 
     @Override
     public View createBannerAdView(

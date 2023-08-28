@@ -83,6 +83,7 @@
     <string name="demo_bidding_in_app_banner_320_50">Banner 320x50 (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_events">Banner 320x50 Events (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_custom_renderer">Banner 320x50 [Custom Renderer] (In-App)</string>
+    <string name="demo_bidding_in_app_banner_320_50_custom_renderer_plugin_event_listener">Banner 320x50 [Custom Renderer, PluginEventListener] (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_no_bids">Banner 320x50 [noBids] (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_imp_prebid_random_bid"> Banner 320x50 [Bid - RANDOM noBids, Ad - RESPECTIVE]</string>
     <string name="demo_bidding_in_app_banner_300_250">Banner 300x250 (In-App)</string>
@@ -97,6 +98,7 @@
     <string name="demo_bidding_in_app_banner_320_50_creative_factory">Banner 320x50 Server-Side Creative Factory Timeout (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_320_480">Display Interstitial 320x480 (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_320_480_custom_renderer">Display Interstitial 320x480 [Custom Renderer] (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_320_480_custom_renderer_plugin_event_listener">Display Interstitial 320x480 [Custom Renderer, PluginEventListener] (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_320_480_no_bids">Display Interstitial 320x480 [noBids] (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_320_480_multiformat">Multiformat Interstitial 320x480 (In-App)</string>
     <string name="demo_bidding_in_app_banner_video_outstream">Video Outstream (In-App)</string>

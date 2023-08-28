@@ -36,6 +36,24 @@
             app:popUpTo="@+id/headerBiddingFragment" />
 
         <action
+            android:id="@+id/action_header_bidding_to_in_app_banner_plugin_event_listener"
+            app:destination="@id/navigation_in_app_banner_plugin_event_listener"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_banner_plugin_renderer"
+            app:destination="@id/navigation_in_app_banner_plugin_renderer"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
             android:id="@+id/action_header_bidding_to_in_app_banner_special_symbols"
             app:destination="@id/navigation_in_app_banner_special_symbols"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -74,6 +92,24 @@
         <action
             android:id="@+id/action_header_bidding_to_in_app_interstitial"
             app:destination="@id/navigation_in_app_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_interstitial_plugin_event_listener"
+            app:destination="@id/navigation_in_app_interstitial_plugin_event_listener"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_interstitial_plugin_renderer"
+            app:destination="@id/navigation_in_app_interstitial_plugin_renderer"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -519,6 +555,16 @@
         android:label="In-App Banner" />
 
     <fragment
+        android:id="@+id/navigation_in_app_banner_plugin_event_listener"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.pluginrenderer.PpmBannerPluginEventListenerFragment"
+        android:label="In-App Banner PluginEventListener" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_banner_plugin_renderer"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.pluginrenderer.PpmBannerPluginRendererFragment"
+        android:label="In-App Banner PluginRenderer" />
+
+    <fragment
         android:id="@+id/navigation_in_app_banner_special_symbols"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannerSpecialSymbolsFragment"
         android:label="In-App Banner" />
@@ -555,6 +601,16 @@
         android:id="@+id/navigation_in_app_interstitial"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmInterstitialFragment"
         android:label="In-App Interstitial" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_interstitial_plugin_event_listener"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.pluginrenderer.PpmInterstitialPluginEventListenerFragment"
+        android:label="In-App Interstitial PluginEventListener" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_interstitial_plugin_renderer"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.pluginrenderer.PpmInterstitialPluginRendererFragment"
+        android:label="In-App Interstitial PluginRenderer" />
 
     <fragment
         android:id="@+id/navigation_interstitial_memory_leak_testing"

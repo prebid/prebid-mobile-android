@@ -39,6 +39,16 @@ public interface PrebidMobilePluginRenderer {
     String getToken();
 
     /**
+     * Register a listener related to a specific ad unit config fingerprint in order to dispatch specific ad events
+     */
+    void registerEventListener(PluginEventListener pluginEventListener, String listenerKey);
+
+    /**
+     * Unregister a listener based on an ad unit config fingerprint
+     */
+    void unregisterEventListener(String listenerKey);
+
+    /**
      * Creates and returns Banner View for a given Bid Response.
      * Returns nil in the case of an internal error.
      * <br>

@@ -50,7 +50,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNotEquals;
@@ -482,6 +485,20 @@ public class UtilsTest extends TestCase {
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
 
         assertEquals(Gravity.END | Gravity.TOP, params.gravity);
+    }
+
+    @Test
+    public void test_generateUUIDTimeBasedUniqueness() {
+        int numberOfUUIDsToGenerate = 1000;
+        Set<String> generatedUUIDs = new HashSet<>();
+
+        for (int i = 0; i < numberOfUUIDsToGenerate; i++) {
+            String uuid = Utils.generateUUIDTimeBased();
+            assertNotNull(UUID.fromString(uuid)); // valid UUID
+            assertEquals(4, UUID.fromString(uuid).version()); // version 4 (random-based)
+            assertFalse(generatedUUIDs.contains(uuid)); // is unique
+            generatedUUIDs.add(uuid);
+        }
     }
 
 }

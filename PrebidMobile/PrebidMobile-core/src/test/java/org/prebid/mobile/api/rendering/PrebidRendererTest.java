@@ -79,26 +79,10 @@ public class PrebidRendererTest {
     }
 
     @Test
-    public void isSupportRenderingFor_withBanner_returnTrue() {
-        when(mockAdUnitConfiguration.isAdType(AdFormat.BANNER)).thenReturn(true);
-        assertTrue(prebidRenderer.isSupportRenderingFor(mockAdUnitConfiguration));
-    }
-
-    @Test
-    public void isSupportRenderingFor_withInterstitial_returnTrue() {
-        when(mockAdUnitConfiguration.isAdType(AdFormat.INTERSTITIAL)).thenReturn(true);
-        assertTrue(prebidRenderer.isSupportRenderingFor(mockAdUnitConfiguration));
-    }
-
-    @Test
-    public void isSupportRenderingFor_withNative_returnTrue() {
-        when(mockAdUnitConfiguration.isAdType(AdFormat.NATIVE)).thenReturn(true);
-        assertTrue(prebidRenderer.isSupportRenderingFor(mockAdUnitConfiguration));
-    }
-
-    @Test
-    public void isSupportRenderingFor_withVast_returnTrue() {
-        when(mockAdUnitConfiguration.isAdType(AdFormat.VAST)).thenReturn(true);
-        assertTrue(prebidRenderer.isSupportRenderingFor(mockAdUnitConfiguration));
+    public void isSupportRenderingFor_complyWithAllAdFormats() {
+        for (AdFormat adFormat : AdFormat.values()) {
+            when(mockAdUnitConfiguration.isAdType(adFormat)).thenReturn(true);
+            assertTrue(prebidRenderer.isSupportRenderingFor(mockAdUnitConfiguration));
+        }
     }
 }

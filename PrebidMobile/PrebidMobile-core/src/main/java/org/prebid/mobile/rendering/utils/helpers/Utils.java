@@ -48,6 +48,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
@@ -142,6 +143,17 @@ public final class Utils {
         }
 
         return encryted;
+    }
+
+    /**
+     * Generate time-based UUID
+     * @return  RFC 4122 high-quality random number
+     */
+    public static String generateUUIDTimeBased() {
+        UUID timeUUID = UUID.randomUUID();
+        long timestamp = System.currentTimeMillis();
+        timeUUID = new UUID(timeUUID.getMostSignificantBits(), timestamp);
+        return timeUUID.toString();
     }
 
     /**

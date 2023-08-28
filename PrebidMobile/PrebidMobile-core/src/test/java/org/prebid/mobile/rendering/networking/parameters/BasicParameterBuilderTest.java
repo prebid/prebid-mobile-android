@@ -92,7 +92,7 @@ public class BasicParameterBuilderTest {
     private static final String USER_CUSTOM = "custom";
     private static final String USER_GENDER = "M";
     private static final String USER_BUYER_ID = "bid";
-    private PrebidMobilePluginRenderer otherPlugin = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, null, true, "FakePlugin");
+    private PrebidMobilePluginRenderer otherPlugin = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, null, true, "FakePlugin", "1.0");
 
     private Context context;
 
@@ -125,6 +125,7 @@ public class BasicParameterBuilderTest {
         PrebidMobile.clearStoredBidResponses();
         PrebidMobile.setStoredAuctionResponse(null);
 
+//        PrebidMobile.unregisterPluginRenderer(otherPlugin);
         PrebidMobilePluginRegister.getInstance().unregisterPlugin(otherPlugin);
     }
 
@@ -818,6 +819,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void whenSetPluginRendererList_pluginRendererIsIndexed() throws JSONException {
         // Given
+//        PrebidMobile.registerPluginRenderer(otherPlugin);
         PrebidMobilePluginRegister.getInstance().registerPlugin(otherPlugin);
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsOriginalAdUnit(false);

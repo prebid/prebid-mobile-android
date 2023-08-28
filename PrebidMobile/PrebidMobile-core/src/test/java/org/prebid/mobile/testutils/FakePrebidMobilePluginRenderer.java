@@ -1,7 +1,5 @@
 package org.prebid.mobile.testutils;
 
-import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
-
 import android.content.Context;
 import android.view.View;
 
@@ -9,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface;
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -22,18 +21,25 @@ public class FakePrebidMobilePluginRenderer {
             InterstitialController mockInterstitialController,
             View mockBannerAdView,
             Boolean isSupportRenderingFor,
-            String rendererName
+            String rendererName,
+            String rendererVersion
     ) {
         return new PrebidMobilePluginRenderer() {
             @Override
             public String getName() { return rendererName; }
 
             @Override
-            public String getVersion() { return null; }
+            public String getVersion() { return rendererVersion; }
 
             @Nullable
             @Override
             public String getToken() { return null; }
+
+            @Override
+            public void registerEventListener(PluginEventListener pluginEventListener, String listenerKey) { }
+
+            @Override
+            public void unregisterEventListener(String listenerKey) { }
 
             @Override
             public View createBannerAdView(

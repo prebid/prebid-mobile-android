@@ -427,7 +427,7 @@ public class PrebidMobile {
         PrebidMobile.creativeFactoryTimeoutPreRenderContent = creativeFactoryTimeoutPreRenderContent;
     }
 
-    // TODO not ready, wait for rendering delegation full release
+    //region PluginRenderer methods are disabled until feature release
     private static void registerPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         PrebidMobilePluginRegister.getInstance().registerPlugin(prebidMobilePluginRenderer);
     }
@@ -439,6 +439,7 @@ public class PrebidMobile {
     private static Boolean containsPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         return PrebidMobilePluginRegister.getInstance().containsPlugin(prebidMobilePluginRenderer);
     }
+    //endregion
 
     /**
      * LogLevel for logging control.

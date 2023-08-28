@@ -54,6 +54,7 @@ public class AdUnitConfiguration {
     private String pbAdSlot;
     private String interstitialSize;
     private String impressionUrl;
+    private String fingerprint = Utils.generateUUIDTimeBased();
 
     private Position closeButtonPosition = Position.TOP_RIGHT;
     private Position skipButtonPosition = Position.TOP_RIGHT;
@@ -480,6 +481,9 @@ public class AdUnitConfiguration {
         return impressionUrl;
     }
 
+    public String getFingerprint() {
+        return fingerprint;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -20,16 +20,21 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
+import android.graphics.Rect
+import android.os.Handler
+import android.os.Looper
 import android.view.Gravity
 import android.view.View
 import android.view.ViewTreeObserver
 import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import org.prebid.mobile.LogUtil
 import org.prebid.mobile.api.data.AdFormat
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer
 import org.prebid.mobile.configuration.AdUnitConfiguration
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
@@ -37,11 +42,27 @@ import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerList
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener
 
 class SampleCustomRenderer : PrebidMobilePluginRenderer {
-    override fun getName(): String = "SampleCustomRenderer"
+
+    override fun getName(): String = SAMPLE_PLUGIN_RENDERER_NAME
+
+    private val pluginEventListenerMap = mutableMapOf<String, SampleCustomRendererEventListener>()
 
     override fun getVersion(): String = "1.0.0"
 
     override fun getToken(): String? = null
+
+    override fun registerEventListener(
+        pluginEventListener: PluginEventListener,
+        listenerKey: String
+    ) {
+        (pluginEventListener as? SampleCustomRendererEventListener)?.let {
+            pluginEventListenerMap[listenerKey] = it
+        }
+    }
+
+    override fun unregisterEventListener(listenerKey: String) {
+        pluginEventListenerMap.remove(listenerKey)
+    }
 
     override fun createBannerAdView(
         context: Context,
@@ -62,11 +83,16 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
             onClick = { displayViewListener.onAdClicked() },
             onClosed = { displayViewListener.onAdClosed() }
         )
+        val visibilityChecker = ViewVisibilityObserver(bannerView) {
+            // Dispatch additional event listener based on criteria from ViewVisibilityObserver
+            pluginEventListenerMap[adUnitConfiguration.fingerprint]?.onImpression()
+        }
 
         bannerView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 // View has been inflated
                 displayViewListener.onAdDisplayed()
+                visibilityChecker.startObserving()
                 bannerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
@@ -102,6 +128,8 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
             override fun show() {
                 alertDialog.show()
                 interstitialControllerListener.onInterstitialDisplayed()
+                // Dispatch additional event listener
+                pluginEventListenerMap[adUnitConfiguration.fingerprint]?.onImpression()
             }
 
             override fun destroy() {}
@@ -157,6 +185,52 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
         frameLayout.addView(closeButton)
 
         return frameLayout
+    }
+
+    private class ViewVisibilityObserver(val view: View, block: () -> Unit) {
+        private val handler = Handler(Looper.getMainLooper())
+        private var isViewVisible = false
+        private val CHECK_INTERVAL = 1000 // 1 second
+        private val MIN_VISIBILITY_STATE = 0.5f
+        private var isObserving = false;
+
+        private val runnable = object : Runnable {
+            override fun run() {
+                if (isObserving.not()) return
+                val isVisibleNow = view.run {
+                    val rect = Rect()
+                    view.getLocalVisibleRect(rect)
+
+                    val viewHeight = view.height
+                    val visibleHeight = rect.bottom - rect.top
+                    LogUtil.debug(SAMPLE_PLUGIN_RENDERER_NAME, "Visibility percentage: ${(visibleHeight.toFloat() / viewHeight) * 100}%")
+
+                    visibleHeight >= viewHeight * MIN_VISIBILITY_STATE
+                }
+                if (isVisibleNow != isViewVisible) {
+                    isViewVisible = isVisibleNow
+                    if (isViewVisible) {
+                        block()
+                        stopObserving()
+                    }
+                }
+                handler.postDelayed(this, CHECK_INTERVAL.toLong())
+            }
+        }
+
+        fun startObserving() {
+            isObserving = true
+            handler.postDelayed(runnable, CHECK_INTERVAL.toLong())
+        }
+
+        fun stopObserving() {
+            isObserving = false
+            handler.removeCallbacks(runnable)
+        }
+    }
+
+    companion object {
+        const val SAMPLE_PLUGIN_RENDERER_NAME = "SampleCustomRenderer"
     }
 }
 

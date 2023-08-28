@@ -29,6 +29,8 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler;
@@ -164,6 +166,10 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         this.adUnitEventsListener = adUnitEventsListener;
     }
 
+    public void setPluginEventListener(PluginEventListener pluginEventListener) {
+        PrebidMobilePluginRegister.getInstance().registerEventListener(pluginEventListener, adUnitConfig.getFingerprint());
+    }
+
     public void setMinSizePercentage(AdSize minSizePercentage) {
         adUnitConfig.setMinSizePercentage(minSizePercentage);
     }
@@ -176,6 +182,8 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
             eventHandler.destroy();
         }
         adUnitEventsListener = null;
+
+        PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig.getFingerprint());
     }
 
 

@@ -13,6 +13,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.EnumSet;
+import java.util.UUID;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -133,6 +134,15 @@ public class AdUnitConfigurationTest {
 
         assertEquals(2, subject.getAdFormats().size());
         assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), subject.getAdFormats());
+    }
+
+    @Test
+    public void fingerprintIsAValidRandomBasedUUID() {
+        // Assert
+        String uuidString = subject.getFingerprint();
+        assertNotNull(uuidString);
+        assertNotNull(UUID.fromString(uuidString)); // valid UUID
+        assertEquals(4, UUID.fromString(uuidString).version()); // version 4 (random-based)
     }
 
 }
