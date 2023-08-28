@@ -32,6 +32,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdView
 import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
+import com.google.common.collect.Lists
 import org.prebid.mobile.*
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.prebidkotlindemo.R
@@ -153,24 +154,34 @@ class GamRenderingApiNativeActivity : BaseAdActivity() {
         ad: PrebidNativeAd, wrapper: ViewGroup
     ) {
         val nativeContainer = View.inflate(wrapper.context, R.layout.layout_native, null)
-        ad.registerView(nativeContainer, object : PrebidNativeAdEventListener {
-            override fun onAdClicked() {}
 
-            override fun onAdImpression() {}
-
-            override fun onAdExpired() {}
-        })
         val icon = nativeContainer.findViewById<ImageView>(R.id.imgIcon)
         ImageUtils.download(ad.iconUrl, icon)
+
         val title = nativeContainer.findViewById<TextView>(R.id.tvTitle)
         title.text = ad.title
+
         val image = nativeContainer.findViewById<ImageView>(R.id.imgImage)
         ImageUtils.download(ad.imageUrl, image)
+
         val description = nativeContainer.findViewById<TextView>(R.id.tvDesc)
         description.text = ad.description
+
         val cta = nativeContainer.findViewById<Button>(R.id.btnCta)
         cta.text = ad.callToAction
+
+        ad.registerView(nativeContainer, Lists.newArrayList(icon, title, image, description, cta), SafeNativeListener())
+
         wrapper.addView(nativeContainer)
+    }
+
+    /**
+     * It's important to use class implementation instead of anonymous object.
+     */
+    private class SafeNativeListener : PrebidNativeAdEventListener {
+        override fun onAdClicked() {}
+        override fun onAdImpression() {}
+        override fun onAdExpired() {}
     }
 
 

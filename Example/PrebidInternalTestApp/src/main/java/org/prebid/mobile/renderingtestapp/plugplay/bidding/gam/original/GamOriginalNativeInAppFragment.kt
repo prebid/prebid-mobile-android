@@ -1,12 +1,10 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdSize
@@ -16,6 +14,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdView
 import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
+import com.google.common.collect.Lists
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +24,7 @@ import org.prebid.mobile.eventhandlers.utils.GamUtils
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeFragment
 import org.prebid.mobile.renderingtestapp.utils.loadImage
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+import java.lang.ref.WeakReference
 
 class GamOriginalNativeInAppFragment : PpmNativeFragment() {
 
@@ -70,35 +69,27 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
         wrapper: ViewGroup
     ) {
         val nativeContainer = View.inflate(wrapper.context, R.layout.lyt_native_ad, null)
-        ad.registerView(nativeContainer, object : PrebidNativeAdEventListener {
-            override fun onAdClicked() {
-                Log.d(TAG, "onAdClicked called: ")
-                onMainThread {
-                    events.clicked(true)
-                }
-            }
 
-            override fun onAdImpression() {
-                Log.d(TAG, "onAdImpression called: ")
-                onMainThread {
-                    events.impression(true)
-                }
-            }
-
-            override fun onAdExpired() {
-                Log.d(TAG, "onAdExpired called: ")
-                onMainThread {
-                    events.expired(true)
-                }
-            }
-        })
-
-        loadImage(binding.ivNativeIcon!!, ad.iconUrl)
+        loadImage(binding.ivNativeIcon, ad.iconUrl)
         binding.tvNativeTitle.text = ad.title
-        loadImage(binding.ivNativeMain!!, ad.imageUrl)
+        loadImage(binding.ivNativeMain, ad.imageUrl)
         binding.tvNativeBody.text = ad.description
         binding.btnNativeAction.text = ad.callToAction
         binding.btnNativeAction.isEnabled = true
+
+        ad.registerView(
+            nativeContainer,
+            Lists.newArrayList(
+                binding.ivNativeIcon,
+                binding.ivNativeMain,
+                binding.tvNativeTitle,
+                binding.tvNativeBrand,
+                binding.tvNativeBody,
+                binding.btnNativeAction
+            ),
+            SafeNativeListener(events)
+        )
+
         binding.adContainer.addView(nativeContainer)
     }
 
@@ -190,6 +181,42 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
         cta.dataType = NativeDataAsset.DATA_TYPE.CTATEXT
         adUnit.addAsset(cta)
         return adUnit
+    }
+
+    /**
+     * It's important to use class implementation instead of anonymous object.
+     */
+    private class SafeNativeListener(events: Events) : PrebidNativeAdEventListener {
+
+        private val eventsReference = WeakReference(events)
+
+        override fun onAdClicked() {
+            Log.d(TAG, "onAdClicked called: ")
+            runOnMainThread {
+                eventsReference.get()?.clicked(true)
+            }
+        }
+
+        override fun onAdImpression() {
+            Log.d(TAG, "onAdImpression called: ")
+            runOnMainThread {
+                eventsReference.get()?.impression(true)
+            }
+        }
+
+        override fun onAdExpired() {
+            Log.d(TAG, "onAdExpired called: ")
+            runOnMainThread {
+                eventsReference.get()?.expired(true)
+            }
+        }
+
+        private fun runOnMainThread(function: () -> Unit) {
+            Handler(Looper.getMainLooper()).postAtFrontOfQueue {
+                function()
+            }
+        }
+
     }
 
     override fun onDestroy() {
