@@ -152,10 +152,12 @@ public class PrebidMobileTest extends BaseSetup {
         );
 
         // When
-        PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
+//        PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
+        PrebidMobilePluginRegister.getInstance().registerPlugin(fakePrebidMobilePluginRenderer);
 
         // Then
-        assertTrue(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
+//        assertTrue(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
+        assertTrue(PrebidMobilePluginRegister.getInstance().containsPlugin(fakePrebidMobilePluginRenderer));
     }
 
     @Test
@@ -170,16 +172,20 @@ public class PrebidMobileTest extends BaseSetup {
         );
 
         // When
-        PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
+//        PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
+        PrebidMobilePluginRegister.getInstance().registerPlugin(fakePrebidMobilePluginRenderer);
 
         // Then
-        assertTrue(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
+//        assertTrue(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
+        assertTrue(PrebidMobilePluginRegister.getInstance().containsPlugin(fakePrebidMobilePluginRenderer));
 
         // When
-        PrebidMobile.unregisterPluginRenderer(fakePrebidMobilePluginRenderer);
+//        PrebidMobile.unregisterPluginRenderer(fakePrebidMobilePluginRenderer);
+        PrebidMobilePluginRegister.getInstance().unregisterPlugin(fakePrebidMobilePluginRenderer);
 
         // Then
-        assertFalse(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
+//        assertFalse(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
+        assertFalse(PrebidMobilePluginRegister.getInstance().containsPlugin(fakePrebidMobilePluginRenderer));
     }
 
     @Test

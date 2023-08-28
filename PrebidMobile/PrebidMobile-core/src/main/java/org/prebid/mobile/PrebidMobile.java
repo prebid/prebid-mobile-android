@@ -427,28 +427,16 @@ public class PrebidMobile {
         PrebidMobile.creativeFactoryTimeoutPreRenderContent = creativeFactoryTimeoutPreRenderContent;
     }
 
-    //region PluginRenderer methods are disabled for non debug builds until feature release
-    public static void registerPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
-        if (!BuildConfig.DEBUG) {
-            LogUtil.warning(TAG, "registerPluginRenderer is available only for debug builds until PluginRenderer feature is full release");
-            return;
-        }
+    //region PluginRenderer methods are disabled until feature release
+    private static void registerPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         PrebidMobilePluginRegister.getInstance().registerPlugin(prebidMobilePluginRenderer);
     }
 
-    public static void unregisterPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
-        if (!BuildConfig.DEBUG) {
-            LogUtil.warning(TAG, "unregisterPluginRenderer is available only for debug builds until PluginRenderer feature is full release");
-            return;
-        }
+    private static void unregisterPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         PrebidMobilePluginRegister.getInstance().unregisterPlugin(prebidMobilePluginRenderer);
     }
 
-    public static Boolean containsPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
-        if (!BuildConfig.DEBUG) {
-            LogUtil.warning(TAG, "containsPluginRenderer is available only for debug builds until PluginRenderer feature is full release");
-            return false;
-        }
+    private static Boolean containsPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         return PrebidMobilePluginRegister.getInstance().containsPlugin(prebidMobilePluginRenderer);
     }
     //endregion

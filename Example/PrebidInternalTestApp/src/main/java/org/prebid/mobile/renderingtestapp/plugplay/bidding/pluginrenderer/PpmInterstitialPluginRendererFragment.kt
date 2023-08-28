@@ -18,9 +18,9 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.pluginrenderer
 
 import android.os.Bundle
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
 import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
@@ -32,7 +32,8 @@ open class PpmInterstitialPluginRendererFragment : BaseBidInterstitialFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        PrebidMobile.registerPluginRenderer(samplePluginRenderer)
+//        PrebidMobile.registerPluginRenderer(samplePluginRenderer)
+        PrebidMobilePluginRegister.getInstance().registerPlugin(samplePluginRenderer)
     }
 
     override fun initInterstitialAd(adUnitFormat: AdUnitFormat, adUnitId: String?,
@@ -54,7 +55,8 @@ open class PpmInterstitialPluginRendererFragment : BaseBidInterstitialFragment()
     }
 
     override fun onDestroy() {
-        PrebidMobile.unregisterPluginRenderer(samplePluginRenderer)
+//        PrebidMobile.unregisterPluginRenderer(samplePluginRenderer)
+        PrebidMobilePluginRegister.getInstance().unregisterPlugin(samplePluginRenderer)
         super.onDestroy()
     }
 }
