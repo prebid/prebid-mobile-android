@@ -26,13 +26,15 @@ public class SdkInitializer {
         @Nullable Context context,
         @Nullable SdkInitializationListener listener
     ) {
-        if (PrebidContextHolder.getContext() != null) {
+        if (PrebidMobile.isSdkInitialized() || InitializationManager.isInitializationInProgress()) {
             return;
         }
 
         Context applicationContext = getApplicationContext(context);
+        InitializationManager initializationManager = new InitializationManager(listener);
+
         if (applicationContext == null) {
-            onInitializationFailed("Context must be not null!", listener);
+            initializationManager.initializationFailed("Context must be not null!");
             return;
         }
 
@@ -43,11 +45,11 @@ public class SdkInitializer {
             LogUtil.setLogLevel(PrebidMobile.getLogLevel().getValue());
         }
 
-        // todo using internal api until pluginrenderer feature is released
-//        PrebidMobile.registerPluginRenderer(new PrebidRenderer());
-        PrebidMobilePluginRegister.getInstance().registerPlugin(new PrebidRenderer());
-
         try {
+            // todo using internal api until pluginrenderer feature is released
+//        PrebidMobile.registerPluginRenderer(new PrebidRenderer());
+            PrebidMobilePluginRegister.getInstance().registerPlugin(new PrebidRenderer());
+
             AppInfoManager.init(applicationContext);
 
             OmAdSessionManager.activateOmSdk(applicationContext);
@@ -56,11 +58,15 @@ public class SdkInitializer {
 
             JSLibraryManager.getInstance(applicationContext).checkIfScriptsDownloadedAndStartDownloadingIfNot();
         } catch (Throwable throwable) {
-            onInitializationFailed("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable), listener);
+            initializationManager.initializationFailed("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable));
             return;
         }
 
-        StatusRequester.makeRequest(listener);
+        runBackgroundTasks(initializationManager);
+    }
+
+    private static void runBackgroundTasks(InitializationManager initializationManager) {
+        StatusRequester.makeRequest(initializationManager);
     }
 
     @Nullable

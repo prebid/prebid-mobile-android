@@ -1,29 +1,18 @@
 package org.prebid.mobile.rendering.sdk;
 
-import android.os.Handler;
-import android.os.Looper;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
+import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.api.data.InitializationStatus;
-import org.prebid.mobile.api.exceptions.InitError;
-import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.tracking.ServerConnection;
 
 public class StatusRequester {
 
-    private static final String TAG = StatusRequester.class.getSimpleName();
+    private static InitializationManager initializationManager;
 
-    @Nullable
-    private static SdkInitializationListener listener;
-
-    public static void makeRequest(@Nullable SdkInitializationListener initializationListener) {
-        listener = initializationListener;
+    public static void makeRequest(@NotNull InitializationManager manager) {
+        initializationManager = manager;
 
         String statusUrl;
 
@@ -36,7 +25,7 @@ public class StatusRequester {
                 statusUrl = url.replace("/openrtb2/auction", "/status");
             } else {
                 LogUtil.info("Prebid SDK can't build the /status endpoint. Please, provide the custom /status endpoint using PrebidMobile.setCustomStatusEndpoint().");
-                postOnMainThread(StatusRequester::onInitializationCompleted);
+                initializationManager.statusRequesterTaskCompleted(null);
                 return;
             }
         }
@@ -52,10 +41,12 @@ public class StatusRequester {
             @Override
             public void onResponse(BaseNetworkTask.GetUrlResult response) {
                 if (response.isOkStatusCode()) {
-                    onInitializationCompleted();
+                    initializationManager.statusRequesterTaskCompleted(null);
                     return;
                 }
-                onStatusRequestFailed("Server status is not ok!");
+                initializationManager.statusRequesterTaskCompleted(
+                        "Server status is not ok!"
+                );
             }
 
             @Override
@@ -63,7 +54,9 @@ public class StatusRequester {
                 String msg,
                 long responseTime
             ) {
-                onStatusRequestFailed("Prebid Server is not responding: " + msg);
+                initializationManager.statusRequesterTaskCompleted(
+                        "Prebid Server is not responding: " + msg
+                );
             }
 
             @Override
@@ -71,33 +64,11 @@ public class StatusRequester {
                 Exception exception,
                 long responseTime
             ) {
-                onStatusRequestFailed("Prebid Server is not responding: " + exception.getMessage());
+                initializationManager.statusRequesterTaskCompleted(
+                        "Prebid Server is not responding: " + exception.getMessage()
+                );
             }
         };
-    }
-
-    private static void onInitializationCompleted() {
-        LogUtil.debug(TAG, "Prebid SDK " + PrebidMobile.SDK_VERSION + " initialized");
-        if (listener != null) {
-            listener.onInitializationComplete(InitializationStatus.SUCCEEDED);
-
-            listener.onSdkInit();
-        }
-    }
-
-    private static void onStatusRequestFailed(@NonNull String message) {
-        LogUtil.error(TAG, message);
-        if (listener != null) {
-            InitializationStatus status = InitializationStatus.SERVER_STATUS_WARNING;
-            status.setDescription(message);
-            listener.onInitializationComplete(status);
-
-            listener.onSdkFailedToInit(new InitError(message));
-        }
-    }
-
-    private static void postOnMainThread(Runnable runnable) {
-        new Handler(Looper.getMainLooper()).post(runnable);
     }
 
 }
