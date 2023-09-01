@@ -25,6 +25,7 @@ import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.prebid.mobile.LogUtil.PrebidLogger;
 import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
@@ -99,7 +100,8 @@ public class PrebidMobile {
      */
     @Deprecated
     public static LogLevel logLevel = LogLevel.NONE;
-
+    @Nullable
+    private static PrebidLogger customLogger = null;
 
     private static boolean pbsDebug = false;
     private static boolean shareGeoLocation = false;
@@ -312,6 +314,15 @@ public class PrebidMobile {
 
     public static void setLogLevel(LogLevel logLevel) {
         PrebidMobile.logLevel = logLevel;
+    }
+
+    @Nullable
+    public static PrebidLogger getCustomLogger() {
+        return PrebidMobile.customLogger;
+    }
+
+    public static void setCustomLogger(@NonNull PrebidLogger logger) {
+        PrebidMobile.customLogger = logger;
     }
 
     /**
