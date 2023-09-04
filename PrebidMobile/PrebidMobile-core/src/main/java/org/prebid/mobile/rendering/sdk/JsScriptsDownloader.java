@@ -126,7 +126,7 @@ public class JsScriptsDownloader {
 
             Context context = PrebidContextHolder.getContext();
             if (context != null) {
-                JSLibraryManager.getInstance(context).initScriptVariables();
+                JSLibraryManager.getInstance(context).startScriptReadingTask();
             }
 
             inProgressKeys.remove(path);

@@ -98,15 +98,17 @@ public class UserConsentManager extends BaseManager {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         initConsentValuesAtStart();
-
         preferencesListener = this::updateConsentValue;
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferencesListener);
     }
 
     private void initConsentValuesAtStart() {
-        for (String consent : GDPR_CONSENTS) {
-            updateConsentValue(sharedPreferences, consent);
-        }
+        Thread thread = new Thread(() -> {
+            for (String consent : GDPR_CONSENTS) {
+                updateConsentValue(sharedPreferences, consent);
+            }
+        });
+        thread.start();
     }
 
     /**

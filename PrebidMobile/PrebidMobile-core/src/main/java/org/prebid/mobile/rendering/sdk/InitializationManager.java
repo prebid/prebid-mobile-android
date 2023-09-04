@@ -16,10 +16,9 @@ import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 public class InitializationManager {
 
     /**
-     * Tasks: status requester, fetching user agent,
-     * js scripts reading, preferences reading
+     * Tasks: status requester, fetching user agent
      */
-    private static final int TASK_COUNT = 4;
+    private static final int TASK_COUNT = 2;
 
     private static final String TAG = "InitializationManager";
     private static boolean tasksCompletedSuccessfully = false;

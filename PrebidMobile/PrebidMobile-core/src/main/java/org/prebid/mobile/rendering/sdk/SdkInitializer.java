@@ -2,16 +2,12 @@ package org.prebid.mobile.rendering.sdk;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.api.data.InitializationStatus;
-import org.prebid.mobile.api.exceptions.InitError;
 import org.prebid.mobile.api.rendering.PrebidRenderer;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
@@ -65,8 +61,10 @@ public class SdkInitializer {
         runBackgroundTasks(initializationManager);
     }
 
-    private static void runBackgroundTasks(InitializationManager initializationManager) {
-        StatusRequester.makeRequest(initializationManager);
+    private static void runBackgroundTasks(InitializationManager manager) {
+        StatusRequester.makeRequest(manager);
+
+        UserAgentFetcherTask.run(manager);
     }
 
     @Nullable
@@ -79,27 +77,6 @@ public class SdkInitializer {
             return context.getApplicationContext();
         }
         return null;
-    }
-
-    private static void onInitializationFailed(
-        String error,
-        @Nullable SdkInitializationListener listener
-    ) {
-        LogUtil.error(error);
-        if (listener != null) {
-            postOnMainThread(() -> {
-                InitializationStatus status = InitializationStatus.FAILED;
-                status.setDescription(error);
-                listener.onInitializationComplete(status);
-
-                listener.onSdkFailedToInit(new InitError(error));
-            });
-        }
-        PrebidContextHolder.clearContext();
-    }
-
-    private static void postOnMainThread(Runnable runnable) {
-        new Handler(Looper.getMainLooper()).post(runnable);
     }
 
 }
