@@ -65,6 +65,8 @@ public class SdkInitializer {
         StatusRequester.makeRequest(manager);
 
         UserAgentFetcherTask.run(manager);
+
+        ManagersResolver.getInstance().getUserConsentManager().initConsentValues(manager);
     }
 
     @Nullable
