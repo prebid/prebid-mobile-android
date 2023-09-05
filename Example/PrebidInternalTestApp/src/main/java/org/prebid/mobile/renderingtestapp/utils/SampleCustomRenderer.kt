@@ -50,10 +50,7 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
 
     override fun getVersion(): String = "1.0.0"
 
-    override fun getData(): HashMap<String, String> = hashMapOf(
-        "extra1" to "value1",
-        "extra2" to "value2",
-    )
+    override fun getData(): HashMap<String, String>? = null
 
     override fun registerEventListener(
         pluginEventListener: PluginEventListener,
