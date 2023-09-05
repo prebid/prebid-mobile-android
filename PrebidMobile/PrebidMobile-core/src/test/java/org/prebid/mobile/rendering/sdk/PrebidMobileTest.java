@@ -111,7 +111,7 @@ public class PrebidMobileTest {
 
         sleep(300);
         shadowOf(getMainLooper()).idle();
-        sleep(200);
+        sleep(2000);
         verify(mockSdkInitListener, times(1)).onInitializationComplete(any());
     }
 

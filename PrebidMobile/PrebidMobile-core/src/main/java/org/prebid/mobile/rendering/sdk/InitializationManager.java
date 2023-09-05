@@ -105,8 +105,6 @@ public class InitializationManager {
         return tasksCompletedSuccessfully;
     }
 
-    ;
-
     public static boolean isInitializationInProgress() {
         return initializationInProgress;
     }
