@@ -9,13 +9,8 @@ import org.prebid.mobile.rendering.networking.tracking.ServerConnection;
 
 public class StatusRequester {
 
-    private static InitializationManager initializationManager;
-
     public static void makeRequest(@NotNull InitializationManager manager) {
-        initializationManager = manager;
-
         String statusUrl;
-
         String customStatusEndpointUrl = PrebidMobile.getCustomStatusEndpoint();
         if (customStatusEndpointUrl != null) {
             statusUrl = customStatusEndpointUrl;
@@ -25,18 +20,18 @@ public class StatusRequester {
                 statusUrl = url.replace("/openrtb2/auction", "/status");
             } else {
                 LogUtil.info("Prebid SDK can't build the /status endpoint. Please, provide the custom /status endpoint using PrebidMobile.setCustomStatusEndpoint().");
-                initializationManager.statusRequesterTaskCompleted(null);
+                manager.statusRequesterTaskCompleted(null);
                 return;
             }
         }
 
         ServerConnection.fireStatusRequest(
             statusUrl,
-            getResponseHandler()
+                getResponseHandler(manager)
         );
     }
 
-    private static ResponseHandler getResponseHandler() {
+    private static ResponseHandler getResponseHandler(InitializationManager initializationManager) {
         return new ResponseHandler() {
             @Override
             public void onResponse(BaseNetworkTask.GetUrlResult response) {

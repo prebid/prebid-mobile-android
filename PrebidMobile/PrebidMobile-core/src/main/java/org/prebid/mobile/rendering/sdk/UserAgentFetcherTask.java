@@ -16,20 +16,21 @@ public class UserAgentFetcherTask {
 
     public static void run(InitializationManager initializationManager) {
         Runnable task = () -> {
+            String userAgent = "";
+
             try {
-                String userAgent = "";
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     userAgent = WebSettings.getDefaultUserAgent(PrebidContextHolder.getContext());
                 }
-
-                if (TextUtils.isEmpty(userAgent) || userAgent.contains("UNAVAILABLE")) {
-                    userAgent = "Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + ";" + " " + getDeviceName() + ")";
-                }
-
-                AppInfoManager.setUserAgent(userAgent);
             } catch (Exception any) {
                 LogUtil.error(TAG, "Failed to get user agent");
             }
+
+            if (TextUtils.isEmpty(userAgent) || userAgent.contains("UNAVAILABLE")) {
+                userAgent = "Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + ";" + " " + getDeviceName() + ")";
+            }
+
+            AppInfoManager.setUserAgent(userAgent);
 
             initializationManager.taskCompleted();
         };

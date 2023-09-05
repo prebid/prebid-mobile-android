@@ -23,6 +23,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.app.Activity;
@@ -35,6 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.reflection.sdk.UserConsentManagerReflection;
+import org.prebid.mobile.rendering.sdk.InitializationManager;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -329,6 +332,17 @@ public class UserConsentManagerTest {
             .apply();
         assertEquals("testString", userConsentManager.getRealGppString());
         assertEquals("testSid", userConsentManager.getRealGppSid());
+    }
+
+
+    @Test
+    public void initConsentValues_mustCallInitializationListener() throws InterruptedException {
+        InitializationManager initializationManager = mock(InitializationManager.class);
+
+        userConsentManager.initConsentValues(initializationManager);
+
+        Thread.sleep(500);
+        verify(initializationManager, times(1)).taskCompleted();
     }
 
 
