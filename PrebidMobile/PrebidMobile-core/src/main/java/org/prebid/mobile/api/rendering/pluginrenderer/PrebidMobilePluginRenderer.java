@@ -29,6 +29,8 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
+import java.util.HashMap;
+
 public interface PrebidMobilePluginRenderer {
 
     String getName();
@@ -36,7 +38,7 @@ public interface PrebidMobilePluginRenderer {
     String getVersion();
 
     @Nullable
-    String getToken();
+    HashMap<String, String> getData();
 
     /**
      * Register a listener related to a specific ad unit config fingerprint in order to dispatch specific ad events

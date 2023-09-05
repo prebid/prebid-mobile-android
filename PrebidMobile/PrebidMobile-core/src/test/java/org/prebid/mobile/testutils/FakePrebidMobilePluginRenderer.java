@@ -16,6 +16,8 @@ import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerList
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
+import java.util.HashMap;
+
 public class FakePrebidMobilePluginRenderer {
     public static PrebidMobilePluginRenderer getFakePrebidRenderer(
             InterstitialController mockInterstitialController,
@@ -33,7 +35,7 @@ public class FakePrebidMobilePluginRenderer {
 
             @Nullable
             @Override
-            public String getToken() { return null; }
+            public HashMap<String, String> getData() { return null; }
 
             @Override
             public void registerEventListener(PluginEventListener pluginEventListener, String listenerKey) { }

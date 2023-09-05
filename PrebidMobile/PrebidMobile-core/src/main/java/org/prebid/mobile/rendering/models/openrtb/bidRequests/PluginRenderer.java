@@ -16,10 +16,12 @@
 
 package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 
+import java.util.HashMap;
+
 public class PluginRenderer extends BaseBid {
     private String name;
     private String version;
-    private String token;
+    private HashMap<String, String> data;
 
     public String getName() {
         return name;
@@ -37,11 +39,11 @@ public class PluginRenderer extends BaseBid {
         this.version = version;
     }
 
-    public String getToken() {
-        return token;
+    public HashMap<String, String> getData() {
+        return data;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setData(HashMap<String, String> data) {
+        this.data = data;
     }
 }

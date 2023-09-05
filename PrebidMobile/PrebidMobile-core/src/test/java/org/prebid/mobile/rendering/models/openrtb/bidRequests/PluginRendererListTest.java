@@ -7,9 +7,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class PluginRendererListTest {
+
+    HashMap<String, String> data = new HashMap<String, String>() {{
+        put("extra", "value");
+    }};
 
     @Test
     public void testGetJsonObjectWithEmptyList() throws JSONException {
@@ -27,9 +32,10 @@ public class PluginRendererListTest {
     @Test
     public void testGetJsonObjectWithNonEmptyList() throws JSONException {
         PluginRendererList pluginRendererList = new PluginRendererList();
+
         List<PluginRenderer> pluginList = Arrays.asList(
-                createPlugin("Plugin 1", "1.0", "token1"),
-                createPlugin("Plugin 2", "2.0", "token2")
+                createPlugin("Plugin 1", "1.0", data),
+                createPlugin("Plugin 2", "2.0", data)
         );
 
         pluginRendererList.setList(pluginList);
@@ -45,16 +51,16 @@ public class PluginRendererListTest {
 
             Assert.assertEquals(plugin.getName(), pluginObj.getString("name"));
             Assert.assertEquals(plugin.getVersion(), pluginObj.getString("version"));
-            Assert.assertEquals(plugin.getToken(), pluginObj.getString("token"));
+            Assert.assertEquals(plugin.getData(), pluginObj.get("data"));
         }
     }
 
     @Test
-    public void testGetJsonObjectWithNoToken() throws JSONException {
+    public void testGetJsonObjectWithNoData() throws JSONException {
         PluginRendererList pluginRendererList = new PluginRendererList();
         List<PluginRenderer> pluginList = Arrays.asList(
-                createPlugin("Plugin 1", "1.0", null),
-                createPlugin("Plugin 2", "2.0", null)
+                createPlugin("Plugin 1", "1.0", data),
+                createPlugin("Plugin 2", "2.0", data)
         );
 
         pluginRendererList.setList(pluginList);
@@ -70,15 +76,15 @@ public class PluginRendererListTest {
 
             Assert.assertEquals(plugin.getName(), pluginObj.getString("name"));
             Assert.assertEquals(plugin.getVersion(), pluginObj.getString("version"));
-            Assert.assertFalse(plugin.getToken(), pluginObj.has("token"));
+            Assert.assertEquals(plugin.getData(), pluginObj.get("data"));
         }
     }
 
-    private PluginRenderer createPlugin(String name, String version, String token) {
+    private PluginRenderer createPlugin(String name, String version, HashMap<String, String> data) {
         PluginRenderer plugin = new PluginRenderer();
         plugin.setName(name);
         plugin.setVersion(version);
-        plugin.setToken(token);
+        plugin.setData(data);
         return plugin;
     }
 }

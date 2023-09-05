@@ -20,13 +20,14 @@ import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRenderer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PluginRendererListMapperTest {
 
     String pluginName;
     String pluginVersion;
-    String pluginToken;
+    HashMap<String, String> pluginData;
 
     PrebidMobilePluginRenderer testPlugin = new PrebidMobilePluginRenderer() {
         @Override
@@ -41,8 +42,8 @@ public class PluginRendererListMapperTest {
 
         @Nullable
         @Override
-        public String getToken() {
-            return pluginToken;
+        public HashMap<String, String> getData() {
+            return pluginData;
         }
 
         @Override
@@ -75,7 +76,8 @@ public class PluginRendererListMapperTest {
         pluginList.add(testPlugin);
         pluginName = "name";
         pluginVersion = "1.0";
-        pluginToken = "token";
+        pluginData = new HashMap<>();
+        pluginData.put("extra", "value");
 
         // When
         List<PluginRenderer> result = mapper.map(pluginList);
@@ -84,6 +86,6 @@ public class PluginRendererListMapperTest {
         // Then
         assertEquals(mappedRenderer.getName(), pluginName);
         assertEquals(mappedRenderer.getVersion(), pluginVersion);
-        assertEquals(mappedRenderer.getToken(), pluginToken);
+        assertEquals(mappedRenderer.getData(), pluginData);
     }
 }

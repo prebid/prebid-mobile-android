@@ -37,6 +37,8 @@ import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
+import java.util.HashMap;
+
 public class PrebidRenderer implements PrebidMobilePluginRenderer {
 
     @Override
@@ -51,7 +53,7 @@ public class PrebidRenderer implements PrebidMobilePluginRenderer {
 
     @Nullable
     @Override
-    public String getToken() {
+    public HashMap<String, String> getData() {
         return null;
     }
 
