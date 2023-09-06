@@ -27,7 +27,7 @@ public class PluginRendererListMapperTest {
 
     String pluginName;
     String pluginVersion;
-    HashMap<String, String> pluginData;
+    HashMap<String, Object> pluginData;
 
     PrebidMobilePluginRenderer testPlugin = new PrebidMobilePluginRenderer() {
         @Override
@@ -42,7 +42,7 @@ public class PluginRendererListMapperTest {
 
         @Nullable
         @Override
-        public HashMap<String, String> getData() {
+        public HashMap<String, Object> getData() {
             return pluginData;
         }
 
@@ -77,7 +77,7 @@ public class PluginRendererListMapperTest {
         pluginName = "name";
         pluginVersion = "1.0";
         pluginData = new HashMap<>();
-        pluginData.put("extra", "value");
+        pluginData.put("extra", true);
 
         // When
         List<PluginRenderer> result = mapper.map(pluginList);

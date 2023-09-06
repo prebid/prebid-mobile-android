@@ -53,7 +53,7 @@ public class PrebidRenderer implements PrebidMobilePluginRenderer {
 
     @Nullable
     @Override
-    public HashMap<String, String> getData() {
+    public HashMap<String, Object> getData() {
         return null;
     }
 

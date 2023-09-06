@@ -21,7 +21,7 @@ import java.util.HashMap;
 public class PluginRenderer extends BaseBid {
     private String name;
     private String version;
-    private HashMap<String, String> data;
+    private HashMap<String, Object> data;
 
     public String getName() {
         return name;
@@ -39,11 +39,11 @@ public class PluginRenderer extends BaseBid {
         this.version = version;
     }
 
-    public HashMap<String, String> getData() {
+    public HashMap<String, Object> getData() {
         return data;
     }
 
-    public void setData(HashMap<String, String> data) {
+    public void setData(HashMap<String, Object> data) {
         this.data = data;
     }
 }

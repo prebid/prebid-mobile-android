@@ -35,7 +35,7 @@ public class FakePrebidMobilePluginRenderer {
 
             @Nullable
             @Override
-            public HashMap<String, String> getData() { return null; }
+            public HashMap<String, Object> getData() { return null; }
 
             @Override
             public void registerEventListener(PluginEventListener pluginEventListener, String listenerKey) { }
