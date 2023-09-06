@@ -65,7 +65,7 @@ public class SdkInitializerTest {
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(""));
         Reflection.setStaticVariableTo(PrebidMobile.class, "customStatusEndpoint", null);
         PrebidContextHolder.clearContext();
-        Reflection.setStaticVariableTo(InitializationManager.class, "initializationInProgress", false);
+        Reflection.setStaticVariableTo(InitializationNotifier.class, "initializationInProgress", false);
     }
 
 

@@ -45,7 +45,7 @@ public class StatusRequesterTest {
     public void statusRequest_success() throws InterruptedException {
         setStatusResponse(200, "Good");
 
-        InitializationManager listener = mock(InitializationManager.class);
+        InitializationNotifier listener = mock(InitializationNotifier.class);
         StatusRequester.makeRequest(listener);
 
         sleep(300);
@@ -58,7 +58,7 @@ public class StatusRequesterTest {
     public void statusRequest_failed() throws InterruptedException {
         setStatusResponse(404, "");
 
-        InitializationManager listener = mock(InitializationManager.class);
+        InitializationNotifier listener = mock(InitializationNotifier.class);
         StatusRequester.makeRequest(listener);
 
         sleep(300);
@@ -71,7 +71,7 @@ public class StatusRequesterTest {
     public void statusRequest_withoutAuctionPartOfUrl() throws InterruptedException {
         PrebidMobile.setPrebidServerHost(Host.createCustomHost("qwerty123456.qwerty"));
 
-        InitializationManager listener = mock(InitializationManager.class);
+        InitializationNotifier listener = mock(InitializationNotifier.class);
         StatusRequester.makeRequest(listener);
 
         sleep(300);
@@ -84,7 +84,7 @@ public class StatusRequesterTest {
     public void statusRequest_longServerAnswer() throws InterruptedException {
         PrebidMobile.setCustomStatusEndpoint("qwerty123456.qwerty");
 
-        InitializationManager listener = mock(InitializationManager.class);
+        InitializationNotifier listener = mock(InitializationNotifier.class);
         StatusRequester.makeRequest(listener);
 
         sleep(300);

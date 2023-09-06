@@ -37,7 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.reflection.sdk.UserConsentManagerReflection;
-import org.prebid.mobile.rendering.sdk.InitializationManager;
+import org.prebid.mobile.rendering.sdk.InitializationNotifier;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -337,12 +337,12 @@ public class UserConsentManagerTest {
 
     @Test
     public void initConsentValues_mustCallInitializationListener() throws InterruptedException {
-        InitializationManager initializationManager = mock(InitializationManager.class);
+        InitializationNotifier initializationNotifier = mock(InitializationNotifier.class);
 
-        userConsentManager.initConsentValues(initializationManager);
+        userConsentManager.initConsentValues(initializationNotifier);
 
         Thread.sleep(500);
-        verify(initializationManager, times(1)).taskCompleted();
+        verify(initializationNotifier, times(1)).taskCompleted();
     }
 
 

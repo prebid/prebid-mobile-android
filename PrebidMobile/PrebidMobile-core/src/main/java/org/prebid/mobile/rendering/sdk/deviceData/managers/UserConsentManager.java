@@ -25,7 +25,6 @@ import androidx.annotation.Nullable;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.sdk.BaseManager;
-import org.prebid.mobile.rendering.sdk.InitializationManager;
 
 /**
  * UserConsent manager. It is initialized during SDK initialization.
@@ -102,14 +101,10 @@ public class UserConsentManager extends BaseManager {
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferencesListener);
     }
 
-    public void initConsentValues(InitializationManager manager) {
-        Thread thread = new Thread(() -> {
-            for (String consent : GDPR_CONSENTS) {
-                updateConsentValue(sharedPreferences, consent);
-            }
-            manager.taskCompleted();
-        });
-        thread.start();
+    public void initConsentValues() {
+        for (String consent : GDPR_CONSENTS) {
+            updateConsentValue(sharedPreferences, consent);
+        }
     }
 
     /**

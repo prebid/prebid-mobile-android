@@ -27,7 +27,7 @@ public class InitializationManagerTest {
     @Mock
     private SdkInitializationListener listener;
 
-    private InitializationManager subject;
+    private InitializationNotifier subject;
 
     private AutoCloseable mocks;
 
@@ -44,26 +44,26 @@ public class InitializationManagerTest {
     }
 
     private void reset() {
-        Reflection.setStaticVariableTo(InitializationManager.class, "tasksCompletedSuccessfully", false);
-        Reflection.setStaticVariableTo(InitializationManager.class, "initializationInProgress", false);
+        Reflection.setStaticVariableTo(InitializationNotifier.class, "tasksCompletedSuccessfully", false);
+        Reflection.setStaticVariableTo(InitializationNotifier.class, "initializationInProgress", false);
     }
 
 
     @Test
     public void defaultParams() {
-        assertFalse(InitializationManager.isInitializationInProgress());
-        assertFalse(InitializationManager.wereTasksCompletedSuccessfully());
-        assertEquals(3, InitializationManager.TASK_COUNT);
+        assertFalse(InitializationNotifier.isInitializationInProgress());
+        assertFalse(InitializationNotifier.wereTasksCompletedSuccessfully());
+        assertEquals(3, InitializationNotifier.TASK_COUNT);
 
-        subject = new InitializationManager(listener);
+        subject = new InitializationNotifier(listener);
 
-        assertTrue(InitializationManager.isInitializationInProgress());
+        assertTrue(InitializationNotifier.isInitializationInProgress());
         verify(listener, never()).onInitializationComplete(any());
     }
 
     @Test
     public void checkAllTasksCompleted() {
-        subject = new InitializationManager(listener);
+        subject = new InitializationNotifier(listener);
 
         subject.statusRequesterTaskCompleted(null);
         shadowOf(getMainLooper()).idle();
@@ -77,13 +77,13 @@ public class InitializationManagerTest {
         shadowOf(getMainLooper()).idle();
         verify(listener, times(1)).onInitializationComplete(any());
 
-        assertFalse(InitializationManager.isInitializationInProgress());
-        assertTrue(InitializationManager.wereTasksCompletedSuccessfully());
+        assertFalse(InitializationNotifier.isInitializationInProgress());
+        assertTrue(InitializationNotifier.wereTasksCompletedSuccessfully());
     }
 
     @Test
     public void checkInitializationFailed() {
-        subject = new InitializationManager(listener);
+        subject = new InitializationNotifier(listener);
 
         subject.initializationFailed("Error 101");
         shadowOf(getMainLooper()).idle();
@@ -92,13 +92,13 @@ public class InitializationManagerTest {
         verify(listener, times(1)).onInitializationComplete(status);
         assertEquals("Error 101", status.getDescription());
 
-        assertFalse(InitializationManager.isInitializationInProgress());
-        assertFalse(InitializationManager.wereTasksCompletedSuccessfully());
+        assertFalse(InitializationNotifier.isInitializationInProgress());
+        assertFalse(InitializationNotifier.wereTasksCompletedSuccessfully());
     }
 
     @Test
     public void testDoubleCall() {
-        subject = new InitializationManager(listener);
+        subject = new InitializationNotifier(listener);
 
         subject.initializationFailed("error");
         subject.initializationFailed("error");
@@ -109,7 +109,7 @@ public class InitializationManagerTest {
 
     @Test
     public void statusRequest_success() {
-        subject = new InitializationManager(listener);
+        subject = new InitializationNotifier(listener);
 
         subject.taskCompleted();
         subject.taskCompleted();
@@ -118,13 +118,13 @@ public class InitializationManagerTest {
 
         verify(listener, times(1)).onInitializationComplete(InitializationStatus.SUCCEEDED);
 
-        assertFalse(InitializationManager.isInitializationInProgress());
-        assertTrue(InitializationManager.wereTasksCompletedSuccessfully());
+        assertFalse(InitializationNotifier.isInitializationInProgress());
+        assertTrue(InitializationNotifier.wereTasksCompletedSuccessfully());
     }
 
     @Test
     public void statusRequest_failed() {
-        subject = new InitializationManager(listener);
+        subject = new InitializationNotifier(listener);
 
         subject.taskCompleted();
         subject.taskCompleted();
@@ -133,8 +133,8 @@ public class InitializationManagerTest {
 
         verify(listener, times(1)).onInitializationComplete(InitializationStatus.SERVER_STATUS_WARNING);
 
-        assertFalse(InitializationManager.isInitializationInProgress());
-        assertTrue(InitializationManager.wereTasksCompletedSuccessfully());
+        assertFalse(InitializationNotifier.isInitializationInProgress());
+        assertTrue(InitializationNotifier.wereTasksCompletedSuccessfully());
     }
 
 }

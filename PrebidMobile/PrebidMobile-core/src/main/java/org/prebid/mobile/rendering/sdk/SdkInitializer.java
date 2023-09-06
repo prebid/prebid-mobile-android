@@ -14,6 +14,11 @@ import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
 public class SdkInitializer {
 
     private static final String TAG = SdkInitializer.class.getSimpleName();
@@ -22,15 +27,15 @@ public class SdkInitializer {
         @Nullable Context context,
         @Nullable SdkInitializationListener listener
     ) {
-        if (PrebidMobile.isSdkInitialized() || InitializationManager.isInitializationInProgress()) {
+        if (PrebidMobile.isSdkInitialized() || InitializationNotifier.isInitializationInProgress()) {
             return;
         }
 
-        Context applicationContext = getApplicationContext(context);
-        InitializationManager initializationManager = new InitializationManager(listener);
+        InitializationNotifier initializationNotifier = new InitializationNotifier(listener);
 
+        Context applicationContext = getApplicationContext(context);
         if (applicationContext == null) {
-            initializationManager.initializationFailed("Context must be not null!");
+            initializationNotifier.initializationFailed("Context must be not null!");
             return;
         }
 
@@ -43,7 +48,7 @@ public class SdkInitializer {
 
         try {
             // todo using internal api until pluginrenderer feature is released
-//        PrebidMobile.registerPluginRenderer(new PrebidRenderer());
+//            PrebidMobile.registerPluginRenderer(new PrebidRenderer());
             PrebidMobilePluginRegister.getInstance().registerPlugin(new PrebidRenderer());
 
             AppInfoManager.init(applicationContext);
@@ -54,19 +59,36 @@ public class SdkInitializer {
 
             JSLibraryManager.getInstance(applicationContext).checkIfScriptsDownloadedAndStartDownloadingIfNot();
         } catch (Throwable throwable) {
-            initializationManager.initializationFailed("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable));
+            initializationNotifier.initializationFailed("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable));
             return;
         }
 
-        runBackgroundTasks(initializationManager);
+        runBackgroundTasks(initializationNotifier);
     }
 
-    private static void runBackgroundTasks(InitializationManager manager) {
-        StatusRequester.makeRequest(manager);
+    private static void runBackgroundTasks(InitializationNotifier initializationNotifier) {
+        Thread thread = new Thread(() -> {
+            try {
+                ExecutorService executor = Executors.newFixedThreadPool(2);
 
-        UserAgentFetcherTask.run(manager);
+                Future<String> statusRequesterResult = executor.submit(StatusRequester::makeRequest);
+                executor.execute(() -> ManagersResolver.getInstance().getUserConsentManager().initConsentValues());
+                executor.execute(UserAgentFetcherTask::run);
+                executor.shutdown();
 
-        ManagersResolver.getInstance().getUserConsentManager().initConsentValues(manager);
+                boolean terminatedByTimeout = !executor.awaitTermination(10, TimeUnit.SECONDS);
+                if (terminatedByTimeout) {
+                    initializationNotifier.initializationFailed("Terminated by timeout.");
+                    return;
+                }
+
+                String statusRequesterError = statusRequesterResult.get();
+                initializationNotifier.initializationCompleted(statusRequesterError);
+            } catch (Exception exception) {
+                initializationNotifier.initializationFailed("Exception during initialization: " + Log.getStackTraceString(exception));
+            }
+        });
+        thread.start();
     }
 
     @Nullable

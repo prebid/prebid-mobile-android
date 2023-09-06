@@ -21,13 +21,13 @@ public class UserAgentFetcherTaskTest {
 
     @Test
     public void runUserAgentTask_callCallbackListener() throws InterruptedException {
-        InitializationManager initializationManager = mock(InitializationManager.class);
+        InitializationNotifier initializationNotifier = mock(InitializationNotifier.class);
 
-        UserAgentFetcherTask.run(initializationManager);
+        UserAgentFetcherTask.run(initializationNotifier);
 
         Thread.sleep(2000);
 
-        verify(initializationManager, times(1)).taskCompleted();
+        verify(initializationNotifier, times(1)).taskCompleted();
         assertNotNull(AppInfoManager.getUserAgent());
     }
 

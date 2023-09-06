@@ -1,6 +1,8 @@
 package org.prebid.mobile.rendering.sdk;
 
-import org.jetbrains.annotations.NotNull;
+import android.util.Log;
+
+import org.jetbrains.annotations.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
@@ -9,7 +11,8 @@ import org.prebid.mobile.rendering.networking.tracking.ServerConnection;
 
 public class StatusRequester {
 
-    public static void makeRequest(@NotNull InitializationManager manager) {
+    @Nullable
+    public static String makeRequest() {
         String statusUrl;
         String customStatusEndpointUrl = PrebidMobile.getCustomStatusEndpoint();
         if (customStatusEndpointUrl != null) {
@@ -20,28 +23,35 @@ public class StatusRequester {
                 statusUrl = url.replace("/openrtb2/auction", "/status");
             } else {
                 LogUtil.info("Prebid SDK can't build the /status endpoint. Please, provide the custom /status endpoint using PrebidMobile.setCustomStatusEndpoint().");
-                manager.statusRequesterTaskCompleted(null);
-                return;
+                return null;
             }
         }
 
+        ResultHolder resultHolder = new ResultHolder();
         ServerConnection.fireStatusRequest(
-            statusUrl,
-                getResponseHandler(manager)
+                statusUrl,
+                getResponseHandler(resultHolder)
         );
+
+        try {
+            while (resultHolder.isResultUnavailableYet()) {
+                Thread.sleep(25);
+            }
+        } catch (InterruptedException e) {
+            LogUtil.debug("StatusRequester", "InterruptedException: " + Log.getStackTraceString(e));
+        }
+        return resultHolder.getStatusRequesterError();
     }
 
-    private static ResponseHandler getResponseHandler(InitializationManager initializationManager) {
+    private static ResponseHandler getResponseHandler(ResultHolder resultHolder) {
         return new ResponseHandler() {
             @Override
             public void onResponse(BaseNetworkTask.GetUrlResult response) {
                 if (response.isOkStatusCode()) {
-                    initializationManager.statusRequesterTaskCompleted(null);
+                    resultHolder.resultReceived(null);
                     return;
                 }
-                initializationManager.statusRequesterTaskCompleted(
-                        "Server status is not ok!"
-                );
+                resultHolder.resultReceived("Server status is not ok!");
             }
 
             @Override
@@ -49,9 +59,7 @@ public class StatusRequester {
                 String msg,
                 long responseTime
             ) {
-                initializationManager.statusRequesterTaskCompleted(
-                        "Prebid Server is not responding: " + msg
-                );
+                resultHolder.resultReceived("Prebid Server is not responding: " + msg);
             }
 
             @Override
@@ -59,11 +67,31 @@ public class StatusRequester {
                 Exception exception,
                 long responseTime
             ) {
-                initializationManager.statusRequesterTaskCompleted(
-                        "Prebid Server is not responding: " + exception.getMessage()
-                );
+                resultHolder.resultReceived("Prebid Server is not responding: " + exception.getMessage());
             }
         };
+    }
+
+    private static class ResultHolder {
+
+        private String statusRequesterError;
+        private Boolean resultReceived;
+
+        public ResultHolder() {
+        }
+
+        public Boolean isResultUnavailableYet() {
+            return resultReceived == null;
+        }
+
+        public void resultReceived(String statusRequesterError) {
+            this.resultReceived = true;
+            this.statusRequesterError = statusRequesterError;
+        }
+
+        public String getStatusRequesterError() {
+            return statusRequesterError;
+        }
     }
 
 }

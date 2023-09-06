@@ -14,29 +14,22 @@ public class UserAgentFetcherTask {
     private UserAgentFetcherTask() {
     }
 
-    public static void run(InitializationManager initializationManager) {
-        Runnable task = () -> {
-            String userAgent = "";
+    public static void run() {
+        String userAgent = "";
 
-            try {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    userAgent = WebSettings.getDefaultUserAgent(PrebidContextHolder.getContext());
-                }
-            } catch (Exception any) {
-                LogUtil.error(TAG, "Failed to get user agent");
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                userAgent = WebSettings.getDefaultUserAgent(PrebidContextHolder.getContext());
             }
+        } catch (Exception any) {
+            LogUtil.error(TAG, "Failed to get user agent");
+        }
 
-            if (TextUtils.isEmpty(userAgent) || userAgent.contains("UNAVAILABLE")) {
-                userAgent = "Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + ";" + " " + getDeviceName() + ")";
-            }
+        if (TextUtils.isEmpty(userAgent) || userAgent.contains("UNAVAILABLE")) {
+            userAgent = "Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + ";" + " " + getDeviceName() + ")";
+        }
 
-            AppInfoManager.setUserAgent(userAgent);
-
-            initializationManager.taskCompleted();
-        };
-
-        Thread thread = new Thread(task);
-        thread.start();
+        AppInfoManager.setUserAgent(userAgent);
     }
 
 
