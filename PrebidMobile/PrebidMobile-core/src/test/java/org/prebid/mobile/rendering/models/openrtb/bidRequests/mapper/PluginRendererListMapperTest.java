@@ -77,7 +77,7 @@ public class PluginRendererListMapperTest {
         pluginName = "name";
         pluginVersion = "1.0";
         pluginData = new HashMap<>();
-        pluginData.put("extra", true);
+        pluginData.put("key", true);
 
         // When
         List<PluginRenderer> result = mapper.map(pluginList);

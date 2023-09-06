@@ -14,9 +14,9 @@ import java.util.List;
 public class PluginRendererListTest {
 
     HashMap<String, Object> data = new HashMap<String, Object>() {{
-        put("extra1", true);
-        put("extra2", 1);
-        put("extra3", "value");
+        put("key1", true);
+        put("key2", 9);
+        put("key3", "value");
     }};
 
     @Test
