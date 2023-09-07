@@ -87,6 +87,6 @@ public class PluginRendererListMapperTest {
         // Then
         assertEquals(mappedRenderer.getName(), pluginName);
         assertEquals(mappedRenderer.getVersion(), pluginVersion);
-        assertEquals(mappedRenderer.getData(), pluginData);
+        assertEquals(mappedRenderer.getData(), pluginData.getPluginRendererData());
     }
 }
