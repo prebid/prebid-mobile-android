@@ -29,8 +29,6 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
-import java.util.HashMap;
-
 public interface PrebidMobilePluginRenderer {
 
     String getName();
