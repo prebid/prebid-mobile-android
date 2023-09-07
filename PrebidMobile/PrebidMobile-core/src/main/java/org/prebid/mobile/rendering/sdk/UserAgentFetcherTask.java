@@ -7,14 +7,12 @@ import android.webkit.WebSettings;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 
-public class UserAgentFetcherTask {
+public class UserAgentFetcherTask implements Runnable {
 
     private static final String TAG = "UserAgentFetcherTask";
 
-    private UserAgentFetcherTask() {
-    }
-
-    public static void run() {
+    @Override
+    public void run() {
         String userAgent = "";
 
         try {

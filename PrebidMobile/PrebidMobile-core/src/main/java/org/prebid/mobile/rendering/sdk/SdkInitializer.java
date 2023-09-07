@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
@@ -24,8 +25,8 @@ public class SdkInitializer {
     private static final String TAG = SdkInitializer.class.getSimpleName();
 
     public static void init(
-        @Nullable Context context,
-        @Nullable SdkInitializationListener listener
+            @Nullable Context context,
+            @Nullable SdkInitializationListener listener
     ) {
         if (PrebidMobile.isSdkInitialized() || InitializationNotifier.isInitializationInProgress()) {
             return;
@@ -63,37 +64,39 @@ public class SdkInitializer {
             return;
         }
 
-        runBackgroundTasks(initializationNotifier);
+        new Thread(() -> runBackgroundTasks(
+                initializationNotifier,
+                Executors.newFixedThreadPool(2))
+        ).start();
     }
 
-    private static void runBackgroundTasks(InitializationNotifier initializationNotifier) {
-        Thread thread = new Thread(() -> {
-            try {
-                ExecutorService executor = Executors.newFixedThreadPool(2);
+    @VisibleForTesting
+    public static void runBackgroundTasks(
+            InitializationNotifier initializationNotifier,
+            ExecutorService executor
+    ) {
+        try {
+            Future<String> statusRequesterResult = executor.submit(new StatusRequester());
+            executor.execute(new UserConsentFetcherTask());
+            executor.execute(new UserAgentFetcherTask());
+            executor.shutdown();
 
-                Future<String> statusRequesterResult = executor.submit(StatusRequester::makeRequest);
-                executor.execute(UserConsentFetcherTask::run);
-                executor.execute(UserAgentFetcherTask::run);
-                executor.shutdown();
-
-                boolean terminatedByTimeout = !executor.awaitTermination(10, TimeUnit.SECONDS);
-                if (terminatedByTimeout) {
-                    initializationNotifier.initializationFailed("Terminated by timeout.");
-                    return;
-                }
-
-                String statusRequesterError = statusRequesterResult.get();
-                initializationNotifier.initializationCompleted(statusRequesterError);
-            } catch (Exception exception) {
-                initializationNotifier.initializationFailed("Exception during initialization: " + Log.getStackTraceString(exception));
+            boolean terminatedByTimeout = !executor.awaitTermination(10, TimeUnit.SECONDS);
+            if (terminatedByTimeout) {
+                initializationNotifier.initializationFailed("Terminated by timeout.");
+                return;
             }
-        });
-        thread.start();
+
+            String statusRequesterError = statusRequesterResult.get();
+            initializationNotifier.initializationCompleted(statusRequesterError);
+        } catch (Exception exception) {
+            initializationNotifier.initializationFailed("Exception during initialization: " + Log.getStackTraceString(exception));
+        }
     }
 
     @Nullable
     private static Context getApplicationContext(
-        @Nullable Context context
+            @Nullable Context context
     ) {
         if (context instanceof Application) {
             return context;
@@ -101,6 +104,15 @@ public class SdkInitializer {
             return context.getApplicationContext();
         }
         return null;
+    }
+
+    protected static class UserConsentFetcherTask implements Runnable {
+
+        @Override
+        public void run() {
+            ManagersResolver.getInstance().getUserConsentManager().initConsentValues();
+        }
+
     }
 
 }

@@ -9,9 +9,15 @@ import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.tracking.ServerConnection;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class StatusRequester {
+public class StatusRequester implements Callable<String> {
+
+    @Override
+    public String call() throws Exception {
+        return makeRequest();
+    }
 
     /**
      * @return status request error - must be null if there is no error.
