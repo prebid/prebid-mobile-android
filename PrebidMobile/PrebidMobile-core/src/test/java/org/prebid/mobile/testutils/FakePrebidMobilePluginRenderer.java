@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface;
 import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginRendererData;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -15,8 +16,6 @@ import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
-
-import java.util.HashMap;
 
 public class FakePrebidMobilePluginRenderer {
     public static PrebidMobilePluginRenderer getFakePrebidRenderer(
@@ -35,7 +34,7 @@ public class FakePrebidMobilePluginRenderer {
 
             @Nullable
             @Override
-            public HashMap<String, Object> getData() { return null; }
+            public PluginRendererData getData() { return null; }
 
             @Override
             public void registerEventListener(PluginEventListener pluginEventListener, String listenerKey) { }

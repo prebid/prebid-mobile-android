@@ -35,13 +35,12 @@ import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener
 import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginRendererData
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer
 import org.prebid.mobile.configuration.AdUnitConfiguration
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener
-import java.util.HashMap
-import java.util.Objects
 
 class SampleCustomRenderer : PrebidMobilePluginRenderer {
 
@@ -51,7 +50,7 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
 
     override fun getVersion(): String = "1.0.0"
 
-    override fun getData(): HashMap<String, Any>? = null
+    override fun getData(): PluginRendererData? = null
 
     override fun registerEventListener(
         pluginEventListener: PluginEventListener,

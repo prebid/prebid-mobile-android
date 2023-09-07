@@ -5,19 +5,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginRendererData;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class PluginRendererListTest {
 
-    HashMap<String, Object> data = new HashMap<String, Object>() {{
-        put("key1", true);
-        put("key2", 9);
-        put("key3", "value");
-    }};
+    private PluginRendererData pluginRendererData = new PluginRendererData();
 
     @Test
     public void testGetJsonObjectWithEmptyList() throws JSONException {
@@ -35,9 +33,14 @@ public class PluginRendererListTest {
     @Test
     public void testGetJsonObjectWithNonEmptyList() throws JSONException {
         PluginRendererList pluginRendererList = new PluginRendererList();
+        pluginRendererData.put("key1", 1);
+        pluginRendererData.put("key2", "value");
+        pluginRendererData.put("key3", true);
+
+
         List<PluginRenderer> pluginList = Arrays.asList(
-                createPlugin("Plugin 1", "1.0", data),
-                createPlugin("Plugin 2", "2.0", data)
+                createPlugin("Plugin 1", "1.0", pluginRendererData),
+                createPlugin("Plugin 2", "2.0", pluginRendererData)
         );
 
         pluginRendererList.setList(pluginList);
@@ -58,7 +61,7 @@ public class PluginRendererListTest {
         }
     }
 
-    private boolean areHashMapsEqual(HashMap<String, Object> map1, HashMap<String, Object> map2) {
+    private boolean areHashMapsEqual(Map<String, Object> map1, Map<String, Object> map2) {
         if (map1 == null || map2 == null) {
             return false;
         }
@@ -88,7 +91,7 @@ public class PluginRendererListTest {
         }   return map;
     }
 
-    private PluginRenderer createPlugin(String name, String version, HashMap<String, Object> data) {
+    private PluginRenderer createPlugin(String name, String version, PluginRendererData data) {
         PluginRenderer plugin = new PluginRenderer();
         plugin.setName(name);
         plugin.setVersion(version);

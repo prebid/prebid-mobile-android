@@ -38,7 +38,7 @@ public interface PrebidMobilePluginRenderer {
     String getVersion();
 
     @Nullable
-    HashMap<String, Object> getData();
+    PluginRendererData getData();
 
     /**
      * Register a listener related to a specific ad unit config fingerprint in order to dispatch specific ad events

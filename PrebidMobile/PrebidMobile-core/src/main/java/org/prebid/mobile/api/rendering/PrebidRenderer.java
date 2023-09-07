@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginRendererData;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
@@ -36,8 +37,6 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
-
-import java.util.HashMap;
 
 public class PrebidRenderer implements PrebidMobilePluginRenderer {
 
@@ -53,7 +52,7 @@ public class PrebidRenderer implements PrebidMobilePluginRenderer {
 
     @Nullable
     @Override
-    public HashMap<String, Object> getData() {
+    public PluginRendererData getData() {
         return null;
     }
 

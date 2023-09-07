@@ -27,7 +27,6 @@ public class PluginRendererList extends BaseBid {
 
     private List<PluginRenderer> renderers;
 
-
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         JSONObject sdkObject = new JSONObject();

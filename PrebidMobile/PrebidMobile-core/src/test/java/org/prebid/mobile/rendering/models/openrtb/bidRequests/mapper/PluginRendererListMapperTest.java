@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import org.junit.Test;
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface;
 import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginRendererData;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -27,7 +28,7 @@ public class PluginRendererListMapperTest {
 
     String pluginName;
     String pluginVersion;
-    HashMap<String, Object> pluginData;
+    PluginRendererData pluginData;
 
     PrebidMobilePluginRenderer testPlugin = new PrebidMobilePluginRenderer() {
         @Override
@@ -42,7 +43,7 @@ public class PluginRendererListMapperTest {
 
         @Nullable
         @Override
-        public HashMap<String, Object> getData() {
+        public PluginRendererData getData() {
             return pluginData;
         }
 
@@ -76,7 +77,7 @@ public class PluginRendererListMapperTest {
         pluginList.add(testPlugin);
         pluginName = "name";
         pluginVersion = "1.0";
-        pluginData = new HashMap<>();
+        pluginData = new PluginRendererData();
         pluginData.put("key", true);
 
         // When
