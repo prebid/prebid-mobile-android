@@ -53,7 +53,6 @@ public class InitializationManagerTest {
     public void defaultParams() {
         assertFalse(InitializationNotifier.isInitializationInProgress());
         assertFalse(InitializationNotifier.wereTasksCompletedSuccessfully());
-        assertEquals(3, InitializationNotifier.TASK_COUNT);
 
         subject = new InitializationNotifier(listener);
 
@@ -65,16 +64,7 @@ public class InitializationManagerTest {
     public void checkAllTasksCompleted() {
         subject = new InitializationNotifier(listener);
 
-        subject.statusRequesterTaskCompleted(null);
-        shadowOf(getMainLooper()).idle();
-        verify(listener, never()).onInitializationComplete(any());
-
-        subject.taskCompleted();
-        shadowOf(getMainLooper()).idle();
-        verify(listener, never()).onInitializationComplete(any());
-
-        subject.taskCompleted();
-        shadowOf(getMainLooper()).idle();
+        subject.initializationCompleted(null);
         verify(listener, times(1)).onInitializationComplete(any());
 
         assertFalse(InitializationNotifier.isInitializationInProgress());
@@ -111,9 +101,7 @@ public class InitializationManagerTest {
     public void statusRequest_success() {
         subject = new InitializationNotifier(listener);
 
-        subject.taskCompleted();
-        subject.taskCompleted();
-        subject.statusRequesterTaskCompleted(null);
+        subject.initializationCompleted(null);
         shadowOf(getMainLooper()).idle();
 
         verify(listener, times(1)).onInitializationComplete(InitializationStatus.SUCCEEDED);
@@ -126,9 +114,7 @@ public class InitializationManagerTest {
     public void statusRequest_failed() {
         subject = new InitializationNotifier(listener);
 
-        subject.taskCompleted();
-        subject.taskCompleted();
-        subject.statusRequesterTaskCompleted("Error");
+        subject.initializationCompleted("Error");
         shadowOf(getMainLooper()).idle();
 
         verify(listener, times(1)).onInitializationComplete(InitializationStatus.SERVER_STATUS_WARNING);

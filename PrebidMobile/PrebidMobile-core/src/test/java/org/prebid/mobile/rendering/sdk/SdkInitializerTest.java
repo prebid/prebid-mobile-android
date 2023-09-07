@@ -28,6 +28,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
@@ -91,9 +92,7 @@ public class SdkInitializerTest {
 
         SdkInitializer.init(context, createListener());
 
-        sleep(300);
-        shadowOf(getMainLooper()).idle();
-        sleep(200);
+        advanceBackgroundTasks();
 
         assertTrue(isSuccessful);
         assertTrue(PrebidMobile.isSdkInitialized());
@@ -106,9 +105,7 @@ public class SdkInitializerTest {
 
         SdkInitializer.init(context, createListener());
 
-        sleep(300);
-        shadowOf(getMainLooper()).idle();
-        sleep(200);
+        advanceBackgroundTasks();
 
         assertTrue(isSuccessful);
         assertTrue(PrebidMobile.isSdkInitialized());
@@ -120,9 +117,7 @@ public class SdkInitializerTest {
 
         SdkInitializer.init(context, createListener());
 
-        sleep(300);
-        shadowOf(getMainLooper()).idle();
-        sleep(200);
+        advanceBackgroundTasks();
 
         assertTrue(isSuccessful);
         assertTrue(PrebidMobile.isSdkInitialized());
@@ -137,9 +132,7 @@ public class SdkInitializerTest {
 
         SdkInitializer.init(context, createListener());
 
-        sleep(300);
-        shadowOf(getMainLooper()).idle();
-        sleep(200);
+        advanceBackgroundTasks();
 
         assertTrue(isSuccessful);
         assertTrue(PrebidMobile.isSdkInitialized());
@@ -153,9 +146,7 @@ public class SdkInitializerTest {
 
         SdkInitializer.init(context, createListener());
 
-        sleep(300);
-        shadowOf(getMainLooper()).idle();
-        sleep(200);
+        advanceBackgroundTasks();
 
         assertTrue(isSuccessful);
         assertTrue(PrebidMobile.isSdkInitialized());
@@ -167,14 +158,20 @@ public class SdkInitializerTest {
 
         SdkInitializer.init(context, createListener());
 
-        sleep(300);
-        shadowOf(getMainLooper()).idle();
-        sleep(200);
+        advanceBackgroundTasks();
 
         assertTrue(isSuccessful);
         assertTrue(PrebidMobile.isSdkInitialized());
         assertEquals("Server status is not ok!", error);
         assertTrue(serverWarning);
+    }
+
+    private void advanceBackgroundTasks() throws InterruptedException {
+        shadowOf(getMainLooper()).idle();
+        sleep(3_000);
+        shadowOf(getMainLooper()).idle();
+        sleep(1_000);
+        shadowOf(getMainLooper()).idle();
     }
 
 
@@ -211,6 +208,7 @@ public class SdkInitializerTest {
         MockResponse mockResponse = new MockResponse();
         mockResponse.setResponseCode(code);
         mockResponse.setBody(body);
+        mockResponse.setBodyDelay(500, TimeUnit.MILLISECONDS);
         server.enqueue(mockResponse);
 
         try {

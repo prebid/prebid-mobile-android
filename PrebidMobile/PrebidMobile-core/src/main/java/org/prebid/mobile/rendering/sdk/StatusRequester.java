@@ -9,8 +9,13 @@ import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.tracking.ServerConnection;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class StatusRequester {
 
+    /**
+     * @return status request error - must be null if there is no error.
+     */
     @Nullable
     public static String makeRequest() {
         String statusUrl;
@@ -28,13 +33,14 @@ public class StatusRequester {
         }
 
         ResultHolder resultHolder = new ResultHolder();
-        ServerConnection.fireStatusRequest(
-                statusUrl,
-                getResponseHandler(resultHolder)
-        );
 
         try {
-            while (resultHolder.isResultUnavailableYet()) {
+            ServerConnection.fireStatusRequest(
+                    statusUrl,
+                    getResponseHandler(resultHolder)
+            );
+
+            while (resultHolder.isResultNotAvailableYet()) {
                 Thread.sleep(25);
             }
         } catch (InterruptedException e) {
@@ -75,17 +81,17 @@ public class StatusRequester {
     private static class ResultHolder {
 
         private String statusRequesterError;
-        private Boolean resultReceived;
+        private final AtomicBoolean resultReceived = new AtomicBoolean(false);
 
         public ResultHolder() {
         }
 
-        public Boolean isResultUnavailableYet() {
-            return resultReceived == null;
+        public Boolean isResultNotAvailableYet() {
+            return !resultReceived.get();
         }
 
         public void resultReceived(String statusRequesterError) {
-            this.resultReceived = true;
+            this.resultReceived.set(true);
             this.statusRequesterError = statusRequesterError;
         }
 

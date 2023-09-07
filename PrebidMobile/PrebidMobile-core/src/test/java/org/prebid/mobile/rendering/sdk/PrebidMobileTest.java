@@ -112,7 +112,9 @@ public class PrebidMobileTest {
         SdkInitializationListener mockSdkInitListener = mock(SdkInitializationListener.class);
         PrebidMobile.initializeSdk(context, mockSdkInitListener);
 
-        sleep(5000);
+        sleep(3_000);
+        shadowOf(getMainLooper()).idle();
+        sleep(1_000);
         shadowOf(getMainLooper()).idle();
 
         verify(mockSdkInitListener, times(1)).onInitializationComplete(any());
