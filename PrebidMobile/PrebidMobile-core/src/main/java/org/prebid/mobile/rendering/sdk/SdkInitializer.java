@@ -72,7 +72,7 @@ public class SdkInitializer {
                 ExecutorService executor = Executors.newFixedThreadPool(2);
 
                 Future<String> statusRequesterResult = executor.submit(StatusRequester::makeRequest);
-                executor.execute(() -> ManagersResolver.getInstance().getUserConsentManager().initConsentValues());
+                executor.execute(UserConsentFetcherTask::run);
                 executor.execute(UserAgentFetcherTask::run);
                 executor.shutdown();
 

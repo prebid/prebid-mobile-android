@@ -100,6 +100,20 @@ public class SdkInitializerTest {
     }
 
     @Test
+    public void init_longStatusResponse_initializationIsFailed() throws IOException, InterruptedException {
+        setStatusResponse(200, "Good");
+
+        SdkInitializer.init(context, createListener());
+
+        Thread.sleep(12_000);
+        shadowOf(getMainLooper()).idle();
+
+        assertFalse(isSuccessful);
+        assertFalse(PrebidMobile.isSdkInitialized());
+        assertEquals("Terminated by timeout.", error);
+    }
+
+    @Test
     public void init_statusResponseIsEmpty_initializationIsSuccessful() throws IOException, InterruptedException {
         setStatusResponse(204, "");
 
