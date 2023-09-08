@@ -97,13 +97,11 @@ public class UserConsentManager extends BaseManager {
         super(context);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        initConsentValuesAtStart();
-
         preferencesListener = this::updateConsentValue;
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferencesListener);
     }
 
-    private void initConsentValuesAtStart() {
+    public void initConsentValues() {
         for (String consent : GDPR_CONSENTS) {
             updateConsentValue(sharedPreferences, consent);
         }

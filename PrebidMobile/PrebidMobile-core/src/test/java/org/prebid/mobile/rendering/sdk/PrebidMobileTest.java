@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.robolectric.Robolectric;
@@ -90,7 +91,9 @@ public class PrebidMobileTest {
 
     @Test
     public void testOnSDKInitWithoutVideoPreCache() throws Exception {
+        PrebidMobileReflection.setFlagsThatSdkIsNotInitialized();
         PrebidContextHolder.clearContext();
+
         //test if sdkinit is sent even if precache fails for any reason, as it is optional & should not avoid further sdk actions
 
         MockResponse mockResponse = new MockResponse();
@@ -109,9 +112,11 @@ public class PrebidMobileTest {
         SdkInitializationListener mockSdkInitListener = mock(SdkInitializationListener.class);
         PrebidMobile.initializeSdk(context, mockSdkInitListener);
 
-        sleep(300);
+        sleep(3_000);
         shadowOf(getMainLooper()).idle();
-        sleep(200);
+        sleep(1_000);
+        shadowOf(getMainLooper()).idle();
+
         verify(mockSdkInitListener, times(1)).onInitializationComplete(any());
     }
 

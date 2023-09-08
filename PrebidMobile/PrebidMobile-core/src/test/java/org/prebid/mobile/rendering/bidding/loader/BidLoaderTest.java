@@ -17,12 +17,9 @@
 package org.prebid.mobile.rendering.bidding.loader;
 
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import android.content.Context;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,6 +29,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
@@ -60,8 +58,6 @@ public class BidLoaderTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        PrebidContextHolder.setContext(mock(Context.class));
-
         when(mockAdConfiguration.isAdType(any(AdFormat.class))).thenReturn(true);
         when(mockAdConfiguration.getAutoRefreshDelay()).thenReturn(60000);
         bidLoader = createBidLoader(mockAdConfiguration, bidRequesterListener);
@@ -69,7 +65,7 @@ public class BidLoaderTest {
 
     @After
     public void clean() {
-        PrebidContextHolder.clearContext();
+
     }
 
     @Test
@@ -97,8 +93,18 @@ public class BidLoaderTest {
 
     @Test
     public void whenFreshLoadAndAdUnitConfigPassed_CallStartAdRequest() {
+        PrebidMobileReflection.setFlagsThatSdkIsInitialized();
+
         bidLoader.load();
         verify(mockRequester).startAdRequest();
+    }
+
+    @Test
+    public void whenFreshLoadButSdkIsNotInitialized_DoNotStartAdRequest() {
+        PrebidMobileReflection.setFlagsThatSdkIsNotInitialized();
+
+        bidLoader.load();
+        verify(mockRequester, never()).startAdRequest();
     }
 
     @Test

@@ -16,16 +16,12 @@
 
 package org.prebid.mobile.rendering.utils.helpers;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Looper;
-import android.text.TextUtils;
 import android.util.Log;
-import android.webkit.WebView;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -43,7 +39,6 @@ public class AppInfoManager {
 
     public static void init(Context context) {
         initPackageInfo(context);
-        initUserAgent(context);
         patchSecurityProviderIfNeeded(context);
     }
 
@@ -73,7 +68,6 @@ public class AppInfoManager {
         sPackageName = packageName;
     }
 
-    @VisibleForTesting
     public static void setUserAgent(String userAgent) {
         sUserAgent = userAgent;
     }
@@ -97,28 +91,6 @@ public class AppInfoManager {
             catch (Exception e) {
                 LogUtil.error(TAG, "Failed to get package name: " + Log.getStackTraceString(e));
             }
-        }
-    }
-
-    @SuppressLint("NewApi")
-    private static void initUserAgent(Context context) {
-        //Use no activity methods: (purpose: Try with application context or activity context)
-        //((Activity) context).runOnUiThread(new Runnable()
-        //MOB-2205 [Research] on how we can eliminate activity context from Native ads.
-        try {
-            sUserAgent = "";
-
-            boolean isMainThread = Looper.myLooper() == Looper.getMainLooper();
-            if (isMainThread) {
-                sUserAgent = new WebView(context).getSettings().getUserAgentString();
-            }
-
-            if (TextUtils.isEmpty(sUserAgent) || sUserAgent.contains("UNAVAILABLE")) {
-                sUserAgent = "Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + ";" + " " + getDeviceName() + ")";
-            }
-        }
-        catch (Exception e) {
-            LogUtil.error(TAG, "Failed to get user agent");
         }
     }
 

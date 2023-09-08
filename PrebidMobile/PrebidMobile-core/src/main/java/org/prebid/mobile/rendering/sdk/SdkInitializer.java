@@ -2,37 +2,41 @@ package org.prebid.mobile.rendering.sdk;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.api.data.InitializationStatus;
-import org.prebid.mobile.api.exceptions.InitError;
 import org.prebid.mobile.api.rendering.PrebidRenderer;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
 public class SdkInitializer {
 
     private static final String TAG = SdkInitializer.class.getSimpleName();
 
     public static void init(
-        @Nullable Context context,
-        @Nullable SdkInitializationListener listener
+            @Nullable Context context,
+            @Nullable SdkInitializationListener listener
     ) {
-        if (PrebidContextHolder.getContext() != null) {
+        if (PrebidMobile.isSdkInitialized() || InitializationNotifier.isInitializationInProgress()) {
             return;
         }
 
+        InitializationNotifier initializationNotifier = new InitializationNotifier(listener);
+
         Context applicationContext = getApplicationContext(context);
         if (applicationContext == null) {
-            onInitializationFailed("Context must be not null!", listener);
+            initializationNotifier.initializationFailed("Context must be not null!");
             return;
         }
 
@@ -43,11 +47,11 @@ public class SdkInitializer {
             LogUtil.setLogLevel(PrebidMobile.getLogLevel().getValue());
         }
 
-        // todo using internal api until pluginrenderer feature is released
-//        PrebidMobile.registerPluginRenderer(new PrebidRenderer());
-        PrebidMobilePluginRegister.getInstance().registerPlugin(new PrebidRenderer());
-
         try {
+            // todo using internal api until pluginrenderer feature is released
+//            PrebidMobile.registerPluginRenderer(new PrebidRenderer());
+            PrebidMobilePluginRegister.getInstance().registerPlugin(new PrebidRenderer());
+
             AppInfoManager.init(applicationContext);
 
             OmAdSessionManager.activateOmSdk(applicationContext);
@@ -56,16 +60,43 @@ public class SdkInitializer {
 
             JSLibraryManager.getInstance(applicationContext).checkIfScriptsDownloadedAndStartDownloadingIfNot();
         } catch (Throwable throwable) {
-            onInitializationFailed("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable), listener);
+            initializationNotifier.initializationFailed("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable));
             return;
         }
 
-        StatusRequester.makeRequest(listener);
+        new Thread(() -> runBackgroundTasks(
+                initializationNotifier,
+                Executors.newFixedThreadPool(2))
+        ).start();
+    }
+
+    @VisibleForTesting
+    public static void runBackgroundTasks(
+            InitializationNotifier initializationNotifier,
+            ExecutorService executor
+    ) {
+        try {
+            Future<String> statusRequesterResult = executor.submit(new StatusRequester());
+            executor.execute(new UserConsentFetcherTask());
+            executor.execute(new UserAgentFetcherTask());
+            executor.shutdown();
+
+            boolean terminatedByTimeout = !executor.awaitTermination(10, TimeUnit.SECONDS);
+            if (terminatedByTimeout) {
+                initializationNotifier.initializationFailed("Terminated by timeout.");
+                return;
+            }
+
+            String statusRequesterError = statusRequesterResult.get();
+            initializationNotifier.initializationCompleted(statusRequesterError);
+        } catch (Exception exception) {
+            initializationNotifier.initializationFailed("Exception during initialization: " + Log.getStackTraceString(exception));
+        }
     }
 
     @Nullable
     private static Context getApplicationContext(
-        @Nullable Context context
+            @Nullable Context context
     ) {
         if (context instanceof Application) {
             return context;
@@ -75,25 +106,13 @@ public class SdkInitializer {
         return null;
     }
 
-    private static void onInitializationFailed(
-        String error,
-        @Nullable SdkInitializationListener listener
-    ) {
-        LogUtil.error(error);
-        if (listener != null) {
-            postOnMainThread(() -> {
-                InitializationStatus status = InitializationStatus.FAILED;
-                status.setDescription(error);
-                listener.onInitializationComplete(status);
+    protected static class UserConsentFetcherTask implements Runnable {
 
-                listener.onSdkFailedToInit(new InitError(error));
-            });
+        @Override
+        public void run() {
+            ManagersResolver.getInstance().getUserConsentManager().initConsentValues();
         }
-        PrebidContextHolder.clearContext();
-    }
 
-    private static void postOnMainThread(Runnable runnable) {
-        new Handler(Looper.getMainLooper()).post(runnable);
     }
 
 }

@@ -32,6 +32,7 @@ import org.prebid.mobile.configuration.PBSConfig;
 import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.mraid.MraidEnv;
+import org.prebid.mobile.rendering.sdk.InitializationNotifier;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.SdkInitializer;
 
@@ -302,7 +303,7 @@ public class PrebidMobile {
      * Return 'true' if Prebid Rendering SDK is initialized completely
      */
     public static boolean isSdkInitialized() {
-        return PrebidContextHolder.getContext() != null;
+        return PrebidContextHolder.getContext() != null && InitializationNotifier.wereTasksCompletedSuccessfully();
     }
 
     public static LogLevel getLogLevel() {

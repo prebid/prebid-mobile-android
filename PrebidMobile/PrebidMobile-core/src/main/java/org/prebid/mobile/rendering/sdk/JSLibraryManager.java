@@ -20,6 +20,8 @@ import android.content.Context;
 
 import org.prebid.mobile.rendering.sdk.scripts.JsScriptData;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Downloader and fetcher for JS scripts needed for the Prebid SDK (omsdk.js, mraid.js).
  * Top level class for working with JS scripts.
@@ -49,8 +51,12 @@ public class JSLibraryManager {
 
     public boolean checkIfScriptsDownloadedAndStartDownloadingIfNot() {
         if (scriptsDownloader.areScriptsDownloadedAlready()) {
-            initScriptVariables();
-            return true;
+            if (!OMSDKscirpt.isEmpty() && !MRAIDscript.isEmpty()) {
+                return true;
+            }
+
+            startScriptReadingTask();
+            return false;
         }
 
         scriptsDownloader.downloadScripts(
@@ -59,13 +65,15 @@ public class JSLibraryManager {
         return false;
     }
 
-    public void initScriptVariables() {
+    public void startScriptReadingTask() {
         if (scriptsDownloader.areScriptsDownloadedAlready()) {
-            if (OMSDKscirpt.isEmpty()) {
-                OMSDKscirpt = scriptsDownloader.readFile(JsScriptData.openMeasurementData);
-            }
-            if (MRAIDscript.isEmpty()) {
-                MRAIDscript = scriptsDownloader.readFile(JsScriptData.mraidData);
+            if (OMSDKscirpt.isEmpty() || MRAIDscript.isEmpty()) {
+
+                boolean isNotRunning = BackgroundScriptReader.alreadyRunning.compareAndSet(false, true);
+                if (isNotRunning) {
+                    Thread thread = new Thread(new BackgroundScriptReader(scriptsDownloader, this));
+                    thread.start();
+                }
             }
         }
     }
@@ -76,6 +84,33 @@ public class JSLibraryManager {
 
     public String getOMSDKScript() {
         return OMSDKscirpt;
+    }
+
+    private static class BackgroundScriptReader implements Runnable {
+
+        private static final AtomicBoolean alreadyRunning = new AtomicBoolean(false);
+
+        private final JsScriptsDownloader scriptsDownloader;
+        private final JSLibraryManager jsLibraryManager;
+
+        public BackgroundScriptReader(
+                JsScriptsDownloader scriptsDownloader,
+                JSLibraryManager jsLibraryManager
+        ) {
+            this.scriptsDownloader = scriptsDownloader;
+            this.jsLibraryManager = jsLibraryManager;
+        }
+
+        @Override
+        public void run() {
+            String openMeasurementScript = scriptsDownloader.readFile(JsScriptData.openMeasurementData);
+            String mraidScript = scriptsDownloader.readFile(JsScriptData.mraidData);
+
+            jsLibraryManager.OMSDKscirpt = openMeasurementScript;
+            jsLibraryManager.MRAIDscript = mraidScript;
+            alreadyRunning.set(false);
+        }
+
     }
 
 }
