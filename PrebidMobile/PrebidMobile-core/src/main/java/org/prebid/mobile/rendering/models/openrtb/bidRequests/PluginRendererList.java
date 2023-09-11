@@ -51,12 +51,9 @@ public class PluginRendererList extends BaseBid {
             JSONObject pluginObj = new JSONObject();
             pluginObj.put("name", plugin.getName());
             pluginObj.put("version", plugin.getVersion());
-            if (plugin.getData() != null) {
-                JSONObject dataObj = new JSONObject();
-                for (Map.Entry<String, Object> entry : plugin.getData().entrySet()) {
-                    dataObj.put(entry.getKey(), entry.getValue());
-                }
-                pluginObj.put("data", dataObj);
+            JSONObject pluginDataObj = plugin.getData();
+            if (pluginDataObj != null) {
+                pluginObj.put("data", pluginDataObj);
             }
             jsonArray.put(pluginObj);
         }

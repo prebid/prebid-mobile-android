@@ -6,9 +6,9 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.json.JSONObject;
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface;
 import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
-import org.prebid.mobile.api.rendering.pluginrenderer.PluginRendererData;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -34,7 +34,7 @@ public class FakePrebidMobilePluginRenderer {
 
             @Nullable
             @Override
-            public PluginRendererData getData() { return null; }
+            public JSONObject getData() { return null; }
 
             @Override
             public void registerEventListener(PluginEventListener pluginEventListener, String listenerKey) { }

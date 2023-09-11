@@ -22,6 +22,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.json.JSONObject;
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -36,7 +37,7 @@ public interface PrebidMobilePluginRenderer {
     String getVersion();
 
     @Nullable
-    PluginRendererData getData();
+    JSONObject getData();
 
     /**
      * Register a listener related to a specific ad unit config fingerprint in order to dispatch specific ad events

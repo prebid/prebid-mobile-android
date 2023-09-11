@@ -8,10 +8,11 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface;
 import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
-import org.prebid.mobile.api.rendering.pluginrenderer.PluginRendererData;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -21,14 +22,13 @@ import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRenderer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class PluginRendererListMapperTest {
 
     String pluginName;
     String pluginVersion;
-    PluginRendererData pluginData;
+    JSONObject pluginData;
 
     PrebidMobilePluginRenderer testPlugin = new PrebidMobilePluginRenderer() {
         @Override
@@ -43,7 +43,7 @@ public class PluginRendererListMapperTest {
 
         @Nullable
         @Override
-        public PluginRendererData getData() {
+        public JSONObject getData() {
             return pluginData;
         }
 
@@ -70,14 +70,14 @@ public class PluginRendererListMapperTest {
     };
 
     @Test
-    public void whenMap_valuesAreCorrect() {
+    public void whenMap_valuesAreCorrect() throws JSONException {
         // Given
         PluginRendererListMapper mapper = new PluginRendererListMapper();
         List<PrebidMobilePluginRenderer> pluginList = new ArrayList<>();
         pluginList.add(testPlugin);
         pluginName = "name";
         pluginVersion = "1.0";
-        pluginData = new PluginRendererData();
+        pluginData = new JSONObject();
         pluginData.put("key", true);
 
         // When
@@ -87,6 +87,6 @@ public class PluginRendererListMapperTest {
         // Then
         assertEquals(mappedRenderer.getName(), pluginName);
         assertEquals(mappedRenderer.getVersion(), pluginVersion);
-        assertEquals(mappedRenderer.getData(), pluginData.getPluginRendererData());
+        assertEquals(mappedRenderer.getData(), pluginData);
     }
 }
