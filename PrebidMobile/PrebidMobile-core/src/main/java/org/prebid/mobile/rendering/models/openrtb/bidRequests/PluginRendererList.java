@@ -24,14 +24,14 @@ import java.util.List;
 
 public class PluginRendererList extends BaseBid {
 
+    public static String RENDERERS_KEY = "renderers";
+
     private List<PluginRenderer> renderers;
 
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        JSONObject sdkObject = new JSONObject();
-        toJSON(sdkObject, "renderers", this.renderers);
-        jsonObject.put("sdk", sdkObject);
+        toJSON(jsonObject, RENDERERS_KEY, this.renderers);
         return jsonObject;
     }
 
@@ -39,7 +39,7 @@ public class PluginRendererList extends BaseBid {
         this.renderers = renderers;
     }
 
-    public List<PluginRenderer> getList() {
+    public List<PluginRenderer> get() {
         return this.renderers;
     }
 
