@@ -27,13 +27,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.AdSize;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRendererList;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.mapper.PluginRendererListMapper;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class Prebid {
@@ -148,6 +154,8 @@ public class Prebid {
             Utils.addValue(prebid, "data", data);
         }
 
+        setPluginRendererList(prebid, config);
+
         return prebid;
     }
 
@@ -162,6 +170,23 @@ public class Prebid {
         return prebid;
     }
 
+    private static void setPluginRendererList(JSONObject prebid, AdUnitConfiguration adUnitConfiguration) {
+        List<PrebidMobilePluginRenderer> plugins = PrebidMobilePluginRegister.getInstance().getRTBListOfRenderersFor(adUnitConfiguration);
+        PluginRendererListMapper mapper = new PluginRendererListMapper();
+        PluginRendererList rendererList = new PluginRendererList();
+        rendererList.setList(mapper.map(plugins));
+
+        boolean isDefaultPluginRenderer = rendererList.get().size() == 1
+                && rendererList.get().get(0).getName().equals(PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME);
+
+        if (!adUnitConfiguration.isOriginalAdUnit() && !isDefaultPluginRenderer) {
+            try {
+                Utils.addValue(prebid, "sdk", rendererList.getJsonObject());
+            } catch (JSONException e) {
+                LogUtil.error("setPluginRendererList", e.getMessage());
+            }
+        }
+    }
 
     private static void parseEvents(
         @NonNull Prebid prebid,

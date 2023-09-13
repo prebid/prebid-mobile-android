@@ -17,10 +17,9 @@ public class PluginRendererListTest {
         List<PluginRenderer> emptyList = Arrays.asList();
 
         pluginRendererList.setList(emptyList);
-        JSONObject jsonObject = (JSONObject) pluginRendererList.getJsonObject().get("sdk");
 
-        Assert.assertTrue(jsonObject.has("renderers"));
-        JSONArray jsonArray = jsonObject.getJSONArray("renderers");
+        Assert.assertTrue(pluginRendererList.getJsonObject().has(PluginRendererList.RENDERERS_KEY));
+        JSONArray jsonArray = pluginRendererList.getJsonObject().getJSONArray(PluginRendererList.RENDERERS_KEY);
         Assert.assertEquals(0, jsonArray.length());
     }
 
@@ -39,10 +38,9 @@ public class PluginRendererListTest {
         );
 
         pluginRendererList.setList(pluginList);
-        JSONObject jsonObject = (JSONObject) pluginRendererList.getJsonObject().get("sdk");
 
-        Assert.assertTrue(jsonObject.has("renderers"));
-        JSONArray jsonArray = jsonObject.getJSONArray("renderers");
+        Assert.assertTrue(pluginRendererList.getJsonObject().has(PluginRendererList.RENDERERS_KEY));
+        JSONArray jsonArray = pluginRendererList.getJsonObject().getJSONArray(PluginRendererList.RENDERERS_KEY);
         Assert.assertEquals(pluginList.size(), jsonArray.length());
 
         for (int i = 0; i < pluginList.size(); i++) {

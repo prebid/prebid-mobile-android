@@ -37,7 +37,6 @@ public class BidRequest extends BaseBid {
     private Regs regs = null;
     private User user = null;
     private Source source = null;
-    private PluginRendererList pluginRendererList = null;
 
     private Ext ext = null;
 
@@ -156,13 +155,5 @@ public class BidRequest extends BaseBid {
             ext = new Ext();
         }
         return ext;
-    }
-
-    public void setPluginRendererList(PluginRendererList pluginRendererList) {
-        this.pluginRendererList = pluginRendererList;
-    }
-
-    public PluginRendererList getPluginRenderers() {
-        return pluginRendererList;
     }
 }

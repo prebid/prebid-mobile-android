@@ -56,7 +56,7 @@ import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRenderer;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRendererList;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
@@ -786,15 +786,20 @@ public class BasicParameterBuilderTest {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsOriginalAdUnit(true);
         configuration.setAdFormat(AdFormat.BANNER);
+        String unwantedObjectNodeKey = "sdk";
+
         BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
+        AdRequestInput adRequestInput = new AdRequestInput();
+
         BidRequest bidRequest = new BidRequest();
         String actualBidRequest = bidRequest.getJsonObject().toString();
 
         // When
-        builder.setPluginRendererList(bidRequest);
+        builder.appendBuilderParameters(adRequestInput);
 
         // Then
-        assertNull(bidRequest.getPluginRenderers());
+        JSONObject prebidObj = (JSONObject) adRequestInput.getBidRequest().getExt().getMap().get("prebid");
+        assertFalse(prebidObj.has(unwantedObjectNodeKey));
         assertEquals(actualBidRequest, bidRequest.getJsonObject().toString());
     }
 
@@ -804,15 +809,20 @@ public class BasicParameterBuilderTest {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsOriginalAdUnit(false);
         configuration.setAdFormat(AdFormat.BANNER);
+        String unwantedObjectNodeKey = "sdk";
+
         BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
+        AdRequestInput adRequestInput = new AdRequestInput();
+
         BidRequest bidRequest = new BidRequest();
         String actualBidRequest = bidRequest.getJsonObject().toString();
 
         // When
-        builder.setPluginRendererList(bidRequest);
+        builder.appendBuilderParameters(adRequestInput);
 
         // Then
-        assertNull(bidRequest.getPluginRenderers());
+        JSONObject prebidObj = (JSONObject) adRequestInput.getBidRequest().getExt().getMap().get("prebid");
+        assertFalse(prebidObj.has(unwantedObjectNodeKey));
         assertEquals(actualBidRequest, bidRequest.getJsonObject().toString());
     }
 
@@ -824,20 +834,21 @@ public class BasicParameterBuilderTest {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsOriginalAdUnit(false);
         configuration.setAdFormat(AdFormat.BANNER);
+
         BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
-        BidRequest bidRequest = new BidRequest();
+        AdRequestInput adRequestInput = new AdRequestInput();
 
         // When
-        builder.setPluginRendererList(bidRequest);
+        builder.appendBuilderParameters(adRequestInput);
 
         // Then
-        List<PluginRenderer> bidRequestPluginRenderers = bidRequest.getPluginRenderers().getList();
-        JSONObject extObj = ((JSONObject)(bidRequest.getJsonObject().get("ext")));
-        JSONObject sdkObj = (JSONObject)(extObj.get("sdk"));
+        JSONObject prebidObj = (JSONObject) adRequestInput.getBidRequest().getExt().getMap().get("prebid");
+        JSONObject sdkObj = prebidObj.getJSONObject("sdk");
+        JSONArray renderersObj = sdkObj.getJSONArray(PluginRendererList.RENDERERS_KEY);
         // Default plugin is indexed and additional plugin is indexed
-        assertTrue(sdkObj.getJSONArray("renderers").length() == 2);
-        assertEquals(bidRequestPluginRenderers.get(0).getName(), otherPlugin.getName());
-        assertEquals(bidRequestPluginRenderers.get(1).getName(), PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME);
+        assertTrue(renderersObj.length() == 2);
+        assertEquals(((JSONObject)renderersObj.get(0)).get("name"), otherPlugin.getName());
+        assertEquals(((JSONObject)renderersObj.get(1)).get("name"), PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME);
     }
 
     private VideoParameters createFullVideoParameters() {
