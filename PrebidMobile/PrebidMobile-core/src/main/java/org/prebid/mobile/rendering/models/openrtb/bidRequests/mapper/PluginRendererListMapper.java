@@ -21,7 +21,7 @@ public class PluginRendererListMapper {
         PluginRenderer pluginRenderer = new PluginRenderer();
         pluginRenderer.setName(prebidMobilePluginRenderer.getName());
         pluginRenderer.setVersion(prebidMobilePluginRenderer.getVersion());
-        pluginRenderer.setToken(prebidMobilePluginRenderer.getToken());
+        pluginRenderer.setData(prebidMobilePluginRenderer.getData());
         return pluginRenderer;
     }
 }

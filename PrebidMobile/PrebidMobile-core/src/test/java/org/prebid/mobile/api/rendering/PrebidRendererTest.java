@@ -59,8 +59,8 @@ public class PrebidRendererTest {
     }
 
     @Test
-    public void getToken_returnNull() {
-        assertNull(prebidRenderer.getToken());
+    public void getData_returnNull() {
+        assertNull(prebidRenderer.getData());
     }
 
     @Test
