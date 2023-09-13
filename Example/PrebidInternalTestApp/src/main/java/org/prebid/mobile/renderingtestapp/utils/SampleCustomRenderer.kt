@@ -29,6 +29,7 @@ import android.view.ViewTreeObserver
 import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import org.json.JSONObject
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.api.data.AdFormat
 import org.prebid.mobile.api.exceptions.AdException
@@ -49,7 +50,7 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
 
     override fun getVersion(): String = "1.0.0"
 
-    override fun getToken(): String? = null
+    override fun getData(): JSONObject? = null
 
     override fun registerEventListener(
         pluginEventListener: PluginEventListener,

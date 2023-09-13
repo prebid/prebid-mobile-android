@@ -16,10 +16,12 @@
 
 package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 
+import org.json.JSONObject;
+
 public class PluginRenderer extends BaseBid {
     private String name;
     private String version;
-    private String token;
+    private JSONObject data;
 
     public String getName() {
         return name;
@@ -37,11 +39,11 @@ public class PluginRenderer extends BaseBid {
         this.version = version;
     }
 
-    public String getToken() {
-        return token;
+    public JSONObject getData() {
+        return data;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setData(JSONObject data) {
+        this.data = data;
     }
 }

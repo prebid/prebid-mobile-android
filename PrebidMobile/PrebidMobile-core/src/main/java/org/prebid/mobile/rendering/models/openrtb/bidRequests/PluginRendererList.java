@@ -21,11 +21,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 public class PluginRendererList extends BaseBid {
 
     private List<PluginRenderer> renderers;
-
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
@@ -51,7 +51,10 @@ public class PluginRendererList extends BaseBid {
             JSONObject pluginObj = new JSONObject();
             pluginObj.put("name", plugin.getName());
             pluginObj.put("version", plugin.getVersion());
-            pluginObj.put("token", plugin.getToken());
+            JSONObject pluginDataObj = plugin.getData();
+            if (pluginDataObj != null) {
+                pluginObj.put("data", pluginDataObj);
+            }
             jsonArray.put(pluginObj);
         }
         jsonObject.put(key, jsonArray);

@@ -8,6 +8,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface;
 import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
@@ -26,7 +28,7 @@ public class PluginRendererListMapperTest {
 
     String pluginName;
     String pluginVersion;
-    String pluginToken;
+    JSONObject pluginData;
 
     PrebidMobilePluginRenderer testPlugin = new PrebidMobilePluginRenderer() {
         @Override
@@ -41,8 +43,8 @@ public class PluginRendererListMapperTest {
 
         @Nullable
         @Override
-        public String getToken() {
-            return pluginToken;
+        public JSONObject getData() {
+            return pluginData;
         }
 
         @Override
@@ -68,14 +70,15 @@ public class PluginRendererListMapperTest {
     };
 
     @Test
-    public void whenMap_valuesAreCorrect() {
+    public void whenMap_valuesAreCorrect() throws JSONException {
         // Given
         PluginRendererListMapper mapper = new PluginRendererListMapper();
         List<PrebidMobilePluginRenderer> pluginList = new ArrayList<>();
         pluginList.add(testPlugin);
         pluginName = "name";
         pluginVersion = "1.0";
-        pluginToken = "token";
+        pluginData = new JSONObject();
+        pluginData.put("key", true);
 
         // When
         List<PluginRenderer> result = mapper.map(pluginList);
@@ -84,6 +87,6 @@ public class PluginRendererListMapperTest {
         // Then
         assertEquals(mappedRenderer.getName(), pluginName);
         assertEquals(mappedRenderer.getVersion(), pluginVersion);
-        assertEquals(mappedRenderer.getToken(), pluginToken);
+        assertEquals(mappedRenderer.getData(), pluginData);
     }
 }
