@@ -60,6 +60,13 @@ public class DeviceInfoParameterBuilder extends ParameterBuilder {
                 device.ifa = advertisingId;
             }
 
+            boolean tabletSize = deviceManager.isTablet();
+            if (tabletSize) {
+                device.devicetype = Device.DeviceType.TABLET.value;
+            } else {
+                device.devicetype = Device.DeviceType.SMARTPHONE.value;
+            }
+
             device.make = Build.MANUFACTURER;
             device.model = Build.MODEL;
             device.os = PLATFORM_VALUE;
