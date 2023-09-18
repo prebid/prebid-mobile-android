@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    setCompileSdkVersion(32)
+    setCompileSdkVersion(33)
     setBuildToolsVersion("30.0.3")
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0.0"
         applicationId "org.prebid.mobile.prebidkotlindemo"
