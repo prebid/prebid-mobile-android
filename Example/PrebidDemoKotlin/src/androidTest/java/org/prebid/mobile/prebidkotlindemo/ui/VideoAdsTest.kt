@@ -49,6 +49,7 @@ class VideoAdsTest(
             AdFormat.VIDEO_BANNER -> checkVideoBannerAd()
             AdFormat.VIDEO_REWARDED -> checkVideoRewardedAd(testCase)
             AdFormat.VIDEO_INTERSTITIAL -> checkVideoInterstitialAd()
+            else -> { throw IllegalArgumentException("TestCase not supported for ${testCase.adFormat.description}") }
         }
     }
 
