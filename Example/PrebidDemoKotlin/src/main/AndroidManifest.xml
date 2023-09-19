@@ -81,6 +81,9 @@
         <activity
             android:name=".activities.ads.gam.original.GamOriginalApiNativeInAppActivity"
             android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiMultiformatBannerNativeActivity"
+            android:exported="true" />
 
         <!-- GAM Rendering -->
         <activity
