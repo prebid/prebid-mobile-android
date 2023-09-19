@@ -149,7 +149,9 @@ public abstract class Requester {
     private void sendAdException(String logMsg, String exceptionMsg) {
         LogUtil.warning(TAG, logMsg);
         AdException adException = new AdException(AdException.INIT_ERROR, exceptionMsg);
-        adResponseCallBack.onErrorWithException(adException, 0);
+        if (adResponseCallBack != null) {
+            adResponseCallBack.onErrorWithException(adException, 0);
+        }
     }
 
     protected void makeAdRequest() {
