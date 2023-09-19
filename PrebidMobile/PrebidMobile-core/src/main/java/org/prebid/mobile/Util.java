@@ -335,7 +335,7 @@ public class Util {
         return false;
     }
 
-    static void apply(HashMap<String, String> bids, Object adObj) {
+    public static void apply(HashMap<String, String> bids, Object adObj) {
         if (adObj == null) return;
         if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
             handleAdManagerCustomTargeting(bids, adObj);

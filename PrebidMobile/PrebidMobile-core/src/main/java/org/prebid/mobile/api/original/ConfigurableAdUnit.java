@@ -10,6 +10,7 @@ import org.prebid.mobile.BannerParameters;
 import org.prebid.mobile.NativeParameters;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.Util;
 import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -18,6 +19,8 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
+
+import java.util.HashMap;
 
 class ConfigurableAdUnit extends AdUnit {
 
@@ -34,12 +37,19 @@ class ConfigurableAdUnit extends AdUnit {
             @Override
             public void onFetchCompleted(BidResponse response) {
                 bidResponse = response;
+
+                HashMap<String, String> keywords = response.getTargeting();
+                Util.apply(keywords, adObject);
+
                 originalListener.onComplete(ResultCode.SUCCESS);
             }
 
             @Override
             public void onError(AdException exception) {
                 bidResponse = null;
+
+                Util.apply(null, adObject);
+
                 originalListener.onComplete(convertToResultCode(exception));
             }
         };
