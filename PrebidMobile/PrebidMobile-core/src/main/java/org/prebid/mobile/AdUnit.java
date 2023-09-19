@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
+import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -57,10 +58,14 @@ public abstract class AdUnit {
     @Nullable
     protected Object adObject;
 
-    AdUnit(@NonNull String configId, @NonNull EnumSet<AdFormat> adTypes) {
+    public AdUnit(@NotNull String configId) {
         configuration.setConfigId(configId);
-        configuration.setAdFormats(adTypes);
         configuration.setIsOriginalAdUnit(true);
+    }
+
+    AdUnit(@NonNull String configId, @NonNull EnumSet<AdFormat> adTypes) {
+        this(configId);
+        configuration.setAdFormats(adTypes);
     }
 
     /**

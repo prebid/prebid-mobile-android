@@ -287,4 +287,17 @@ public class BidResponse {
         return null;
     }
 
+    @Nullable
+    public Integer getExpirationTimeSeconds() {
+        Bid winningBid = getWinningBid();
+        if (winningBid == null) return null;
+
+        int expirationTime = winningBid.getExp();
+        if (expirationTime <= 0) {
+            return null;
+        }
+
+        return expirationTime;
+    }
+
 }

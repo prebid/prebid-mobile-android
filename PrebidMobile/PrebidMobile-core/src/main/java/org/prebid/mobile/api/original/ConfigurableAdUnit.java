@@ -1,0 +1,102 @@
+package org.prebid.mobile.api.original;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.AdUnit;
+import org.prebid.mobile.BannerParameters;
+import org.prebid.mobile.NativeParameters;
+import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.VideoParameters;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.NativeAdUnitConfiguration;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
+import org.prebid.mobile.rendering.models.AdPosition;
+import org.prebid.mobile.rendering.models.PlacementType;
+
+class ConfigurableAdUnit extends AdUnit {
+
+    @Nullable
+    private BidResponse bidResponse;
+
+    public ConfigurableAdUnit(@NotNull String configId) {
+        super(configId);
+    }
+
+    @Override
+    protected BidRequesterListener createBidListener(OnCompleteListener originalListener) {
+        return new BidRequesterListener() {
+            @Override
+            public void onFetchCompleted(BidResponse response) {
+                bidResponse = response;
+                originalListener.onComplete(ResultCode.SUCCESS);
+            }
+
+            @Override
+            public void onError(AdException exception) {
+                bidResponse = null;
+                originalListener.onComplete(convertToResultCode(exception));
+            }
+        };
+    }
+
+    public void setConfigurationBasedOnRequest(
+            @NonNull PrebidRequest request
+    ) {
+        if (request.isInterstitial()) {
+            configuration.setAdPosition(AdPosition.FULLSCREEN);
+        }
+
+        BannerParameters bannerParameters = request.getBannerParameters();
+        if (bannerParameters != null) {
+            if (request.isInterstitial()) {
+                configuration.addAdFormat(AdFormat.INTERSTITIAL);
+
+                Integer minWidth = bannerParameters.getInterstitialMinWidthPercentage();
+                Integer minHeight = bannerParameters.getInterstitialMinHeightPercentage();
+                if (minWidth != null && minHeight != null) {
+                    configuration.setMinSizePercentage(new AdSize(minWidth, minHeight));
+                }
+            } else {
+                configuration.addAdFormat(AdFormat.BANNER);
+            }
+
+            configuration.setBannerParameters(bannerParameters);
+            configuration.addSizes(bannerParameters.getAdSizes());
+        }
+
+        VideoParameters videoParameters = request.getVideoParameters();
+        if (videoParameters != null) {
+            configuration.addAdFormat(AdFormat.VAST);
+
+            if (request.isInterstitial()) {
+                configuration.setPlacementType(PlacementType.INTERSTITIAL);
+            }
+            if (request.isRewarded()) {
+                configuration.setRewarded(true);
+            }
+
+            configuration.setVideoParameters(videoParameters);
+            configuration.addSize(videoParameters.getAdSize());
+        }
+
+        NativeParameters nativeParameters = request.getNativeParameters();
+        if (nativeParameters != null) {
+            configuration.addAdFormat(AdFormat.NATIVE);
+
+            NativeAdUnitConfiguration nativeConfig = nativeParameters.getNativeConfiguration();
+            configuration.setNativeConfiguration(nativeConfig);
+        }
+    }
+
+    @Nullable
+    public BidResponse getBidResponse() {
+        return bidResponse;
+    }
+
+}

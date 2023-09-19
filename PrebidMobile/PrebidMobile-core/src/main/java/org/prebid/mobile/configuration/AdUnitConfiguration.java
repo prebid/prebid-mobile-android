@@ -196,22 +196,38 @@ public class AdUnitConfiguration {
         return minSizePercentage;
     }
 
+    /**
+     * Should be replaced by the sizes in {@link BannerParameters} or {@link VideoParameters}.
+     */
+    @Deprecated
     public void addSize(@Nullable AdSize size) {
         if (size != null) {
             adSizes.add(size);
         }
     }
 
+    /**
+     * Should be replaced by the sizes in {@link BannerParameters} or {@link VideoParameters}.
+     */
+    @Deprecated
     public void addSizes(AdSize... sizes) {
         adSizes.addAll(Arrays.asList(sizes));
     }
 
+    /**
+     * Should be replaced by the sizes in {@link BannerParameters} or {@link VideoParameters}.
+     */
+    @Deprecated
     public void addSizes(@Nullable Set<AdSize> sizes) {
         if (sizes != null) {
             adSizes.addAll(sizes);
         }
     }
 
+    /**
+     * Should be replaced by the sizes in {@link BannerParameters} or {@link VideoParameters}.
+     */
+    @Deprecated
     @NonNull
     public HashSet<AdSize> getSizes() {
         return adSizes;
@@ -467,6 +483,10 @@ public class AdUnitConfiguration {
     @Nullable
     public NativeAdUnitConfiguration getNativeConfiguration() {
         return nativeConfiguration;
+    }
+
+    public void setNativeConfiguration(NativeAdUnitConfiguration nativeConfiguration) {
+        this.nativeConfiguration = nativeConfiguration;
     }
 
     public boolean isOriginalAdUnit() {
