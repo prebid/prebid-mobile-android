@@ -46,7 +46,8 @@ public class GeoLocationParameterBuilder extends ParameterBuilder {
         adRequestInput.getBidRequest().getDevice().setGeo(null);
 
         if (locationInfoManager != null && PrebidMobile.isShareGeoLocation()) {
-            if (deviceManager != null && deviceManager.isPermissionGranted("android.permission.ACCESS_FINE_LOCATION")) {
+            if (deviceManager != null && (deviceManager.isPermissionGranted("android.permission.ACCESS_FINE_LOCATION")
+                    || deviceManager.isPermissionGranted("android.permission.ACCESS_COARSE_LOCATION"))) {
                 setLocation(adRequestInput, locationInfoManager);
             }
         }
