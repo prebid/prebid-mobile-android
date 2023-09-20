@@ -61,6 +61,7 @@ public class AdUnitConfiguration {
     private AdSize minSizePercentage;
     private PlacementType placementType;
     private AdPosition adPosition;
+    @Nullable
     private ContentObject appContent;
     private BannerParameters bannerParameters;
     private VideoParameters videoParameters;
@@ -68,9 +69,12 @@ public class AdUnitConfiguration {
 
     private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
     private final HashSet<AdSize> adSizes = new HashSet<>();
-    private final ArrayList<DataObject> userDataObjects = new ArrayList<>();
-    private final Map<String, Set<String>> extDataDictionary = new HashMap<>();
-    private final Set<String> extKeywordsSet = new HashSet<>();
+    @NonNull
+    private ArrayList<DataObject> userDataObjects = new ArrayList<>();
+    @NonNull
+    private Map<String, Set<String>> extDataDictionary = new HashMap<>();
+    @NonNull
+    private Set<String> extKeywordsSet = new HashSet<>();
 
 
     public void modifyUsingBidResponse(@Nullable BidResponse bidResponse) {
@@ -87,8 +91,10 @@ public class AdUnitConfiguration {
         return configId;
     }
 
-    public void setAppContent(ContentObject content) {
-        appContent = content;
+    public void setAppContent(@Nullable ContentObject content) {
+        if (content != null) {
+            appContent = content;
+        }
     }
 
     public ContentObject getAppContent() {
@@ -116,6 +122,12 @@ public class AdUnitConfiguration {
 
     public void clearUserData() {
         userDataObjects.clear();
+    }
+
+    public void setUserData(@Nullable ArrayList<DataObject> userData) {
+        if (userData != null) {
+            userDataObjects = userData;
+        }
     }
 
     public void addExtData(
@@ -160,6 +172,12 @@ public class AdUnitConfiguration {
         extDataDictionary.clear();
     }
 
+    public void setExtData(@Nullable Map<String, Set<String>> extData) {
+        if (extData != null) {
+            this.extDataDictionary = extData;
+        }
+    }
+
     public void addExtKeyword(String keyword) {
         if (keyword != null) {
             extKeywordsSet.add(keyword);
@@ -175,6 +193,12 @@ public class AdUnitConfiguration {
     public void removeExtKeyword(String key) {
         if (key != null) {
             extKeywordsSet.remove(key);
+        }
+    }
+
+    public void setExtKeywords(@Nullable Set<String> extKeywords) {
+        if (extKeywords != null) {
+            this.extKeywordsSet = extKeywords;
         }
     }
 

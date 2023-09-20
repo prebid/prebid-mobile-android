@@ -39,9 +39,11 @@ public class BannerParameters {
     }
 
     public void setAdSizes(@Nullable Set<AdSize> adSizes) {
-        if (adSizes != null) {
-            this.adSizes = new HashSet<>(adSizes);
+        if (adSizes == null) {
+            this.adSizes = null;
+            return;
         }
+        this.adSizes = new HashSet<>(adSizes);
     }
 
     @Nullable

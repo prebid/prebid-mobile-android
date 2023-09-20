@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.BannerParameters;
+import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.DataObject;
 import org.prebid.mobile.NativeParameters;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.ResultCode;
@@ -20,7 +22,10 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 class ConfigurableAdUnit extends AdUnit {
 
@@ -102,6 +107,19 @@ class ConfigurableAdUnit extends AdUnit {
             NativeAdUnitConfiguration nativeConfig = nativeParameters.getNativeConfiguration();
             configuration.setNativeConfiguration(nativeConfig);
         }
+
+
+        ContentObject contentObject = request.getAppContent();
+        configuration.setAppContent(contentObject);
+
+        ArrayList<DataObject> userData = request.getUserData();
+        configuration.setUserData(userData);
+
+        Map<String, Set<String>> extData = request.getExtData();
+        configuration.setExtData(extData);
+
+        Set<String> extKeywords = request.getExtKeywords();
+        configuration.setExtKeywords(extKeywords);
     }
 
     @Nullable
