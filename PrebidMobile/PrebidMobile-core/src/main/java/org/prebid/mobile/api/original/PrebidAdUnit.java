@@ -1,5 +1,9 @@
 package org.prebid.mobile.api.original;
 
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
+
+import androidx.annotation.IntRange;
 import androidx.annotation.Nullable;
 
 import org.prebid.mobile.LogUtil;
@@ -28,6 +32,25 @@ public class PrebidAdUnit {
     ) {
         baseFetchDemand(request, adObject, listener);
     }
+
+    public void setAutoRefreshInterval(
+            @IntRange(from = AUTO_REFRESH_DELAY_MIN / 1000, to = AUTO_REFRESH_DELAY_MAX / 1000) int seconds
+    ) {
+        adUnit.setAutoRefreshInterval(seconds);
+    }
+
+    public void resumeAutoRefresh() {
+        adUnit.resumeAutoRefresh();
+    }
+
+    public void stopAutoRefresh() {
+        adUnit.stopAutoRefresh();
+    }
+
+    public void destroy() {
+        adUnit.destroy();
+    }
+
 
     private void baseFetchDemand(
             @Nullable PrebidRequest request,
