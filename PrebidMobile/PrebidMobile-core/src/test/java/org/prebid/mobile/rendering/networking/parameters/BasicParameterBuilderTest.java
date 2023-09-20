@@ -125,8 +125,7 @@ public class BasicParameterBuilderTest {
         PrebidMobile.clearStoredBidResponses();
         PrebidMobile.setStoredAuctionResponse(null);
 
-//        PrebidMobile.unregisterPluginRenderer(otherPlugin);
-        PrebidMobilePluginRegister.getInstance().unregisterPlugin(otherPlugin);
+        PrebidMobile.unregisterPluginRenderer(otherPlugin);
     }
 
     @Test
@@ -829,8 +828,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void whenSetPluginRendererList_pluginRendererIsIndexed() throws JSONException {
         // Given
-//        PrebidMobile.registerPluginRenderer(otherPlugin);
-        PrebidMobilePluginRegister.getInstance().registerPlugin(otherPlugin);
+        PrebidMobile.registerPluginRenderer(otherPlugin);
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsOriginalAdUnit(false);
         configuration.setAdFormat(AdFormat.BANNER);

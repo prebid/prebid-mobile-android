@@ -19,10 +19,10 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.pluginrenderer
 import android.os.Bundle
 import android.view.View
 import org.prebid.mobile.AdSize
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener
-import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerBinding
@@ -46,8 +46,7 @@ open class PpmBannerPluginRendererFragment : AdFragment(), BannerViewListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        PrebidMobile.registerPluginRenderer(sampleCustomRenderer)
-        PrebidMobilePluginRegister.getInstance().registerPlugin(sampleCustomRenderer);
+        PrebidMobile.registerPluginRenderer(sampleCustomRenderer)
     }
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
@@ -129,8 +128,7 @@ open class PpmBannerPluginRendererFragment : AdFragment(), BannerViewListener {
     }
 
     override fun onDestroy() {
-//        PrebidMobile.unregisterPluginRenderer(sampleCustomRenderer)
-        PrebidMobilePluginRegister.getInstance().unregisterPlugin(sampleCustomRenderer)
+        PrebidMobile.unregisterPluginRenderer(sampleCustomRenderer)
         super.onDestroy()
     }
 }
