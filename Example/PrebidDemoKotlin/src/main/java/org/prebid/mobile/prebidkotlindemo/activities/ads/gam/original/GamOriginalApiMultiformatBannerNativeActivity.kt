@@ -61,7 +61,7 @@ class GamOriginalApiMultiformatBannerNativeActivity : BaseAdActivity() {
         prebidRequest.setNativeParameters(createNativeParameters())
 
         val gamRequest = AdManagerAdRequest.Builder().build()
-        adUnit.fetchDemand(gamRequest, prebidRequest) {
+        adUnit.fetchDemand(prebidRequest, gamRequest) {
             loadGam(gamRequest)
         }
     }
