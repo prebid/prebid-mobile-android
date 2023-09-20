@@ -59,6 +59,7 @@ public abstract class Requester {
     protected URLBuilder urlBuilder;
     protected ResponseHandler adResponseCallBack;
     protected BaseNetworkTask networkTask;
+    protected Boolean isDestroyed = false;
 
     Requester(
             AdUnitConfiguration config,
@@ -87,6 +88,7 @@ public abstract class Requester {
         }
         networkTask = null;
         adResponseCallBack = null;
+        isDestroyed = true;
     }
 
     protected List<ParameterBuilder> getParameterBuilders() {
@@ -129,13 +131,21 @@ public abstract class Requester {
                 @Override
                 public void adIdFetchCompletion() {
                     LogUtil.info(TAG, "Advertising id was received");
-                    makeAdRequest();
+                    if (isDestroyed) {
+                        LogUtil.warning(TAG, "Attempted to make ad request after requester was destroyed");
+                    } else {
+                        makeAdRequest();
+                    }
                 }
 
                 @Override
                 public void adIdFetchFailure() {
                     LogUtil.warning(TAG, "Can't get advertising id");
-                    makeAdRequest();
+                    if (isDestroyed) {
+                        LogUtil.warning(TAG, "Attempted to make ad request after requester was destroyed");
+                    } else {
+                        makeAdRequest();
+                    }
                 }
             });
         } else {
