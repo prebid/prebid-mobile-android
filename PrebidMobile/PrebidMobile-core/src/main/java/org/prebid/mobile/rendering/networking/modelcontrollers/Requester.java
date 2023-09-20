@@ -47,6 +47,7 @@ import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,6 @@ public abstract class Requester {
     protected URLBuilder urlBuilder;
     protected ResponseHandler adResponseCallBack;
     protected BaseNetworkTask networkTask;
-    protected Boolean isDestroyed = false;
 
     Requester(
             AdUnitConfiguration config,
@@ -88,7 +88,6 @@ public abstract class Requester {
         }
         networkTask = null;
         adResponseCallBack = null;
-        isDestroyed = true;
     }
 
     protected List<ParameterBuilder> getParameterBuilders() {
@@ -126,25 +125,22 @@ public abstract class Requester {
         }
 
         UserConsentManager userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
+        WeakReference<Requester> weakRequester = new WeakReference<>(this);
         if (userConsentManager.canAccessDeviceData()) {
             AdIdManager.initAdId(context, new AdIdFetchListener() {
                 @Override
                 public void adIdFetchCompletion() {
                     LogUtil.info(TAG, "Advertising id was received");
-                    if (isDestroyed) {
-                        LogUtil.warning(TAG, "Attempted to make ad request after requester was destroyed");
-                    } else {
-                        makeAdRequest();
+                    if (weakRequester.get() != null) {
+                        weakRequester.get().makeAdRequest();
                     }
                 }
 
                 @Override
                 public void adIdFetchFailure() {
                     LogUtil.warning(TAG, "Can't get advertising id");
-                    if (isDestroyed) {
-                        LogUtil.warning(TAG, "Attempted to make ad request after requester was destroyed");
-                    } else {
-                        makeAdRequest();
+                    if (weakRequester.get() != null) {
+                        weakRequester.get().makeAdRequest();
                     }
                 }
             });
