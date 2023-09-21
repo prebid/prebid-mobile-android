@@ -60,6 +60,7 @@ public abstract class Requester {
     protected URLBuilder urlBuilder;
     protected ResponseHandler adResponseCallBack;
     protected BaseNetworkTask networkTask;
+    protected AdIdManager.FetchAdIdInfoTask fetchAdIdInfoTask;
 
     Requester(
             AdUnitConfiguration config,
@@ -88,6 +89,10 @@ public abstract class Requester {
         }
         networkTask = null;
         adResponseCallBack = null;
+        if (fetchAdIdInfoTask != null) {
+            fetchAdIdInfoTask.cancel(true);
+        }
+        fetchAdIdInfoTask = null;
     }
 
     protected List<ParameterBuilder> getParameterBuilders() {
@@ -125,23 +130,18 @@ public abstract class Requester {
         }
 
         UserConsentManager userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
-        WeakReference<Requester> weakRequester = new WeakReference<>(this);
         if (userConsentManager.canAccessDeviceData()) {
-            AdIdManager.initAdId(context, new AdIdFetchListener() {
+            fetchAdIdInfoTask = AdIdManager.initAdId(context, new AdIdFetchListener() {
                 @Override
                 public void adIdFetchCompletion() {
                     LogUtil.info(TAG, "Advertising id was received");
-                    if (weakRequester.get() != null) {
-                        weakRequester.get().makeAdRequest();
-                    }
+                    makeAdRequest();
                 }
 
                 @Override
                 public void adIdFetchFailure() {
                     LogUtil.warning(TAG, "Can't get advertising id");
-                    if (weakRequester.get() != null) {
-                        weakRequester.get().makeAdRequest();
-                    }
+                    makeAdRequest();
                 }
             });
         } else {
