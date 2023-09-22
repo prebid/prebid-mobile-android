@@ -30,19 +30,18 @@ import org.prebid.mobile.api.original.PrebidRequest
 import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 import org.prebid.mobile.prebidkotlindemo.utils.ImageUtils
-import kotlin.random.Random
 
-class GamOriginalApiMultiformatBannerNativeActivity : BaseAdActivity() {
+class GamOriginalApiMultiformatBannerVideoNativeActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-multiformat"
         const val CONFIG_ID_BANNER = "prebid-ita-banner-320-50"
         const val CONFIG_ID_NATIVE = "prebid-ita-banner-native-styles"
+        const val CONFIG_ID_VIDEO = "prebid-ita-video-outstream-original-api"
         const val CUSTOM_FORMAT_ID = "12304464"
-        const val WIDTH = 320
-        const val HEIGHT = 50
     }
 
+    private var prebidAdUnit: PrebidAdUnit? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,17 +50,18 @@ class GamOriginalApiMultiformatBannerNativeActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        // Random.nextBoolean() only for test cases
-        val configId = if (Random.nextBoolean()) CONFIG_ID_BANNER else CONFIG_ID_NATIVE
+        // random() only for test cases, in production use one config id
+        val configId = listOf(CONFIG_ID_BANNER, CONFIG_ID_VIDEO, CONFIG_ID_NATIVE).random()
 
-        val adUnit = PrebidAdUnit(configId)
+        prebidAdUnit = PrebidAdUnit(configId)
         val prebidRequest = PrebidRequest()
 
         prebidRequest.setBannerParameters(createBannerParameters())
+        prebidRequest.setVideoParameters(createVideoParameters())
         prebidRequest.setNativeParameters(createNativeParameters())
 
         val gamRequest = AdManagerAdRequest.Builder().build()
-        adUnit.fetchDemand(prebidRequest, gamRequest) {
+        prebidAdUnit?.fetchDemand(prebidRequest, gamRequest) {
             loadGam(gamRequest)
         }
     }
@@ -75,15 +75,15 @@ class GamOriginalApiMultiformatBannerNativeActivity : BaseAdActivity() {
             showNativeAd(nativeAd, adWrapperView)
         }
 
-        val onCustomAdLoaded = OnCustomFormatAdLoadedListener { customNativeAd ->
-            showCustomNativeAd(customNativeAd)
+        val onPrebidNativeAdLoaded = OnCustomFormatAdLoadedListener { customNativeAd ->
+            showPrebidNativeAd(customNativeAd)
         }
 
         val adLoader = AdLoader.Builder(this, AD_UNIT_ID)
             .forAdManagerAdView(onBannerLoaded, AdSize.BANNER, AdSize.MEDIUM_RECTANGLE)
             .forNativeAd(onNativeLoaded)
-            .forCustomFormatAd(CUSTOM_FORMAT_ID, onCustomAdLoaded, null)
-            .withAdListener(AdListenerWithPrebidSizer(this))
+            .forCustomFormatAd(CUSTOM_FORMAT_ID, onPrebidNativeAdLoaded, null)
+            .withAdListener(AdListenerWithToast(this))
             .withAdManagerAdViewOptions(AdManagerAdViewOptions.Builder().build())
             .build()
 
@@ -93,6 +93,10 @@ class GamOriginalApiMultiformatBannerNativeActivity : BaseAdActivity() {
 
     private fun createBannerParameters(): BannerParameters {
         return BannerParameters()
+    }
+
+    private fun createVideoParameters(): VideoParameters {
+        return VideoParameters(listOf("video/mp4"))
     }
 
     private fun createNativeParameters(): NativeParameters {
@@ -181,7 +185,7 @@ class GamOriginalApiMultiformatBannerNativeActivity : BaseAdActivity() {
         wrapper.addView(nativeContainer)
     }
 
-    private fun showCustomNativeAd(customNativeAd: NativeCustomFormatAd) {
+    private fun showPrebidNativeAd(customNativeAd: NativeCustomFormatAd) {
         AdViewUtils.findNative(customNativeAd, object : PrebidNativeAdListener {
             override fun onPrebidNativeLoaded(ad: PrebidNativeAd) {
                 inflatePrebidNativeAd(ad)
@@ -223,11 +227,11 @@ class GamOriginalApiMultiformatBannerNativeActivity : BaseAdActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // TODO: Destroy
+        prebidAdUnit?.destroy()
     }
 
 
-    private class AdListenerWithPrebidSizer(
+    private class AdListenerWithToast(
         context: Context,
     ) : AdListener() {
 

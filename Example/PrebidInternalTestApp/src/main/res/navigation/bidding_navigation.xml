@@ -511,6 +511,15 @@
             android:id="@+id/action_header_bidding_to_gam_original_banner"
             app:destination="@id/gamOriginalBannerFragment" />
         <action
+            android:id="@+id/action_header_bidding_to_gam_original_multiformat"
+            app:destination="@id/gamOriginalMultiformatFragment" />
+        <action
+            android:id="@+id/action_header_bidding_to_gam_original_multiformat_interstitial"
+            app:destination="@id/gamOriginalMultiformatInterstitialFragment" />
+        <action
+            android:id="@+id/action_header_bidding_to_gam_original_multiformat_rewarded"
+            app:destination="@id/gamOriginalMultiformatRewardedFragment" />
+        <action
             android:id="@+id/action_header_bidding_to_gam_original_banner_memory_leak_testing"
             app:destination="@id/gamOriginalBannerMemoryLeakTestingFragment" />
         <action
@@ -782,6 +791,18 @@
         android:id="@+id/gamOriginalBannerFragment"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalBannerFragment"
         android:label="GamOriginalBannerFragment" />
+    <fragment
+        android:id="@+id/gamOriginalMultiformatFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalMultiformatBannerVideoNativeFragment"
+        android:label="GamOriginalMultiformatFragment" />
+    <fragment
+        android:id="@+id/gamOriginalMultiformatInterstitialFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalMultiformatRewardedFragment"
+        android:label="GamOriginalMultiformatRewardedFragment" />
+    <fragment
+        android:id="@+id/gamOriginalMultiformatRewardedFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalMultiformatRewardedFragment"
+        android:label="GamOriginalMultiformatRewardedFragment" />
     <fragment
         android:id="@+id/gamOriginalBannerMemoryLeakTestingFragment"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.testing.MemoryLeakTestingOriginalApiBannerFragment"

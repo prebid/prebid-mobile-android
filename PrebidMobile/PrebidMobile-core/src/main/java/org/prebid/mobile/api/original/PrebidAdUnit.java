@@ -12,10 +12,10 @@ import org.prebid.mobile.api.data.BidInfo;
 
 public class PrebidAdUnit {
 
-    private final ConfigurableAdUnit adUnit;
+    private final MultiformatAdUnitFacade adUnit;
 
     public PrebidAdUnit(String configId) {
-        adUnit = new ConfigurableAdUnit(configId);
+        adUnit = new MultiformatAdUnitFacade(configId);
     }
 
     public void fetchDemand(

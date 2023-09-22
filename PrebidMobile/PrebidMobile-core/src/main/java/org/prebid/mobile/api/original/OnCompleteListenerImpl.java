@@ -20,12 +20,12 @@ class OnCompleteListenerImpl implements OnCompleteListener, OnCompleteListener2 
     @NonNull
     private PrebidRequest request;
     @NonNull
-    private ConfigurableAdUnit adUnit;
+    private MultiformatAdUnitFacade adUnit;
     @NonNull
     private OnFetchDemandResult listener;
 
     OnCompleteListenerImpl(
-            @NonNull ConfigurableAdUnit adUnit,
+            @NonNull MultiformatAdUnitFacade adUnit,
             @NonNull PrebidRequest request,
             @Nullable Object adObject,
             @NonNull OnFetchDemandResult listener

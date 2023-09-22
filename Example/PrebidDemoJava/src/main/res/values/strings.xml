@@ -12,6 +12,7 @@
     <string name="gam_original_display_banner_320x50">GAM (Original API) Display Banner 320x50</string>
     <string name="gam_original_display_banner_300x250">GAM (Original API) Display Banner 300x250</string>
     <string name="gam_original_multiformat_banner_300x250">GAM (Original API) Multiformat Banner 300x250</string>
+    <string name="gam_original_multiformat_banner_video_native">GAM (Original API) Multiformat Banner + Video + Native</string>
     <string name="gam_original_video_banner">GAM (Original API) Video Banner</string>
     <string name="gam_original_display_interstitial">GAM (Original API) Display Interstitial</string>
     <string name="gam_original_video_interstitial">GAM (Original API) Video Interstitial</string>

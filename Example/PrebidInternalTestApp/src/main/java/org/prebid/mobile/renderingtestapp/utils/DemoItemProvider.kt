@@ -63,6 +63,12 @@ class DemoItemProvider private constructor() {
         private const val gamInterstitialMultiformatAction =
             R.id.action_header_bidding_to_gam_interstitial_multiformat
         private const val gamRewardedAction = R.id.action_header_bidding_to_gam_video_rewarded
+        private const val gamMultiformatOriginalAction =
+            R.id.action_header_bidding_to_gam_original_multiformat
+        private const val gamMultiformatInterstitialOriginalAction =
+            R.id.action_header_bidding_to_gam_original_multiformat_interstitial
+        private const val gamMultiformatRewardedOriginalAction =
+            R.id.action_header_bidding_to_gam_original_multiformat_rewarded
 
         private const val adMobBannerAction = R.id.action_header_bidding_to_admob_banner
         private const val adMobRandomBannerAction =
@@ -356,6 +362,45 @@ class DemoItemProvider private constructor() {
                     )
                 )
             )
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_multiformat),
+                    gamMultiformatOriginalAction,
+                    gamBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_dynamic,
+                        R.string.adunit_dynamic,
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_multiformat_interstitial),
+                    gamMultiformatInterstitialOriginalAction,
+                    gamInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_dynamic,
+                        R.string.adunit_gam_interstitial_320_480_original_multiformat,
+                        320,
+                        480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_multiformat_rewarded),
+                    gamMultiformatRewardedOriginalAction,
+                    gamInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_rewarded_end_card_320_480_original_api,
+                        R.string.adunit_gam_interstitial_video_320_480_original,
+                        320,
+                        480
+                    )
+                )
+            )
+
         }
 
         private fun addInAppPbsExamples() {

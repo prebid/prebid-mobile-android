@@ -27,12 +27,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-class ConfigurableAdUnit extends AdUnit {
+/**
+ * Internal AdUnit implementation that is used for PrebidAdUnit
+ * with multiformat configuration. It separates logic for multiformat ad unit.
+ */
+class MultiformatAdUnitFacade extends AdUnit {
 
     @Nullable
     private BidResponse bidResponse;
 
-    public ConfigurableAdUnit(@NotNull String configId) {
+    public MultiformatAdUnitFacade(@NotNull String configId) {
         super(configId);
     }
 
