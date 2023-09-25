@@ -4,6 +4,7 @@ import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
 import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
 
 import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.prebid.mobile.LogUtil;
@@ -12,10 +13,13 @@ import org.prebid.mobile.api.data.BidInfo;
 
 public class PrebidAdUnit {
 
-    private final MultiformatAdUnitFacade adUnit;
+    @NonNull
+    private final String configId;
+    @Nullable
+    private MultiformatAdUnitFacade adUnit;
 
-    public PrebidAdUnit(String configId) {
-        adUnit = new MultiformatAdUnitFacade(configId);
+    public PrebidAdUnit(@NonNull String configId) {
+        this.configId = configId;
     }
 
     public void fetchDemand(
@@ -36,19 +40,27 @@ public class PrebidAdUnit {
     public void setAutoRefreshInterval(
             @IntRange(from = AUTO_REFRESH_DELAY_MIN / 1000, to = AUTO_REFRESH_DELAY_MAX / 1000) int seconds
     ) {
-        adUnit.setAutoRefreshInterval(seconds);
+        if (adUnit != null) {
+            adUnit.setAutoRefreshInterval(seconds);
+        }
     }
 
     public void resumeAutoRefresh() {
-        adUnit.resumeAutoRefresh();
+        if (adUnit != null) {
+            adUnit.resumeAutoRefresh();
+        }
     }
 
     public void stopAutoRefresh() {
-        adUnit.stopAutoRefresh();
+        if (adUnit != null) {
+            adUnit.stopAutoRefresh();
+        }
     }
 
     public void destroy() {
-        adUnit.destroy();
+        if (adUnit != null) {
+            adUnit.destroy();
+        }
     }
 
 
@@ -67,7 +79,11 @@ public class PrebidAdUnit {
             return;
         }
 
-        adUnit.setConfigurationBasedOnRequest(request);
+        if (adUnit != null) {
+            adUnit.destroy();
+        }
+
+        adUnit = new MultiformatAdUnitFacade(configId, request);
 
         OnCompleteListenerImpl innerListener = new OnCompleteListenerImpl(adUnit, request, adObject, userListener);
         if (adObject != null) {

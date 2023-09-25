@@ -32,8 +32,10 @@ import androidx.annotation.VisibleForTesting;
 
 import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
@@ -57,6 +59,10 @@ public abstract class AdUnit {
     protected BidLoader bidLoader;
     @Nullable
     protected Object adObject;
+    @Nullable
+    protected BidResponse bidResponse;
+
+    protected boolean allowNullableAdObject = false;
 
     public AdUnit(@NotNull String configId) {
         configuration.setConfigId(configId);
@@ -104,6 +110,10 @@ public abstract class AdUnit {
         }
     }
 
+    /**
+     * Use {@link #fetchDemand(OnFetchDemandResult)}.
+     */
+    @Deprecated
     public void fetchDemand(@NonNull final OnCompleteListener2 listener) {
         final Map<String, String> keywordsMap = new HashMap<>();
 
@@ -114,7 +124,7 @@ public abstract class AdUnit {
         });
     }
 
-    public void fetchDemand(@NonNull Object adObj, @NonNull OnCompleteListener listener) {
+    public void fetchDemand(@Nullable Object adObj, @NonNull OnCompleteListener listener) {
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
             LogUtil.error("Empty account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
@@ -157,7 +167,7 @@ public abstract class AdUnit {
             return;
         }
 
-        if (Util.supportedAdObject(adObj)) {
+        if (Util.supportedAdObject(adObj) || allowNullableAdObject) {
             adObject = adObj;
             bidLoader = new BidLoader(
                     configuration,
@@ -179,6 +189,33 @@ public abstract class AdUnit {
             listener.onComplete(ResultCode.INVALID_AD_OBJECT);
         }
 
+    }
+
+    public void fetchDemand(OnFetchDemandResult listener) {
+        if (listener == null) {
+            LogUtil.error("Parameter OnFetchDemandResult in fetchDemand() must be not null.");
+            return;
+        }
+
+        allowNullableAdObject = true;
+
+        fetchDemand(null, resultCode -> {
+            BidInfo bidInfo;
+            if (bidResponse != null) {
+                bidInfo = new BidInfo(resultCode, bidResponse.getTargeting());
+                if (resultCode == ResultCode.SUCCESS) {
+                    boolean isNative = configuration.getNativeConfiguration() != null;
+                    if (isNative) {
+                        String cacheId = CacheManager.save(bidResponse.getWinningBidJson());
+                        Util.saveCacheId(cacheId, adObject);
+                        bidInfo.setNativeResult(cacheId, bidResponse.getExpirationTimeSeconds());
+                    }
+                }
+            } else {
+                bidInfo = new BidInfo(resultCode, null);
+            }
+            listener.onComplete(bidInfo);
+        });
     }
 
     // MARK: - adunit context data aka inventory data (imp[].ext.data)
@@ -374,6 +411,8 @@ public abstract class AdUnit {
         return new BidRequesterListener() {
             @Override
             public void onFetchCompleted(BidResponse response) {
+                bidResponse = response;
+
                 HashMap<String, String> keywords = response.getTargeting();
                 Util.apply(keywords, adObject);
                 originalListener.onComplete(ResultCode.SUCCESS);
@@ -381,6 +420,8 @@ public abstract class AdUnit {
 
             @Override
             public void onError(AdException exception) {
+                bidResponse = null;
+
                 Util.apply(null, adObject);
                 originalListener.onComplete(convertToResultCode(exception));
             }

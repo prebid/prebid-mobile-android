@@ -36,8 +36,10 @@ class MultiformatAdUnitFacade extends AdUnit {
     @Nullable
     private BidResponse bidResponse;
 
-    public MultiformatAdUnitFacade(@NotNull String configId) {
+    public MultiformatAdUnitFacade(@NotNull String configId, @NonNull PrebidRequest request) {
         super(configId);
+        allowNullableAdObject = true;
+        setConfigurationBasedOnRequest(request);
     }
 
     @Override
@@ -64,7 +66,7 @@ class MultiformatAdUnitFacade extends AdUnit {
         };
     }
 
-    public void setConfigurationBasedOnRequest(
+    private void setConfigurationBasedOnRequest(
             @NonNull PrebidRequest request
     ) {
         if (request.isInterstitial()) {
