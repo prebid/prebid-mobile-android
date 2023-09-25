@@ -54,6 +54,7 @@ public class BidResponseTest {
         assertEquals("bidid", bidResponse.getBidId());
         assertEquals("custom", bidResponse.getCustomData());
         assertEquals(1, bidResponse.getNbr());
+        assertEquals(Integer.valueOf(300), bidResponse.getExpirationTimeSeconds());
         assertNull(bidResponse.getMobileSdkPassThrough());
     }
 
@@ -73,6 +74,7 @@ public class BidResponseTest {
         assertNull(bidResponse.getParseError());
         assertEquals("id", bidResponse.getId());
         assertNotNull(bidResponse.getExt());
+        assertNull(bidResponse.getExpirationTimeSeconds());
     }
 
     @Test
@@ -187,6 +189,7 @@ public class BidResponseTest {
 
         assertFalse(subject.hasParseError());
         assertNotNull(subject.getWinningBid());
+        assertNull(subject.getExpirationTimeSeconds());
     }
 
 }

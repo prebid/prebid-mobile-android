@@ -8,6 +8,7 @@
           "impid": "impId",
           "price": 0.15,
           "adm": "adm",
+          "exp": 300,
           "crid": "crid",
           "w": 320,
           "h": 50,

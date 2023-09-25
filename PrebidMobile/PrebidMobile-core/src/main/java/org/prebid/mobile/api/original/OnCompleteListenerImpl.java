@@ -13,6 +13,9 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 import java.util.Map;
 
+/**
+ * Listener implementation for multiformat PrebidAdUnit.
+ */
 class OnCompleteListenerImpl implements OnCompleteListener, OnCompleteListener2 {
 
     @Nullable
