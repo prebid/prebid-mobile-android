@@ -65,6 +65,8 @@ class DemoItemProvider private constructor() {
         private const val gamRewardedAction = R.id.action_header_bidding_to_gam_video_rewarded
         private const val gamMultiformatOriginalAction =
             R.id.action_header_bidding_to_gam_original_multiformat
+        private const val gamMultiformatOriginalNativeStylesAction =
+            R.id.action_header_bidding_to_gam_original_multiformat_native_styles
         private const val gamMultiformatInterstitialOriginalAction =
             R.id.action_header_bidding_to_gam_original_multiformat_interstitial
         private const val gamMultiformatRewardedOriginalAction =
@@ -367,6 +369,17 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_gam_multiformat),
                     gamMultiformatOriginalAction,
+                    gamBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_dynamic,
+                        R.string.adunit_dynamic,
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_multiformat_native_styles),
+                    gamMultiformatOriginalNativeStylesAction,
                     gamBannerTagList,
                     createBannerBundle(
                         R.string.imp_prebid_dynamic,

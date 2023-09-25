@@ -208,6 +208,7 @@
     <string name="demo_bidding_gam_native_unified_ads_prebid_ok">Native Ad (GAM) [OK, GADUnifiedNativeAd]</string>
     <string name="demo_bidding_gam_native_feed">Native Ad Feed (GAM) [OK, NativeAd]</string>
     <string name="demo_bidding_gam_multiformat">Multiformat (Banner + Video + In-App Native) (GAM Original)</string>
+    <string name="demo_bidding_gam_multiformat_native_styles">Multiformat (Banner + Video + Native Styles) (GAM Original)</string>
     <string name="demo_bidding_gam_multiformat_interstitial">Multiformat Interstitial (Banner + Video) (GAM Original)</string>
     <string name="demo_bidding_gam_multiformat_rewarded">Multiformat Rewarded (GAM Original)</string>
 

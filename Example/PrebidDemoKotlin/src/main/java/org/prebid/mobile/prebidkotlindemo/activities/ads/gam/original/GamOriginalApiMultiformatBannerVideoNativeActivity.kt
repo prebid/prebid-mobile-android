@@ -50,7 +50,7 @@ class GamOriginalApiMultiformatBannerVideoNativeActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        // random() only for test cases, in production use one config id
+        // random() only for test cases, in production use only one config id
         val configId = listOf(CONFIG_ID_BANNER, CONFIG_ID_VIDEO, CONFIG_ID_NATIVE).random()
 
         prebidAdUnit = PrebidAdUnit(configId)
