@@ -48,7 +48,7 @@ import org.prebid.mobile.javademo.utils.ImageUtils;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class GamOriginalApiMultiformatBannerVideoNative extends BaseAdActivity {
+public class GamOriginalApiMultiformatBannerVideoNativeInApp extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-multiformat";
     private static final String CONFIG_ID_BANNER = "prebid-ita-banner-320-50";

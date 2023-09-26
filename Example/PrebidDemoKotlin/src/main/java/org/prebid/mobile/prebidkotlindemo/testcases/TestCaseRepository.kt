@@ -44,10 +44,16 @@ object TestCaseRepository {
             GamOriginalApiMultiformatBannerActivity::class.java,
         ),
         TestCase(
-            R.string.gam_original_multiformat_banner_video_native,
+            R.string.gam_original_multiformat_banner_video_native_in_app,
             AdFormat.MULTIFORMAT,
             IntegrationKind.GAM_ORIGINAL,
-            GamOriginalApiMultiformatBannerVideoNativeActivity::class.java,
+            GamOriginalApiMultiformatBannerVideoNativeInAppActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_multiformat_banner_video_native_styles,
+            AdFormat.MULTIFORMAT,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiMultiformatBannerVideoNativeStylesActivity::class.java,
         ),
         TestCase(
             R.string.gam_original_display_interstitial,

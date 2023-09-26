@@ -31,7 +31,7 @@ import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 import org.prebid.mobile.prebidkotlindemo.utils.ImageUtils
 
-class GamOriginalApiMultiformatBannerVideoNativeActivity : BaseAdActivity() {
+class GamOriginalApiMultiformatBannerVideoNativeInAppActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-multiformat"
