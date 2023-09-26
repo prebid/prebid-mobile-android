@@ -41,6 +41,7 @@ import android.view.WindowManager;
 import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.sdk.BaseManager;
 import org.prebid.mobile.rendering.sdk.calendar.CalendarEventWrapper;
 import org.prebid.mobile.rendering.sdk.calendar.CalendarFactory;
@@ -257,6 +258,14 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     @Override
     public boolean hasGps() {
         return packageManager.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+    }
+
+    @Override
+    public boolean isTablet() {
+        if (getContext() != null) {
+            return getContext().getResources().getBoolean(R.bool.prebid_is_tablet);
+        }
+        return false;
     }
 
     @VisibleForTesting
