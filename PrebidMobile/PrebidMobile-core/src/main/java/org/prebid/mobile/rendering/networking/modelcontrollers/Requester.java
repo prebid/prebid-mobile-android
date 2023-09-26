@@ -88,10 +88,10 @@ public abstract class Requester {
             networkTask.destroy();
         }
         networkTask = null;
-        adResponseCallBack = null;
         if (fetchAdIdInfoTask != null) {
             fetchAdIdInfoTask.cancel(true);
         }
+        adResponseCallBack = null;
         fetchAdIdInfoTask = null;
     }
 
