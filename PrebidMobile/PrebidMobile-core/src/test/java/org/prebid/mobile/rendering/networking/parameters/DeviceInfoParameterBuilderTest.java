@@ -69,6 +69,7 @@ public class DeviceInfoParameterBuilderTest {
         expectedBidRequestDevice.language = Locale.getDefault().getLanguage();
         expectedBidRequestDevice.osv = "4.4";
         expectedBidRequestDevice.os = "Android";
+        expectedBidRequestDevice.devicetype = Device.DeviceType.TABLET.value;
         expectedBidRequestDevice.model = "robolectric";
         expectedBidRequestDevice.make = "unknown";
         expectedBidRequestDevice.pxratio = 1f;

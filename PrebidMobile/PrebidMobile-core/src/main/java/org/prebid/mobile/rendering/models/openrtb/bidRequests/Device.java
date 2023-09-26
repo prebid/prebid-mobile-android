@@ -127,4 +127,16 @@ public class Device extends BaseBid {
         }
         return ext;
     }
+
+    public enum DeviceType {
+        MobileOrTablet(1),
+        SMARTPHONE(4),
+        TABLET(5);
+
+        public final int value;
+
+        DeviceType(int type) {
+            this.value = type;
+        }
+    }
 }
