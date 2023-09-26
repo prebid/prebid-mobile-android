@@ -50,16 +50,19 @@ class GamOriginalApiMultiformatBannerVideoNativeInAppActivity : BaseAdActivity()
     }
 
     private fun createAd() {
-        // random() only for test cases, in production use only one config id
+        // Random only for test cases. For production use one config id.
         val configId = listOf(CONFIG_ID_BANNER, CONFIG_ID_VIDEO, CONFIG_ID_NATIVE).random()
 
+        // 1. Create PrebidAdUnit with configId
         prebidAdUnit = PrebidAdUnit(configId)
-        val prebidRequest = PrebidRequest()
 
+        // 2. Create PrebidRequest with needed multiformat parameters
+        val prebidRequest = PrebidRequest()
         prebidRequest.setBannerParameters(createBannerParameters())
         prebidRequest.setVideoParameters(createVideoParameters())
         prebidRequest.setNativeParameters(createNativeParameters())
 
+        // 3. Make a bid request to Prebid Server
         val gamRequest = AdManagerAdRequest.Builder().build()
         prebidAdUnit?.fetchDemand(gamRequest, prebidRequest) {
             loadGam(gamRequest)
@@ -67,6 +70,7 @@ class GamOriginalApiMultiformatBannerVideoNativeInAppActivity : BaseAdActivity()
     }
 
     private fun loadGam(gamRequest: AdManagerAdRequest) {
+        // 4. Load GAM ad
         val onBannerLoaded = OnAdManagerAdViewLoadedListener { adView ->
             showBannerAd(adView)
         }
@@ -148,6 +152,7 @@ class GamOriginalApiMultiformatBannerVideoNativeInAppActivity : BaseAdActivity()
     }
 
     private fun showBannerAd(adView: AdManagerAdView) {
+        // 5.1. Show banner
         adWrapperView.addView(adView)
         AdViewUtils.findPrebidCreativeSize(adView, object : AdViewUtils.PbFindSizeListener {
             override fun success(width: Int, height: Int) {
@@ -159,6 +164,7 @@ class GamOriginalApiMultiformatBannerVideoNativeInAppActivity : BaseAdActivity()
     }
 
     private fun showNativeAd(ad: NativeAd, wrapper: ViewGroup) {
+        // 5.2. Show GAM native
         val nativeContainer = View.inflate(wrapper.context, R.layout.layout_native, null)
 
         val icon = nativeContainer.findViewById<ImageView>(R.id.imgIcon)
@@ -186,6 +192,7 @@ class GamOriginalApiMultiformatBannerVideoNativeInAppActivity : BaseAdActivity()
     }
 
     private fun showPrebidNativeAd(customNativeAd: NativeCustomFormatAd) {
+        // 5.3. Show Prebid native
         AdViewUtils.findNative(customNativeAd, object : PrebidNativeAdListener {
             override fun onPrebidNativeLoaded(ad: PrebidNativeAd) {
                 inflatePrebidNativeAd(ad)

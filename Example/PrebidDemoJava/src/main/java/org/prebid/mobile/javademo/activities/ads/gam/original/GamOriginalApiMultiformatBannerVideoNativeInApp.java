@@ -66,16 +66,20 @@ public class GamOriginalApiMultiformatBannerVideoNativeInApp extends BaseAdActiv
     }
 
     private void createAd() {
+        // Random only for test cases. For production use one config id.
         ArrayList<String> configIds = Lists.newArrayList(CONFIG_ID_BANNER, CONFIG_ID_VIDEO, CONFIG_ID_NATIVE);
         String configId = configIds.get((new Random().nextInt(3)));
 
+        // 1. Create PrebidAdUnit with configId
         prebidAdUnit = new PrebidAdUnit(configId);
 
+        // 2. Create PrebidRequest with needed multiformat parameters
         PrebidRequest prebidRequest = new PrebidRequest();
         prebidRequest.setBannerParameters(new BannerParameters());
         prebidRequest.setVideoParameters(new VideoParameters(Lists.newArrayList("video/mp4")));
         prebidRequest.setNativeParameters(creativeNativeParameters());
 
+        // 3. Make a bid request to Prebid Server
         AdManagerAdRequest gamRequest = new AdManagerAdRequest.Builder().build();
         prebidAdUnit.fetchDemand(gamRequest, prebidRequest, bidInfo -> {
             loadGam(gamRequest);
@@ -83,6 +87,7 @@ public class GamOriginalApiMultiformatBannerVideoNativeInApp extends BaseAdActiv
     }
 
     private void loadGam(AdManagerAdRequest gamRequest) {
+        // 4. Load GAM ad
         OnAdManagerAdViewLoadedListener onBannerLoaded = adManagerAdView -> showBannerAd(adManagerAdView);
 
         NativeAd.OnNativeAdLoadedListener onNativeLoaded = nativeAd -> showNativeAd(nativeAd, getAdWrapperView());
@@ -101,8 +106,8 @@ public class GamOriginalApiMultiformatBannerVideoNativeInApp extends BaseAdActiv
     }
 
     private void showBannerAd(AdManagerAdView adView) {
+        // 5.1. Show banner
         getAdWrapperView().addView(adView);
-
         AdViewUtils.findPrebidCreativeSize(adView, new AdViewUtils.PbFindSizeListener() {
 
             @Override
@@ -118,6 +123,7 @@ public class GamOriginalApiMultiformatBannerVideoNativeInApp extends BaseAdActiv
     }
 
     private void showNativeAd(NativeAd ad, ViewGroup adWrapperView) {
+        // 5.2. Show GAM native
         View nativeContainer = View.inflate(adWrapperView.getContext(), R.layout.layout_native, null);
 
         TextView title = nativeContainer.findViewById(R.id.tvTitle);
@@ -141,6 +147,7 @@ public class GamOriginalApiMultiformatBannerVideoNativeInApp extends BaseAdActiv
     }
 
     private void showPrebidNativeAd(NativeCustomFormatAd customNativeAd) {
+        // 5.3. Show Prebid native
         AdViewUtils.findNative(customNativeAd, new PrebidNativeAdListener() {
             @Override
             public void onPrebidNativeLoaded(PrebidNativeAd ad) {
