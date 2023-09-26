@@ -146,4 +146,11 @@ public interface DeviceInfoManager {
      * @return true if location feature is available
      */
     boolean hasGps();
+
+    /**
+     * Checks if the device is a tablet
+     *
+     * @return true if it is a tablet
+     */
+    boolean isTablet();
 }

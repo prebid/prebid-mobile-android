@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -253,5 +254,19 @@ public class DeviceInfoImplTest {
         ArgumentCaptor<String> filenameCaptor = ArgumentCaptor.forClass(String.class);
         verify(spyDeviceImpl).getOutputStream(filenameCaptor.capture());
         assertFalse(filenameCaptor.getValue().contains("."));
+    }
+
+    @Test
+    public void isTabletTest() {
+        Resources mockResources = mock(Resources.class);
+
+        when(mockContext.getResources()).thenReturn(mockResources);
+        when(mockResources.getBoolean(anyInt())).thenReturn(true);
+
+        assertTrue(deviceInfoImpl.isTablet());
+
+        when(mockResources.getBoolean(anyInt())).thenReturn(false);
+
+        assertFalse(deviceInfoImpl.isTablet());
     }
 }
