@@ -124,7 +124,7 @@ public abstract class AdUnit {
         });
     }
 
-    public void fetchDemand(@Nullable Object adObj, @NonNull OnCompleteListener listener) {
+    public void fetchDemand(Object adObj, @NonNull OnCompleteListener listener) {
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
             LogUtil.error("Empty account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);

@@ -62,7 +62,7 @@ open class GamOriginalMultiformatInterstitialFragment : BaseBidInterstitialFragm
         prebidAdUnit = PrebidAdUnit(getCurrentConfigId())
 
         val gamRequest = AdManagerAdRequest.Builder().build()
-        prebidAdUnit?.fetchDemand(createPrebidRequest(), gamRequest) {
+        prebidAdUnit?.fetchDemand(gamRequest, createPrebidRequest()) {
             AdManagerInterstitialAd.load(
                 requireContext(),
                 adUnitId,

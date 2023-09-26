@@ -16,7 +16,7 @@ public class BidInfo {
     @Nullable
     private String nativeCacheId;
     @Nullable
-    private Integer expirationTimeSeconds;
+    private Integer exp;
 
     public BidInfo(
             @NonNull ResultCode resultCode,
@@ -31,7 +31,7 @@ public class BidInfo {
             Integer expirationTimeSeconds
     ) {
         this.nativeCacheId = nativeCacheId;
-        this.expirationTimeSeconds = expirationTimeSeconds;
+        this.exp = expirationTimeSeconds;
     }
 
     @NonNull
@@ -50,8 +50,8 @@ public class BidInfo {
     }
 
     @Nullable
-    public Integer getExpirationTimeSeconds() {
-        return expirationTimeSeconds;
+    public Integer getExp() {
+        return exp;
     }
 
 }

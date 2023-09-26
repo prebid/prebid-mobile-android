@@ -64,7 +64,7 @@ public class OnCompleteListenerImplTest {
         assertNotNull(bidInfo);
         assertEquals(ResultCode.NO_BIDS, bidInfo.getResultCode());
         assertNull(bidInfo.getNativeCacheId());
-        assertNull(bidInfo.getExpirationTimeSeconds());
+        assertNull(bidInfo.getExp());
         assertNull(bidInfo.getTargetingKeywords());
     }
 
@@ -93,7 +93,7 @@ public class OnCompleteListenerImplTest {
         assertEquals(ResultCode.SUCCESS, bidInfo.getResultCode());
         assertEquals(keywords, bidInfo.getTargetingKeywords());
         assertNull(bidInfo.getNativeCacheId());
-        assertNull(bidInfo.getExpirationTimeSeconds());
+        assertNull(bidInfo.getExp());
     }
 
     @Test
@@ -122,7 +122,7 @@ public class OnCompleteListenerImplTest {
         assertNotNull(bidInfo);
         assertEquals(ResultCode.SUCCESS, bidInfo.getResultCode());
         assertEquals(keywords, bidInfo.getTargetingKeywords());
-        assertEquals(Integer.valueOf(300), bidInfo.getExpirationTimeSeconds());
+        assertEquals(Integer.valueOf(300), bidInfo.getExp());
     }
 
 }

@@ -30,8 +30,8 @@ public class PrebidAdUnit {
     }
 
     public void fetchDemand(
-            PrebidRequest request,
             Object adObject,
+            PrebidRequest request,
             OnFetchDemandResult listener
     ) {
         baseFetchDemand(request, adObject, listener);

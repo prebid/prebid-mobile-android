@@ -77,7 +77,7 @@ public class GamOriginalApiMultiformatBannerVideoNative extends BaseAdActivity {
         prebidRequest.setNativeParameters(creativeNativeParameters());
 
         AdManagerAdRequest gamRequest = new AdManagerAdRequest.Builder().build();
-        prebidAdUnit.fetchDemand(prebidRequest, gamRequest, bidInfo -> {
+        prebidAdUnit.fetchDemand(gamRequest, prebidRequest, bidInfo -> {
             loadGam(gamRequest);
         });
     }

@@ -103,7 +103,7 @@ open class GamOriginalMultiformatBannerVideoNativeFragment : AdFragment() {
         prebidAdUnit = PrebidAdUnit(configId)
 
         val gamRequest = AdManagerAdRequest.Builder().build()
-        prebidAdUnit?.fetchDemand(prebidRequest, gamRequest) {
+        prebidAdUnit?.fetchDemand(gamRequest, prebidRequest) {
             loadGam(gamRequest)
         }
     }
