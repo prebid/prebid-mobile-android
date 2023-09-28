@@ -8,7 +8,8 @@ public enum AdFormat {
     VIDEO_INTERSTITIAL("Video Interstitial"),
     VIDEO_REWARDED("Video Rewarded"),
     IN_STREAM_VIDEO("In-stream Video"),
-    NATIVE("Native");
+    NATIVE("Native"),
+    MULTIFORMAT("Multiformat");
 
     private final String description;
 

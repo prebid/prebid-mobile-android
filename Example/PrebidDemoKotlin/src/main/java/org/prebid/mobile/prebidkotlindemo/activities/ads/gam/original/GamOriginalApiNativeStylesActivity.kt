@@ -83,16 +83,11 @@ class GamOriginalApiNativeStylesActivity : BaseAdActivity() {
         adUnit?.addAsset(cta)
 
         // ADD EVENT TRACKERS
-
         val methods = ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD>()
         methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE)
 
-        try {
-            val tracker = NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods)
-            adUnit?.addEventTracker(tracker)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        val tracker = NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods)
+        adUnit?.addEventTracker(tracker)
     }
 
     override fun onDestroy() {

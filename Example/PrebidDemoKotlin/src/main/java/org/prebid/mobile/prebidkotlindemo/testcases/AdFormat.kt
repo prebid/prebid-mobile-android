@@ -11,5 +11,6 @@ enum class AdFormat(
     VIDEO_REWARDED("Video Rewarded"),
     IN_STREAM_VIDEO("In-stream Video"),
     NATIVE("Native"),
+    MULTIFORMAT("Multiformat")
 
 }

@@ -18,15 +18,25 @@ package org.prebid.mobile;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 public class Util {
 
@@ -325,7 +335,7 @@ public class Util {
         return false;
     }
 
-    static void apply(HashMap<String, String> bids, Object adObj) {
+    public static void apply(HashMap<String, String> bids, Object adObj) {
         if (adObj == null) return;
         if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
             handleAdManagerCustomTargeting(bids, adObj);
@@ -344,7 +354,7 @@ public class Util {
         }
     }
 
-    static void saveCacheId(
+    public static void saveCacheId(
             @Nullable String cacheId,
             Object adObject
     ) {

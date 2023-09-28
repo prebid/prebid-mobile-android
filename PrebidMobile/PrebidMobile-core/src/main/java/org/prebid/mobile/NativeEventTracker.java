@@ -74,10 +74,10 @@ public class NativeEventTracker {
     ArrayList<EVENT_TRACKING_METHOD> methods;
     Object extObject;
 
-    public NativeEventTracker(EVENT_TYPE event, ArrayList<EVENT_TRACKING_METHOD> methods) throws Exception {
+    public NativeEventTracker(EVENT_TYPE event, ArrayList<EVENT_TRACKING_METHOD> methods) {
         this.event = event;
         if (methods == null || methods.isEmpty()) {
-            throw new Exception("Methods are required");
+            throw new NullPointerException("Methods are required");
         }
         this.methods = methods;
     }

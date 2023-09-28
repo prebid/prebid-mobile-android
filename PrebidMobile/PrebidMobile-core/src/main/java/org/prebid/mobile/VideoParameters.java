@@ -88,6 +88,10 @@ public class VideoParameters {
     @Nullable
     private Integer linearity;
 
+    @Nullable
+    private AdSize adSize;
+
+
     //Getters and setters
     @Nullable
     public List<Signals.Api> getApi() {
@@ -183,4 +187,14 @@ public class VideoParameters {
     public void setLinearity(@Nullable Integer linearity) {
         this.linearity = linearity;
     }
+
+    @Nullable
+    public AdSize getAdSize() {
+        return adSize;
+    }
+
+    public void setAdSize(@Nullable AdSize adSize) {
+        this.adSize = adSize;
+    }
+
 }

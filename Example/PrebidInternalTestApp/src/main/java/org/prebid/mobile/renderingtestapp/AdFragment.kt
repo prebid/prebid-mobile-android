@@ -96,6 +96,7 @@ abstract class AdFragment : BaseFragment() {
     protected fun resetEventButtons() {
         baseBinding?.root?.findViewById<EventCounterView>(R.id.btnAdFailed)?.isEnabled = false
         baseBinding?.root?.findViewById<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = false
+        baseBinding?.root?.findViewById<EventCounterView>(R.id.btnAdImpression)?.isEnabled = false
         baseBinding?.root?.findViewById<EventCounterView>(R.id.btnAdClicked)?.isEnabled = false
         baseBinding?.root?.findViewById<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = false
         baseBinding?.root?.findViewById<EventCounterView>(R.id.btnAdClosed)?.isEnabled = false

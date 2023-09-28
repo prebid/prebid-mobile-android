@@ -7,6 +7,8 @@ import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiDisp
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiDisplayBanner320x50;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiDisplayInterstitial;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiMultiformatBanner;
+import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiMultiformatBannerVideoNativeInApp;
+import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiMultiformatBannerVideoNativeStyles;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiMultiformatInterstitial;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiNativeInApp;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiNativeStyles;
@@ -37,9 +39,21 @@ public class TestCaseRepository {
                 ),
                 new TestCase(
                         R.string.gam_original_multiformat_banner_300x250,
-                        AdFormat.DISPLAY_BANNER,
+                        AdFormat.MULTIFORMAT,
                         IntegrationKind.GAM_ORIGINAL,
                         GamOriginalApiMultiformatBanner.class
+                ),
+                new TestCase(
+                        R.string.gam_original_multiformat_banner_video_native_in_app,
+                        AdFormat.MULTIFORMAT,
+                        IntegrationKind.GAM_ORIGINAL,
+                        GamOriginalApiMultiformatBannerVideoNativeInApp.class
+                ),
+                new TestCase(
+                        R.string.gam_original_multiformat_banner_video_native_styles,
+                        AdFormat.MULTIFORMAT,
+                        IntegrationKind.GAM_ORIGINAL,
+                        GamOriginalApiMultiformatBannerVideoNativeStyles.class
                 ),
                 new TestCase(
                         R.string.gam_original_video_banner,
