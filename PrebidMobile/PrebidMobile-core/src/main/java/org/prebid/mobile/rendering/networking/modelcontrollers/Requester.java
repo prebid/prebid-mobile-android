@@ -47,6 +47,7 @@ import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +60,7 @@ public abstract class Requester {
     protected URLBuilder urlBuilder;
     protected ResponseHandler adResponseCallBack;
     protected BaseNetworkTask networkTask;
+    protected AdIdManager.FetchAdIdInfoTask fetchAdIdInfoTask;
 
     Requester(
             AdUnitConfiguration config,
@@ -86,7 +88,11 @@ public abstract class Requester {
             networkTask.destroy();
         }
         networkTask = null;
+        if (fetchAdIdInfoTask != null) {
+            fetchAdIdInfoTask.cancel(true);
+        }
         adResponseCallBack = null;
+        fetchAdIdInfoTask = null;
     }
 
     protected List<ParameterBuilder> getParameterBuilders() {
@@ -125,7 +131,7 @@ public abstract class Requester {
 
         UserConsentManager userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
         if (userConsentManager.canAccessDeviceData()) {
-            AdIdManager.initAdId(context, new AdIdFetchListener() {
+            fetchAdIdInfoTask = AdIdManager.initAdId(context, new AdIdFetchListener() {
                 @Override
                 public void adIdFetchCompletion() {
                     LogUtil.info(TAG, "Advertising id was received");
@@ -149,7 +155,9 @@ public abstract class Requester {
     private void sendAdException(String logMsg, String exceptionMsg) {
         LogUtil.warning(TAG, logMsg);
         AdException adException = new AdException(AdException.INIT_ERROR, exceptionMsg);
-        adResponseCallBack.onErrorWithException(adException, 0);
+        if (adResponseCallBack != null) {
+            adResponseCallBack.onErrorWithException(adException, 0);
+        }
     }
 
     protected void makeAdRequest() {

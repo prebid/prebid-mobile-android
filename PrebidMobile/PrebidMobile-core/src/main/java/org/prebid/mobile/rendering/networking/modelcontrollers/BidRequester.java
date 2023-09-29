@@ -36,7 +36,9 @@ public class BidRequester extends Requester {
     @Override
     public void startAdRequest() {
         if (TextUtils.isEmpty(adConfiguration.getConfigId())) {
-            adResponseCallBack.onError("No configuration id specified.", 0);
+            if (adResponseCallBack != null) {
+                adResponseCallBack.onError("No configuration id specified.", 0);
+            }
             return;
         }
 
