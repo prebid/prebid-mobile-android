@@ -406,6 +406,9 @@ public abstract class AdUnit {
         configuration.setPbAdSlot(pbAdSlot);
     }
 
+    public void setGpid(@Nullable String gpid) {
+        configuration.setGpid(gpid);
+    }
 
     protected BidRequesterListener createBidListener(OnCompleteListener originalListener) {
         return new BidRequesterListener() {

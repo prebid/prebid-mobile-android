@@ -26,6 +26,8 @@ public class PrebidRequest {
     private boolean isRewarded = false;
 
     @Nullable
+    private String gpid;
+    @Nullable
     private Map<String, Set<String>> extData;
     @Nullable
     private Set<String> extKeywords;
@@ -81,6 +83,15 @@ public class PrebidRequest {
         }
     }
 
+
+    @Nullable
+    String getGpid() {
+        return gpid;
+    }
+
+    public void setGpid(@Nullable String gpid) {
+        this.gpid = gpid;
+    }
 
     @Nullable
     ContentObject getAppContent() {

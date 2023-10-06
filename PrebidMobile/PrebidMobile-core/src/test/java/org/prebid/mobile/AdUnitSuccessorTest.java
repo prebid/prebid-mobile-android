@@ -82,12 +82,22 @@ public class AdUnitSuccessorTest {
     }
 
     @Test
-    public void testBannerAdUnitAddSize() throws Exception {
+    public void testBannerAdUnitAddSize() {
         BannerAdUnit adUnit = new BannerAdUnit(testConfigId, width, height);
         adUnit.addAdditionalSize(300, height);
         assertEquals(2, adUnit.getSizes().size());
         adUnit.addAdditionalSize(width, height);
         assertEquals(2, adUnit.getSizes().size());
+    }
+
+    @Test
+    public void testGpidParameter() {
+        BannerAdUnit adUnit = new BannerAdUnit(testConfigId, width, height);
+        String expectedGpid = "/12345/home_screen#identifier";
+        adUnit.setGpid(expectedGpid);
+
+        AdUnitConfiguration configuration = adUnit.getConfiguration();
+        assertEquals(expectedGpid, configuration.getGpid());
     }
 
     @Test

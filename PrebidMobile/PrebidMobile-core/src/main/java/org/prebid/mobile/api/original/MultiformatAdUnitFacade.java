@@ -114,6 +114,8 @@ class MultiformatAdUnitFacade extends AdUnit {
             configuration.setNativeConfiguration(nativeConfig);
         }
 
+        String gpid = request.getGpid();
+        configuration.setGpid(gpid);
 
         ContentObject contentObject = request.getAppContent();
         configuration.setAppContent(contentObject);
