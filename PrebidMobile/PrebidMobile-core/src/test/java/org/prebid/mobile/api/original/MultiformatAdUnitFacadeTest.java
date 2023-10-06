@@ -253,6 +253,9 @@ public class MultiformatAdUnitFacadeTest {
     public void configuration_additionalParameters() {
         PrebidRequest request = new PrebidRequest();
 
+        String expectedGpid = "/12345/home_screen#identifier";
+        request.setGpid(expectedGpid);
+
         ContentObject expectedAppContent = new ContentObject();
         expectedAppContent.addCategory("Category");
         request.setAppContent(expectedAppContent);
@@ -291,6 +294,10 @@ public class MultiformatAdUnitFacadeTest {
         assertEquals(
                 expectedExtKeywords,
                 configuration.getExtKeywordsSet()
+        );
+        assertEquals(
+                expectedGpid,
+                configuration.getGpid()
         );
     }
 

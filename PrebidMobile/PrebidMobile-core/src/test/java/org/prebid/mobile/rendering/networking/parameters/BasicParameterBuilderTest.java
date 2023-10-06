@@ -246,6 +246,26 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
+    public void setGpid_gpidPresentInRequest() {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        String expectedGpid = "/12345/home_screen#identifier";
+        adConfiguration.setGpid(expectedGpid);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+                adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        BidRequest actualBidRequest = adRequestInput.getBidRequest();
+        Imp imp = actualBidRequest.getImp().get(0);
+        String gpid = (String) imp.getExt().getMap().get("gpid");
+        assertEquals(expectedGpid, gpid);
+    }
+
+    @Test
     public void whenAppendParametersAndBInterstitialType_ImpWithValidBannerObject()
     throws JSONException {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
