@@ -369,6 +369,11 @@ public class BasicParameterBuilder extends ParameterBuilder {
         }
         imp.getExt().put("prebid", Prebid.getJsonObjectForImp(adConfiguration));
 
+        String gpid = adConfiguration.getGpid();
+        if (gpid != null) {
+            imp.getExt().put("gpid", gpid);
+        }
+
         final Map<String, Set<String>> extDataDictionary = adConfiguration.getExtDataDictionary();
         JSONObject data = Utils.toJson(extDataDictionary);
         Utils.addValue(data, "adslot", adConfiguration.getPbAdSlot());

@@ -55,6 +55,8 @@ public class AdUnitConfiguration {
     private String interstitialSize;
     private String impressionUrl;
     private String fingerprint = Utils.generateUUIDTimeBased();
+    @Nullable
+    private String gpid;
 
     private Position closeButtonPosition = Position.TOP_RIGHT;
     private Position skipButtonPosition = Position.TOP_RIGHT;
@@ -529,6 +531,15 @@ public class AdUnitConfiguration {
         return fingerprint;
     }
 
+    @Nullable
+    public String getGpid() {
+        return gpid;
+    }
+
+    public void setGpid(@Nullable String gpid) {
+        this.gpid = gpid;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -547,5 +558,4 @@ public class AdUnitConfiguration {
     public int hashCode() {
         return configId != null ? configId.hashCode() : 0;
     }
-
 }
