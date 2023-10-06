@@ -26,12 +26,10 @@ import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginR
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.PBSConfig;
 import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
-import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.RobolectricTestRunner;
@@ -152,12 +150,10 @@ public class PrebidMobileTest extends BaseSetup {
         );
 
         // When
-//        PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
-        PrebidMobilePluginRegister.getInstance().registerPlugin(fakePrebidMobilePluginRenderer);
+        PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
 
         // Then
-//        assertTrue(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
-        assertTrue(PrebidMobilePluginRegister.getInstance().containsPlugin(fakePrebidMobilePluginRenderer));
+        assertTrue(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
     }
 
     @Test
@@ -172,20 +168,16 @@ public class PrebidMobileTest extends BaseSetup {
         );
 
         // When
-//        PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
-        PrebidMobilePluginRegister.getInstance().registerPlugin(fakePrebidMobilePluginRenderer);
+        PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
 
         // Then
-//        assertTrue(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
-        assertTrue(PrebidMobilePluginRegister.getInstance().containsPlugin(fakePrebidMobilePluginRenderer));
+        assertTrue(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
 
         // When
-//        PrebidMobile.unregisterPluginRenderer(fakePrebidMobilePluginRenderer);
-        PrebidMobilePluginRegister.getInstance().unregisterPlugin(fakePrebidMobilePluginRenderer);
+        PrebidMobile.unregisterPluginRenderer(fakePrebidMobilePluginRenderer);
 
         // Then
-//        assertFalse(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
-        assertFalse(PrebidMobilePluginRegister.getInstance().containsPlugin(fakePrebidMobilePluginRenderer));
+        assertFalse(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
     }
 
     @Test
