@@ -18,8 +18,10 @@ package org.prebid.mobile.rendering.bidding.data.bid;
 
 
 import android.util.Base64;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.rendering.models.internal.MacrosModel;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.utils.helpers.MacrosResolutionHelper;
@@ -125,6 +127,8 @@ public class Bid {
     // Advisory as to the number of seconds the bidder is willing to
     // wait between the auction and the actual impression
     private int exp;
+
+    private Map<String, String> events;
 
     private MobileSdkPassThrough mobileSdkPassThrough;
 
@@ -250,6 +254,10 @@ public class Bid {
         return mobileSdkPassThrough;
     }
 
+    public Map<String, String> getEvents() {
+        return events;
+    }
+
     public static Bid fromJSONObject(JSONObject jsonObject) {
         Bid bid = new Bid();
         if (jsonObject == null) {
@@ -286,7 +294,9 @@ public class Bid {
 
         JSONObject ext = jsonObject.optJSONObject("ext");
         if (ext != null) {
-            bid.prebid = Prebid.fromJSONObject(ext.optJSONObject("prebid"));
+            Prebid prebidObject = Prebid.fromJSONObject(ext.optJSONObject("prebid"));
+            setEvents(bid, prebidObject);
+            bid.prebid = prebidObject;
             bid.mobileSdkPassThrough = MobileSdkPassThrough.create(ext);
         }
 
@@ -341,4 +351,17 @@ public class Bid {
         bid.adm = MacrosResolutionHelper.resolveAuctionMacros(bid.adm, macrosModelMap);
         bid.nurl = MacrosResolutionHelper.resolveAuctionMacros(bid.nurl, macrosModelMap);
     }
+
+
+    private static void setEvents(Bid bid, Prebid prebidObject) {
+        HashMap<String, String> events = new HashMap<>();
+        String winUrl = prebidObject.getWinEventUrl();
+        if (winUrl != null) {
+            events.put(BidInfo.EVENT_WIN, winUrl);
+        }
+        if (!events.isEmpty()) {
+            bid.events = events;
+        }
+    }
+
 }

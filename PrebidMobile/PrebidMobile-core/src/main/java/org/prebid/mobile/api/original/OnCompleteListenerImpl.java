@@ -3,11 +3,9 @@ package org.prebid.mobile.api.original;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.ResultCode;
-import org.prebid.mobile.Util;
 import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
@@ -52,30 +50,12 @@ class OnCompleteListenerImpl implements OnCompleteListener, OnCompleteListener2 
 
     private void notifyListener(ResultCode resultCode) {
         BidResponse bidResponse = adUnit.getBidResponse();
-
-        if (bidResponse == null) {
-            listener.onComplete(new BidInfo(resultCode, null));
-            return;
+        BidInfo bidInfo = BidInfo.create(resultCode, bidResponse);
+        boolean isNative = request.getNativeParameters() != null;
+        if (isNative) {
+            BidInfo.saveNativeResult(bidInfo, bidResponse, adObject);
         }
-
-        BidInfo bidInfo = new BidInfo(resultCode, bidResponse.getTargeting());
-        saveCacheForNativeIfNeeded(bidResponse, bidInfo, resultCode);
         listener.onComplete(bidInfo);
-    }
-
-    private void saveCacheForNativeIfNeeded(
-            BidResponse bidResponse,
-            BidInfo bidInfo,
-            ResultCode resultCode
-    ) {
-        if (resultCode == ResultCode.SUCCESS) {
-            boolean isNative = request.getNativeParameters() != null;
-            if (isNative) {
-                String cacheId = CacheManager.save(bidResponse.getWinningBidJson());
-                Util.saveCacheId(cacheId, adObject);
-                bidInfo.setNativeResult(cacheId, bidResponse.getExpirationTimeSeconds());
-            }
-        }
     }
 
 }
