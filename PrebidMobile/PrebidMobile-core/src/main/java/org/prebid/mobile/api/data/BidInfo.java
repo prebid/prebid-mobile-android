@@ -25,9 +25,13 @@ public class BidInfo {
     private Integer exp;
 
     /**
-     * Key for events map to get win event.
+     * Key for {@link #getEvents()} map to get win event.
      */
     public static final String EVENT_WIN = "ext.prebid.events.win";
+    /**
+     * Key for {@link #getEvents()} map to get impression event.
+     */
+    public static final String EVENT_IMP = "ext.prebid.events.imp";
 
 
     private BidInfo(

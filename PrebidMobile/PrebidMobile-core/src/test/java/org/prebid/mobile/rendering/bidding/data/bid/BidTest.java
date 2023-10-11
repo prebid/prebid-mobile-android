@@ -63,10 +63,14 @@ public class BidTest {
         Bid bid = Bid.fromJSONObject(jsonBid);
 
         Map<String, String> events = bid.getEvents();
-        String value = events.get(BidInfo.EVENT_WIN);
+        assertEquals(2, events.size());
 
-        assertEquals(1, events.size());
-        assertEquals(value, "https://duck.com");
+        String value = events.get(BidInfo.EVENT_WIN);
+        assertEquals(value, "https://win.com");
+
+        value = events.get(BidInfo.EVENT_IMP);
+        assertEquals(value, "https://imp.com");
+
         verifyBid(bid);
     }
 

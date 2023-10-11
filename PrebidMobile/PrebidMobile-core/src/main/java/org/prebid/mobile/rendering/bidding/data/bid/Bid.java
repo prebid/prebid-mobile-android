@@ -359,6 +359,10 @@ public class Bid {
         if (winUrl != null) {
             events.put(BidInfo.EVENT_WIN, winUrl);
         }
+        String impUrl = prebidObject.getImpEventUrl();
+        if (impUrl != null) {
+            events.put(BidInfo.EVENT_IMP, impUrl);
+        }
         if (!events.isEmpty()) {
             bid.events = events;
         }

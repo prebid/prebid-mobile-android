@@ -37,7 +37,8 @@
   "ext": {
     "prebid": {
       "events": {
-        "win": "https://duck.com"
+        "win": "https://win.com",
+        "imp": "https://imp.com"
       },
       "cache": {
         "key": "cacheKey",
