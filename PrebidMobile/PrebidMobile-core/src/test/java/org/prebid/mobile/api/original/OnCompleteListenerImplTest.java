@@ -49,7 +49,6 @@ public class OnCompleteListenerImplTest {
     public void emptyBidResponse() {
         OnCompleteListenerImpl subject = new OnCompleteListenerImpl(
                 mockAdUnit,
-                mockPrebidRequest,
                 null,
                 mockListener
         );
@@ -74,7 +73,6 @@ public class OnCompleteListenerImplTest {
     public void fullBidResponse() {
         OnCompleteListenerImpl subject = new OnCompleteListenerImpl(
                 mockAdUnit,
-                mockPrebidRequest,
                 null,
                 mockListener
         );
@@ -83,6 +81,7 @@ public class OnCompleteListenerImplTest {
         keywords.put("key1", "value1");
         keywords.put("key2", "value2");
         when(mockBidResponse.getTargeting()).thenReturn(keywords);
+        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(null);
         when(mockAdUnit.getBidResponse()).thenReturn(mockBidResponse);
 
         subject.onComplete(ResultCode.SUCCESS);
@@ -103,7 +102,6 @@ public class OnCompleteListenerImplTest {
     public void fullBidResponseWithNative() {
         OnCompleteListenerImpl subject = new OnCompleteListenerImpl(
                 mockAdUnit,
-                mockPrebidRequest,
                 null,
                 mockListener
         );

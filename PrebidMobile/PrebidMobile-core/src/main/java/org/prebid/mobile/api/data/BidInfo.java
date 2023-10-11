@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
@@ -16,9 +17,9 @@ public class BidInfo {
     @NonNull
     private final ResultCode resultCode;
     @Nullable
-    private final Map<String, String> targetingKeywords;
+    private Map<String, String> targetingKeywords;
     @Nullable
-    private final Map<String, String> events;
+    private Map<String, String> events;
     @Nullable
     private String nativeCacheId;
     @Nullable
@@ -34,14 +35,8 @@ public class BidInfo {
     public static final String EVENT_IMP = "ext.prebid.events.imp";
 
 
-    private BidInfo(
-            @NonNull ResultCode resultCode,
-            @Nullable Map<String, String> targetingKeywords,
-            @Nullable Map<String, String> events
-    ) {
+    private BidInfo(@NonNull ResultCode resultCode) {
         this.resultCode = resultCode;
-        this.targetingKeywords = targetingKeywords;
-        this.events = events;
     }
 
     @NonNull
@@ -71,27 +66,34 @@ public class BidInfo {
 
 
     @NonNull
-    public static BidInfo create(@NonNull ResultCode resultCode, @Nullable BidResponse bidResponse) {
+    public static BidInfo create(
+            @NonNull ResultCode resultCode,
+            @Nullable BidResponse bidResponse,
+            @Nullable AdUnitConfiguration configuration,
+            @Nullable Object adObject
+    ) {
+        BidInfo bidInfo = new BidInfo(resultCode);
         if (bidResponse == null) {
-            return new BidInfo(resultCode, null, null);
+            return bidInfo;
         }
+
+        bidInfo.targetingKeywords = bidResponse.getTargeting();
+
+        bidInfo.exp = bidResponse.getExpirationTimeSeconds();
 
         Bid winningBid = bidResponse.getWinningBid();
-        Map<String, String> events = null;
         if (winningBid != null) {
-            events = winningBid.getEvents();
+            bidInfo.events = winningBid.getEvents();
         }
 
-        return new BidInfo(resultCode, bidResponse.getTargeting(), events);
-    }
-
-    public static void saveNativeResult(@NonNull BidInfo bidInfo, @Nullable BidResponse bidResponse, @Nullable Object adObject) {
-        if (bidInfo.resultCode == ResultCode.SUCCESS && bidResponse != null) {
+        boolean isNative = configuration != null && configuration.getNativeConfiguration() != null;
+        if (isNative && bidInfo.resultCode == ResultCode.SUCCESS) {
             String cacheId = CacheManager.save(bidResponse.getWinningBidJson());
             Util.saveCacheId(cacheId, adObject);
             bidInfo.nativeCacheId = cacheId;
-            bidInfo.exp = bidResponse.getExpirationTimeSeconds();
         }
+
+        return bidInfo;
     }
 
 }

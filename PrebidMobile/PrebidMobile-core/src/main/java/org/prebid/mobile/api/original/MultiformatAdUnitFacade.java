@@ -1,5 +1,7 @@
 package org.prebid.mobile.api.original;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -16,6 +18,7 @@ import org.prebid.mobile.Util;
 import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.configuration.NativeAdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
@@ -133,6 +136,12 @@ class MultiformatAdUnitFacade extends AdUnit {
     @Nullable
     public BidResponse getBidResponse() {
         return bidResponse;
+    }
+
+    @SuppressLint("VisibleForTests")
+    @Override
+    public AdUnitConfiguration getConfiguration() {
+        return super.getConfiguration();
     }
 
 }

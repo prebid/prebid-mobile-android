@@ -19,6 +19,8 @@ package org.prebid.mobile.rendering.bidding.data.bid;
 
 import android.util.Base64;
 
+import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.api.data.BidInfo;
@@ -128,6 +130,7 @@ public class Bid {
     // wait between the auction and the actual impression
     private int exp;
 
+    @Nullable
     private Map<String, String> events;
 
     private MobileSdkPassThrough mobileSdkPassThrough;
@@ -254,6 +257,7 @@ public class Bid {
         return mobileSdkPassThrough;
     }
 
+    @Nullable
     public Map<String, String> getEvents() {
         return events;
     }

@@ -200,11 +200,7 @@ public abstract class AdUnit {
         allowNullableAdObject = true;
 
         fetchDemand(null, resultCode -> {
-            BidInfo bidInfo = BidInfo.create(resultCode, bidResponse);
-            boolean isNative = configuration.getNativeConfiguration() != null;
-            if (isNative) {
-                BidInfo.saveNativeResult(bidInfo, bidResponse, adObject);
-            }
+            BidInfo bidInfo = BidInfo.create(resultCode, bidResponse, configuration, adObject);
             listener.onComplete(bidInfo);
         });
     }

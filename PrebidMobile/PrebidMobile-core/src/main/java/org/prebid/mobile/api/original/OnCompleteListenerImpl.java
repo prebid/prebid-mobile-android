@@ -7,7 +7,6 @@ import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.api.data.BidInfo;
-import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 import java.util.Map;
 
@@ -17,23 +16,19 @@ import java.util.Map;
 class OnCompleteListenerImpl implements OnCompleteListener, OnCompleteListener2 {
 
     @Nullable
-    private Object adObject;
+    private final Object adObject;
     @NonNull
-    private PrebidRequest request;
+    private final MultiformatAdUnitFacade adUnit;
     @NonNull
-    private MultiformatAdUnitFacade adUnit;
-    @NonNull
-    private OnFetchDemandResult listener;
+    private final OnFetchDemandResult listener;
 
     OnCompleteListenerImpl(
             @NonNull MultiformatAdUnitFacade adUnit,
-            @NonNull PrebidRequest request,
             @Nullable Object adObject,
             @NonNull OnFetchDemandResult listener
     ) {
         this.adObject = adObject;
         this.adUnit = adUnit;
-        this.request = request;
         this.listener = listener;
     }
 
@@ -49,12 +44,7 @@ class OnCompleteListenerImpl implements OnCompleteListener, OnCompleteListener2 
 
 
     private void notifyListener(ResultCode resultCode) {
-        BidResponse bidResponse = adUnit.getBidResponse();
-        BidInfo bidInfo = BidInfo.create(resultCode, bidResponse);
-        boolean isNative = request.getNativeParameters() != null;
-        if (isNative) {
-            BidInfo.saveNativeResult(bidInfo, bidResponse, adObject);
-        }
+        BidInfo bidInfo = BidInfo.create(resultCode, adUnit.getBidResponse(), adUnit.getConfiguration(), adObject);
         listener.onComplete(bidInfo);
     }
 
