@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 
 import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.ResultCode;
-import org.prebid.mobile.Util;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -69,8 +68,7 @@ public class BidInfo {
     public static BidInfo create(
             @NonNull ResultCode resultCode,
             @Nullable BidResponse bidResponse,
-            @Nullable AdUnitConfiguration configuration,
-            @Nullable Object adObject
+            @Nullable AdUnitConfiguration configuration
     ) {
         BidInfo bidInfo = new BidInfo(resultCode);
         if (bidResponse == null) {
@@ -88,9 +86,7 @@ public class BidInfo {
 
         boolean isNative = configuration != null && configuration.getNativeConfiguration() != null;
         if (isNative && bidInfo.resultCode == ResultCode.SUCCESS) {
-            String cacheId = CacheManager.save(bidResponse.getWinningBidJson());
-            Util.saveCacheId(cacheId, adObject);
-            bidInfo.nativeCacheId = cacheId;
+            bidInfo.nativeCacheId = CacheManager.save(bidResponse.getWinningBidJson());
         }
 
         return bidInfo;

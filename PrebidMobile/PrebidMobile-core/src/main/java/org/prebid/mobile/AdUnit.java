@@ -200,7 +200,8 @@ public abstract class AdUnit {
         allowNullableAdObject = true;
 
         fetchDemand(null, resultCode -> {
-            BidInfo bidInfo = BidInfo.create(resultCode, bidResponse, configuration, adObject);
+            BidInfo bidInfo = BidInfo.create(resultCode, bidResponse, configuration);
+            Util.saveCacheId(bidInfo.getNativeCacheId(), adObject);
             listener.onComplete(bidInfo);
         });
     }

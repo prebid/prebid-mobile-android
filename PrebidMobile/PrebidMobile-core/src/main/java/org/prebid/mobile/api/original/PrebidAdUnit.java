@@ -75,7 +75,7 @@ public class PrebidAdUnit {
         }
 
         if (request == null || requestDoesNotHaveAnyConfiguration(request)) {
-            userListener.onComplete(BidInfo.create(ResultCode.INVALID_PREBID_REQUEST_OBJECT, null, null, null));
+            userListener.onComplete(BidInfo.create(ResultCode.INVALID_PREBID_REQUEST_OBJECT, null, null));
             return;
         }
 

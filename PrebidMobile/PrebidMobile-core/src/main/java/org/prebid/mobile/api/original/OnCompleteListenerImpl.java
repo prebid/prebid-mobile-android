@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.Util;
 import org.prebid.mobile.api.data.BidInfo;
 
 import java.util.Map;
@@ -44,7 +45,8 @@ class OnCompleteListenerImpl implements OnCompleteListener, OnCompleteListener2 
 
 
     private void notifyListener(ResultCode resultCode) {
-        BidInfo bidInfo = BidInfo.create(resultCode, adUnit.getBidResponse(), adUnit.getConfiguration(), adObject);
+        BidInfo bidInfo = BidInfo.create(resultCode, adUnit.getBidResponse(), adUnit.getConfiguration());
+        Util.saveCacheId(bidInfo.getNativeCacheId(), adObject);
         listener.onComplete(bidInfo);
     }
 
