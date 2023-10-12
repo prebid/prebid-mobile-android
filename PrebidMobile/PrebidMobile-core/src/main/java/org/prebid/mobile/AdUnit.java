@@ -200,20 +200,8 @@ public abstract class AdUnit {
         allowNullableAdObject = true;
 
         fetchDemand(null, resultCode -> {
-            BidInfo bidInfo;
-            if (bidResponse != null) {
-                bidInfo = new BidInfo(resultCode, bidResponse.getTargeting());
-                if (resultCode == ResultCode.SUCCESS) {
-                    boolean isNative = configuration.getNativeConfiguration() != null;
-                    if (isNative) {
-                        String cacheId = CacheManager.save(bidResponse.getWinningBidJson());
-                        Util.saveCacheId(cacheId, adObject);
-                        bidInfo.setNativeResult(cacheId, bidResponse.getExpirationTimeSeconds());
-                    }
-                }
-            } else {
-                bidInfo = new BidInfo(resultCode, null);
-            }
+            BidInfo bidInfo = BidInfo.create(resultCode, bidResponse, configuration);
+            Util.saveCacheId(bidInfo.getNativeCacheId(), adObject);
             listener.onComplete(bidInfo);
         });
     }
@@ -404,6 +392,11 @@ public abstract class AdUnit {
 
     public void setPbAdSlot(String pbAdSlot) {
         configuration.setPbAdSlot(pbAdSlot);
+    }
+
+    @Nullable
+    public String getGpid() {
+        return configuration.getGpid();
     }
 
     public void setGpid(@Nullable String gpid) {

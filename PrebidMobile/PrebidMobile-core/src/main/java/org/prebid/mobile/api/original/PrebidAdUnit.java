@@ -75,7 +75,7 @@ public class PrebidAdUnit {
         }
 
         if (request == null || requestDoesNotHaveAnyConfiguration(request)) {
-            userListener.onComplete(new BidInfo(ResultCode.INVALID_PREBID_REQUEST_OBJECT, null));
+            userListener.onComplete(BidInfo.create(ResultCode.INVALID_PREBID_REQUEST_OBJECT, null, null));
             return;
         }
 
@@ -85,7 +85,7 @@ public class PrebidAdUnit {
 
         adUnit = new MultiformatAdUnitFacade(configId, request);
 
-        OnCompleteListenerImpl innerListener = new OnCompleteListenerImpl(adUnit, request, adObject, userListener);
+        OnCompleteListenerImpl innerListener = new OnCompleteListenerImpl(adUnit, request, userListener);
         if (adObject != null) {
             adUnit.fetchDemand(adObject, innerListener);
         } else {

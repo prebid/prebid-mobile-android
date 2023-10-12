@@ -16,16 +16,21 @@
 
 package org.prebid.mobile.rendering.bidding.data.bid;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.RobolectricTestRunner;
 
 import java.io.IOException;
-
-import static org.junit.Assert.*;
+import java.util.Map;
 
 @RunWith(RobolectricTestRunner.class)
 public class BidTest {
@@ -37,6 +42,7 @@ public class BidTest {
         Bid bid = Bid.fromJSONObject(jsonBid);
         assertEquals("adm", bid.getAdm());
         assertEquals("nurl", bid.getNurl());
+        assertNull(bid.getEvents());
         verifyBid(bid);
     }
 
@@ -48,6 +54,23 @@ public class BidTest {
         assertNotNull(bid);
         assertEquals("exampleadm?price=0.15&with_base64=MC4xNQ==", bid.getAdm());
         assertEquals("http://textlink.com?price=0.15", bid.getNurl());
+        verifyBid(bid);
+    }
+
+    @Test
+    public void events_eventListContainsWinEvent() throws Exception {
+        JSONObject jsonBid = new JSONObject(ResourceUtils.convertResourceToString("bidding_bid_obj_events.json"));
+        Bid bid = Bid.fromJSONObject(jsonBid);
+
+        Map<String, String> events = bid.getEvents();
+        assertEquals(2, events.size());
+
+        String value = events.get(BidInfo.EVENT_WIN);
+        assertEquals(value, "https://win.com");
+
+        value = events.get(BidInfo.EVENT_IMP);
+        assertEquals(value, "https://imp.com");
+
         verifyBid(bid);
     }
 
