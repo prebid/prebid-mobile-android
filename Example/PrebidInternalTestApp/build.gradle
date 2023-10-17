@@ -120,4 +120,10 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-core:2.15.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.15.1'
     implementation 'com.google.android.exoplayer:extension-ima:2.15.1'
+
+    // Plugin Renderer
+    implementation("tv.teads.sdk.android:sdk:5.1.0-prebid-release-v2@aar") {
+        transitive = true
+    }
+    implementation 'tv.teads.sdk.android:prebidadapter:5.1.0-prebid-release-v2'
 }

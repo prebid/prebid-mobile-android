@@ -83,8 +83,8 @@
     <!--In-App Titles-->
     <string name="demo_bidding_in_app_banner_320_50">Banner 320x50 (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_events">Banner 320x50 Events (In-App)</string>
-    <string name="demo_bidding_in_app_banner_320_50_custom_renderer">Banner 320x50 [Custom Renderer] (In-App)</string>
-    <string name="demo_bidding_in_app_banner_320_50_custom_renderer_plugin_event_listener">Banner 320x50 [Custom Renderer, PluginEventListener] (In-App)</string>
+    <string name="demo_bidding_in_app_banner_320_180_custom_renderer">Banner 320x180 [Custom Renderer] (In-App)</string>
+    <string name="demo_bidding_in_app_banner_320_180_custom_renderer_plugin_event_listener">Banner 320x180 [Custom Renderer, PluginEventListener] (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_no_bids">Banner 320x50 [noBids] (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_imp_prebid_random_bid"> Banner 320x50 [Bid - RANDOM noBids, Ad - RESPECTIVE]</string>
     <string name="demo_bidding_in_app_banner_300_250">Banner 300x250 (In-App)</string>
@@ -354,7 +354,7 @@
     <string name="imp_prebid_id_banner_320x50_vast">prebid-demo-banner-incorrect-vast</string>
     <string name="imp_prebid_id_banner_300x250">prebid-ita-banner-300-250</string>
     <string name="adimp_prebid_id_banner_300x250">prebid-ita-banner-300-250</string>
-    <string name="imp_prebid_id_banner_320x50_custom_renderer">prebid-ita-banner-320-50-meta-custom-renderer</string>
+    <string name="imp_prebid_id_banner_320x180_custom_renderer">prebid-ita-banner-320-180-meta-custom-renderer</string>
     <string name="imp_prebid_id_banner_728x90">prebid-demo-banner-728-90</string>
     <string name="imp_prebid_id_banner_multisize">prebid-demo-banner-multisize</string>
     <string name="imp_prebid_id_interstitial_320_480">prebid-ita-display-interstitial-320-480</string>

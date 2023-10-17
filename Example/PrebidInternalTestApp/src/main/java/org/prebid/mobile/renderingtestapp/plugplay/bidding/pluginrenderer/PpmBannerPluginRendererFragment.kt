@@ -19,6 +19,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.pluginrenderer
 import android.os.Bundle
 import android.view.View
 import org.prebid.mobile.AdSize
+import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
@@ -29,11 +30,15 @@ import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerBindi
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
-import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
+import tv.teads.adapter.prebid.TeadsPBMEventListener
+import tv.teads.adapter.prebid.TeadsPBMPluginRenderer
+import tv.teads.sdk.AdPlacementSettings
+import tv.teads.sdk.AdRatio
+import tv.teads.sdk.TeadsMediationSettings
 
-open class PpmBannerPluginRendererFragment : AdFragment(), BannerViewListener {
+open class PpmBannerPluginRendererFragment : AdFragment(), BannerViewListener, TeadsPBMEventListener {
     private val TAG = PpmBannerPluginRendererFragment::class.java.simpleName
-    private val sampleCustomRenderer = SampleCustomRenderer()
+    private lateinit var teadsPBMPluginRenderer: TeadsPBMPluginRenderer
 
     override val layoutRes = R.layout.fragment_bidding_banner
 
@@ -46,7 +51,7 @@ open class PpmBannerPluginRendererFragment : AdFragment(), BannerViewListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        PrebidMobile.registerPluginRenderer(sampleCustomRenderer)
+        initTeadsPBMPluginRenderer()
     }
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
@@ -128,7 +133,33 @@ open class PpmBannerPluginRendererFragment : AdFragment(), BannerViewListener {
     }
 
     override fun onDestroy() {
-        PrebidMobile.unregisterPluginRenderer(sampleCustomRenderer)
+        PrebidMobile.unregisterPluginRenderer(teadsPBMPluginRenderer)
         super.onDestroy()
+    }
+
+    private fun initTeadsPBMPluginRenderer() {
+        val adPlacementSettings = AdPlacementSettings.Builder()
+            .enableDebug()
+            .build()
+        val teadsMediationSettings = TeadsMediationSettings(adPlacementSettings = adPlacementSettings)
+        teadsPBMPluginRenderer = TeadsPBMPluginRenderer(
+            context = requireContext(),
+            teadsMediationSettings = teadsMediationSettings
+        )
+
+        PrebidMobile.registerPluginRenderer(teadsPBMPluginRenderer)
+    }
+
+    override fun onAdCollapsedFromFullscreen() {
+    }
+
+    override fun onAdExpandedToFullscreen() {
+    }
+
+    override fun onAdRatioUpdate(adRatio: AdRatio) {
+    }
+
+    override fun onFailToReceiveAd(failReason: String) {
+        LogUtil.debug(failReason)
     }
 }

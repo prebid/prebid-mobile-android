@@ -483,27 +483,27 @@ class DemoItemProvider private constructor() {
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_banner_320_50_custom_renderer),
+                    getString(R.string.demo_bidding_in_app_banner_320_180_custom_renderer),
                     ppmBannerPluginRendererAction,
                     ppmBannerTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_banner_320x50_custom_renderer,
+                        R.string.imp_prebid_id_banner_320x180_custom_renderer,
                         null,
                         320,
-                        50
+                        180
                     )
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_banner_320_50_custom_renderer_plugin_event_listener),
+                    getString(R.string.demo_bidding_in_app_banner_320_180_custom_renderer_plugin_event_listener),
                     ppmBannerPluginEventListenerAction,
                     ppmBannerTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_banner_320x50_custom_renderer,
+                        R.string.imp_prebid_id_banner_320x180_custom_renderer,
                         null,
                         320,
-                        50
+                        180
                     )
                 )
             )
