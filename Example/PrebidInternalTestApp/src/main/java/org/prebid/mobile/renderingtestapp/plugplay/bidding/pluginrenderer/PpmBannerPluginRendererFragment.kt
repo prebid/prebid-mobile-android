@@ -157,6 +157,11 @@ open class PpmBannerPluginRendererFragment : AdFragment(), BannerViewListener, T
     }
 
     override fun onAdRatioUpdate(adRatio: AdRatio) {
+        bannerView?.let {
+            val adViewParams = binding.viewContainer.layoutParams
+            adViewParams.height = adRatio.calculateHeight(it.measuredWidth)
+            binding.viewContainer.layoutParams = adViewParams
+        }
     }
 
     override fun onFailToReceiveAd(failReason: String) {
