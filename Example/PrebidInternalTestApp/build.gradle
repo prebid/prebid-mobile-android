@@ -122,8 +122,8 @@ dependencies {
     implementation 'com.google.android.exoplayer:extension-ima:2.15.1'
 
     // Plugin Renderer
-    implementation("tv.teads.sdk.android:sdk:5.1.0-final-release@aar") {
+    implementation("tv.teads.sdk.android:sdk:5.1.1@aar") {
         transitive = true
     }
-    implementation 'tv.teads.sdk.android:prebidadapter:5.1.0-final-release'
+    implementation 'tv.teads.sdk.android:prebidadapter:5.1.1'
 }
