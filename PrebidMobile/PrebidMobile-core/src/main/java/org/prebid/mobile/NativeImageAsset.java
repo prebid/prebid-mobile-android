@@ -20,6 +20,12 @@ public class NativeImageAsset extends NativeAsset {
         hmin = minHeight;
     }
 
+    public NativeImageAsset(int minWidth, int minHeight) {
+        super(REQUEST_ASSET.IMAGE);
+        wmin = minWidth;
+        hmin = minHeight;
+    }
+
     public enum IMAGE_TYPE {
         ICON(1),
         MAIN(3),
@@ -161,9 +167,13 @@ public class NativeImageAsset extends NativeAsset {
             JSONObject imageObject = new JSONObject();
             imageObject.putOpt("type", type != null ? type.getID() : null);
 
-            imageObject.put("w", w);
+            if (w > 0) {
+                imageObject.put("w", w);
+            }
             imageObject.put("wmin", wmin);
-            imageObject.put("h", h);
+            if (h > 0) {
+                imageObject.put("h", h);
+            }
             imageObject.put("hmin", hmin);
             imageObject.putOpt("ext", imageExt);
 
