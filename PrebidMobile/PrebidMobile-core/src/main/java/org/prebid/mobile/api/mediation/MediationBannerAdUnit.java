@@ -18,6 +18,7 @@ package org.prebid.mobile.api.mediation;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
@@ -55,6 +56,7 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         adUnitConfig.setAdFormat(AdFormat.BANNER);
     }
 
+    @WorkerThread
     @Override
     public void destroy() {
         super.destroy();
