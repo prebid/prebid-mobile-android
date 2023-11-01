@@ -295,7 +295,7 @@ public class PrebidNativeAd {
                 return false;
             }
 
-            if (imp_trackers != null) {
+            if (imp_trackers != null && !imp_trackers.isEmpty()) {
                 impressionTrackers = new ArrayList<>(imp_trackers.size());
                 for (String url : imp_trackers) {
                     ImpressionTracker impressionTracker = ImpressionTracker.create(url, visibilityDetector, view.getContext(), new ImpressionTrackerListener() {
@@ -309,6 +309,18 @@ public class PrebidNativeAd {
                     });
                     impressionTrackers.add(impressionTracker);
                 }
+            } else if (impEvent != null){
+                impressionTrackers = new ArrayList<>(1);
+                ImpressionTracker impressionTracker = ImpressionTracker.create(impEvent, visibilityDetector, view.getContext(), new ImpressionTrackerListener() {
+                    @Override
+                    public void onImpressionTrackerFired() {
+                        if (listener != null) {
+                            listener.onAdImpression();
+                        }
+                        notifyImpressionEvent();
+                    }
+                });
+                impressionTrackers.add(impressionTracker);
             }
 
             registeredView = new WeakReference<>(view);
