@@ -24,6 +24,7 @@ import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.BannerParameters;
@@ -51,7 +52,7 @@ import java.util.Random;
 public class GamOriginalApiMultiformatBannerVideoNativeInApp extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-multiformat";
-    private static final String CONFIG_ID_BANNER = "prebid-ita-banner-320-50";
+    private static final String CONFIG_ID_BANNER = "prebid-ita-banner-300-250";
     private static final String CONFIG_ID_VIDEO = "prebid-ita-video-outstream-original-api";
     private static final String CONFIG_ID_NATIVE = "prebid-ita-banner-native-styles";
     private static final String CUSTOM_FORMAT_ID = "12304464";
@@ -75,8 +76,8 @@ public class GamOriginalApiMultiformatBannerVideoNativeInApp extends BaseAdActiv
 
         // 2. Create PrebidRequest with needed multiformat parameters
         PrebidRequest prebidRequest = new PrebidRequest();
-        prebidRequest.setBannerParameters(new BannerParameters());
-        prebidRequest.setVideoParameters(new VideoParameters(Lists.newArrayList("video/mp4")));
+        prebidRequest.setBannerParameters(createBannerParameters());
+        prebidRequest.setVideoParameters(createVideoParameters());
         prebidRequest.setNativeParameters(creativeNativeParameters());
 
         // 3. Make a bid request to Prebid Server
@@ -164,6 +165,18 @@ public class GamOriginalApiMultiformatBannerVideoNativeInApp extends BaseAdActiv
                 Log.e("PrebidFindNative", "onPrebidNativeNotValid");
             }
         });
+    }
+
+    private BannerParameters createBannerParameters() {
+        BannerParameters parameters = new BannerParameters();
+        parameters.setAdSizes(Sets.newHashSet(new org.prebid.mobile.AdSize(300, 250)));
+        return parameters;
+    }
+
+    private VideoParameters createVideoParameters() {
+        VideoParameters parameters = new VideoParameters(Lists.newArrayList("video/mp4"));
+        parameters.setAdSize(new org.prebid.mobile.AdSize(320, 480));
+        return parameters;
     }
 
     private NativeParameters creativeNativeParameters() {
