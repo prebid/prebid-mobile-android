@@ -956,6 +956,8 @@ public class BasicParameterBuilderTest {
         playbackMethods.add(new Signals.PlaybackMethod(32));
         parameters.setPlaybackMethod(playbackMethods);
 
+        parameters.setAdSize(new AdSize(320, 480));
+
         return parameters;
     }
 
