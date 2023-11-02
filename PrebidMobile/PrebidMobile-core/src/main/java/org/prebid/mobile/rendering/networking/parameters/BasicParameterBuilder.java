@@ -125,13 +125,12 @@ public class BasicParameterBuilder extends ParameterBuilder {
             setCommonImpValues(imp, uuid);
             if (adConfiguration.getNativeConfiguration() != null) {
                 setNativeImpValues(imp);
-            } else {
-                if (adConfiguration.isAdType(AdFormat.BANNER) || adConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
-                    setBannerImpValues(imp);
-                }
-                if (adConfiguration.isAdType(AdFormat.VAST)) {
-                    setVideoImpValues(imp);
-                }
+            }
+            if (adConfiguration.isAdType(AdFormat.BANNER) || adConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
+                setBannerImpValues(imp);
+            }
+            if (adConfiguration.isAdType(AdFormat.VAST)) {
+                setVideoImpValues(imp);
             }
         }
     }
@@ -301,8 +300,14 @@ public class BasicParameterBuilder extends ParameterBuilder {
             }
         }
 
-        HashSet<AdSize> adSizes = adConfiguration.getSizes();
-        if (!adSizes.isEmpty()) {
+        VideoParameters videoParams = adConfiguration.getVideoParameters();
+        if (videoParams != null) {
+            AdSize adSize = videoParams.getAdSize();
+            if (adSize != null) {
+                video.w = adSize.getWidth();
+                video.h = adSize.getHeight();
+            }
+        } else if (!adConfiguration.getSizes().isEmpty()) {
             for (AdSize size : adConfiguration.getSizes()) {
                 video.w = size.getWidth();
                 video.h = size.getHeight();
@@ -334,7 +339,15 @@ public class BasicParameterBuilder extends ParameterBuilder {
             banner.api = getApiFrameworks();
         }
 
-        if (adConfiguration.isAdType(AdFormat.BANNER)) {
+        BannerParameters bannerParameters = adConfiguration.getBannerParameters();
+        if (bannerParameters != null) {
+            Set<AdSize> adSizes = bannerParameters.getAdSizes();
+            if (adSizes != null) {
+                for (AdSize size : adSizes) {
+                    banner.addFormat(size.getWidth(), size.getHeight());
+                }
+            }
+        } else if (adConfiguration.isAdType(AdFormat.BANNER)) {
             for (AdSize size : adConfiguration.getSizes()) {
                 banner.addFormat(size.getWidth(), size.getHeight());
             }
