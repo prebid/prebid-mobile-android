@@ -295,33 +295,14 @@ public class PrebidNativeAd {
                 return false;
             }
 
-            if (imp_trackers != null && !imp_trackers.isEmpty()) {
-                impressionTrackers = new ArrayList<>(imp_trackers.size());
-                for (String url : imp_trackers) {
-                    ImpressionTracker impressionTracker = ImpressionTracker.create(url, visibilityDetector, view.getContext(), new ImpressionTrackerListener() {
-                        @Override
-                        public void onImpressionTrackerFired() {
-                            if (listener != null) {
-                                listener.onAdImpression();
-                            }
-                            notifyImpressionEvent();
-                        }
-                    });
-                    impressionTrackers.add(impressionTracker);
-                }
-            } else if (impEvent != null){
-                impressionTrackers = new ArrayList<>(1);
-                ImpressionTracker impressionTracker = ImpressionTracker.create(impEvent, visibilityDetector, view.getContext(), new ImpressionTrackerListener() {
-                    @Override
-                    public void onImpressionTrackerFired() {
-                        if (listener != null) {
-                            listener.onAdImpression();
-                        }
-                        notifyImpressionEvent();
-                    }
-                });
-                impressionTrackers.add(impressionTracker);
+            ArrayList<String> combinedImpTrackers = new ArrayList<>();
+            if (imp_trackers != null) {
+                combinedImpTrackers.addAll(imp_trackers);
             }
+            if (impEvent != null) {
+                combinedImpTrackers.add(impEvent);
+            }
+            createImpressionTrackers(view, combinedImpTrackers);
 
             registeredView = new WeakReference<>(view);
 
@@ -359,22 +340,14 @@ public class PrebidNativeAd {
             if (visibilityDetector == null) {
                 return false;
             }
-
+            ArrayList<String> combinedImpTrackers = new ArrayList<>();
             if (imp_trackers != null) {
-                impressionTrackers = new ArrayList<>(imp_trackers.size());
-                for (String url : imp_trackers) {
-                    ImpressionTracker impressionTracker = ImpressionTracker.create(url, visibilityDetector, container.getContext(), new ImpressionTrackerListener() {
-                        @Override
-                        public void onImpressionTrackerFired() {
-                            if (listener != null) {
-                                listener.onAdImpression();
-                            }
-                            notifyImpressionEvent();
-                        }
-                    });
-                    impressionTrackers.add(impressionTracker);
-                }
+                combinedImpTrackers.addAll(imp_trackers);
             }
+            if (impEvent != null) {
+                combinedImpTrackers.add(impEvent);
+            }
+            createImpressionTrackers(container, combinedImpTrackers);
 
             registeredView = new WeakReference<>(container);
 
@@ -390,6 +363,21 @@ public class PrebidNativeAd {
             return true;
         }
         return false;
+    }
+
+    private void createImpressionTrackers(View view, ArrayList<String> trackers) {
+        impressionTrackers = new ArrayList<>(imp_trackers.size());
+        for (String url : trackers) {
+            ImpressionTracker impressionTracker = ImpressionTracker.create(url, visibilityDetector, view.getContext(), new ImpressionTrackerListener() {
+                @Override
+                public void onImpressionTrackerFired() {
+                    if (listener != null) {
+                        listener.onAdImpression();
+                    }
+                }
+            });
+            impressionTrackers.add(impressionTracker);
+        }
     }
 
     protected boolean registerPrebidNativeAdEventListener(PrebidNativeAdEventListener listener) {
