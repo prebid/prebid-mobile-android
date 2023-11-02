@@ -85,7 +85,7 @@ public class PrebidAdUnit {
 
         adUnit = new MultiformatAdUnitFacade(configId, request);
 
-        OnCompleteListenerImpl innerListener = new OnCompleteListenerImpl(adUnit, request, userListener);
+        OnCompleteListenerImpl innerListener = new OnCompleteListenerImpl(adUnit, adObject, userListener);
         if (adObject != null) {
             adUnit.fetchDemand(adObject, innerListener);
         } else {

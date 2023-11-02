@@ -35,7 +35,7 @@ class GamOriginalApiMultiformatBannerVideoNativeInAppActivity : BaseAdActivity()
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-multiformat"
-        const val CONFIG_ID_BANNER = "prebid-ita-banner-320-50"
+        const val CONFIG_ID_BANNER = "prebid-ita-banner-300-250"
         const val CONFIG_ID_NATIVE = "prebid-ita-banner-native-styles"
         const val CONFIG_ID_VIDEO = "prebid-ita-video-outstream-original-api"
         const val CUSTOM_FORMAT_ID = "12304464"
@@ -96,11 +96,15 @@ class GamOriginalApiMultiformatBannerVideoNativeInAppActivity : BaseAdActivity()
 
 
     private fun createBannerParameters(): BannerParameters {
-        return BannerParameters()
+        val params = BannerParameters()
+        params.adSizes = mutableSetOf(org.prebid.mobile.AdSize(300, 250))
+        return params
     }
 
     private fun createVideoParameters(): VideoParameters {
-        return VideoParameters(listOf("video/mp4"))
+        val params = VideoParameters(listOf("video/mp4"))
+        params.adSize = org.prebid.mobile.AdSize(320, 480)
+        return params
     }
 
     private fun createNativeParameters(): NativeParameters {
