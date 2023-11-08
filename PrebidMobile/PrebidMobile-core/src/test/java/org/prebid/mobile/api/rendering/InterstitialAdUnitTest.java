@@ -65,6 +65,7 @@ import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
+import java.util.Arrays;
 import java.util.EnumSet;
 
 @RunWith(RobolectricTestRunner.class)
@@ -307,7 +308,7 @@ public class InterstitialAdUnitTest {
         final Bid mockBid = mock(Bid.class);
         final InterstitialEventListener spyEventListener = spy(getEventListener());
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
-        PrebidMobilePluginRenderer fakePrebidRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(mockInterstitialController, null, true, PREBID_MOBILE_RENDERER_NAME, "1.0");
+        PrebidMobilePluginRenderer fakePrebidRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(mockInterstitialController, null, true, PREBID_MOBILE_RENDERER_NAME, "1.0", Arrays.asList(1, 2, 7));
         PrebidMobile.registerPluginRenderer(fakePrebidRenderer);
 
         WhiteBox.setInternalState(interstitialAdUnit, "bidResponse", mockBidResponse);

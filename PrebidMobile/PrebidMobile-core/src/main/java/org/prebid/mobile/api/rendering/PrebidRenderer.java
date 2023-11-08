@@ -38,6 +38,10 @@ import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class PrebidRenderer implements PrebidMobilePluginRenderer {
 
     @Override
@@ -54,6 +58,11 @@ public class PrebidRenderer implements PrebidMobilePluginRenderer {
     @Override
     public JSONObject getData() {
         return null;
+    }
+
+    @Override
+    public List<Integer> getApiFrameworks() {
+        return Collections.emptyList();
     }
 
     @Override

@@ -29,6 +29,7 @@ import android.view.ViewTreeObserver
 import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import com.google.common.collect.ImmutableList
 import org.json.JSONObject
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.api.data.AdFormat
@@ -41,6 +42,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener
+import java.util.Arrays
 
 class SampleCustomRenderer : PrebidMobilePluginRenderer {
 
@@ -51,6 +53,8 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
     override fun getVersion(): String = "1.0.0"
 
     override fun getData(): JSONObject? = null
+
+    override fun getApiFrameworks(): List<Int> = listOf(1, 2, 7)
 
     override fun registerEventListener(
         pluginEventListener: PluginEventListener,

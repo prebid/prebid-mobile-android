@@ -30,6 +30,8 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Arrays;
+
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class DisplayViewTest {
@@ -56,7 +58,7 @@ public class DisplayViewTest {
 
         adUnitConfiguration.setAdFormat(AdFormat.BANNER);
 
-        fakePrebidMobilePluginRenderer = Mockito.spy(FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, mockBannerView, true, PREBID_MOBILE_RENDERER_NAME, "1.0"));
+        fakePrebidMobilePluginRenderer = Mockito.spy(FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, mockBannerView, true, PREBID_MOBILE_RENDERER_NAME, "1.0", Arrays.asList(1, 2, 7)));
         PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
 
         mockResponse = mock(BidResponse.class);

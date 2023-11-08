@@ -35,6 +35,7 @@ import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 @RunWith(RobolectricTestRunner.class)
@@ -146,7 +147,8 @@ public class PrebidMobileTest extends BaseSetup {
                 null,
                 true,
                 PREBID_MOBILE_RENDERER_NAME,
-                "1.0"
+                "1.0",
+                Arrays.asList(1, 2, 7)
         );
 
         // When
@@ -164,7 +166,8 @@ public class PrebidMobileTest extends BaseSetup {
                 null,
                 true,
                 PREBID_MOBILE_RENDERER_NAME,
-                "1.0"
+                "1.0",
+                Arrays.asList(1, 2, 7)
         );
 
         // When

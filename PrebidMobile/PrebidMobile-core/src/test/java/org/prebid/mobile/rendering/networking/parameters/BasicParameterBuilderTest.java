@@ -99,7 +99,7 @@ public class BasicParameterBuilderTest {
     private static final String USER_CUSTOM = "custom";
     private static final String USER_GENDER = "M";
     private static final String USER_BUYER_ID = "bid";
-    private PrebidMobilePluginRenderer otherPlugin = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, null, true, "FakePlugin", "1.0");
+    private PrebidMobilePluginRenderer otherPlugin = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, null, true, "FakePlugin", "1.0", Arrays.asList(1, 2, 7));
 
     private Context context;
 
@@ -300,6 +300,26 @@ public class BasicParameterBuilderTest {
         assertNull(actualImp.video);
         assertEquals(1, actualImp.secure.intValue());
         assertEquals(0, actualImp.instl.intValue());
+    }
+
+    @Test
+    public void whenPluginRendererPresent_ImpWithValidBannerApiObject() {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdFormat(AdFormat.BANNER);
+        adConfiguration.setPbAdSlot("12345");
+        PrebidMobile.addStoredBidResponse("bidderTest", "123456");
+        PrebidMobile.setStoredAuctionResponse("storedResponse");
+        PrebidMobile.registerPluginRenderer(otherPlugin);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+        BidRequest actualBidRequest = adRequestInput.getBidRequest();
+
+        assertArrayEquals(new int[]{1, 2, 3, 5, 6, 7}, actualBidRequest.getImp().get(0).banner.api);
     }
 
     @Test

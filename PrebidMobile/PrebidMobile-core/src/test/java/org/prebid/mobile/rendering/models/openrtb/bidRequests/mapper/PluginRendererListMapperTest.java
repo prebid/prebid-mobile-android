@@ -22,6 +22,8 @@ import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRenderer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class PluginRendererListMapperTest {
@@ -45,6 +47,12 @@ public class PluginRendererListMapperTest {
         @Override
         public JSONObject getData() {
             return pluginData;
+        }
+
+        @NonNull
+        @Override
+        public List<Integer> getApiFrameworks() {
+            return Collections.emptyList();
         }
 
         @Override

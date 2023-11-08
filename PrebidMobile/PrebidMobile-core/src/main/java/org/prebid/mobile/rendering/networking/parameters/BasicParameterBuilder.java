@@ -34,6 +34,8 @@ import org.prebid.mobile.Signals;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.PlacementType;
@@ -410,7 +412,8 @@ public class BasicParameterBuilder extends ParameterBuilder {
     }
 
     private int[] getApiFrameworks() {
-        List<Integer> supportedApiFrameworks = new ArrayList<>();
+        List<PrebidMobilePluginRenderer> plugins = PrebidMobilePluginRegister.getInstance().getRTBListOfRenderersFor(adConfiguration);
+        Set<Integer> supportedApiFrameworks = concatPluginsApiFrameworks(plugins);
 
         // If MRAID is on, then add api(3,5)
         if (PrebidMobile.sendMraidSupportParams) {
@@ -420,21 +423,24 @@ public class BasicParameterBuilder extends ParameterBuilder {
         // Add OM support
         supportedApiFrameworks.add(API_OPEN_MEASUREMENT);
 
-        // If list of supported frameworks is not empty, set api field
-        if (!supportedApiFrameworks.isEmpty()) {
-            // Remove duplicates
-            supportedApiFrameworks = new ArrayList<>(new HashSet<>(supportedApiFrameworks));
-
-            // Create api array
-            int[] result = new int[supportedApiFrameworks.size()];
-            for (int i = 0; i < supportedApiFrameworks.size(); i++) {
-                result[i] = supportedApiFrameworks.get(i);
-            }
-
-            return result;
+        // Create api array
+        // fill int[] to set api field
+        int[] result = new int[supportedApiFrameworks.size()];
+        int i = 0;
+        for (Integer apiFramework : supportedApiFrameworks) {
+            result[i++] = apiFramework;
         }
-        else {
-            return null;
+
+        return result;
+    }
+
+    private Set<Integer> concatPluginsApiFrameworks(List<PrebidMobilePluginRenderer> plugins) {
+        Set<Integer> supportedApiFrameworks = new HashSet<>();
+
+        for (PrebidMobilePluginRenderer plugin : plugins) {
+            supportedApiFrameworks.addAll(plugin.getApiFrameworks());
         }
+
+        return supportedApiFrameworks;
     }
 }

@@ -17,13 +17,16 @@ import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerList
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
+import java.util.List;
+
 public class FakePrebidMobilePluginRenderer {
     public static PrebidMobilePluginRenderer getFakePrebidRenderer(
             InterstitialController mockInterstitialController,
             View mockBannerAdView,
             Boolean isSupportRenderingFor,
             String rendererName,
-            String rendererVersion
+            String rendererVersion,
+            List<Integer> apiFrameworks
     ) {
         return new PrebidMobilePluginRenderer() {
             @Override
@@ -35,6 +38,11 @@ public class FakePrebidMobilePluginRenderer {
             @Nullable
             @Override
             public JSONObject getData() { return null; }
+
+            @Override
+            public List<Integer> getApiFrameworks() {
+                return apiFrameworks;
+            }
 
             @Override
             public void registerEventListener(PluginEventListener pluginEventListener, String listenerKey) { }

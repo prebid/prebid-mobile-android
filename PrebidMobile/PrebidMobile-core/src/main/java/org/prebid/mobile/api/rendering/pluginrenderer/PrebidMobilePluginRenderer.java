@@ -30,6 +30,8 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
+import java.util.List;
+
 public interface PrebidMobilePluginRenderer {
 
     String getName();
@@ -38,6 +40,8 @@ public interface PrebidMobilePluginRenderer {
 
     @Nullable
     JSONObject getData();
+
+    List<Integer> getApiFrameworks();
 
     /**
      * Register a listener related to a specific ad unit config fingerprint in order to dispatch specific ad events
