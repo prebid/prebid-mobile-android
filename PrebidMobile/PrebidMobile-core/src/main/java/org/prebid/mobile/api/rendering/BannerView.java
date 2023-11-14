@@ -16,6 +16,8 @@
 
 package org.prebid.mobile.api.rendering;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -629,9 +631,13 @@ public class BannerView extends FrameLayout {
 
         removeAllViews();
 
-        final Pair<Integer, Integer> sizePair = bidResponse.getWinningBidWidthHeightPairDips(getContext());
         displayView = new DisplayView(getContext(), displayViewListener, displayVideoListener, adUnitConfig, bidResponse);
-        addView(displayView, sizePair.first, sizePair.second);
+        if (bidResponse.getPreferredPluginRendererName() == PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME) {
+            final Pair<Integer, Integer> sizePair = bidResponse.getWinningBidWidthHeightPairDips(getContext());
+            addView(displayView, sizePair.first, sizePair.second);
+        } else {
+            addView(displayView, new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        }
     }
 
     private void displayAdServerView(View view) {
