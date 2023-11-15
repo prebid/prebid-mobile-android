@@ -295,14 +295,7 @@ public class PrebidNativeAd {
                 return false;
             }
 
-            ArrayList<String> combinedImpTrackers = new ArrayList<>();
-            if (imp_trackers != null) {
-                combinedImpTrackers.addAll(imp_trackers);
-            }
-            if (impEvent != null) {
-                combinedImpTrackers.add(impEvent);
-            }
-            createImpressionTrackers(view, combinedImpTrackers);
+            createImpressionTrackers(view);
 
             registeredView = new WeakReference<>(view);
 
@@ -340,14 +333,8 @@ public class PrebidNativeAd {
             if (visibilityDetector == null) {
                 return false;
             }
-            ArrayList<String> combinedImpTrackers = new ArrayList<>();
-            if (imp_trackers != null) {
-                combinedImpTrackers.addAll(imp_trackers);
-            }
-            if (impEvent != null) {
-                combinedImpTrackers.add(impEvent);
-            }
-            createImpressionTrackers(container, combinedImpTrackers);
+
+            createImpressionTrackers(container);
 
             registeredView = new WeakReference<>(container);
 
@@ -365,9 +352,17 @@ public class PrebidNativeAd {
         return false;
     }
 
-    private void createImpressionTrackers(View view, ArrayList<String> trackers) {
-        impressionTrackers = new ArrayList<>(imp_trackers.size());
-        for (String url : trackers) {
+    private void createImpressionTrackers(View view) {
+        ArrayList<String> combinedImpTrackers = new ArrayList<>();
+        if (imp_trackers != null) {
+            combinedImpTrackers.addAll(imp_trackers);
+        }
+        if (impEvent != null) {
+            combinedImpTrackers.add(impEvent);
+        }
+
+        impressionTrackers = new ArrayList<>();
+        for (String url : combinedImpTrackers) {
             ImpressionTracker impressionTracker = ImpressionTracker.create(url, visibilityDetector, view.getContext(), new ImpressionTrackerListener() {
                 @Override
                 public void onImpressionTrackerFired() {
