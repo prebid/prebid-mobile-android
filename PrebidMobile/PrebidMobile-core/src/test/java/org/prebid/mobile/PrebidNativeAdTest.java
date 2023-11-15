@@ -1,21 +1,71 @@
 package org.prebid.mobile;
 
+import static org.hamcrest.Matchers.hasItem;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import android.app.Application;
+import android.content.Context;
+import android.view.View;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.reflection.Reflection;
+import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.RobolectricTestRunner;
 
+import java.io.IOException;
 import java.util.ArrayList;
-
-import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.*;
+import java.util.List;
 
 @RunWith(RobolectricTestRunner.class)
 public class PrebidNativeAdTest {
 
     @Test
-    public void testNativeAdParser() {
-        String cacheId = CacheManager.save(getResponse());
-        PrebidNativeAd nativeAd = PrebidNativeAd.create(cacheId);
+    public void registerView_withAllTrackers() {
+        PrebidNativeAd nativeAd = nativeAdFromFile("PrebidNativeAdTest/Full.json");
+
+        assertEquals("https://prebid.qa.openx.net//event?t=win&b=5f6bec03-a3ae-4084-b2ae-dedfb0ac01ff&a=b4eb1475-4e3d-4186-97b7-25b6a6cf8618&bidder=openx&ts=1643899069308", nativeAd.getWinEvent());
+        assertEquals("https://prebid.qa.openx.net//event?t=imp&b=5f6bec03-a3ae-4084-b2ae-dedfb0ac01ff&a=b4eb1475-4e3d-4186-97b7-25b6a6cf8618&bidder=openx&ts=1643899069308", nativeAd.getImpEvent());
+
+        ArrayList<String> admImpressionTrackers = reflectAdmImpressionTrackers(nativeAd);
+        assertNotNull(admImpressionTrackers);
+        assertEquals(1, admImpressionTrackers.size());
+        assertThat(admImpressionTrackers, hasItem("https://s3-us-west-2.amazonaws.com/omsdk-files/compliance-js/omid-validation-verification-script-v1.js"));
+
+
+        nativeAd.registerView(createViewMock(), mock(List.class), mock(PrebidNativeAdEventListener.class));
+
+
+        ArrayList<ImpressionTracker> trackerObjects = reflectImpressionTrackerObjects(nativeAd);
+        assertEquals(2, trackerObjects.size());
+        assertEquals("https://s3-us-west-2.amazonaws.com/omsdk-files/compliance-js/omid-validation-verification-script-v1.js", reflectImpressionTrackerUrl(trackerObjects.get(0)));
+        assertEquals("https://prebid.qa.openx.net//event?t=imp&b=5f6bec03-a3ae-4084-b2ae-dedfb0ac01ff&a=b4eb1475-4e3d-4186-97b7-25b6a6cf8618&bidder=openx&ts=1643899069308", reflectImpressionTrackerUrl(trackerObjects.get(1)));
+    }
+
+    @Test
+    public void registerView_withoutTrackers() {
+        PrebidNativeAd nativeAd = nativeAdFromFile("PrebidNativeAdTest/WithoutTrackers.json");
+
+        assertNull(nativeAd.getWinEvent());
+        assertNull(nativeAd.getImpEvent());
+        assertNull(reflectAdmImpressionTrackers(nativeAd));
+
+
+        nativeAd.registerView(createViewMock(), mock(List.class), mock(PrebidNativeAdEventListener.class));
+
+
+        ArrayList<ImpressionTracker> trackerObjects = reflectImpressionTrackerObjects(nativeAd);
+        assertEquals(0, trackerObjects.size());
+    }
+
+    @Test
+    public void nativeAdParser() {
+        PrebidNativeAd nativeAd = nativeAdFromFile("PrebidNativeAdTest/Full.json");
 
         assertNotNull(nativeAd);
 
@@ -56,69 +106,36 @@ public class PrebidNativeAdTest {
         }
     }
 
-    private String getResponse() {
-        return "{\n" +
-                "  \"id\": \"5f6bec03-a3ae-4084-b2ae-dedfb0ac01ff\",\n" +
-                "  \"impid\": \"PrebidMobile\",\n" +
-                "  \"price\": 0.11259999999999999,\n" +
-                "  \"adm\": \"{\\\"assets\\\":[{\\\"required\\\":1,\\\"data\\\":{\\\"value\\\":\\\"Sample value 2\\\"}},{\\\"required\\\":1,\\\"data\\\":{\\\"type\\\":500,\\\"value\\\":\\\"Sample value\\\"}},{\\\"required\\\":1,\\\"img\\\":{\\\"type\\\":500,\\\"url\\\":\\\"https://test.com/test.png\\\"}},{\\\"required\\\":1,\\\"img\\\":{\\\"url\\\":\\\"https://test2.com/test.png\\\"}},\n{\\\"required\\\":1,\\\"title\\\":{\\\"text\\\":\\\"OpenX (Title)\\\"}},{\\\"required\\\":1,\\\"img\\\":{\\\"type\\\":1,\\\"url\\\":\\\"https:\\/\\/www.saashub.com\\/images\\/app\\/service_logos\\/5\\/1df363c9a850\\/large.png?1525414023\\\"}},{\\\"required\\\":1,\\\"img\\\":{\\\"type\\\":3,\\\"url\\\":\\\"https:\\/\\/ssl-i.cdn.openx.com\\/mobile\\/demo-creatives\\/mobile-demo-banner-640x100.png\\\"}},{\\\"required\\\":1,\\\"data\\\":{\\\"type\\\":1,\\\"value\\\":\\\"OpenX (Brand)\\\"}},{\\\"required\\\":1,\\\"data\\\":{\\\"type\\\":2,\\\"value\\\":\\\"Learn all about this awesome story of someone using out OpenX SDK.\\\"}},{\\\"required\\\":1,\\\"data\\\":{\\\"type\\\":12,\\\"value\\\":\\\"Click here to visit our site!\\\"}}],\\\"link\\\":{\\\"url\\\":\\\"https:\\/\\/www.openx.com\\/\\\"},\\\"eventtrackers\\\":[{\\\"event\\\":555,\\\"method\\\":2,\\\"url\\\":\\\"https:\\/\\/s3-us-west-2.amazonaws.com\\/omsdk-files\\/compliance-js\\/omid-validation-verification-script-v1.js\\\",\\\"ext\\\":{\\\"vendorKey\\\":\\\"iabtechlab.com-omid\\\",\\\"verification_parameters\\\":\\\"iabtechlab-Openx\\\"}}]}\",\n" +
-                "  \"adid\": \"test-ad-id-12345\",\n" +
-                "  \"adomain\": [\n" +
-                "    \"openx.com\"\n" +
-                "  ],\n" +
-                "  \"crid\": \"test-creative-id-1\",\n" +
-                "  \"w\": 300,\n" +
-                "  \"h\": 250,\n" +
-                "  \"ext\": {\n" +
-                "    \"ad_ox_cats\": [\n" +
-                "      2\n" +
-                "    ],\n" +
-                "    \"agency_id\": \"agency_10\",\n" +
-                "    \"brand_id\": \"brand_10\",\n" +
-                "    \"buyer_id\": \"buyer_10\",\n" +
-                "    \"matching_ad_id\": {\n" +
-                "      \"campaign_id\": 1,\n" +
-                "      \"creative_id\": 3,\n" +
-                "      \"placement_id\": 2\n" +
-                "    },\n" +
-                "    \"next_highest_bid_price\": 0.099,\n" +
-                "    \"prebid\": {\n" +
-                "      \"cache\": {\n" +
-                "        \"key\": \"\",\n" +
-                "        \"url\": \"\",\n" +
-                "        \"bids\": {\n" +
-                "          \"url\": \"prebid.qa.openx.net\\/cache?uuid=feb0b9c0-7064-4dd4-8607-bef8a41f7a2c\",\n" +
-                "          \"cacheId\": \"feb0b9c0-7064-4dd4-8607-bef8a41f7a2c\"\n" +
-                "        }\n" +
-                "      },\n" +
-                "      \"targeting\": {\n" +
-                "        \"hb_bidder\": \"openx\",\n" +
-                "        \"hb_bidder_openx\": \"openx\",\n" +
-                "        \"hb_cache_host\": \"prebid.qa.openx.net\",\n" +
-                "        \"hb_cache_host_openx\": \"prebid.qa.openx.net\",\n" +
-                "        \"hb_cache_id\": \"feb0b9c0-7064-4dd4-8607-bef8a41f7a2c\",\n" +
-                "        \"hb_cache_id_openx\": \"feb0b9c0-7064-4dd4-8607-bef8a41f7a2c\",\n" +
-                "        \"hb_cache_path\": \"\\/cache\",\n" +
-                "        \"hb_cache_path_openx\": \"\\/cache\",\n" +
-                "        \"hb_env\": \"mobile-app\",\n" +
-                "        \"hb_env_openx\": \"mobile-app\",\n" +
-                "        \"hb_pb\": \"0.10\",\n" +
-                "        \"hb_pb_openx\": \"0.10\",\n" +
-                "        \"hb_size\": \"300x250\",\n" +
-                "        \"hb_size_openx\": \"300x250\"\n" +
-                "      },\n" +
-                "      \"type\": \"banner\",\n" +
-                "      \"video\": {\n" +
-                "        \"duration\": 0,\n" +
-                "        \"primary_category\": \"\"\n" +
-                "      },\n" +
-                "      \"events\": {\n" +
-                "        \"win\": \"https:\\/\\/prebid.qa.openx.net\\/\\/event?t=win&b=5f6bec03-a3ae-4084-b2ae-dedfb0ac01ff&a=b4eb1475-4e3d-4186-97b7-25b6a6cf8618&bidder=openx&ts=1643899069308\",\n" +
-                "        \"imp\": \"https:\\/\\/prebid.qa.openx.net\\/\\/event?t=imp&b=5f6bec03-a3ae-4084-b2ae-dedfb0ac01ff&a=b4eb1475-4e3d-4186-97b7-25b6a6cf8618&bidder=openx&ts=1643899069308\"\n" +
-                "      }\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+
+    private PrebidNativeAd nativeAdFromFile(String path) {
+        try {
+            String resource = ResourceUtils.convertResourceToString(path);
+            String cacheId = CacheManager.save(resource);
+            return PrebidNativeAd.create(cacheId);
+        } catch (IOException e) {
+            throw new NullPointerException(e.getMessage());
+        }
+    }
+
+    private View createViewMock() {
+        Context contextMock = mock(Context.class);
+        when(contextMock.getApplicationContext()).thenReturn(mock(Application.class));
+
+        View mainMock = mock(View.class);
+        when(mainMock.getContext()).thenReturn(contextMock);
+        return mainMock;
+    }
+
+    private ArrayList<String> reflectAdmImpressionTrackers(PrebidNativeAd ad) {
+        return Reflection.getFieldOf(ad, "imp_trackers");
+    }
+
+    private ArrayList<ImpressionTracker> reflectImpressionTrackerObjects(PrebidNativeAd ad) {
+        return Reflection.getFieldOf(ad, "impressionTrackers");
+    }
+
+    private String reflectImpressionTrackerUrl(ImpressionTracker tracker) {
+        return Reflection.getFieldOf(tracker, "url");
     }
 
 }
