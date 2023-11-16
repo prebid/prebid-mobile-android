@@ -17,6 +17,8 @@
 package org.prebid.mobile;
 
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Size;
 
 public class LogUtil {
@@ -32,12 +34,19 @@ public class LogUtil {
 
     private static int logLevel;
 
+    @NonNull
+    private static PrebidLogger logger = new LogCatLogger();
+
     private LogUtil() {
     }
 
 
     public static void setLogLevel(int level) {
         logLevel = level;
+    }
+
+    public static void setLogger(@NonNull PrebidLogger newLogger) {
+        logger = newLogger;
     }
 
     public static int getLogLevel() {
@@ -130,7 +139,7 @@ public class LogUtil {
         }
 
         if (ERROR >= getLogLevel()) {
-            Log.e(getTagWithBase(tag), message, throwable);
+            logger.e(getTagWithBase(tag), message, throwable);
         }
     }
 
@@ -143,7 +152,7 @@ public class LogUtil {
         }
 
         if (messagePriority >= getLogLevel()) {
-            Log.println(messagePriority, getTagWithBase(tag), message);
+            logger.println(messagePriority, getTagWithBase(tag), message);
         }
     }
 
@@ -167,4 +176,23 @@ public class LogUtil {
         }
     }
 
+    public interface PrebidLogger {
+
+        void println(int messagePriority, String tag, String message);
+
+        void e(final String tag, String message, Throwable throwable);
+    }
+
+    private static class LogCatLogger implements PrebidLogger {
+
+        @Override
+        public void println(int messagePriority, String tag, String message) {
+            Log.println(messagePriority, tag, message);
+        }
+
+        @Override
+        public void e(String tag, String message, Throwable throwable) {
+            Log.e(tag, message, throwable);
+        }
+    }
 }

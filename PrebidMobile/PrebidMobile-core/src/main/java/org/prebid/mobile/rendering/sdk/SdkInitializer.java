@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.LogUtil.PrebidLogger;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.rendering.PrebidRenderer;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
@@ -44,6 +45,11 @@ public class SdkInitializer {
 
         if (PrebidMobile.logLevel != null) {
             LogUtil.setLogLevel(PrebidMobile.getLogLevel().getValue());
+        }
+
+        PrebidLogger customLogger = PrebidMobile.getCustomLogger();
+        if (customLogger != null) {
+            LogUtil.setLogger(customLogger);
         }
 
         try {
