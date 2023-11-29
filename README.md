@@ -7,22 +7,27 @@ See [this page](https://docs.prebid.org/prebid-server/overview/prebid-server-ove
 
 ## Use Maven?
 
-Easily include the Prebid Mobile SDK using Maven. Simply add this line to your gradle dependencies:
+You can include the Prebid Mobile SDK using Maven. If your build script is Groovy-based, add this line to your gradle dependencies:
 
 ```
-implementation 'org.prebid:prebid-mobile-sdk:2.1.8'
+implementation 'org.prebid:prebid-mobile-sdk:2.1.6'
+```
+
+If your build script uses Kotlin DSL instead, add this line to your gradle dependencies:
+
+```
+implementation("org.prebid:prebid-mobile-sdk:2.1.6")
 ```
 
 ## Build from source
 
-Build Prebid Mobile from source code. After cloning the repo, from the root directory run
+Build Prebid Mobile from source code. After cloning the repo, from the root directory run:
 
 ```
 scripts/buildPrebidMobile.sh
 ```
 
-to output the final lib jar and package you a demo app.
-
+This will output the final lib jar and package your demo app.
 
 ## Test Prebid Mobile
 
