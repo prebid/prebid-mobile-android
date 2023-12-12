@@ -340,12 +340,9 @@ public class BasicParameterBuilder extends ParameterBuilder {
         }
 
         BannerParameters bannerParameters = adConfiguration.getBannerParameters();
-        if (bannerParameters != null) {
-            Set<AdSize> adSizes = bannerParameters.getAdSizes();
-            if (adSizes != null) {
-                for (AdSize size : adSizes) {
-                    banner.addFormat(size.getWidth(), size.getHeight());
-                }
+        if (bannerParameters != null && bannerParameters.getAdSizes() != null && !bannerParameters.getAdSizes().isEmpty()) {
+            for (AdSize size : bannerParameters.getAdSizes()) {
+                banner.addFormat(size.getWidth(), size.getHeight());
             }
         } else if (adConfiguration.isAdType(AdFormat.BANNER)) {
             for (AdSize size : adConfiguration.getSizes()) {
