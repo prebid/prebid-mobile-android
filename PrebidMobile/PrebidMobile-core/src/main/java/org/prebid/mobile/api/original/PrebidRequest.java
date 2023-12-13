@@ -27,6 +27,8 @@ public class PrebidRequest {
 
     @Nullable
     private String gpid;
+    private Map<String, Object> ortbObject;
+
     @Nullable
     private Map<String, Set<String>> extData;
     @Nullable
@@ -91,6 +93,14 @@ public class PrebidRequest {
 
     public void setGpid(@Nullable String gpid) {
         this.gpid = gpid;
+    }
+
+    public Map<String, Object> getOrtbObject() {
+        return ortbObject;
+    }
+
+    public void setOrtbObject(Map<String, Object> ortbObject) {
+        this.ortbObject = ortbObject;
     }
 
     @Nullable

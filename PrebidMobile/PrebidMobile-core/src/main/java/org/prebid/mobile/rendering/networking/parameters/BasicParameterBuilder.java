@@ -397,6 +397,15 @@ public class BasicParameterBuilder extends ParameterBuilder {
             imp.getExt().put("keywords", string);
         }
 
+
+        Map<String, Object> ortbObject= adConfiguration.getOrtbObject();
+        if (ortbObject != null) {
+            for (Map.Entry<String, Object> param : ortbObject.entrySet()) {
+                if (!imp.getExt().getMap().containsKey(param.getKey())) {
+                    imp.getExt().put(param.getKey(), param.getValue().toString());
+                }
+            }
+        }
         // TODO: 15.12.2020 uncomment when Prebid server will be able to process Ext content not related to bidders
         //imp.getExt().put(KEY_DEEPLINK_PLUS, 1);
     }

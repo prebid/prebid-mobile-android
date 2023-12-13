@@ -403,6 +403,14 @@ public abstract class AdUnit {
         configuration.setGpid(gpid);
     }
 
+    public Map<String, Object> getOrtbObject() {
+        return configuration.getOrtbObject();
+    }
+
+    public void setOrtbObject(Map<String, Object> ortbObject) {
+        configuration.setOrtbObject(ortbObject);
+    }
+
     protected BidRequesterListener createBidListener(OnCompleteListener originalListener) {
         return new BidRequesterListener() {
             @Override

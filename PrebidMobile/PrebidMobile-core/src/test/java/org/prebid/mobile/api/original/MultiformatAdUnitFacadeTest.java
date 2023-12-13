@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class MultiformatAdUnitFacadeTest {
@@ -256,6 +257,12 @@ public class MultiformatAdUnitFacadeTest {
         String expectedGpid = "/12345/home_screen#identifier";
         request.setGpid(expectedGpid);
 
+        Map<String, Object> expectedOrtbObject = new HashMap<>();
+        expectedOrtbObject.put("param1", "value1");
+        expectedOrtbObject.put("param2", 1);
+        expectedOrtbObject.put("param3", true);
+        request.setOrtbObject(expectedOrtbObject);
+
         ContentObject expectedAppContent = new ContentObject();
         expectedAppContent.addCategory("Category");
         request.setAppContent(expectedAppContent);
@@ -298,6 +305,10 @@ public class MultiformatAdUnitFacadeTest {
         assertEquals(
                 expectedGpid,
                 configuration.getGpid()
+        );
+        assertEquals(
+                expectedOrtbObject,
+                configuration.getOrtbObject()
         );
     }
 

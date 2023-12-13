@@ -120,6 +120,9 @@ class MultiformatAdUnitFacade extends AdUnit {
         String gpid = request.getGpid();
         configuration.setGpid(gpid);
 
+        Map<String, Object> ortbObject = request.getOrtbObject();
+        configuration.setOrtbObject(ortbObject);
+
         ContentObject contentObject = request.getAppContent();
         configuration.setAppContent(contentObject);
 

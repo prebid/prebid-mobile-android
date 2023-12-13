@@ -37,7 +37,9 @@ import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -98,6 +100,21 @@ public class AdUnitSuccessorTest {
 
         AdUnitConfiguration configuration = adUnit.getConfiguration();
         assertEquals(expectedGpid, configuration.getGpid());
+    }
+
+    @Test
+    public void testOrtbObjectParameter() {
+        BannerAdUnit adUnit = new BannerAdUnit(testConfigId, width, height);
+        String expectedGpid = "/12345/home_screen#identifier";
+        adUnit.setGpid(expectedGpid);
+        Map<String, Object> expectedOrtbObject = new HashMap<>();
+        expectedOrtbObject.put("param1", "value1");
+        expectedOrtbObject.put("param2", 1);
+        expectedOrtbObject.put("param3", true);
+        adUnit.setOrtbObject(expectedOrtbObject);
+
+        AdUnitConfiguration configuration = adUnit.getConfiguration();
+        assertEquals(expectedOrtbObject, configuration.getOrtbObject());
     }
 
     @Test

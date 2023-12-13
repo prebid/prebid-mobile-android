@@ -82,6 +82,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -320,6 +321,29 @@ public class BasicParameterBuilderTest {
         Imp imp = actualBidRequest.getImp().get(0);
         String gpid = (String) imp.getExt().getMap().get("gpid");
         assertEquals(expectedGpid, gpid);
+    }
+
+    @Test
+    public void setOrtbObject_ortbObjectPresentInRequest() {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        Map<String, Object> expectedOrtbObject = new HashMap<>();
+        expectedOrtbObject.put("param1", "value1");
+        expectedOrtbObject.put("param2", 1);
+        expectedOrtbObject.put("param3", true);
+        adConfiguration.setOrtbObject(expectedOrtbObject);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+                adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        BidRequest actualBidRequest = adRequestInput.getBidRequest();
+        Imp imp = actualBidRequest.getImp().get(0);
+        String value1 = (String) imp.getExt().getMap().get("param1");
+        assertEquals(expectedOrtbObject.get("param1"), value1);
     }
 
     @Test
