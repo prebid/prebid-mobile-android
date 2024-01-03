@@ -16,7 +16,6 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.inapp
 
 import android.os.Bundle
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
@@ -26,28 +25,23 @@ import java.util.*
 
 class InAppVideoInterstitialMultiFormatActivity : BaseAdActivity() {
 
-    companion object {
-        const val CONFIG_ID = "prebid-demo-display-interstitial-320-480-random"
-    }
-
     private var adUnit: InterstitialAdUnit? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        val storedAuctionResponses = listOf(
-            "response-prebid-video-interstitial-320-480",
-            "response-prebid-display-interstitial-320-480"
-        )
-        PrebidMobile.setStoredAuctionResponse(storedAuctionResponses.shuffled().first())
-
         createAd()
     }
 
     private fun createAd() {
-        adUnit = InterstitialAdUnit(this, CONFIG_ID, EnumSet.of(AdUnitFormat.VIDEO, AdUnitFormat.BANNER))
+        // Random for test cases
+        val configId = mutableListOf(
+            "prebid-demo-display-interstitial-320-480",
+            "prebid-demo-video-interstitial-320-480"
+        ).shuffled().first()
+
+        adUnit = InterstitialAdUnit(this, configId, EnumSet.of(AdUnitFormat.VIDEO, AdUnitFormat.BANNER))
         adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
             override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
                 adUnit?.show()
