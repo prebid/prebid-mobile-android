@@ -22,11 +22,12 @@ import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
+
 class GamRenderingApiVideoBannerActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid_oxb_300x250_banner"
-        const val CONFIG_ID = "prebid-ita-video-outstream"
+        const val CONFIG_ID = "prebid-demo-video-outstream"
         const val WIDTH = 300
         const val HEIGHT = 250
     }

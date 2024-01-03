@@ -35,9 +35,9 @@ class GamOriginalApiMultiformatBannerVideoNativeInAppActivity : BaseAdActivity()
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-multiformat"
-        const val CONFIG_ID_BANNER = "prebid-ita-banner-300-250"
-        const val CONFIG_ID_NATIVE = "prebid-ita-banner-native-styles"
-        const val CONFIG_ID_VIDEO = "prebid-ita-video-outstream-original-api"
+        const val CONFIG_ID_BANNER = "prebid-demo-banner-300-250"
+        const val CONFIG_ID_NATIVE = "prebid-demo-banner-native-styles"
+        const val CONFIG_ID_VIDEO = "prebid-demo-video-outstream-original-api"
         const val CUSTOM_FORMAT_ID = "12304464"
     }
 

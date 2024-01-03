@@ -18,15 +18,26 @@ package org.prebid.mobile.rendering.parser;
 
 import android.text.TextUtils;
 import android.util.Xml;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.VastParseError;
 import org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
-import org.prebid.mobile.rendering.video.vast.*;
+import org.prebid.mobile.rendering.video.vast.Ad;
+import org.prebid.mobile.rendering.video.vast.AdVerifications;
+import org.prebid.mobile.rendering.video.vast.ClickTracking;
+import org.prebid.mobile.rendering.video.vast.Companion;
+import org.prebid.mobile.rendering.video.vast.Creative;
+import org.prebid.mobile.rendering.video.vast.Extension;
+import org.prebid.mobile.rendering.video.vast.Impression;
+import org.prebid.mobile.rendering.video.vast.InLine;
+import org.prebid.mobile.rendering.video.vast.MediaFile;
+import org.prebid.mobile.rendering.video.vast.VAST;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -668,9 +679,11 @@ public class AdResponseParserVast extends AdResponseParserBase {
      * Searches through ArrayList of Tracking for a specific event
      */
     public static org.prebid.mobile.rendering.video.vast.Tracking findTracking(ArrayList<org.prebid.mobile.rendering.video.vast.Tracking> trackingEvents) {
-        for (org.prebid.mobile.rendering.video.vast.Tracking tracking : trackingEvents) {
-            if (tracking.getEvent().equals("creativeView")) {
-                return tracking;
+        if (trackingEvents != null) {
+            for (org.prebid.mobile.rendering.video.vast.Tracking tracking : trackingEvents) {
+                if (tracking.getEvent().equals("creativeView")) {
+                    return tracking;
+                }
             }
         }
 

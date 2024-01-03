@@ -52,9 +52,9 @@ import java.util.Random;
 public class GamOriginalApiMultiformatBannerVideoNativeInApp extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-multiformat";
-    private static final String CONFIG_ID_BANNER = "prebid-ita-banner-300-250";
-    private static final String CONFIG_ID_VIDEO = "prebid-ita-video-outstream-original-api";
-    private static final String CONFIG_ID_NATIVE = "prebid-ita-banner-native-styles";
+    private static final String CONFIG_ID_BANNER = "prebid-demo-banner-300-250";
+    private static final String CONFIG_ID_VIDEO = "prebid-demo-video-outstream-original-api";
+    private static final String CONFIG_ID_NATIVE = "prebid-demo-banner-native-styles";
     private static final String CUSTOM_FORMAT_ID = "12304464";
 
     private PrebidAdUnit prebidAdUnit;
