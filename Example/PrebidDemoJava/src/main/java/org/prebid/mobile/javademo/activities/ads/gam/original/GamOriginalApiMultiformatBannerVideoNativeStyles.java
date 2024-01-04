@@ -34,9 +34,9 @@ import java.util.Random;
 public class GamOriginalApiMultiformatBannerVideoNativeStyles extends BaseAdActivity {
 
     private final String AD_UNIT_ID = "/21808260008/prebid-demo-multiformat-native-styles";
-    private final String CONFIG_ID_BANNER = "prebid-ita-banner-300-250";
-    private final String CONFIG_ID_NATIVE = "prebid-ita-banner-native-styles";
-    private final String CONFIG_ID_VIDEO = "prebid-ita-video-outstream-original-api";
+    private final String CONFIG_ID_BANNER = "prebid-demo-banner-300-250";
+    private final String CONFIG_ID_NATIVE = "prebid-demo-banner-native-styles";
+    private final String CONFIG_ID_VIDEO = "prebid-demo-video-outstream-original-api";
 
     private PrebidAdUnit prebidAdUnit;
 

@@ -34,8 +34,8 @@ import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstit
 open class GamOriginalMultiformatInterstitialFragment : BaseBidInterstitialFragment() {
 
     companion object {
-        private const val CONFIG_ID_BANNER = "prebid-ita-display-interstitial-320-480"
-        private const val CONFIG_ID_VIDEO = "prebid-ita-video-interstitial-320-480-original-api"
+        private const val CONFIG_ID_BANNER = "prebid-demo-display-interstitial-320-480"
+        private const val CONFIG_ID_VIDEO = "prebid-demo-video-interstitial-320-480-original-api"
     }
 
     private var prebidAdUnit: PrebidAdUnit? = null
