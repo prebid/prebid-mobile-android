@@ -171,9 +171,8 @@ public class BaseJSInterface implements JSInterface {
     public String getCurrentPosition() {
         JSONObject position = new JSONObject();
         Rect rect = new Rect();
-
-        adBaseView.getGlobalVisibleRect(rect);
-
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+        mainHandler.post(() -> adBaseView.getGlobalVisibleRect(rect));
         try {
             position.put(JSON_X, (int) (rect.left / Utils.DENSITY));
             position.put(JSON_Y, (int) (rect.top / Utils.DENSITY));
