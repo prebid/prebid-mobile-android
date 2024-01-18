@@ -119,9 +119,11 @@ public class BaseJSInterface implements JSInterface {
         JSONObject maxSize = new JSONObject();
         try {
             final Rect currentMaxSizeRect = screenMetrics.getCurrentMaxSizeRect();
-            maxSize.put(JSON_WIDTH, currentMaxSizeRect.width());
-            maxSize.put(JSON_HEIGHT, currentMaxSizeRect.height());
-            return maxSize.toString();
+            if (currentMaxSizeRect != null) {
+                maxSize.put(JSON_WIDTH, currentMaxSizeRect.width());
+                maxSize.put(JSON_HEIGHT, currentMaxSizeRect.height());
+                return maxSize.toString();
+            }
         }
         catch (Exception e) {
             LogUtil.error(TAG, "Failed getMaxSize() for MRAID: " + Log.getStackTraceString(e));
