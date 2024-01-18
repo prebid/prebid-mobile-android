@@ -56,6 +56,8 @@ import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 
 import java.lang.ref.WeakReference;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.RunnableFuture;
 
 @SuppressLint("NewApi")
 public class BaseJSInterface implements JSInterface {
@@ -174,8 +176,10 @@ public class BaseJSInterface implements JSInterface {
         JSONObject position = new JSONObject();
         Rect rect = new Rect();
         Handler mainHandler = new Handler(Looper.getMainLooper());
-        mainHandler.post(() -> adBaseView.getGlobalVisibleRect(rect));
+        Runnable mainThreadRunnable = () -> adBaseView.getGlobalVisibleRect(rect);
+        RunnableFuture<Void> task = new FutureTask<>(mainThreadRunnable, null);
         try {
+            mainHandler.post(task);
             position.put(JSON_X, (int) (rect.left / Utils.DENSITY));
             position.put(JSON_Y, (int) (rect.top / Utils.DENSITY));
             position.put(JSON_WIDTH, (int) (rect.right / Utils.DENSITY - rect.left / Utils.DENSITY));
