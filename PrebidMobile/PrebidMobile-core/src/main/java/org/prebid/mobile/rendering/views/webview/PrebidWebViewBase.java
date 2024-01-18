@@ -98,6 +98,7 @@ public class PrebidWebViewBase extends FrameLayout implements PreloadManager.Pre
         handler.removeCallbacksAndMessages(null);
         handler.postDelayed(new WebViewCleanupRunnable(currentWebView), WEBVIEW_DESTROY_DELAY_MS);
         webView = null;
+        mraidWebView = null;
     }
 
     public void initMraidExpanded() {
