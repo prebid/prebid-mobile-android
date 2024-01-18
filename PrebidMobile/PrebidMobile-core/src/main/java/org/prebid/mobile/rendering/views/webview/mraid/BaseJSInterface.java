@@ -180,6 +180,7 @@ public class BaseJSInterface implements JSInterface {
         RunnableFuture<Void> task = new FutureTask<>(mainThreadRunnable, null);
         try {
             mainHandler.post(task);
+            task.get();
             position.put(JSON_X, (int) (rect.left / Utils.DENSITY));
             position.put(JSON_Y, (int) (rect.top / Utils.DENSITY));
             position.put(JSON_WIDTH, (int) (rect.right / Utils.DENSITY - rect.left / Utils.DENSITY));
