@@ -56,6 +56,8 @@ import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 
 import java.lang.ref.WeakReference;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.RunnableFuture;
 
 @SuppressLint("NewApi")
 public class BaseJSInterface implements JSInterface {
@@ -119,9 +121,11 @@ public class BaseJSInterface implements JSInterface {
         JSONObject maxSize = new JSONObject();
         try {
             final Rect currentMaxSizeRect = screenMetrics.getCurrentMaxSizeRect();
-            maxSize.put(JSON_WIDTH, currentMaxSizeRect.width());
-            maxSize.put(JSON_HEIGHT, currentMaxSizeRect.height());
-            return maxSize.toString();
+            if (currentMaxSizeRect != null) {
+                maxSize.put(JSON_WIDTH, currentMaxSizeRect.width());
+                maxSize.put(JSON_HEIGHT, currentMaxSizeRect.height());
+                return maxSize.toString();
+            }
         }
         catch (Exception e) {
             LogUtil.error(TAG, "Failed getMaxSize() for MRAID: " + Log.getStackTraceString(e));
@@ -171,10 +175,12 @@ public class BaseJSInterface implements JSInterface {
     public String getCurrentPosition() {
         JSONObject position = new JSONObject();
         Rect rect = new Rect();
-
-        adBaseView.getGlobalVisibleRect(rect);
-
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+        Runnable mainThreadRunnable = () -> adBaseView.getGlobalVisibleRect(rect);
+        RunnableFuture<Void> task = new FutureTask<>(mainThreadRunnable, null);
         try {
+            mainHandler.post(task);
+            task.get();
             position.put(JSON_X, (int) (rect.left / Utils.DENSITY));
             position.put(JSON_Y, (int) (rect.top / Utils.DENSITY));
             position.put(JSON_WIDTH, (int) (rect.right / Utils.DENSITY - rect.left / Utils.DENSITY));
