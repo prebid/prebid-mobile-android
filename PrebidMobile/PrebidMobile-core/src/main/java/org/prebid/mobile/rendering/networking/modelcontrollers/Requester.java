@@ -107,7 +107,6 @@ public abstract class Requester {
                 new DestroyNetworkTaskAsyncTask().execute(networkTask);
             } else {
                 networkTask.cancel(true);
-                networkTask.destroy();
             }
         }
         networkTask = null;
