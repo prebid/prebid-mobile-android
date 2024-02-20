@@ -23,6 +23,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_NAME;
 import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_VERSION;
 import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.VIDEO_INTERSTITIAL_PLAYBACK_END;
@@ -320,6 +321,28 @@ public class BasicParameterBuilderTest {
         Imp imp = actualBidRequest.getImp().get(0);
         String gpid = (String) imp.getExt().getMap().get("gpid");
         assertEquals(expectedGpid, gpid);
+    }
+
+    @Test
+    public void setOrtbConfig_configPresentInRequest() {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        String ortbConfig = "{\"arbitraryparamkey1\":\"arbitraryparamvalue1\"}";
+        adConfiguration.setOrtbConfig(ortbConfig);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+                adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        BidRequest actualBidRequest = adRequestInput.getBidRequest();
+        try {
+            assertEquals("arbitraryparamvalue1", actualBidRequest.getJsonObject().getString("arbitraryparamkey1"));
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Test

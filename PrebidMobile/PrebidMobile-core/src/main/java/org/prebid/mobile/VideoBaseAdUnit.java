@@ -39,6 +39,11 @@ public abstract class VideoBaseAdUnit extends AdUnit {
         configuration.setVideoParameters(parameters);
     }
 
+    @Nullable
+    public String getOrtbConfig() { return configuration.getOrtbConfig(); }
+
+    public void setOrtbConfig(@Nullable String ortbConfig) { configuration.setOrtbConfig(ortbConfig);}
+
     /**
      * @deprecated use `setVideoParameters()`
      */
