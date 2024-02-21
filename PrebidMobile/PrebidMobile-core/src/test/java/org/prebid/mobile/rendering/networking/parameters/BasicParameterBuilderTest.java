@@ -31,6 +31,7 @@ import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBu
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.util.Log;
 
 import com.google.common.collect.Sets;
 
@@ -326,7 +327,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void setOrtbConfig_configPresentInRequest() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        String ortbConfig = "{\"arbitraryparamkey1\":\"arbitraryparamvalue1\"}";
+        String ortbConfig = "{\"arbitraryparamkey1\":\"arbitraryparamvalue1\",\"ext\":{\"otherExtParam\":\"otherParam\"}}";
         adConfiguration.setOrtbConfig(ortbConfig);
 
         BasicParameterBuilder builder = new BasicParameterBuilder(
@@ -340,6 +341,54 @@ public class BasicParameterBuilderTest {
         BidRequest actualBidRequest = adRequestInput.getBidRequest();
         try {
             assertEquals("arbitraryparamvalue1", actualBidRequest.getJsonObject().getString("arbitraryparamkey1"));
+            assertEquals("otherParam", actualBidRequest.getJsonObject().getJSONObject("ext").getString("otherExtParam"));
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void setOrtbConfig_invalidJSONInRequest() {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        String ortbConfig = "\"arbitraryparamkey1\":\"arbitraryparamvalue1\"}";
+        adConfiguration.setOrtbConfig(ortbConfig);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+                adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        BidRequest actualBidRequest = adRequestInput.getBidRequest();
+        try {
+            assertFalse(actualBidRequest.getJsonObject().has("arbitraryparamkey1"));;
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void setOrtbConfig_illegalParametersPresentInRequest() {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        String ortbConfig = "{\"arbitraryparamkey1\":\"arbitraryparamvalue1\", \"regs\": \"no regs here\", \"ext\":{\"gdpr\":\"no GDPR here\", \"otherExtParam\":\"otherParam\"}}";
+        adConfiguration.setOrtbConfig(ortbConfig);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+                adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        BidRequest actualBidRequest = adRequestInput.getBidRequest();
+        try {
+            assertEquals("arbitraryparamvalue1", actualBidRequest.getJsonObject().getString("arbitraryparamkey1"));
+            assertEquals("otherParam", actualBidRequest.getJsonObject().getJSONObject("ext").getString("otherExtParam"));
+            assertFalse(actualBidRequest.getJsonObject().getJSONObject("ext").has("gdpr"));
+            assertFalse(actualBidRequest.getJsonObject().has("regs"));
         } catch (Exception e) {
             fail();
         }

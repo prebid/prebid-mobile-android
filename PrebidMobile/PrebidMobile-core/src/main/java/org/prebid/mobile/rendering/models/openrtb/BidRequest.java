@@ -76,7 +76,9 @@ public class BidRequest extends BaseBid {
 
     private JSONObject mergeOrtbConfig(JSONObject bidRequestJson) {
         try {
-            assert ortbConfig != null;
+            if (ortbConfig == null) {
+                return bidRequestJson;
+            }
             JSONObject ortbConfigObject = new JSONObject(ortbConfig);
             //remove protected fields
             if (ortbConfigObject.has("regs")) {
