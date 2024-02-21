@@ -118,8 +118,15 @@ public class BidRequest extends BaseBid {
             } else {
                 // existing value for "key" - recursively deep merge:
                 if (value instanceof JSONObject) {
-                    JSONObject valueJson = (JSONObject)value;
+                    JSONObject valueJson = (JSONObject) value;
                     deepMerge(valueJson, target.getJSONObject(key));
+                } else if (value instanceof JSONArray) {
+                    if (target.get(key) instanceof JSONArray) {
+                        JSONArray sourceArray = (JSONArray) value;
+                        for (int i = 0; i < sourceArray.length(); i++) {
+                            target.getJSONArray(key).put(sourceArray.getJSONObject(i));
+                        }
+                    }
                 } else {
                     target.put(key, value);
                 }
