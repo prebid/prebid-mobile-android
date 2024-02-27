@@ -94,7 +94,6 @@ public abstract class Requester {
             if (baseNetworkTasks.length > 0) {
                 if (baseNetworkTasks[0] != null) {
                     baseNetworkTasks[0].cancel(true);
-                    baseNetworkTasks[0].destroy();
                 }
             }
             return null;
