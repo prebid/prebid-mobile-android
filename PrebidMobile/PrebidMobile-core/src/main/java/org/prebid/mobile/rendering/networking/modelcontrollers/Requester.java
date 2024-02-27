@@ -19,6 +19,7 @@ package org.prebid.mobile.rendering.networking.modelcontrollers;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.os.Looper;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -82,10 +83,30 @@ public abstract class Requester {
 
     public abstract void startAdRequest();
 
+    /**
+     * This Async task is needed because the networkTask needs to be cancelled / destroyed
+     * on a background thread or it throws a NetworkOnMainThreadException
+     **/
+    private static class DestroyNetworkTaskAsyncTask extends  AsyncTask<BaseNetworkTask, Void, Void> {
+
+        @Override
+        protected Void doInBackground(BaseNetworkTask... baseNetworkTasks) {
+            if (baseNetworkTasks.length > 0) {
+                if (baseNetworkTasks[0] != null) {
+                    baseNetworkTasks[0].cancel(true);
+                }
+            }
+            return null;
+        }
+    }
+
     public void destroy() {
         if (networkTask != null) {
-            networkTask.cancel(true);
-            networkTask.destroy();
+            if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
+                new DestroyNetworkTaskAsyncTask().execute(networkTask);
+            } else {
+                networkTask.cancel(true);
+            }
         }
         networkTask = null;
         if (fetchAdIdInfoTask != null) {
