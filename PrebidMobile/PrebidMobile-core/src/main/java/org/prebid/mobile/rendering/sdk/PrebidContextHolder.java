@@ -24,7 +24,7 @@ public class PrebidContextHolder {
         return null;
     }
 
-    @VisibleForTesting
+    @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
     public static void setContext(Context context) {
         contextReference = new WeakReference<>(context);
     }
@@ -33,7 +33,7 @@ public class PrebidContextHolder {
      * It clears Context reference and thereby SDK will skip any fetch demand calls.
      * Must be called only if initialization is failed.
      */
-    @VisibleForTesting
+    @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
     public static void clearContext() {
         contextReference = null;
     }
