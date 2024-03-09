@@ -18,6 +18,8 @@ package org.prebid.mobile.rendering.sdk;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import org.prebid.mobile.rendering.sdk.deviceData.managers.ConnectionInfoManager;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoImpl;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
@@ -57,7 +59,7 @@ public class ManagersResolver {
     /**
      * Prepare managers.
      */
-    public void prepare(Context context) {
+    public void prepare(@NonNull Context context) {
         //Try with application context or activity context
         //MOB-2205 [Research] on how we can eliminate activity context from Native ads.
         Utils.DENSITY = context.getResources().getDisplayMetrics().density;

@@ -23,6 +23,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import com.google.android.gms.security.ProviderInstaller;
@@ -68,11 +69,11 @@ public class AppInfoManager {
         sPackageName = packageName;
     }
 
-    public static void setUserAgent(String userAgent) {
+    public static void setUserAgent(@NonNull String userAgent) {
         sUserAgent = userAgent;
     }
 
-    private static void initPackageInfo(Context context) {
+    private static void initPackageInfo(@NonNull Context context) {
         if (sPackageName == null || sAppName == null) {
             try {
                 sPackageName = context.getPackageName();
@@ -98,7 +99,7 @@ public class AppInfoManager {
     // https://developer.android.com/training/articles/security-gms-provider
     // If this will be removed the publisher may face problems described here:
     // jira/browse/MOBILE-5295
-    private static void patchSecurityProviderIfNeeded(Context context) {
+    private static void patchSecurityProviderIfNeeded(@NonNull Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return;
         }
