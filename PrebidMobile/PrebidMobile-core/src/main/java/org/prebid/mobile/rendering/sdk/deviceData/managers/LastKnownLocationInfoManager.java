@@ -26,11 +26,13 @@ import android.location.Location;
 import android.location.LocationListener;
 
 import org.prebid.mobile.rendering.sdk.BaseManager;
+import org.prebid.mobile.LogUtil;
 
 public final class LastKnownLocationInfoManager extends BaseManager implements LocationInfoManager {
 
     private android.location.LocationManager locManager;
     private Location location;
+    private static final String TAG = LastKnownLocationInfoManager.class.getSimpleName();
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;
 
@@ -48,21 +50,25 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
         Location gpsLastKnownLocation = null;
         Location ntwLastKnownLocation = null;
         if (getContext() != null) {
-            locManager = (android.location.LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            try {
+                locManager = (android.location.LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
-            if (isLocationPermissionGranted() && locManager != null) {
-                gpsLastKnownLocation = locManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
-                ntwLastKnownLocation = locManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER);
-            }
+                if (isLocationPermissionGranted() && locManager != null) {
+                    gpsLastKnownLocation = locManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
+                    ntwLastKnownLocation = locManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER);
+                }
 
-            if (gpsLastKnownLocation != null) {
-                location = gpsLastKnownLocation;
+                if (gpsLastKnownLocation != null) {
+                    location = gpsLastKnownLocation;
 
-                if (ntwLastKnownLocation != null && isBetterLocation(ntwLastKnownLocation, location)) {
+                    if (ntwLastKnownLocation != null && isBetterLocation(ntwLastKnownLocation, location)) {
+                        location = ntwLastKnownLocation;
+                    }
+                } else if (ntwLastKnownLocation != null) {
                     location = ntwLastKnownLocation;
                 }
-            } else if (ntwLastKnownLocation != null) {
-                location = ntwLastKnownLocation;
+            } catch (SecurityException exception) {
+                LogUtil.warning(TAG, "Unable to access locationManager due to android firmware bug.");
             }
         }
     }
