@@ -84,7 +84,7 @@ dependencies {
 
     // Ad dependencies
     implementation 'com.google.android.gms:play-services-base:18.1.0'
-    implementation 'com.google.android.gms:play-services-ads:+'
+    implementation libs.google.play.services.ads
     implementation "com.applovin:applovin-sdk:11.3.2"
     implementation "com.google.android.gms:play-services-ads-identifier:18.0.1" // For Applovin Max
 

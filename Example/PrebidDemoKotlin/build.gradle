@@ -46,7 +46,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 
     // Advertisement
-    implementation 'com.google.android.gms:play-services-ads:+'
+    implementation libs.google.play.services.ads
     implementation "com.applovin:applovin-sdk:11.5.3"
     implementation "com.google.android.gms:play-services-ads-identifier:18.0.1" // For Applovin Max
 
