@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
@@ -85,5 +86,14 @@ public class DisplayView extends FrameLayout {
         adUnitConfiguration = null;
         displayViewListener = null;
         displayVideoListener = null;
+    }
+
+    @Nullable
+    public String getOrtbConfig() {
+        return adUnitConfiguration.getOrtbConfig();
+    }
+
+    public void setOrtbConfig(@Nullable String ortbConfig) {
+        adUnitConfiguration.setOrtbConfig(ortbConfig);
     }
 }

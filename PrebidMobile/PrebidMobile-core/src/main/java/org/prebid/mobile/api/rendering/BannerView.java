@@ -684,6 +684,15 @@ public class BannerView extends FrameLayout {
         return bidResponse;
     }
 
+    @Nullable
+    public String getOrtbConfig() {
+        return adUnitConfig.getOrtbConfig();
+    }
+
+    public void setOrtbConfig(@Nullable String ortbConfig) {
+        adUnitConfig.setOrtbConfig(ortbConfig);
+    }
+
     //region ==================== HelperMethods for Unit Tests. Should be used only in tests
     @VisibleForTesting
     final void setBidResponse(BidResponse response) {

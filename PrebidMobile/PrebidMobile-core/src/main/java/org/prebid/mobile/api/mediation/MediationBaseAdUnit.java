@@ -318,4 +318,13 @@ public abstract class MediationBaseAdUnit {
         }
     }
 
+    @Nullable
+    public String getOrtbConfig() {
+        return adUnitConfig.getOrtbConfig();
+    }
+
+    public void setOrtbConfig(@Nullable String ortbConfig) {
+        adUnitConfig.setOrtbConfig(ortbConfig);
+    }
+
 }

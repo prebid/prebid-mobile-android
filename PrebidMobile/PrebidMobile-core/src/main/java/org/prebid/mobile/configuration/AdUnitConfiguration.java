@@ -57,6 +57,8 @@ public class AdUnitConfiguration {
     private String fingerprint = Utils.generateUUIDTimeBased();
     @Nullable
     private String gpid;
+    @Nullable
+    private String ortbConfig;
 
     private Position closeButtonPosition = Position.TOP_RIGHT;
     private Position skipButtonPosition = Position.TOP_RIGHT;
@@ -538,6 +540,15 @@ public class AdUnitConfiguration {
 
     public void setGpid(@Nullable String gpid) {
         this.gpid = gpid;
+    }
+
+    @Nullable
+    public String getOrtbConfig() {
+        return ortbConfig;
+    }
+
+    public void setOrtbConfig(@Nullable String ortbConfig) {
+        this.ortbConfig = ortbConfig;
     }
 
     @Override

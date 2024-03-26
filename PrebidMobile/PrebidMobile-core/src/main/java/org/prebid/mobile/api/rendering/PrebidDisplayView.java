@@ -327,4 +327,13 @@ public class PrebidDisplayView extends FrameLayout {
         return cachedResponse;
     }
 
+    @Nullable
+    public String getOrtbConfig() {
+        return adUnitConfiguration.getOrtbConfig();
+    }
+
+    public void setOrtbConfig(@Nullable String ortbConfig) {
+        adUnitConfiguration.setOrtbConfig(ortbConfig);
+    }
+
 }

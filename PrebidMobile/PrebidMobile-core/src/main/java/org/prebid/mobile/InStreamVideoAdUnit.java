@@ -17,6 +17,7 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.prebid.mobile.api.data.AdFormat;
 
