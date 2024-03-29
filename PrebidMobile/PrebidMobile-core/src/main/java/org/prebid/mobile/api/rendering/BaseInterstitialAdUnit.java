@@ -278,6 +278,15 @@ public abstract class BaseInterstitialAdUnit {
         adUnitConfig.clearUserData();
     }
 
+    @Nullable
+    public String getOrtbConfig() {
+        return adUnitConfig.getOrtbConfig();
+    }
+
+    public void setOrtbConfig(@Nullable String ortbConfig) {
+        adUnitConfig.setOrtbConfig(ortbConfig);
+    }
+
 
     @Nullable
     public String getPbAdSlot() {

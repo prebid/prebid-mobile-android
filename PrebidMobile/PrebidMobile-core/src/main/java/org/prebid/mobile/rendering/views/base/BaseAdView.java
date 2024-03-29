@@ -20,6 +20,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import androidx.annotation.Nullable;
+
 import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
@@ -132,4 +135,15 @@ public abstract class BaseAdView extends FrameLayout {
             eventForwardingReceiver = null;
         }
     }
+
+
+    @Nullable
+    public String getOrtbConfig() {
+        return adViewManager.getAdConfiguration().getOrtbConfig();
+    }
+
+    public void setOrtbConfig(@Nullable String ortbConfig) {
+        adViewManager.getAdConfiguration().setOrtbConfig(ortbConfig);
+    }
+
 }

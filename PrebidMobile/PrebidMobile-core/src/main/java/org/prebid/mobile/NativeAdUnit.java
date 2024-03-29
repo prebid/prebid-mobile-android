@@ -1,6 +1,7 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import org.json.JSONObject;
@@ -211,5 +212,11 @@ public class NativeAdUnit extends AdUnit {
     public NativeAdUnitConfiguration getNativeConfiguration() {
         return nativeConfiguration;
     }
+
+    @Nullable
+    public String getOrtbConfig() {return configuration.getOrtbConfig();}
+
+    public void setOrtbConfig(@Nullable String ortbConfig) {configuration.setOrtbConfig(ortbConfig);}
+
 
 }

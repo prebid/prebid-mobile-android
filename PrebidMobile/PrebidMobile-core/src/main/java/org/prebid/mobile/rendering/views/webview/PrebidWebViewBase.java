@@ -27,6 +27,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
+
+import androidx.annotation.Nullable;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.listeners.WebViewDelegate;
 import org.prebid.mobile.rendering.models.HTMLCreative;

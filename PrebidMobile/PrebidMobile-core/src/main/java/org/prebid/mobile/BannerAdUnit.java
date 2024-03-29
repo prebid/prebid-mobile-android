@@ -17,6 +17,7 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
@@ -50,6 +51,15 @@ public class BannerAdUnit extends BannerBaseAdUnit {
 
     HashSet<AdSize> getSizes() {
         return configuration.getSizes();
+    }
+
+    @Nullable
+    public String getOrtbConfig() {
+        return configuration.getOrtbConfig();
+    }
+
+    public void setOrtbConfig(@Nullable String ortbConfig) {
+        configuration.setOrtbConfig(ortbConfig);
     }
 
 }
