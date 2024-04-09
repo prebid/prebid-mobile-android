@@ -83,30 +83,9 @@ public abstract class Requester {
 
     public abstract void startAdRequest();
 
-    /**
-     * This Async task is needed because the networkTask needs to be cancelled / destroyed
-     * on a background thread or it throws a NetworkOnMainThreadException
-     **/
-    private static class DestroyNetworkTaskAsyncTask extends  AsyncTask<BaseNetworkTask, Void, Void> {
-
-        @Override
-        protected Void doInBackground(BaseNetworkTask... baseNetworkTasks) {
-            if (baseNetworkTasks.length > 0) {
-                if (baseNetworkTasks[0] != null) {
-                    baseNetworkTasks[0].cancel(true);
-                }
-            }
-            return null;
-        }
-    }
-
     public void destroy() {
         if (networkTask != null) {
-            if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
-                new DestroyNetworkTaskAsyncTask().execute(networkTask);
-            } else {
-                networkTask.cancel(true);
-            }
+            networkTask.cancel(true);
         }
         networkTask = null;
         if (fetchAdIdInfoTask != null) {
