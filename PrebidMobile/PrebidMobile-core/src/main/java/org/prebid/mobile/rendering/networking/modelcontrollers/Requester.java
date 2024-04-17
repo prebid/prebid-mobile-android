@@ -19,6 +19,7 @@ package org.prebid.mobile.rendering.networking.modelcontrollers;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.os.Looper;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -85,7 +86,6 @@ public abstract class Requester {
     public void destroy() {
         if (networkTask != null) {
             networkTask.cancel(true);
-            networkTask.destroy();
         }
         networkTask = null;
         if (fetchAdIdInfoTask != null) {
