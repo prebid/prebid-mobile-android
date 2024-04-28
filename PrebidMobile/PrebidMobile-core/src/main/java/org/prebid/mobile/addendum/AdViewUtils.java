@@ -23,9 +23,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
+
 import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidNativeAd;
@@ -33,7 +35,11 @@ import org.prebid.mobile.PrebidNativeAdListener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,7 +57,7 @@ public final class AdViewUtils {
     private AdViewUtils() { }
 
     @SuppressWarnings("deprecation")
-    public static void findPrebidCreativeSize(@Nullable View adView, final PbFindSizeListener handler) {
+    public static void findPrebidCreativeSize(@Nullable View adView, @NonNull final PbFindSizeListener handler) {
 
         if (adView == null) {
             warnAndTriggerFailure(PbFindSizeErrorFactory.NO_WEB_VIEW, handler);
@@ -68,7 +74,7 @@ public final class AdViewUtils {
         findSizeInWebViewListAsync(webViewList, handler);
     }
 
-    static void triggerSuccess(WebView webView, Pair<Integer, Integer> adSize, PbFindSizeListener handler) {
+    static void triggerSuccess(@NonNull WebView webView, @NonNull Pair<Integer, Integer> adSize, @NonNull PbFindSizeListener handler) {
         final int width = adSize.first;
         final int height = adSize.second;
 
@@ -79,7 +85,7 @@ public final class AdViewUtils {
     }
     //a fix of strange bug on Android with image scaling up
     //case: should be called after PublisherAdView.setAdSizes()
-    static void fixZoomIn(final WebView webView, final int expectedWidth, final int expectedHeight) {
+    static void fixZoomIn(@NonNull final WebView webView, final int expectedWidth, final int expectedHeight) {
 
         final int minViewHeight = 10;
 
@@ -129,7 +135,7 @@ public final class AdViewUtils {
         });
     }
 
-    static void setWebViewScale(WebView webView, float webViewHeight, int webViewContentHeight) {
+    static void setWebViewScale(@NonNull WebView webView, float webViewHeight, int webViewContentHeight) {
         //case: regulate scale because WebView.getSettings().setLoadWithOverviewMode() does not work
         int scale = (int) (webViewHeight / webViewContentHeight * 100 + 1);
 
@@ -137,12 +143,12 @@ public final class AdViewUtils {
         webView.setInitialScale(scale);
     }
 
-    static void warnAndTriggerFailure(Set<Pair<WebView, PbFindSizeError>> webViewErrorSet, PbFindSizeListener handler) {
+    static void warnAndTriggerFailure(@NonNull Set<Pair<WebView, PbFindSizeError>> webViewErrorSet, @NonNull PbFindSizeListener handler) {
 
         warnAndTriggerFailure(PbFindSizeErrorFactory.getCompositeFailureError(webViewErrorSet), handler);
     }
 
-    static void warnAndTriggerFailure(PbFindSizeError error, PbFindSizeListener handler) {
+    static void warnAndTriggerFailure(@NonNull PbFindSizeError error, @NonNull PbFindSizeListener handler) {
 
         String description = error.getDescription();
         LogUtil.warning(description);
@@ -150,8 +156,7 @@ public final class AdViewUtils {
         handler.failure(error);
     }
 
-    @Nullable
-    static void recursivelyFindWebViewList(@Nullable View view, List<WebView> webViewList) {
+    static void recursivelyFindWebViewList(@Nullable View view, @NonNull List<WebView> webViewList) {
         if (view instanceof ViewGroup) {
             //ViewGroup
             ViewGroup viewGroup = (ViewGroup) view;
@@ -168,7 +173,7 @@ public final class AdViewUtils {
         }
     }
 
-    static void findSizeInWebViewListAsync(@Size(min = 1) final List<WebView> webViewList, final PbFindSizeListener handler) {
+    static void findSizeInWebViewListAsync(@NonNull @Size(min = 1) final List<WebView> webViewList, @NonNull final PbFindSizeListener handler) {
 
         int currentAndroidApi = Build.VERSION.SDK_INT;
         int necessaryAndroidApi = Build.VERSION_CODES.KITKAT;
@@ -189,7 +194,7 @@ public final class AdViewUtils {
      * and {@link PbFindSizeListener#failure(PbFindSizeError)} when size is not found inside passed WebView list
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    static void iterateWebViewListAsync(@Size(min = 1) final List<WebView> webViewList, final int index, final PbFindSizeListener handler) {
+    static void iterateWebViewListAsync(@NonNull @Size(min = 1) final List<WebView> webViewList, final int index, @NonNull final PbFindSizeListener handler) {
 
         final WebView webView = webViewList.get(index);
 
@@ -235,7 +240,7 @@ public final class AdViewUtils {
      * {@link PrebidNativeAdListener#onPrebidNativeNotValid()} (PrebidNativeAd)} when Cached Ad is found and but is invalid
      * and {@link PrebidNativeAdListener#onPrebidNativeNotFound()} ()} (PrebidNativeAd)} when Cached Ad is not found
      */
-    static void iterateWebViewListAsync(final List<WebView> webViewList, final int index, final PrebidNativeAdListener listener) {
+    static void iterateWebViewListAsync(@NonNull final List<WebView> webViewList, final int index, @NonNull final PrebidNativeAdListener listener) {
 
         final WebView webView = webViewList.get(index);
 
@@ -322,17 +327,17 @@ public final class AdViewUtils {
     }
 
     @Nullable
-    static String findHbSizeObject(String text) {
+    static String findHbSizeObject(@NonNull String text) {
         return matchAndCheck(SIZE_OBJECT_REGEX_EXPRESSION, text);
     }
 
     @Nullable
-    static String findHbSizeValue(String text) {
+    static String findHbSizeValue(@NonNull String text) {
         return matchAndCheck(SIZE_VALUE_REGEX_EXPRESSION, text);
     }
 
     @NonNull
-    static String[] matches(String regex, String text) {
+    static String[] matches(@NonNull String regex, @NonNull String text) {
 
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(text);
@@ -346,7 +351,7 @@ public final class AdViewUtils {
     }
 
     @Nullable
-    static String matchAndCheck(String regex, String text) {
+    static String matchAndCheck(@NonNull String regex, @NonNull String text) {
 
         String[] matched = matches(regex, text);
 
@@ -359,7 +364,7 @@ public final class AdViewUtils {
     }
 
     @Nullable
-    static Pair<Integer, Integer> stringToSize(String size) {
+    static Pair<Integer, Integer> stringToSize(@NonNull String size) {
         String[] sizeArr = size.split("x");
 
         if (sizeArr.length != 2) {
@@ -450,7 +455,8 @@ public final class AdViewUtils {
 
     }
 
-    static Object callMethodOnObject(Object object, String methodName, Object... params) {
+    @Nullable
+    static Object callMethodOnObject(@NonNull Object object, @NonNull String methodName, Object... params) {
         try {
             int len = params.length;
             Class<?>[] classes = new Class[len];
@@ -500,15 +506,18 @@ final class PbFindSizeErrorFactory {
     static final PbFindSizeError NO_SIZE_VALUE = getNoSizeValueError();
     static final PbFindSizeError SIZE_UNPARSED = getSizeUnparsedError();
 
+    @NonNull
     private static PbFindSizeError getUnspecifiedError() {
         return getError(UNSPECIFIED_CODE, "Unspecified error");
     }
 
+    @NonNull
     static PbFindSizeError getUnsupportedAndroidIpiError(int currentAndroidApi, int necessaryAndroidApi) {
         return getError(UNSUPPORTED_ANDROID_IPI_CODE, "AndroidAPI:" + currentAndroidApi + " doesn't support the functionality. Minimum AndroidAPI is:" + necessaryAndroidApi);
     }
 
-    static PbFindSizeError getCompositeFailureError(Set<Pair<WebView, PbFindSizeError>> errorSet) {
+    @NonNull
+    static PbFindSizeError getCompositeFailureError(@NonNull Set<Pair<WebView, PbFindSizeError>> errorSet) {
         StringBuilder result = new StringBuilder();
         result.append("There is a set of errors:\n");
 
@@ -524,32 +533,38 @@ final class PbFindSizeErrorFactory {
     }
 
     //private zone
+    @NonNull
     private static PbFindSizeError getNoWebViewError() {
         return getError(NO_WEBVIEW_CODE, "The view doesn't include WebView");
     }
 
+    @NonNull
     private static PbFindSizeError getWebViewFailedError() {
         return getError(WEBVIEW_FAILED_CODE, "The view doesn't include WebView");
     }
 
+    @NonNull
     private static PbFindSizeError getNoHtmlError() {
         return getError(NO_HTML_CODE, "The WebView doesn't have HTML");
     }
 
+    @NonNull
     private static PbFindSizeError getNoSizeObjectError() {
         return getError(NO_SIZE_OBJECT_CODE, "The HTML doesn't contain a size object");
     }
 
+    @NonNull
     private static PbFindSizeError getNoSizeValueError() {
         return getError(NO_SIZE_VALUE_CODE, "The size object doesn't contain a value");
     }
 
+    @NonNull
     private static PbFindSizeError getSizeUnparsedError() {
         return getError(SIZE_UNPARSED_CODE, "The size value has a wrong format");
     }
 
-    private static PbFindSizeError getError(final int code, final String description) {
-
+    @NonNull
+    private static PbFindSizeError getError(final int code, @NonNull final String description) {
         return new PbFindSizeError(code, description);
     }
 }

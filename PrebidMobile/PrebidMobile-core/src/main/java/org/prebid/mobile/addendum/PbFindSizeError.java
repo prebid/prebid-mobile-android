@@ -17,9 +17,11 @@
 package org.prebid.mobile.addendum;
 
 
+import androidx.annotation.NonNull;
+
 public final class PbFindSizeError extends PbError {
 
-    PbFindSizeError(int code, String description) {
+    PbFindSizeError(int code, @NonNull String description) {
         super(code, description);
     }
 }
