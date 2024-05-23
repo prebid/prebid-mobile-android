@@ -61,7 +61,6 @@ public abstract class Requester {
     protected URLBuilder urlBuilder;
     protected ResponseHandler adResponseCallBack;
     protected BaseNetworkTask networkTask;
-    protected AdIdManager.FetchAdIdInfoTask fetchAdIdInfoTask;
 
     Requester(
             AdUnitConfiguration config,
@@ -88,11 +87,7 @@ public abstract class Requester {
             networkTask.cancel(true);
         }
         networkTask = null;
-        if (fetchAdIdInfoTask != null) {
-            fetchAdIdInfoTask.cancel(true);
-        }
         adResponseCallBack = null;
-        fetchAdIdInfoTask = null;
     }
 
     protected List<ParameterBuilder> getParameterBuilders() {
@@ -131,7 +126,7 @@ public abstract class Requester {
 
         UserConsentManager userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
         if (userConsentManager.canAccessDeviceData()) {
-            fetchAdIdInfoTask = AdIdManager.initAdId(context, new AdIdFetchListener() {
+            AdIdManager.updateAdvertisingId(context, new AdIdFetchListener() {
                 @Override
                 public void adIdFetchCompletion() {
                     LogUtil.info(TAG, "Advertising id was received");

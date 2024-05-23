@@ -11,8 +11,10 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.LogUtil.PrebidLogger;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.rendering.PrebidRenderer;
+import org.prebid.mobile.rendering.listeners.AdIdFetchListener;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
+import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 
 import java.util.concurrent.ExecutorService;
@@ -62,6 +64,18 @@ public class SdkInitializer {
             ManagersResolver.getInstance().prepare(applicationContext);
 
             JSLibraryManager.getInstance(applicationContext).checkIfScriptsDownloadedAndStartDownloadingIfNot();
+
+            /*AdIdManager.initAdId(context, new AdIdFetchListener() {
+                @Override
+                public void adIdFetchCompletion() {
+                    LogUtil.info(TAG, "Advertising id was receiv ed");
+                }
+
+                @Override
+                public void adIdFetchFailure() {
+                    LogUtil.warning(TAG, "Can't get advertising id");
+                }
+            });*/
         } catch (Throwable throwable) {
             initializationNotifier.initializationFailed("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable));
             return;

@@ -32,6 +32,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.listeners.AdIdFetchListener;
 
 import java.lang.ref.WeakReference;
+import java.util.Date;
 
 public class AdIdManager {
     private static final String TAG = AdIdManager.class.getSimpleName();
@@ -42,7 +43,10 @@ public class AdIdManager {
      */
     private static final long AD_ID_TIMEOUT_MS = 3000;
 
+    private static final long AD_ID_MINIMUM_UPDATE_MS = 60000;
+
     private static volatile String sAdId = null;
+    private static Date adIdLastUpdateTime = null;
     private static boolean sLimitAdTrackingEnabled;
 
     private AdIdManager() {
@@ -77,6 +81,31 @@ public class AdIdManager {
             LogUtil.error(TAG, "Failed to initAdId: " + Log.getStackTraceString(throwable) + "\nDid you add necessary dependencies?");
         }
         return null;
+    }
+
+    /**
+     * Updates Advertising Id only if a minute has passed instead of fetching with every bid request
+     */
+    public static void updateAdvertisingId(Context context, AdIdFetchListener listener) {
+        Date now = new Date();
+        if (adIdLastUpdateTime == null) {
+            initAdId(context, listener);
+        } else {
+            if (now.getTime() - adIdLastUpdateTime.getTime() >= AD_ID_MINIMUM_UPDATE_MS) {
+                initAdId(context, new AdIdFetchListener() {
+                    @Override
+                    public void adIdFetchCompletion() {
+                        LogUtil.info(TAG, "Advertising id was received");
+                    }
+
+                    @Override
+                    public void adIdFetchFailure() {
+                        LogUtil.warning(TAG, "Can't get advertising id");
+                    }
+                });
+            }
+            listener.adIdFetchCompletion();
+        }
     }
 
     /**
@@ -130,6 +159,7 @@ public class AdIdManager {
             try {
                 AdvertisingIdClient.Info adInfo = AdvertisingIdClient.getAdvertisingIdInfo(context);
                 sAdId = adInfo.getId();
+                adIdLastUpdateTime = new Date();
                 sLimitAdTrackingEnabled = adInfo.isLimitAdTrackingEnabled();
             }
             catch (Throwable e) {
