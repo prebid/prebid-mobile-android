@@ -129,13 +129,13 @@ public abstract class Requester {
             AdIdManager.updateAdvertisingId(context, new AdIdFetchListener() {
                 @Override
                 public void adIdFetchCompletion() {
-                    LogUtil.info(TAG, "Advertising id was received");
+                    LogUtil.info(TAG, "Advertising id was loaded from cache");
                     makeAdRequest();
                 }
 
                 @Override
                 public void adIdFetchFailure() {
-                    LogUtil.warning(TAG, "Can't get advertising id");
+                    LogUtil.warning(TAG, "Can't get advertising id from cache");
                     makeAdRequest();
                 }
             });

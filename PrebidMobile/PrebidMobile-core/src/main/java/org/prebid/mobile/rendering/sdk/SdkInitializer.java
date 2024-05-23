@@ -65,17 +65,17 @@ public class SdkInitializer {
 
             JSLibraryManager.getInstance(applicationContext).checkIfScriptsDownloadedAndStartDownloadingIfNot();
 
-            /*AdIdManager.initAdId(context, new AdIdFetchListener() {
+            AdIdManager.initAdId(context, new AdIdFetchListener() {
                 @Override
                 public void adIdFetchCompletion() {
-                    LogUtil.info(TAG, "Advertising id was receiv ed");
+                    LogUtil.info(TAG, "Advertising id was received");
                 }
 
                 @Override
                 public void adIdFetchFailure() {
                     LogUtil.warning(TAG, "Can't get advertising id");
                 }
-            });*/
+            });
         } catch (Throwable throwable) {
             initializationNotifier.initializationFailed("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable));
             return;

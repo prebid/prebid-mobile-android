@@ -95,12 +95,12 @@ public class AdIdManager {
                 initAdId(context, new AdIdFetchListener() {
                     @Override
                     public void adIdFetchCompletion() {
-                        LogUtil.info(TAG, "Advertising id was received");
+                        LogUtil.info(TAG, "Advertising id was updated");
                     }
 
                     @Override
                     public void adIdFetchFailure() {
-                        LogUtil.warning(TAG, "Can't get advertising id");
+                        LogUtil.warning(TAG, "Can't update advertising id");
                     }
                 });
             }
