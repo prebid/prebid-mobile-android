@@ -59,6 +59,8 @@ public class PrebidNativeAd {
     private ArrayList<ClickTracker> clickTrackers;
     private String winEvent;
     private String impEvent;
+    @Nullable
+    private String privacyUrl;
 
 
     public static PrebidNativeAd create(String cacheId) {
@@ -154,6 +156,11 @@ public class PrebidNativeAd {
                             }
                         }
                     }
+                }
+
+                if (adm.has("privacy")) {
+                    String url = adm.getString("privacy");
+                    ad.setPrivacyUrl(url);
                 }
                 parseEvents(details, ad);
                 return ad;
@@ -281,6 +288,15 @@ public class PrebidNativeAd {
             }
         }
         return "";
+    }
+
+    @Nullable
+    public String getPrivacyUrl() {
+        return privacyUrl;
+    }
+
+    private void setPrivacyUrl(@Nullable String url) {
+        privacyUrl = url;
     }
 
     /**
