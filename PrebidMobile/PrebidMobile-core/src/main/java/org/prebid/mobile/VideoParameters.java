@@ -91,6 +91,12 @@ public class VideoParameters {
     @Nullable
     private AdSize adSize;
 
+    /**
+     * Value that indicates whether video object is skippable (ORTB v2.5)
+     */
+    @Nullable
+    private Integer skippable;
+
 
     //Getters and setters
     @Nullable
@@ -195,6 +201,15 @@ public class VideoParameters {
 
     public void setAdSize(@Nullable AdSize adSize) {
         this.adSize = adSize;
+    }
+
+    @Nullable
+    public Integer getSkippable() {
+        return skippable;
+    }
+
+    public void setSkippable(@Nullable Integer skippable) {
+        this.skippable = skippable;
     }
 
 }

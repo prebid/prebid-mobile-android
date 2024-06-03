@@ -1077,6 +1077,7 @@ public class BasicParameterBuilderTest {
         parameters.setPlaybackMethod(playbackMethods);
 
         parameters.setAdSize(new AdSize(320, 480));
+        parameters.setSkippable(1);
 
         return parameters;
     }

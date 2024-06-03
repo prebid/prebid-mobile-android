@@ -157,6 +157,7 @@ public class MultiformatAdUnitFacadeTest {
 
         VideoParameters videoParameters = new VideoParameters(Lists.newArrayList("video/mp4"));
         videoParameters.setAdSize(new AdSize(300, 250));
+        videoParameters.setSkippable(0);
         request.setVideoParameters(videoParameters);
 
 
