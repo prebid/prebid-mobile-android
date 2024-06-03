@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener;
@@ -114,6 +115,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         adUnitConfiguration.setConfigId(configId);
         adUnitConfiguration.setAdUnitFormats(adUnitFormats);
+        adUnitConfiguration.addAdFormat(AdFormat.INTERSTITIAL);
         init(adUnitConfiguration);
     }
 

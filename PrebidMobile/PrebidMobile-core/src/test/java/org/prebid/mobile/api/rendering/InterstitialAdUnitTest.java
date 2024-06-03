@@ -139,7 +139,7 @@ public class InterstitialAdUnitTest {
         assertNotNull(interstitialAdUnit);
         assertTrue(eventHandler instanceof StandaloneInterstitialEventHandler);
         assertNotNull(bidLoader);
-        assertEquals(EnumSet.of(AdFormat.VAST), interstitialAdUnit.adUnitConfig.getAdFormats());
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), interstitialAdUnit.adUnitConfig.getAdFormats());
     }
 
     @Test

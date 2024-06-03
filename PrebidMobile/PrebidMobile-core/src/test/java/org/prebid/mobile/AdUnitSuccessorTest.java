@@ -157,7 +157,7 @@ public class AdUnitSuccessorTest {
         AdUnitConfiguration configuration = (AdUnitConfiguration) adUnit.getConfiguration();
 
         assertEquals(testConfigId, configuration.getConfigId());
-        assertEquals(EnumSet.of(AdFormat.VAST), configuration.getAdFormats());
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), configuration.getAdFormats());
     }
 
     @Test
@@ -165,7 +165,7 @@ public class AdUnitSuccessorTest {
         RewardedVideoAdUnit adUnit = new RewardedVideoAdUnit(testConfigId);
         AdUnitConfiguration configuration = adUnit.getConfiguration();
         assertEquals(testConfigId, configuration.getConfigId());
-        assertEquals(EnumSet.of(AdFormat.VAST), configuration.getAdFormats());
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), configuration.getAdFormats());
     }
 
     @Test

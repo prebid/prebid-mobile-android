@@ -47,6 +47,7 @@ public class InterstitialAdUnit extends BannerBaseAdUnit {
     public InterstitialAdUnit(@NonNull String configId, EnumSet<AdUnitFormat> adUnitFormats) {
         super(configId, AdFormat.fromSet(adUnitFormats, true));
 
+        configuration.addAdFormat(AdFormat.INTERSTITIAL);
         if (adUnitFormats.contains(AdUnitFormat.VIDEO)) {
             configuration.setAdPosition(AdPosition.FULLSCREEN);
             configuration.setPlacementType(PlacementType.INTERSTITIAL);

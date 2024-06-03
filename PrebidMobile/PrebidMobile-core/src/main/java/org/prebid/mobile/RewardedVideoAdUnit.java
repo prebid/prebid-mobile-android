@@ -28,6 +28,7 @@ public class RewardedVideoAdUnit extends VideoBaseAdUnit {
 
     public RewardedVideoAdUnit(@NonNull String configId) {
         super(configId, EnumSet.of(AdFormat.VAST));
+        configuration.addAdFormat(AdFormat.INTERSTITIAL);
         configuration.setRewarded(true);
         configuration.setAdPosition(AdPosition.FULLSCREEN);
         configuration.setPlacementType(PlacementType.INTERSTITIAL);
