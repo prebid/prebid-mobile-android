@@ -31,7 +31,6 @@ import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBu
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.util.Log;
 
 import com.google.common.collect.Sets;
 
@@ -286,7 +285,8 @@ public class BasicParameterBuilderTest {
         PrebidMobile.addStoredBidResponse("bidderTest", "123456");
         PrebidMobile.setStoredAuctionResponse("storedResponse");
 
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+                adConfiguration,
                 context.getResources(),
                 browserActivityAvailable
         );
@@ -446,7 +446,7 @@ public class BasicParameterBuilderTest {
         assertEquals(1920, actualImp.video.w.intValue());
         assertEquals(1080, actualImp.video.h.intValue());
         assertEquals(VIDEO_INTERSTITIAL_PLACEMENT, actualImp.video.placement.intValue());
-        assertEquals(1, actualImp.instl.intValue());
+        assertEquals(0, actualImp.instl.intValue());
     }
 
     @Test
@@ -473,7 +473,7 @@ public class BasicParameterBuilderTest {
         assertNotNull(actualImp.video);
         assertNull(actualImp.banner);
         assertNull(actualImp.secure);
-        assertEquals(1, actualImp.instl.intValue());
+        assertEquals(0, actualImp.instl.intValue());
         assertEquals(300, actualImp.video.w.intValue());
         assertEquals(250, actualImp.video.h.intValue());
         assertNotEquals(VIDEO_INTERSTITIAL_PLACEMENT, actualImp.video.placement.intValue());
@@ -999,6 +999,54 @@ public class BasicParameterBuilderTest {
         assertEquals(((JSONObject)renderersObj.get(1)).get("name"), PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME);
     }
 
+    @Test
+    public void instlParameter_notInterstitial() {
+        List<EnumSet<AdFormat>> formatsList = Arrays.asList(
+                EnumSet.of(AdFormat.BANNER),
+                EnumSet.of(AdFormat.VAST),
+                EnumSet.of(AdFormat.BANNER, AdFormat.VAST),
+                EnumSet.of(AdFormat.NATIVE)
+        );
+        for (EnumSet<AdFormat> formats : formatsList) {
+            AdUnitConfiguration config = new AdUnitConfiguration();
+            config.setAdFormats(formats);
+
+            BidRequest actualRequest = getActualRequest(config);
+
+            Integer instl = actualRequest.getImp().get(0).instl;
+            assertEquals(Integer.valueOf(0), instl);
+        }
+    }
+
+    @Test
+    public void instlParameter_interstitial() {
+        List<EnumSet<AdFormat>> formatsList = Arrays.asList(
+                EnumSet.of(AdFormat.INTERSTITIAL),
+                EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST)
+        );
+        for (EnumSet<AdFormat> formats : formatsList) {
+            AdUnitConfiguration config = new AdUnitConfiguration();
+            config.setAdFormats(formats);
+
+            BidRequest actualRequest = getActualRequest(config);
+
+            Integer instl = actualRequest.getImp().get(0).instl;
+            assertEquals(Integer.valueOf(1), instl);
+        }
+    }
+
+    private BidRequest getActualRequest(AdUnitConfiguration config) {
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+                config,
+                context.getResources(),
+                browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        return adRequestInput.getBidRequest();
+    }
+
     private VideoParameters createFullVideoParameters() {
         ArrayList<String> mimes = new ArrayList<>(2);
         mimes.add("Mime1");
@@ -1072,8 +1120,7 @@ public class BasicParameterBuilderTest {
             imp.secure = 1;
         }
         //Send 1 for interstitial/interstitial video and 0 for banners
-        boolean isInterstitial = adConfiguration.isAdType(AdFormat.VAST) ||
-                adConfiguration.isAdType(AdFormat.INTERSTITIAL);
+        boolean isInterstitial = adConfiguration.isAdType(AdFormat.INTERSTITIAL);
         imp.instl = isInterstitial ? 1 : 0;
 
         // 0 == embedded, 1 == native
