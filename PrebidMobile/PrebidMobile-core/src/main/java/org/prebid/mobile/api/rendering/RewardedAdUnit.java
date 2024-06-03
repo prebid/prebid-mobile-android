@@ -17,7 +17,9 @@
 package org.prebid.mobile.api.rendering;
 
 import android.content.Context;
+
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -27,6 +29,8 @@ import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.RewardedEventHandler;
 import org.prebid.mobile.rendering.bidding.interfaces.StandaloneRewardedVideoEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
+
+import java.util.EnumSet;
 
 public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
@@ -109,7 +113,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
         AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         adUnitConfiguration.setConfigId(configId);
-        adUnitConfiguration.setAdFormat(AdFormat.VAST);
+        adUnitConfiguration.setAdFormats(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST));
         adUnitConfiguration.setRewarded(true);
 
         init(adUnitConfiguration);

@@ -369,7 +369,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
     private void setCommonImpValues(Imp imp, String uuid) {
         imp.id = uuid;
-        boolean isInterstitial = adConfiguration.isAdType(AdFormat.VAST) || adConfiguration.isAdType(AdFormat.INTERSTITIAL);
+        boolean isInterstitial = adConfiguration.isAdType(AdFormat.INTERSTITIAL);
         //Send 1 for interstitial/interstitial video and 0 for banners
         imp.instl = isInterstitial ? 1 : 0;
         // 0 == embedded, 1 == native
