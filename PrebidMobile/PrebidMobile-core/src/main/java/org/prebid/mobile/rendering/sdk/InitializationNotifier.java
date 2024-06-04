@@ -38,11 +38,14 @@ public class InitializationNotifier {
                 LogUtil.debug(TAG, "Prebid SDK " + PrebidMobile.SDK_VERSION + " initialized");
 
                 if (listener != null) {
+                    //allows placing of bids to occur in InitializationListener
+                    tasksCompletedSuccessfully = true;
                     listener.onInitializationComplete(InitializationStatus.SUCCEEDED);
 
                     listener.onSdkInit();
                 }
             } else {
+                tasksCompletedSuccessfully = true;
                 LogUtil.error(TAG, statusRequesterError);
 
                 if (listener != null) {
@@ -53,8 +56,6 @@ public class InitializationNotifier {
                     listener.onSdkFailedToInit(new InitError(statusRequesterError));
                 }
             }
-
-            tasksCompletedSuccessfully = true;
             initializationInProgress = false;
             listener = null;
         });
