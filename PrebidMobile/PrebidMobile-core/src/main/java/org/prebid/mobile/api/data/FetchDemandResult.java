@@ -85,7 +85,7 @@ public enum FetchDemandResult {
         if (msg.contains("Timeout")) {
             return TIMEOUT;
         }
-        if (msg.contains("Network Error")) {
+        if (msg.contains("Network Error") || msg.contains("No internet")) {
             return NETWORK_ERROR;
         }
         if (requestMatcher.find() || msg.contains("No stored request")) {
