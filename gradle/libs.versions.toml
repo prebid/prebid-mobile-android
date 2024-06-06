@@ -1,5 +1,5 @@
 [versions]
-google-play-services-ads = "22.6.0"
+google-play-services-ads = "23.1.0"
 
 [libraries]
 google-play-services-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "google-play-services-ads" }

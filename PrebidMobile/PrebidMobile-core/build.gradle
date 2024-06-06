@@ -3,6 +3,7 @@ apply from: '../publisher.gradle'
 apply from: '../tests.gradle'
 
 android {
+    namespace "org.prebid.mobile.core"
     def getGitHash = { ->
         def stdout = new ByteArrayOutputStream()
         exec {
@@ -11,7 +12,12 @@ android {
         }
         return stdout.toString().trim()
     }
-
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
     defaultConfig {
         buildConfigField "String", "GitHash", "\"${getGitHash()}\""
         buildConfigField "String", "VERSION", "\"${versionName}\""
@@ -24,10 +30,10 @@ dependencies {
 
     implementation 'androidx.annotation:annotation:1.5.0'
 
-    implementation 'com.google.android.gms:play-services-base:18.1.0'
-    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.15.1'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.15.1'
+    implementation 'com.google.android.gms:play-services-base:18.5.0'
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.1.0'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.19.1'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.19.1'
 
     implementation "androidx.localbroadcastmanager:localbroadcastmanager:1.0.0"
 }

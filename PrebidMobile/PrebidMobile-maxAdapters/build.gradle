@@ -2,6 +2,9 @@ apply from: '../android.gradle'
 apply from: '../publisher.gradle'
 apply from: '../tests.gradle'
 
+android {
+    namespace "org.prebid.mobile.max.adapters"
+}
 dependencies {
     implementation project(":PrebidMobile")
     implementation "com.applovin:applovin-sdk:11.3.2"
