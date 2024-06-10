@@ -25,13 +25,9 @@ public class MobileSdkPassThrough {
     public static MobileSdkPassThrough create(JSONObject extJson) {
         try {
             JSONObject rootJsonObject;
-            if (!BuildConfig.DEBUG) {
-                if (extJson.has("prebid")) {
-                    rootJsonObject = extJson.getJSONObject("prebid");
-                } else return null;
-            } else {
-                rootJsonObject = extJson;
-            }
+            if (extJson.has("prebid")) {
+                rootJsonObject = extJson.getJSONObject("prebid");
+            } else return null;
 
             if (rootJsonObject.has("passthrough")) {
                 JSONArray passThroughArray = rootJsonObject.getJSONArray("passthrough");
