@@ -37,7 +37,6 @@ android {
                 events "passed", "skipped", "failed", "standardOut", "standardError"
                 exceptionFormat = "full"
             }
-            jvmArgs ["--add-opens=java.base/java.lang=ALL-UNNAMED", "--add-opens=java.base/java.util=ALL-UNNAMED"]
         }
     }
 
