@@ -18,7 +18,7 @@ jobs:
     steps:
       - checkout
       - android/change-java-version:
-          java-version: 21
+          java-version: 17
       - android/start-emulator-and-run-tests:
           post-emulator-launch-assemble-command: ./gradlew PrebidDemoKotlin:assembleAndroidTest
           test-command: ./gradlew PrebidDemoKotlin:connectedDebugAndroidTest
