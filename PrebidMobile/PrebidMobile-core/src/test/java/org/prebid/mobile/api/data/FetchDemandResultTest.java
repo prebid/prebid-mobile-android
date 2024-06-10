@@ -39,6 +39,11 @@ public class FetchDemandResultTest {
     }
 
     @Test
+    public void whenParseErrorMessageAndNetworkErrorMsg_NoInternetNetworkErrorResult() {
+        assertEquals(NETWORK_ERROR, FetchDemandResult.parseErrorMessage("SDK internal error: Invalid bid response: Initialization failed: No internet connection detected"));
+    }
+
+    @Test
     public void whenParseErrorMessageAndInvalidAccountMsg_InvalidAccountIdResult() {
         assertEquals(INVALID_ACCOUNT_ID, FetchDemandResult.parseErrorMessage("Invalid request: Stored Request with ID=\"0689a263-318d-448b-a3d4-b02e8a709d9da\" not found."));
     }
