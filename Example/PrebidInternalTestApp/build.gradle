@@ -19,11 +19,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    setCompileSdkVersion(33)
+    namespace "org.prebid.mobile.renderingtestapp"
+    setCompileSdkVersion(34)
     setBuildToolsVersion("30.0.3")
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 33
+        minSdkVersion 21
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0.0"
         applicationId "org.prebid.mobile.renderingtestapp"
@@ -40,11 +41,11 @@ android {
         exclude 'LICENSE.txt'
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_21.toString()
     }
     adbOptions {
         timeOutInMs 5 * 60 * 1000 // 5 minutes

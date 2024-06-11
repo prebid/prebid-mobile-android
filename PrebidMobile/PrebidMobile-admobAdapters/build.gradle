@@ -3,8 +3,9 @@ apply from: '../publisher.gradle'
 apply from: '../tests.gradle'
 
 android {
+    namespace "org.prebid.mobile.admob.adapters"
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 21
     }
 }
 

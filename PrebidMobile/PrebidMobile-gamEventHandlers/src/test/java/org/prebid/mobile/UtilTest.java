@@ -19,7 +19,8 @@ package org.prebid.mobile;
 import android.app.Activity;
 import android.os.Bundle;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
-import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
+import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
+
 import okhttp3.mockwebserver.MockWebServer;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -402,7 +403,7 @@ public class UtilTest extends BaseSetup {
     public void testFindNativeLoadedDFP() {
         String mockedResponse = MockPrebidServerResponses.validResponsePrebidNativeNativeBid();
         String cacheId = CacheManager.save(mockedResponse);
-        NativeCustomTemplateAd nativeCustomTemplateAd = Mockito.mock(NativeCustomTemplateAd.class);
+        NativeCustomFormatAd nativeCustomTemplateAd = Mockito.mock(NativeCustomFormatAd.class);
         Mockito.when(nativeCustomTemplateAd.getText("isPrebid")).thenReturn("1");
         Mockito.when(nativeCustomTemplateAd.getText("hb_cache_id_local")).thenReturn(cacheId);
         AdViewUtils.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
@@ -427,7 +428,7 @@ public class UtilTest extends BaseSetup {
     public void testFindNativeNotValidDFP() {
         String mockedResponse = MockPrebidServerResponses.validResponsePrebidNativeNativeBid();
         String cacheId = CacheManager.save(mockedResponse);
-        NativeCustomTemplateAd nativeCustomTemplateAd = Mockito.mock(NativeCustomTemplateAd.class);
+        NativeCustomFormatAd nativeCustomTemplateAd = Mockito.mock(NativeCustomFormatAd.class);
         Mockito.when(nativeCustomTemplateAd.getText("isPrebid")).thenReturn("1");
         Mockito.when(nativeCustomTemplateAd.getText("hb_cache_id_local")).thenReturn("cacheId");
         AdViewUtils.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
@@ -452,7 +453,7 @@ public class UtilTest extends BaseSetup {
     public void testFindNativeNotFoundDFP() {
         String mockedResponse = MockPrebidServerResponses.validResponsePrebidNativeNativeBid();
         String cacheId = CacheManager.save(mockedResponse);
-        NativeCustomTemplateAd nativeCustomTemplateAd = Mockito.mock(NativeCustomTemplateAd.class);
+        NativeCustomFormatAd nativeCustomTemplateAd = Mockito.mock(NativeCustomFormatAd.class);
         Mockito.when(nativeCustomTemplateAd.getText("isPrebid")).thenReturn("0");
         Mockito.when(nativeCustomTemplateAd.getText("hb_cache_id_local")).thenReturn(cacheId);
         AdViewUtils.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
