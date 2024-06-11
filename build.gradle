@@ -1,8 +1,8 @@
 ext {
     prebidSdkVersionName = "2.2.1"
     prebidSdkMinVersion = 16
-    prebidSdkTargetVersion = 33
-    prebidSdkCompileVersion = 33
+    prebidSdkTargetVersion = 34
+    prebidSdkCompileVersion = 34
     prebidSdkBuildToolsVersion = "30.0.3"
 
     artifactGroupId = "org.prebid"
@@ -19,7 +19,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'com.android.tools.build:gradle:8.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }

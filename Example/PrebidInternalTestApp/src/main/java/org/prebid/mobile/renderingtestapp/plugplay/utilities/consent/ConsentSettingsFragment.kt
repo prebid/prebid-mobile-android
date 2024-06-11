@@ -32,9 +32,9 @@ class ConsentSettingsFragment : PreferenceFragmentCompat(), SharedPreferences.On
         getDefaultSharedPreference()?.registerOnSharedPreferenceChangeListener(this)
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
 
-        when (val preference = findPreference<Preference>(key)) {
+        when (val preference = key?.let { findPreference<Preference>(it) }) {
             is IntegerEditTextPreferenceWithValue ->
                 preference.summary = sharedPreferences?.getInt(key, -1).toString()
             is EditTextPreferenceWithValue ->
