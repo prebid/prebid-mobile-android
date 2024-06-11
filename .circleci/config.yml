@@ -14,7 +14,7 @@ jobs:
   android-test:
     executor:
       name: android/android-machine
-      tag: 2024.04.1
+      tag: 2024.04.2
     steps:
       - checkout
       - android/change-java-version:
