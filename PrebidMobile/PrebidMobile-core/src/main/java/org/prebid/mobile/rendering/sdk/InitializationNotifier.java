@@ -39,23 +39,25 @@ public class InitializationNotifier {
 
                 if (listener != null) {
                     //allows placing of bids to occur in InitializationListener
-                    tasksCompletedSuccessfully = true;
-                    listener.onInitializationComplete(InitializationStatus.SUCCEEDED);
-
-                    listener.onSdkInit();
+                    postOnMainThread(() -> {
+                        listener.onInitializationComplete(InitializationStatus.SUCCEEDED);
+                        listener.onSdkInit();
+                    });
                 }
             } else {
-                tasksCompletedSuccessfully = true;
                 LogUtil.error(TAG, statusRequesterError);
 
                 if (listener != null) {
                     InitializationStatus serverStatusWarning = InitializationStatus.SERVER_STATUS_WARNING;
                     serverStatusWarning.setDescription(statusRequesterError);
-                    listener.onInitializationComplete(serverStatusWarning);
-
-                    listener.onSdkFailedToInit(new InitError(statusRequesterError));
+                    postOnMainThread(() -> {
+                        listener.onInitializationComplete(serverStatusWarning);
+                        listener.onSdkFailedToInit(new InitError(statusRequesterError));
+                    });
                 }
             }
+
+            tasksCompletedSuccessfully = true;
             initializationInProgress = false;
             listener = null;
         });
