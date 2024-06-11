@@ -42,24 +42,25 @@ public class InitializationNotifier {
                     postOnMainThread(() -> {
                         listener.onInitializationComplete(InitializationStatus.SUCCEEDED);
                         listener.onSdkInit();
+                        listener = null;
                     });
                 }
             } else {
                 LogUtil.error(TAG, statusRequesterError);
 
                 if (listener != null) {
-                    InitializationStatus serverStatusWarning = InitializationStatus.SERVER_STATUS_WARNING;
-                    serverStatusWarning.setDescription(statusRequesterError);
                     postOnMainThread(() -> {
+                        InitializationStatus serverStatusWarning = InitializationStatus.SERVER_STATUS_WARNING;
+                        serverStatusWarning.setDescription(statusRequesterError);
                         listener.onInitializationComplete(serverStatusWarning);
                         listener.onSdkFailedToInit(new InitError(statusRequesterError));
+                        listener = null;
                     });
                 }
             }
 
             tasksCompletedSuccessfully = true;
             initializationInProgress = false;
-            listener = null;
         });
     }
 
