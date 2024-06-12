@@ -55,6 +55,8 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout
+      - android/change-java-version:
+          java-version: 11
       # And finally run the release build
       - run:
           name: Test Frameworks
