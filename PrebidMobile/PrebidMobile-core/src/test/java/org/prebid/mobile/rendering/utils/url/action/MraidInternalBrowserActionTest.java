@@ -157,7 +157,7 @@ public class MraidInternalBrowserActionTest {
     public void handleInternalBrowserActionFollowUrlSuccessAndIsVideoContent_PlayVideo() {
         String url = "https://video.mp4";
         String extension = "video/mp4";
-        shadowOf(MimeTypeMap.getSingleton()).addExtensionMimeTypMapping("mp4", extension);
+        shadowOf(MimeTypeMap.getSingleton()).addExtensionMimeTypeMapping("mp4", extension);
 
         ArgumentCaptor<RedirectUrlListener> callbackCapture = ArgumentCaptor.forClass(RedirectUrlListener.class);
         mraidInternalBrowserAction.handleInternalBrowserAction(context, mockBaseJsInterface, url);
