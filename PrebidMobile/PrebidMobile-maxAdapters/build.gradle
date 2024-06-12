@@ -13,7 +13,6 @@ android {
     }
     testOptions {
         unitTests.all {
-            jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
             systemProperty 'robolectric.invokedynamic.enable', 'false'
         }
     }
