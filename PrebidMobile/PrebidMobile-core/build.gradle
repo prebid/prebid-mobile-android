@@ -19,7 +19,13 @@ android {
         buildConfigField "String", "OMSDK_VERSION", "\"${omSdkVersion}\""
         multiDexEnabled true
     }
+    testOptions {
+        unitTests.all {
+            jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
+        }
+    }
 }
+
 
 dependencies {
     implementation project(":omsdk-android")

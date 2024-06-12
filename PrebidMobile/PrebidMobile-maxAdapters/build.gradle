@@ -11,4 +11,9 @@ android {
     defaultConfig {
         multiDexEnabled true
     }
+    testOptions {
+        unitTests.all {
+            jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
+        }
+    }
 }
