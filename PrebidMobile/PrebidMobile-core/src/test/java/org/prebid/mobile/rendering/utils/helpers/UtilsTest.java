@@ -45,6 +45,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.robolectric.annotation.LooperMode;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -59,9 +60,11 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19, qualifiers = "w1920dp-h1080dp")
+@LooperMode(LEGACY)
 public class UtilsTest extends TestCase {
 
     @Test
@@ -186,11 +189,6 @@ public class UtilsTest extends TestCase {
 
     private static void setFinalStatic(Field field, Object newValue) throws Exception {
         field.setAccessible(true);
-
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-
         field.set(null, newValue);
     }
 

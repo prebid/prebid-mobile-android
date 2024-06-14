@@ -17,10 +17,13 @@
 package org.prebid.mobile.testutils;
 
 import android.app.Activity;
+import android.os.Looper;
+
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;
 import org.junit.Before;
 import org.robolectric.Robolectric;
+import org.robolectric.annotation.LooperMode;
 import org.robolectric.shadows.httpclient.FakeHttp;
 import org.robolectric.util.Scheduler;
 
@@ -28,7 +31,9 @@ import java.io.IOException;
 
 import static org.junit.Assert.fail;
 import static org.robolectric.Shadows.shadowOf;
+import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
+@LooperMode(LEGACY)
 public class BaseSetup {
     public static final int testSDK = 21;
 
@@ -56,8 +61,8 @@ public class BaseSetup {
         uiScheduler = Robolectric.getForegroundThreadScheduler();
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
-        bgScheduler.pause();
-        uiScheduler.pause();
+        bgScheduler.unPause();
+        uiScheduler.unPause();
     }
 
     @After

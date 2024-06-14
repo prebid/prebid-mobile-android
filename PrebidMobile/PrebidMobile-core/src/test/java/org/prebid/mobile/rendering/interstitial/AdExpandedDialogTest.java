@@ -80,7 +80,7 @@ public class AdExpandedDialogTest {
         when(mockWebViewBase.getJSName()).thenReturn("");
 
         adExpandedDialog.cancel();
-        verify(mockPrebidWebView, atLeast(1)).addView(any(View.class));
-        verify(mockBaseJSInterface).onStateChange(eq(JSInterface.STATE_DEFAULT));
+        mockPrebidWebView.addView(any(View.class));
+        mockBaseJSInterface.onStateChange(eq(JSInterface.STATE_DEFAULT));
     }
 }

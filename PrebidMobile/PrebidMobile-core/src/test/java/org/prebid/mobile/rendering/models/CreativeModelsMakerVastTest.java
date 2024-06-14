@@ -41,6 +41,7 @@ import org.prebid.mobile.rendering.video.VideoCreativeModel;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.annotation.LooperMode;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -53,10 +54,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.prebid.mobile.rendering.video.VideoAdEvent.Event.AD_IMPRESSION;
+import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21, shadows = {MyShadowAsyncTask.class})
 @SuppressWarnings("unchecked")
+@LooperMode(LEGACY)
 public class CreativeModelsMakerVastTest {
 
     private AdUnitConfiguration adConfiguration;

@@ -1,6 +1,6 @@
 [versions]
 google-play-services-ads = "23.1.0"
-robolectric = "4.9.1"
+robolectric = "4.12.2"
 
 [libraries]
 google-play-services-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "google-play-services-ads" }

@@ -30,6 +30,7 @@ import org.prebid.mobile.rendering.views.webview.mraid.Views;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.annotation.LooperMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,10 +38,12 @@ import java.util.Collections;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
 @RunWith(RobolectricTestRunner.class)
 @LargeTest
 @Config(sdk = 23, qualifiers = "w800dp-h800dp-xhdpi")
+@LooperMode(LEGACY)
 public class ViewExposureCheckerTest {
 
     private Activity activity;

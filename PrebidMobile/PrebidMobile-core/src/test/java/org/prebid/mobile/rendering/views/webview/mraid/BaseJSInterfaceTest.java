@@ -39,6 +39,7 @@ import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.LOCATI
 import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.LOCATION_LON;
 import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.LOCATION_TYPE;
 import static org.robolectric.Shadows.shadowOf;
+import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
 import android.app.Activity;
 import android.content.Context;
@@ -87,6 +88,7 @@ import java.lang.reflect.Field;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
+@LooperMode(LEGACY)
 public class BaseJSInterfaceTest {
 
     private Activity testActivity;

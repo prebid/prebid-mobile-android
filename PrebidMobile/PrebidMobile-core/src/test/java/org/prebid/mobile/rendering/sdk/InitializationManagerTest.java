@@ -9,6 +9,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
+import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,8 +21,10 @@ import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.LooperMode;
 
 @RunWith(RobolectricTestRunner.class)
+@LooperMode(LEGACY)
 public class InitializationManagerTest {
 
     @Mock
