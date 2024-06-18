@@ -89,6 +89,7 @@ public class AdIdManager {
         if (adIdLastUpdateTime == null) {
             initAdId(context, listener);
         } else {
+            listener.adIdFetchCompletion();
             if (now.getTime() - adIdLastUpdateTime.getTime() >= AD_ID_MINIMUM_UPDATE_MS) {
                 initAdId(context, new AdIdFetchListener() {
                     @Override
@@ -102,7 +103,6 @@ public class AdIdManager {
                     }
                 });
             }
-            listener.adIdFetchCompletion();
         }
     }
 
