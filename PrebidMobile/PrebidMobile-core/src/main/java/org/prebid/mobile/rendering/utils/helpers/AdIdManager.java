@@ -54,7 +54,7 @@ public class AdIdManager {
     }
 
     // Wrap method execution in try / catch to avoid crashes in runtime if publisher didn't include identifier dependencies
-    public static FetchAdIdInfoTask initAdId(final Context context, final AdIdFetchListener listener) {
+    public static void initAdId(final Context context, final AdIdFetchListener listener) {
         try {
             GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
             int resultCode = apiAvailability.isGooglePlayServicesAvailable(context);
@@ -71,7 +71,6 @@ public class AdIdManager {
                         listener.adIdFetchFailure();
                     }
                 }, AD_ID_TIMEOUT_MS);
-                return getAdIdInfoTask;
             }
             else {
                 listener.adIdFetchCompletion();
@@ -80,13 +79,12 @@ public class AdIdManager {
         catch (Throwable throwable) {
             LogUtil.error(TAG, "Failed to initAdId: " + Log.getStackTraceString(throwable) + "\nDid you add necessary dependencies?");
         }
-        return null;
     }
 
     /**
      * Updates Advertising Id only if a minute has passed instead of fetching with every bid request
      */
-    public static void updateAdvertisingId(Context context, AdIdFetchListener listener) {
+    public static void fetchAdvertisingId(Context context, AdIdFetchListener listener) {
         Date now = new Date();
         if (adIdLastUpdateTime == null) {
             initAdId(context, listener);

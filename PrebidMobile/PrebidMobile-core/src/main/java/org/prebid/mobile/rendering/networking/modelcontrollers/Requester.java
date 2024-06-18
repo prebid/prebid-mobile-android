@@ -126,7 +126,7 @@ public abstract class Requester {
 
         UserConsentManager userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
         if (userConsentManager.canAccessDeviceData()) {
-            AdIdManager.updateAdvertisingId(context, new AdIdFetchListener() {
+            AdIdManager.fetchAdvertisingId(context, new AdIdFetchListener() {
                 @Override
                 public void adIdFetchCompletion() {
                     LogUtil.info(TAG, "Advertising id was loaded from cache");
