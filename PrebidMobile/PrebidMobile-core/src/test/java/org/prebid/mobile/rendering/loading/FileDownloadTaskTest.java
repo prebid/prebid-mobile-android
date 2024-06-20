@@ -26,13 +26,16 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.LooperMode;
 
 import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertNotNull;
+import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
 @RunWith(RobolectricTestRunner.class)
+@LooperMode(LEGACY)
 public class FileDownloadTaskTest {
     private BaseNetworkTask.GetUrlParams params;
     private MockWebServer server;

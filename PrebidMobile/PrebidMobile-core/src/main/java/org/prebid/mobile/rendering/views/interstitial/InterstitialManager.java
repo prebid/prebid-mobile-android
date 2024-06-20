@@ -51,7 +51,7 @@ public class InterstitialManager implements InterstitialManagerInterface {
     private InterstitialManagerMraidDelegate mraidDelegate;
     private AdViewManager.AdViewManagerInterstitialDelegate adViewManagerInterstitialDelegate;
 
-    private final Stack<View> viewStack = new Stack<>();
+    private Stack<View> viewStack = new Stack<>();
 
     public void setMraidDelegate(InterstitialManagerMraidDelegate mraidDelegate) {
         this.mraidDelegate = mraidDelegate;

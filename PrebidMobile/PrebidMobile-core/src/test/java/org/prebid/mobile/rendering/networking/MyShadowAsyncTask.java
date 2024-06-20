@@ -19,11 +19,13 @@ package org.prebid.mobile.rendering.networking;
 import android.os.AsyncTask;
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
+import org.robolectric.annotation.LooperMode;
 import org.robolectric.shadows.ShadowLegacyAsyncTask;
 
 import java.util.concurrent.Executor;
 
 @Implements(AsyncTask.class)
+@LooperMode(LooperMode.Mode.LEGACY)
 public class MyShadowAsyncTask<Params, Progress, Result>
     extends ShadowLegacyAsyncTask<Params, Progress, Result> {
 

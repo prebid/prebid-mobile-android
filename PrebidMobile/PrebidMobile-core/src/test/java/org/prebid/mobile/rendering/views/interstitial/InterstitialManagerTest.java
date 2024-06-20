@@ -53,6 +53,7 @@ import java.util.Stack;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -193,7 +194,6 @@ public class InterstitialManagerTest {
                 .set(spyInterstitialManager, mockViewStack);
 
         when(mockInterstitialViewController.getDisplayView()).thenReturn(mockDisplayView);
-
         spyInterstitialManager.addOldViewToBackStack(mockWebViewBase, "test", mockInterstitialViewController);
 
         verify(mockViewStack).push(mockDisplayView);

@@ -38,7 +38,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 19)
+@Config(sdk = 21)
 public class PublisherAdViewWrapperTest {
     private PublisherAdViewWrapper publisherAdViewWrapper;
 

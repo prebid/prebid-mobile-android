@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.prebid.mobile.rendering.networking.BaseNetworkTask.REDIRECT_TASK;
+import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
 import androidx.test.filters.Suppress;
 
@@ -32,6 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.PrebidMobile;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.LooperMode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -43,6 +45,7 @@ import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 
 @RunWith(RobolectricTestRunner.class)
+@LooperMode(LEGACY)
 public class BaseNetworkTaskTest {
 
     private MockWebServer server;

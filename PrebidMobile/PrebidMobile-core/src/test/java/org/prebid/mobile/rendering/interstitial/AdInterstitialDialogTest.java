@@ -31,13 +31,16 @@ import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.annotation.LooperMode;
 
 import java.lang.reflect.Field;
 
 import static org.mockito.Mockito.*;
+import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
+@LooperMode(LEGACY)
 public class AdInterstitialDialogTest {
 
     private AdInterstitialDialog adInterstitialDialog;

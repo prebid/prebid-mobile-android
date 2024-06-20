@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 android {
+    namespace "org.prebid.mobile"
     setCompileSdkVersion(rootProject.prebidSdkCompileVersion)
     setBuildToolsVersion(rootProject.prebidSdkBuildToolsVersion)
 
@@ -10,6 +11,7 @@ android {
         targetSdkVersion rootProject.prebidSdkTargetVersion
         versionCode 1
         versionName rootProject.prebidSdkVersionName
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -40,8 +42,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     packagingOptions {

@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -37,6 +38,7 @@ import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.annotation.LooperMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +50,7 @@ import java.util.Set;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
+@LooperMode(LEGACY)
 public class TargetingParamsTest extends BaseSetup {
 
     @Before

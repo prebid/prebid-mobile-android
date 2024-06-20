@@ -40,7 +40,7 @@ import static org.mockito.Mockito.*;
 import static org.prebid.mobile.eventhandlers.global.Constants.APP_EVENT;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 19)
+@Config(sdk = 21)
 public class RewardedAdWrapperTest {
     private RewardedAdWrapper rewardedAdWrapper;
 

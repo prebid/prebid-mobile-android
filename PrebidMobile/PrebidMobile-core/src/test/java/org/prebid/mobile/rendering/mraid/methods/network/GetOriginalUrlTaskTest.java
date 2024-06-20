@@ -31,6 +31,7 @@ import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.annotation.LooperMode;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -40,9 +41,11 @@ import java.util.Locale;
 
 import static org.junit.Assert.*;
 import static org.prebid.mobile.rendering.networking.BaseNetworkTask.REDIRECT_TASK;
+import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 25)
+@LooperMode(LEGACY)
 public class GetOriginalUrlTaskTest {
 
     private boolean success;

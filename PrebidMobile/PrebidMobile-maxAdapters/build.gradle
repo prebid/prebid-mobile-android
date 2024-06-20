@@ -6,3 +6,15 @@ dependencies {
     implementation project(":PrebidMobile")
     implementation "com.applovin:applovin-sdk:11.3.2"
 }
+android {
+    namespace "org.prebid.mobile.max.adapters"
+    defaultConfig {
+        multiDexEnabled true
+    }
+    testOptions {
+        unitTests.all {
+            jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
+            systemProperty 'robolectric.invokedynamic.enable', 'false'
+        }
+    }
+}
