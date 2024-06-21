@@ -16,11 +16,19 @@
 
 package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 
+import android.os.Build;
+
+import androidx.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 
 public class Device extends BaseBid {
+
+    @Nullable
+    private static String deviceName = null;
 
     // User Agent
     public String ua = null;
@@ -37,10 +45,7 @@ public class Device extends BaseBid {
     public String model = null;
     public String os = null;
     public String osv = null;
-
-    //TODO: ORTB2.5: detect this? How?
-    //Hardware version of the device (e.g., “5S” for iPhone 5S).
-    public String hwv = null;
+    public String hwv = getDeviceName();
 
     public String flashver = null;
     public String language = null;
@@ -126,6 +131,66 @@ public class Device extends BaseBid {
             ext = new Ext();
         }
         return ext;
+    }
+
+    @Nullable
+    private static String getDeviceName() {
+        if (deviceName == null) {
+            deviceName = parseDeviceName();
+            if (deviceName.isBlank()) return null;
+            return deviceName;
+        }
+
+        if (deviceName.isBlank()) {
+            return null;
+        }
+
+        return deviceName;
+    }
+
+    private static String parseDeviceName() {
+        try {
+            String manufacturer = Build.MANUFACTURER;
+            String model = Build.MODEL;
+
+            if (manufacturer.equals(Build.UNKNOWN)) {
+                manufacturer = "";
+            }
+            if (model.equals(Build.UNKNOWN)) {
+                model = "";
+            }
+
+            String result;
+            if (manufacturer.isBlank() && model.isBlank()) {
+                result = "";
+            } else if (model.isBlank()) {
+                result = manufacturer;
+            } else if (manufacturer.isBlank()) {
+                result = model;
+            } else {
+                if (model.toLowerCase().startsWith(manufacturer.toLowerCase())) {
+                    result = model;
+                } else {
+                    result = manufacturer + " " + model;
+                }
+            }
+            return capitalizeFirstLetter(result);
+        } catch (Throwable any) {
+            LogUtil.error("Can't get device name: " + any.getMessage());
+        }
+        return "";
+    }
+
+    private static String capitalizeFirstLetter(String s) {
+        if (s == null || s.isEmpty()) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
     }
 
     public enum DeviceType {
