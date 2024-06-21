@@ -130,13 +130,23 @@ public abstract class Requester {
                 @Override
                 public void adIdFetchCompletion() {
                     LogUtil.info(TAG, "Advertising id was loaded from cache");
-                    makeAdRequest();
+                    try {
+                        makeAdRequest();
+                    } catch (Exception e) {
+                        LogUtil.info(TAG,
+                                "makeAdRequest() failed because Requester object doesn't exist");
+                    }
                 }
 
                 @Override
                 public void adIdFetchFailure() {
                     LogUtil.warning(TAG, "Can't get advertising id from cache");
-                    makeAdRequest();
+                    try {
+                        makeAdRequest();
+                    } catch (Exception e) {
+                        LogUtil.info(TAG,
+                                "makeAdRequest() failed because Requester object doesn't exist");
+                    }
                 }
             });
         } else {

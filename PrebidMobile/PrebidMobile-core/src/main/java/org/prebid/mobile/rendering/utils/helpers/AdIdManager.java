@@ -89,7 +89,15 @@ public class AdIdManager {
         if (adIdLastUpdateTime == null) {
             initAdId(context, listener);
         } else {
-            listener.adIdFetchCompletion();
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    if (listener != null) {
+                        listener.adIdFetchCompletion();
+                    }
+                    return null;
+                }
+            }.execute();
             if (now.getTime() - adIdLastUpdateTime.getTime() >= AD_ID_MINIMUM_UPDATE_MS) {
                 initAdId(context, new AdIdFetchListener() {
                     @Override
