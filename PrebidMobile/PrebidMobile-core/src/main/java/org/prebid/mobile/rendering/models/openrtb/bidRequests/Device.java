@@ -137,6 +137,7 @@ public class Device extends BaseBid {
     private static String getDeviceName() {
         if (deviceName == null) {
             deviceName = parseDeviceName();
+            if (deviceName.isBlank()) return null;
             return deviceName;
         }
 
