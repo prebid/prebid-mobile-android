@@ -23,6 +23,9 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.AdSize;
@@ -301,27 +304,32 @@ public class BasicParameterBuilder extends ParameterBuilder {
             }
         }
 
+        setVideoDimensionsTo(video);
+        video.delivery = new int[]{VIDEO_DELIVERY_DOWNLOAD};
+
+        imp.video = video;
+    }
+
+    private void setVideoDimensionsTo(@NonNull Video video) {
         VideoParameters videoParams = adConfiguration.getVideoParameters();
-        if (videoParams != null) {
-            AdSize adSize = videoParams.getAdSize();
-            if (adSize != null) {
-                video.w = adSize.getWidth();
-                video.h = adSize.getHeight();
-            }
+        @Nullable AdSize adSize = null;
+        if (videoParams != null && videoParams.getAdSize() != null) {
+            adSize = videoParams.getAdSize();
         } else if (!adConfiguration.getSizes().isEmpty()) {
             for (AdSize size : adConfiguration.getSizes()) {
-                video.w = size.getWidth();
-                video.h = size.getHeight();
+                adSize = size;
                 break;
             }
+        }
+
+        if (adSize != null) {
+            video.w = adSize.getWidth();
+            video.h = adSize.getHeight();
         } else if (resources != null) {
             Configuration deviceConfiguration = resources.getConfiguration();
             video.w = deviceConfiguration.screenWidthDp;
             video.h = deviceConfiguration.screenHeightDp;
         }
-        video.delivery = new int[]{VIDEO_DELIVERY_DOWNLOAD};
-
-        imp.video = video;
     }
 
     private void setBannerImpValues(Imp imp) {
