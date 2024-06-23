@@ -43,6 +43,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.AdSize;
+import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.BannerParameters;
 import org.prebid.mobile.DataObject;
 import org.prebid.mobile.ExternalUserId;
@@ -134,6 +135,30 @@ public class BasicParameterBuilderTest {
         PrebidMobile.setStoredAuctionResponse(null);
 
         PrebidMobile.unregisterPluginRenderer(otherPlugin);
+    }
+
+    @Test
+    public void banner_videoDimensionsNotSet_allImpsHaveDimensions() throws JSONException {
+        final BannerAdUnit adUnit = new BannerAdUnit(
+                "unitId",
+                300,
+                250,
+                EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO)
+        );
+        final VideoParameters videoParameters = new VideoParameters(Lists.newArrayList("video/mp4"));
+        adUnit.setVideoParameters(videoParameters);
+
+        final BidRequest bidRequest = configIntoBidRequest(adUnit.getConfiguration());
+
+        Imp imp = bidRequest.getImp().get(0);
+        assertNotNull(imp);
+        Banner banner = imp.banner;
+        assertNotNull(banner);
+        assertEquals("{\"format\":[{\"w\":300,\"h\":250}]}", banner.getJsonObject().toString());
+
+        Video video = imp.video;
+        assertNotNull(video);
+        assertEquals("{\"delivery\":[3],\"w\":300,\"h\":250,\"mimes\":[\"video\\/mp4\"]}", video.getJsonObject().toString());
     }
 
     @Test
