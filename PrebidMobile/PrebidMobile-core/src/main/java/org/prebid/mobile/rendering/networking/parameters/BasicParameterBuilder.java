@@ -304,13 +304,13 @@ public class BasicParameterBuilder extends ParameterBuilder {
             }
         }
 
-        setVideoDimensionsTo(video);
+        setVideoDimensions(video);
         video.delivery = new int[]{VIDEO_DELIVERY_DOWNLOAD};
 
         imp.video = video;
     }
 
-    private void setVideoDimensionsTo(@NonNull Video video) {
+    private void setVideoDimensions(@NonNull Video video) {
         VideoParameters videoParams = adConfiguration.getVideoParameters();
         @Nullable AdSize adSize = null;
         if (videoParams != null && videoParams.getAdSize() != null) {
