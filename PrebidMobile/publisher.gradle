@@ -2,13 +2,17 @@ task javadoc(type: Javadoc, dependsOn: assemble) {
     source = android.sourceSets.main.java.srcDirs
     source += file('build/generated/source/buildConfig/release/org/prebid/mobile/core/BuildConfig.java').path
 
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += project.files(project.android.getBootClasspath())
 
     options.addBooleanOption('-ignore-source-errors', true)
     options.addStringOption('Xdoclint:none', '-quiet')
     options.addStringOption('encoding', 'UTF-8')
     options.addStringOption('charSet', 'UTF-8')
+    afterEvaluate {
+        tasks.javadoc.classpath += files(project.android.getBootClasspath())
+    }
 }
+
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     archiveClassifier.set("javadoc")
