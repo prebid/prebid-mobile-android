@@ -138,13 +138,9 @@ public class Prebid {
             Utils.addValue(targeting, "includeformat", "true");
         }
 
-        if(PrebidMobile.getIncludeWinnersFlag()){
-            Utils.addValue(targeting, "includewinners", "true");
-        }
+        Utils.addValue(targeting, "includewinners", PrebidMobile.getIncludeWinnersFlag().toString());
 
-        if(PrebidMobile.getIncludeBidderKeysFlag()){
-            Utils.addValue(targeting, "includebidderkeys", "true");
-        }
+        Utils.addValue(targeting, "includebidderkeys", PrebidMobile.getIncludeBidderKeysFlag().toString()); 
 
         Utils.addValue(prebid, "targeting", targeting);
 
