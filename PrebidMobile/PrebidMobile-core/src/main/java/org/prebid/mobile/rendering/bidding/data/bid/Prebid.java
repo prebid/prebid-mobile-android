@@ -137,10 +137,16 @@ public class Prebid {
         if (config.isOriginalAdUnit() && config.getAdFormats().size() > 1) {
             Utils.addValue(targeting, "includeformat", "true");
         }
+        
+        if (PrebidMobile.includeWinnersFlagIsSet())
+        {
+            Utils.addValue(targeting, "includewinners", PrebidMobile.getIncludeWinnersFlag().toString());
+        }
 
-        Utils.addValue(targeting, "includewinners", PrebidMobile.getIncludeWinnersFlag().toString());
-
-        Utils.addValue(targeting, "includebidderkeys", PrebidMobile.getIncludeBidderKeysFlag().toString()); 
+        if(PrebidMobile.includeBidderKeysFlagIsSet())
+        {
+            Utils.addValue(targeting, "includebidderkeys", PrebidMobile.getIncludeBidderKeysFlag().toString()); 
+        }
 
         Utils.addValue(prebid, "targeting", targeting);
 

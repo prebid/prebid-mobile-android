@@ -128,7 +128,9 @@ public class PrebidMobile {
     private static final Map<String, String> storedBidResponses = new LinkedHashMap<>();
     private static List<ExternalUserId> externalUserIds = new ArrayList<>();
     private static HashMap<String, String> customHeaders = new HashMap<>();
+    private static boolean includeWinnersIsSet = false;
     private static boolean includeWinners = false;
+    private static boolean includeBidderKeysIsSet = false;
     private static boolean includeBidderKeys = false;
 
     private static final int DEFAULT_BANNER_TIMEOUT = 6 * 1000;
@@ -381,7 +383,14 @@ public class PrebidMobile {
     public static String getCustomStatusEndpoint() {
         return customStatusEndpoint;
     }
+
+    public static void includeWinnersFlagIsSet()
+    {
+        return includeWinnersIsSet;
+    }
+
     public static void setIncludeWinnersFlag(boolean includeWinners) {
+        includeWinnersIsSet = true;
         PrebidMobile.includeWinners = includeWinners;
     }
 
@@ -389,7 +398,13 @@ public class PrebidMobile {
         return PrebidMobile.includeWinners;
     }
 
+    public static void includeBidderKeysFlagIsSet()
+    {
+        return includeBidderKeysIsSet;
+    }
+
     public static boolean setIncludeBidderKeysFlag(boolean includeBidderKeys) {
+        includeBidderKeysIsSet = true;
         return PrebidMobile.includeBidderKeys = includeBidderKeys;
     }
 
