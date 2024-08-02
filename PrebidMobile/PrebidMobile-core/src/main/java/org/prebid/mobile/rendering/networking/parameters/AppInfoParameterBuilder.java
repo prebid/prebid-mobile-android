@@ -52,9 +52,11 @@ public class AppInfoParameterBuilder extends ParameterBuilder {
             app.ver = appVersion;
         }
 
-        String bundle = AppInfoManager.getPackageName();
+        String bundle = TargetingParams.getBundleName();
         if (Utils.isNotBlank(bundle)) {
             app.bundle = bundle;
+        } else if (Utils.isNotBlank(AppInfoManager.getPackageName())) {
+            app.bundle = AppInfoManager.getPackageName();
         }
 
         String storeUrl = TargetingParams.getStoreUrl();

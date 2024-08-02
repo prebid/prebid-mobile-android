@@ -70,6 +70,7 @@ public class AppInfoParameterBuilderTest {
         TargetingParams.setPublisherName(expectedPublisherName);
         TargetingParams.setStoreUrl(expectedStoreurl);
         TargetingParams.setDomain(expectedDomain);
+        TargetingParams.setBundleName(APP_BUNDLE);
 
         builder.appendBuilderParameters(adRequestInput);
 
