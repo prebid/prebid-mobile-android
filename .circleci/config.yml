@@ -79,7 +79,7 @@ jobs:
       # And finally run the release build
       - run:
           name: Test Frameworks
-          command:
+          command: |
             ./gradlew :PrebidMobile:combinedJavadoc
             git checkout docs
             cp -r PrebidMobile/build/combinedJavadoc docs
