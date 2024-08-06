@@ -82,8 +82,8 @@ jobs:
           command: |
             ./gradlew :PrebidMobile:combinedJavadoc
             git checkout docs
-            cp -r PrebidMobile/build/combinedJavadoc docs
             rm -rf docs
+            cp -r PrebidMobile/build/combinedJavadoc docs
             git add ./docs
             git push
       - store_artifacts:
