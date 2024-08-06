@@ -1,0 +1,12 @@
+com.applovin.mediation.adapters
+org.prebid.mobile
+org.prebid.mobile.admob
+org.prebid.mobile.api.data
+org.prebid.mobile.api.exceptions
+org.prebid.mobile.api.mediation
+org.prebid.mobile.api.mediation.listeners
+org.prebid.mobile.api.original
+org.prebid.mobile.api.rendering
+org.prebid.mobile.api.rendering.listeners
+org.prebid.mobile.api.rendering.pluginrenderer
+org.prebid.mobile.eventhandlers
