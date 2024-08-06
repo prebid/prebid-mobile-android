@@ -81,10 +81,13 @@ jobs:
           name: Test Frameworks
           command: |
             ./gradlew :PrebidMobile:combinedJavadoc
+            git config --local user.name "CircleCI" && git config --local user.email "valentin.petrovich@postindustria.com"
             git checkout docs
+            git pull --rebase 
             rm -rf docs
             cp -r PrebidMobile/build/combinedJavadoc docs
             git add ./docs
+            git commit -m "Javadoc publication"
             git push
       - store_artifacts:
           path: ./PrebidMobile/build/combinedJavadoc
