@@ -4,3 +4,29 @@ apply from: 'publisher.gradle'
 dependencies {
     api project(':PrebidMobile-core')
 }
+
+task combinedJavadoc(type: Javadoc, dependsOn: assemble) {
+    var sourcePaths = project(":PrebidMobile-core").files("src/main/java")
+            .plus(project(":PrebidMobile-admobAdapters").files("src/main/java"))
+            .plus(project(":PrebidMobile-gamEventHandlers").files("src/main/java"))
+            .plus(project(":PrebidMobile-maxAdapters").files("src/main/java"))
+    source = sourcePaths
+
+    destinationDir = file("$projectDir/build/combinedJavadoc")
+    failOnError false
+    options.addBooleanOption('-ignore-source-errors', true)
+
+    exclude("**/com/applovin/mediation/adapters/prebid/**")
+    exclude("**/org/prebid/mobile/addendum**")
+    exclude("**/org/prebid/mobile/configuration**")
+    exclude("**/org/prebid/mobile/http**")
+    exclude("**/org/prebid/mobile/tasksmanager**")
+    exclude("**/org/prebid/mobile/rendering**")
+    exclude("**/org/prebid/mobile/eventhandlers/utils**")
+    exclude("**/org/prebid/mobile/eventhandlers/global**")
+
+    // Boot class path fix
+    afterEvaluate {
+        tasks.combinedJavadoc.classpath += files(android.getBootClasspath())
+    }
+}
