@@ -81,7 +81,11 @@ jobs:
           name: Test Frameworks
           command:
             ./gradlew :PrebidMobile:combinedJavadoc
-
+            git checkout docs
+            cp -r PrebidMobile/build/combinedJavadoc docs
+            rm -r docs
+            git add ./docs
+            git push
       - store_artifacts:
           path: ./PrebidMobile/build/combinedJavadoc
 
