@@ -79,7 +79,8 @@ jobs:
       # And finally run the release build
       - run:
           name: Test Frameworks
-          command: ./gradlew :PrebidMobile:combinedJavadoc
+          command:
+            ./gradlew :PrebidMobile:combinedJavadoc
 
       - store_artifacts:
           path: ./PrebidMobile/build/combinedJavadoc
@@ -103,3 +104,6 @@ workflows:
           name: Run Unit Tests - Prebid Mobile
       - android-test:
           name: Run Smoke UI Tests - Demo App Kotlin - Android 11
+      # TODO: Move to release branch only
+      - generate-documentation:
+          name: Generating documentation
