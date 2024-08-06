@@ -6,15 +6,19 @@ dependencies {
 }
 
 task combinedJavadoc(type: Javadoc, dependsOn: assemble) {
+    title = """
+        <h1>Prebid Mobile Android SDK</h1>
+        <p>Documentation to the public API.</p>
+    """
+
     var sourcePaths = project(":PrebidMobile-core").files("src/main/java")
             .plus(project(":PrebidMobile-admobAdapters").files("src/main/java"))
             .plus(project(":PrebidMobile-gamEventHandlers").files("src/main/java"))
             .plus(project(":PrebidMobile-maxAdapters").files("src/main/java"))
     source = sourcePaths
-
     destinationDir = file("$projectDir/build/combinedJavadoc")
-    failOnError false
     options.addBooleanOption('-ignore-source-errors', true)
+    failOnError false
 
     exclude("**/com/applovin/mediation/adapters/prebid/**")
     exclude("**/org/prebid/mobile/addendum**")
