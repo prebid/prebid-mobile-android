@@ -78,6 +78,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">PrebidMobile</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Main class for managing Prebid SDK. It allows to initialize, set log level
+ and manage internal behaviour.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -202,7 +204,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#containsPluginRenderer(org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer)" class="member-name-link">containsPluginRenderer</a><wbr>(<a href="api/rendering/pluginrenderer/PrebidMobilePluginRenderer.html" title="interface in org.prebid.mobile.api.rendering.pluginrenderer">PrebidMobilePluginRenderer</a>&nbsp;prebidMobilePluginRenderer)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Return whether SDK already registered this renderer.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static android.content.Context</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#getApplicationContext()" class="member-name-link">getApplicationContext</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
@@ -211,7 +215,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getCreativeFactoryTimeout()" class="member-name-link">getCreativeFactoryTimeout</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Priority Policy: PBSConfig > SDKConfig > Default</div>
+<div class="block"><a href="#setCreativeFactoryTimeout(int)"><code>setCreativeFactoryTimeout(int)</code></a></div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getCreativeFactoryTimeoutPreRenderContent()" class="member-name-link">getCreativeFactoryTimeoutPreRenderContent</a>()</code></div>
@@ -225,10 +229,14 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="LogUtil.PrebidLogger.html" title="interface in org.prebid.mobile">LogUtil.PrebidLogger</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getCustomLogger()" class="member-name-link">getCustomLogger</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block"><a href="#setCustomLogger(org.prebid.mobile.LogUtil.PrebidLogger)"><code>setCustomLogger(PrebidLogger)</code></a></div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getCustomStatusEndpoint()" class="member-name-link">getCustomStatusEndpoint</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block"><a href="#setCustomStatusEndpoint(java.lang.String)"><code>setCustomStatusEndpoint(String)</code></a></div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ExternalUserId.html" title="class in org.prebid.mobile">ExternalUserId</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getExternalUserIds()" class="member-name-link">getExternalUserIds</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -236,13 +244,19 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getIncludeBidderKeysFlag()" class="member-name-link">getIncludeBidderKeysFlag</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block"><a href="#setIncludeBidderKeysFlag(boolean)"><code>setIncludeBidderKeysFlag(boolean)</code></a></div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getIncludeWinnersFlag()" class="member-name-link">getIncludeWinnersFlag</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block"><a href="#setIncludeWinnersFlag(boolean)"><code>setIncludeWinnersFlag(boolean)</code></a></div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="PrebidMobile.LogLevel.html" title="enum class in org.prebid.mobile">PrebidMobile.LogLevel</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getLogLevel()" class="member-name-link">getLogLevel</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block"><a href="#setLogLevel(org.prebid.mobile.PrebidMobile.LogLevel)"><code>setLogLevel(LogLevel)</code></a></div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static PBSConfig</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPbsConfig()" class="member-name-link">getPbsConfig</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -257,13 +271,17 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStoredAuctionResponse()" class="member-name-link">getStoredAuctionResponse</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block"><a href="#setStoredAuctionResponse(java.lang.String)"><code>setStoredAuctionResponse(String)</code></a></div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStoredBidResponses()" class="member-name-link">getStoredBidResponses</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTimeoutMillis()" class="member-name-link">getTimeoutMillis</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block"><a href="#setTimeoutMillis(int)"><code>setTimeoutMillis(int)</code></a>.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#initializeSdk(android.content.Context,SdkInitializationListener)" class="member-name-link">initializeSdk</a><wbr>(android.content.Context&nbsp;context,
  SdkInitializationListener&nbsp;listener)</code></div>
@@ -277,19 +295,29 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isShareGeoLocation()" class="member-name-link">isShareGeoLocation</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block"><a href="#setShareGeoLocation(boolean)"><code>setShareGeoLocation(boolean)</code></a></div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isUseCacheForReportingWithRenderingApi()" class="member-name-link">isUseCacheForReportingWithRenderingApi</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block"><code>useCacheForReportingWithRenderingApi</code></div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerPluginRenderer(org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer)" class="member-name-link">registerPluginRenderer</a><wbr>(<a href="api/rendering/pluginrenderer/PrebidMobilePluginRenderer.html" title="interface in org.prebid.mobile.api.rendering.pluginrenderer">PrebidMobilePluginRenderer</a>&nbsp;prebidMobilePluginRenderer)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers plugin renderer for displaying ad in custom wrapper.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCreativeFactoryTimeout(int)" class="member-name-link">setCreativeFactoryTimeout</a><wbr>(int&nbsp;creativeFactoryTimeout)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sets creative factory timeout.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCreativeFactoryTimeoutPreRenderContent(int)" class="member-name-link">setCreativeFactoryTimeoutPreRenderContent</a><wbr>(int&nbsp;creativeFactoryTimeoutPreRenderContent)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sets creative factory timeout for prerender content.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCustomHeaders(java.util.HashMap)" class="member-name-link">setCustomHeaders</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;customHeaders)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -297,7 +325,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCustomLogger(org.prebid.mobile.LogUtil.PrebidLogger)" class="member-name-link">setCustomLogger</a><wbr>(<a href="LogUtil.PrebidLogger.html" title="interface in org.prebid.mobile">LogUtil.PrebidLogger</a>&nbsp;logger)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sets custom logger for the SDK.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCustomStatusEndpoint(java.lang.String)" class="member-name-link">setCustomStatusEndpoint</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -310,13 +340,19 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setIncludeBidderKeysFlag(boolean)" class="member-name-link">setIncludeBidderKeysFlag</a><wbr>(boolean&nbsp;includeBidderKeys)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sets 'includebidderkeys' parameter for ad request to receive additional info about bidders.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setIncludeWinnersFlag(boolean)" class="member-name-link">setIncludeWinnersFlag</a><wbr>(boolean&nbsp;includeWinners)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sets 'includewinners' parameter for ad request to receive additional info about winners in response.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setLogLevel(org.prebid.mobile.PrebidMobile.LogLevel)" class="member-name-link">setLogLevel</a><wbr>(<a href="PrebidMobile.LogLevel.html" title="enum class in org.prebid.mobile">PrebidMobile.LogLevel</a>&nbsp;logLevel)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sets log level for the SDK.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setPbsConfig(PBSConfig)" class="member-name-link">setPbsConfig</a><wbr>(PBSConfig&nbsp;pbsConfig)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -331,22 +367,32 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setShareGeoLocation(boolean)" class="member-name-link">setShareGeoLocation</a><wbr>(boolean&nbsp;share)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Allows the SDK to share geolocation if permission is granted by the user.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setStoredAuctionResponse(java.lang.String)" class="member-name-link">setStoredAuctionResponse</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;storedAuctionResponse)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sets stored auction response for testing purposes.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setTimeoutMillis(int)" class="member-name-link">setTimeoutMillis</a><wbr>(int&nbsp;timeoutMillis)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sets connection timeout for bid request.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setUseCacheForReportingWithRenderingApi(boolean)" class="member-name-link">setUseCacheForReportingWithRenderingApi</a><wbr>(boolean&nbsp;useCacheForReportingWithRenderingApi)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sets boolean for caching ad for rendering API.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shouldAssignNativeAssetID()" class="member-name-link">shouldAssignNativeAssetID</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unregisterPluginRenderer(org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer)" class="member-name-link">unregisterPluginRenderer</a><wbr>(<a href="api/rendering/pluginrenderer/PrebidMobilePluginRenderer.html" title="interface in org.prebid.mobile.api.rendering.pluginrenderer">PrebidMobilePluginRenderer</a>&nbsp;prebidMobilePluginRenderer)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Remove plugin renderer.</div>
+</div>
 </div>
 </div>
 </div>
@@ -536,24 +582,32 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="isUseCacheForReportingWithRenderingApi()">
 <h3>isUseCacheForReportingWithRenderingApi</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isUseCacheForReportingWithRenderingApi</span>()</div>
+<div class="block"><code>useCacheForReportingWithRenderingApi</code></div>
 </section>
 </li>
 <li>
 <section class="detail" id="setUseCacheForReportingWithRenderingApi(boolean)">
 <h3>setUseCacheForReportingWithRenderingApi</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setUseCacheForReportingWithRenderingApi</span><wbr><span class="parameters">(boolean&nbsp;useCacheForReportingWithRenderingApi)</span></div>
+<div class="block">Sets boolean for caching ad for rendering API.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>useCacheForReportingWithRenderingApi</code> - </dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getTimeoutMillis()">
 <h3>getTimeoutMillis</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getTimeoutMillis</span>()</div>
+<div class="block"><a href="#setTimeoutMillis(int)"><code>setTimeoutMillis(int)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="setTimeoutMillis(int)">
 <h3>setTimeoutMillis</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setTimeoutMillis</span><wbr><span class="parameters">(int&nbsp;timeoutMillis)</span></div>
+<div class="block">Sets connection timeout for bid request.</div>
 </section>
 </li>
 <li>
@@ -584,12 +638,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setShareGeoLocation(boolean)">
 <h3>setShareGeoLocation</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setShareGeoLocation</span><wbr><span class="parameters">(boolean&nbsp;share)</span></div>
+<div class="block">Allows the SDK to share geolocation if permission is granted by the user.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="isShareGeoLocation()">
 <h3>isShareGeoLocation</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isShareGeoLocation</span>()</div>
+<div class="block"><a href="#setShareGeoLocation(boolean)"><code>setShareGeoLocation(boolean)</code></a></div>
 </section>
 </li>
 <li>
@@ -666,12 +722,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setStoredAuctionResponse(java.lang.String)">
 <h3>setStoredAuctionResponse</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setStoredAuctionResponse</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;storedAuctionResponse)</span></div>
+<div class="block">Sets stored auction response for testing purposes.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="getStoredAuctionResponse()">
 <h3>getStoredAuctionResponse</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getStoredAuctionResponse</span>()</div>
+<div class="block"><a href="#setStoredAuctionResponse(java.lang.String)"><code>setStoredAuctionResponse(String)</code></a></div>
 </section>
 </li>
 <li>
@@ -734,24 +792,28 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getLogLevel()">
 <h3>getLogLevel</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="PrebidMobile.LogLevel.html" title="enum class in org.prebid.mobile">PrebidMobile.LogLevel</a></span>&nbsp;<span class="element-name">getLogLevel</span>()</div>
+<div class="block"><a href="#setLogLevel(org.prebid.mobile.PrebidMobile.LogLevel)"><code>setLogLevel(LogLevel)</code></a></div>
 </section>
 </li>
 <li>
 <section class="detail" id="setLogLevel(org.prebid.mobile.PrebidMobile.LogLevel)">
 <h3>setLogLevel</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setLogLevel</span><wbr><span class="parameters">(<a href="PrebidMobile.LogLevel.html" title="enum class in org.prebid.mobile">PrebidMobile.LogLevel</a>&nbsp;logLevel)</span></div>
+<div class="block">Sets log level for the SDK.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="getCustomLogger()">
 <h3>getCustomLogger</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="LogUtil.PrebidLogger.html" title="interface in org.prebid.mobile">LogUtil.PrebidLogger</a></span>&nbsp;<span class="element-name">getCustomLogger</span>()</div>
+<div class="block"><a href="#setCustomLogger(org.prebid.mobile.LogUtil.PrebidLogger)"><code>setCustomLogger(PrebidLogger)</code></a></div>
 </section>
 </li>
 <li>
 <section class="detail" id="setCustomLogger(org.prebid.mobile.LogUtil.PrebidLogger)">
 <h3>setCustomLogger</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCustomLogger</span><wbr><span class="parameters">(<a href="LogUtil.PrebidLogger.html" title="interface in org.prebid.mobile">LogUtil.PrebidLogger</a>&nbsp;logger)</span></div>
+<div class="block">Sets custom logger for the SDK.</div>
 </section>
 </li>
 <li>
@@ -786,30 +848,35 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getCustomStatusEndpoint()">
 <h3>getCustomStatusEndpoint</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getCustomStatusEndpoint</span>()</div>
+<div class="block"><a href="#setCustomStatusEndpoint(java.lang.String)"><code>setCustomStatusEndpoint(String)</code></a></div>
 </section>
 </li>
 <li>
 <section class="detail" id="setIncludeWinnersFlag(boolean)">
 <h3>setIncludeWinnersFlag</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setIncludeWinnersFlag</span><wbr><span class="parameters">(boolean&nbsp;includeWinners)</span></div>
+<div class="block">Sets 'includewinners' parameter for ad request to receive additional info about winners in response.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="getIncludeWinnersFlag()">
 <h3>getIncludeWinnersFlag</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">getIncludeWinnersFlag</span>()</div>
+<div class="block"><a href="#setIncludeWinnersFlag(boolean)"><code>setIncludeWinnersFlag(boolean)</code></a></div>
 </section>
 </li>
 <li>
 <section class="detail" id="setIncludeBidderKeysFlag(boolean)">
 <h3>setIncludeBidderKeysFlag</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">setIncludeBidderKeysFlag</span><wbr><span class="parameters">(boolean&nbsp;includeBidderKeys)</span></div>
+<div class="block">Sets 'includebidderkeys' parameter for ad request to receive additional info about bidders.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="getIncludeBidderKeysFlag()">
 <h3>getIncludeBidderKeysFlag</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">getIncludeBidderKeysFlag</span>()</div>
+<div class="block"><a href="#setIncludeBidderKeysFlag(boolean)"><code>setIncludeBidderKeysFlag(boolean)</code></a></div>
 </section>
 </li>
 <li>
@@ -828,17 +895,18 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getCreativeFactoryTimeout()">
 <h3>getCreativeFactoryTimeout</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getCreativeFactoryTimeout</span>()</div>
-<div class="block">Priority Policy: PBSConfig > SDKConfig > Default</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>creativeFactoryTimeout in ms</dd>
-</dl>
+<div class="block"><a href="#setCreativeFactoryTimeout(int)"><code>setCreativeFactoryTimeout(int)</code></a></div>
 </section>
 </li>
 <li>
 <section class="detail" id="setCreativeFactoryTimeout(int)">
 <h3>setCreativeFactoryTimeout</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCreativeFactoryTimeout</span><wbr><span class="parameters">(int&nbsp;creativeFactoryTimeout)</span></div>
+<div class="block">Sets creative factory timeout. It's time to parse and render banner ads.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>creativeFactoryTimeout</code> - in ms (default 6000ms)</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -856,24 +924,33 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setCreativeFactoryTimeoutPreRenderContent(int)">
 <h3>setCreativeFactoryTimeoutPreRenderContent</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCreativeFactoryTimeoutPreRenderContent</span><wbr><span class="parameters">(int&nbsp;creativeFactoryTimeoutPreRenderContent)</span></div>
+<div class="block">Sets creative factory timeout for prerender content. It's time to parse and render interstitial ads.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>creativeFactoryTimeoutPreRenderContent</code> - in ms (default 30000ms)</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="registerPluginRenderer(org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer)">
 <h3>registerPluginRenderer</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerPluginRenderer</span><wbr><span class="parameters">(<a href="api/rendering/pluginrenderer/PrebidMobilePluginRenderer.html" title="interface in org.prebid.mobile.api.rendering.pluginrenderer">PrebidMobilePluginRenderer</a>&nbsp;prebidMobilePluginRenderer)</span></div>
+<div class="block">Registers plugin renderer for displaying ad in custom wrapper.
+ Prebid SDK will choose this renderer only if the winning bid contains this renderer.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="unregisterPluginRenderer(org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer)">
 <h3>unregisterPluginRenderer</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">unregisterPluginRenderer</span><wbr><span class="parameters">(<a href="api/rendering/pluginrenderer/PrebidMobilePluginRenderer.html" title="interface in org.prebid.mobile.api.rendering.pluginrenderer">PrebidMobilePluginRenderer</a>&nbsp;prebidMobilePluginRenderer)</span></div>
+<div class="block">Remove plugin renderer. <a href="#registerPluginRenderer(org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer)"><code>registerPluginRenderer(PrebidMobilePluginRenderer)</code></a></div>
 </section>
 </li>
 <li>
 <section class="detail" id="containsPluginRenderer(org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer)">
 <h3>containsPluginRenderer</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">containsPluginRenderer</span><wbr><span class="parameters">(<a href="api/rendering/pluginrenderer/PrebidMobilePluginRenderer.html" title="interface in org.prebid.mobile.api.rendering.pluginrenderer">PrebidMobilePluginRenderer</a>&nbsp;prebidMobilePluginRenderer)</span></div>
+<div class="block">Return whether SDK already registered this renderer.</div>
 </section>
 </li>
 </ul>

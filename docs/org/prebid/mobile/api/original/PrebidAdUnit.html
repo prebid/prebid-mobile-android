@@ -78,6 +78,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">PrebidAdUnit</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Universal ad unit for original API. It allows to make multi-format request.
+ Fetch demand result provides access to bid info data <a href="../data/BidInfo.html" title="class in org.prebid.mobile.api.data"><code>BidInfo</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -90,7 +92,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String)" class="member-name-link">PrebidAdUnit</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;configId)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Default constructor.</div>
+</div>
 </div>
 </section>
 </li>
@@ -107,25 +111,37 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#destroy()" class="member-name-link">destroy</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Destroy ad unit and stop downloading.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchDemand(java.lang.Object,org.prebid.mobile.api.original.PrebidRequest,org.prebid.mobile.api.original.OnFetchDemandResult)" class="member-name-link">fetchDemand</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;adObject,
  <a href="PrebidRequest.html" title="class in org.prebid.mobile.api.original">PrebidRequest</a>&nbsp;request,
  <a href="OnFetchDemandResult.html" title="interface in org.prebid.mobile.api.original">OnFetchDemandResult</a>&nbsp;listener)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Loads ad, applies keywords to the ad object, and calls listener with bid info data.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchDemand(org.prebid.mobile.api.original.PrebidRequest,org.prebid.mobile.api.original.OnFetchDemandResult)" class="member-name-link">fetchDemand</a><wbr>(<a href="PrebidRequest.html" title="class in org.prebid.mobile.api.original">PrebidRequest</a>&nbsp;request,
  <a href="OnFetchDemandResult.html" title="interface in org.prebid.mobile.api.original">OnFetchDemandResult</a>&nbsp;listener)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Loads ad and calls listener with bid info data.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resumeAutoRefresh()" class="member-name-link">resumeAutoRefresh</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Resumes auto refresh interval after stopping.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAutoRefreshInterval(int)" class="member-name-link">setAutoRefreshInterval</a><wbr>(int&nbsp;seconds)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Auto refresh interval for banner ad.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stopAutoRefresh()" class="member-name-link">stopAutoRefresh</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Stops auto refresh interval.</div>
+</div>
 </div>
 </div>
 </div>
@@ -147,6 +163,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(java.lang.String)">
 <h3>PrebidAdUnit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PrebidAdUnit</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;configId)</span></div>
+<div class="block">Default constructor.</div>
 </section>
 </li>
 </ul>
@@ -162,6 +179,12 @@ loadScripts(document, 'script');</script>
 <h3>fetchDemand</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fetchDemand</span><wbr><span class="parameters">(<a href="PrebidRequest.html" title="class in org.prebid.mobile.api.original">PrebidRequest</a>&nbsp;request,
  <a href="OnFetchDemandResult.html" title="interface in org.prebid.mobile.api.original">OnFetchDemandResult</a>&nbsp;listener)</span></div>
+<div class="block">Loads ad and calls listener with bid info data.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>request</code> - request object</dd>
+<dd><code>listener</code> - callback when operation is completed (success or fail)</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -170,30 +193,42 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fetchDemand</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;adObject,
  <a href="PrebidRequest.html" title="class in org.prebid.mobile.api.original">PrebidRequest</a>&nbsp;request,
  <a href="OnFetchDemandResult.html" title="interface in org.prebid.mobile.api.original">OnFetchDemandResult</a>&nbsp;listener)</span></div>
+<div class="block">Loads ad, applies keywords to the ad object, and calls listener with bid info data.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>adObject</code> - AdMob's (<code>AdManagerAdRequest</code> or @<code>AdManagerAdRequest.Builder</code>)
+                 or AppLovin's (<code>MaxNativeAdLoader</code>) ad object</dd>
+<dd><code>request</code> - request object</dd>
+<dd><code>listener</code> - callback when operation is completed (success or fail)</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setAutoRefreshInterval(int)">
 <h3>setAutoRefreshInterval</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAutoRefreshInterval</span><wbr><span class="parameters">(int&nbsp;seconds)</span></div>
+<div class="block">Auto refresh interval for banner ad.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="resumeAutoRefresh()">
 <h3>resumeAutoRefresh</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resumeAutoRefresh</span>()</div>
+<div class="block">Resumes auto refresh interval after stopping.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="stopAutoRefresh()">
 <h3>stopAutoRefresh</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stopAutoRefresh</span>()</div>
+<div class="block">Stops auto refresh interval.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="destroy()">
 <h3>destroy</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">destroy</span>()</div>
+<div class="block">Destroy ad unit and stop downloading.</div>
 </section>
 </li>
 </ul>

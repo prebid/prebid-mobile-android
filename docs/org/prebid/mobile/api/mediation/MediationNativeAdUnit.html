@@ -78,6 +78,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MediationNativeAdUnit</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Mediation native ad unit for Rendering API with AdMob or AppLovin MAX.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -91,7 +92,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.Object)" class="member-name-link">MediationNativeAdUnit</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;configId,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;adObject)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Default constructor.</div>
+</div>
 </div>
 </section>
 </li>
@@ -139,7 +142,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchDemand(org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener)" class="member-name-link">fetchDemand</a><wbr>(<a href="listeners/OnFetchCompleteListener.html" title="interface in org.prebid.mobile.api.mediation.listeners">OnFetchCompleteListener</a>&nbsp;listener)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Loads ad and applies mediation delegate.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../ContentObject.html" title="class in org.prebid.mobile">ContentObject</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAppContent()" class="member-name-link">getAppContent</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -208,6 +213,13 @@ loadScripts(document, 'script');</script>
 <h3>MediationNativeAdUnit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MediationNativeAdUnit</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;configId,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;adObject)</span></div>
+<div class="block">Default constructor.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>configId</code> - config id.</dd>
+<dd><code>adObject</code> - AdMob's (<code>AdManagerAdRequest</code> or <code>AdManagerAdRequest.Builder</code>)
+                 or AppLovin's (<code>MaxNativeAdLoader</code>) ad object</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -222,6 +234,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="fetchDemand(org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener)">
 <h3>fetchDemand</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fetchDemand</span><wbr><span class="parameters">(<a href="listeners/OnFetchCompleteListener.html" title="interface in org.prebid.mobile.api.mediation.listeners">OnFetchCompleteListener</a>&nbsp;listener)</span></div>
+<div class="block">Loads ad and applies mediation delegate.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>listener</code> - callback when operation is completed (success or fail)</dd>
+</dl>
 </section>
 </li>
 <li>

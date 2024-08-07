@@ -82,6 +82,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">AdUnit</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Base ad unit for the original API.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -211,14 +212,20 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#destroy()" class="member-name-link">destroy</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Destroy ad unit and stop downloading.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchDemand(java.lang.Object,org.prebid.mobile.OnCompleteListener)" class="member-name-link">fetchDemand</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;adObj,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchDemand(java.lang.Object,org.prebid.mobile.OnCompleteListener)" class="member-name-link">fetchDemand</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;adObject,
  <a href="OnCompleteListener.html" title="interface in org.prebid.mobile">OnCompleteListener</a>&nbsp;listener)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Loads ad and applies keywords to the ad object.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchDemand(org.prebid.mobile.api.original.OnFetchDemandResult)" class="member-name-link">fetchDemand</a><wbr>(<a href="api/original/OnFetchDemandResult.html" title="interface in org.prebid.mobile.api.original">OnFetchDemandResult</a>&nbsp;listener)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Loads ad and saves it to cache.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#fetchDemand(org.prebid.mobile.OnCompleteListener2)" class="member-name-link">fetchDemand</a><wbr>(<a href="OnCompleteListener2.html" title="interface in org.prebid.mobile">OnCompleteListener2</a>&nbsp;listener)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
@@ -266,7 +273,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resumeAutoRefresh()" class="member-name-link">resumeAutoRefresh</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Resumes auto refresh interval after stopping.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAppContent(org.prebid.mobile.ContentObject)" class="member-name-link">setAppContent</a><wbr>(<a href="ContentObject.html" title="class in org.prebid.mobile">ContentObject</a>&nbsp;content)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -274,7 +283,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAutoRefreshInterval(int)" class="member-name-link">setAutoRefreshInterval</a><wbr>(int&nbsp;seconds)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Auto refresh interval for banner ad.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#setAutoRefreshPeriodMillis(int)" class="member-name-link">setAutoRefreshPeriodMillis</a><wbr>(int&nbsp;periodMillis)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
@@ -293,7 +304,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stopAutoRefresh()" class="member-name-link">stopAutoRefresh</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Stops auto refresh interval.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#updateContextData(java.lang.String,java.util.Set)" class="member-name-link">updateContextData</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;value)</code></div>
@@ -390,24 +403,28 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setAutoRefreshInterval(int)">
 <h3>setAutoRefreshInterval</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAutoRefreshInterval</span><wbr><span class="parameters">(int&nbsp;seconds)</span></div>
+<div class="block">Auto refresh interval for banner ad.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="resumeAutoRefresh()">
 <h3>resumeAutoRefresh</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resumeAutoRefresh</span>()</div>
+<div class="block">Resumes auto refresh interval after stopping.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="stopAutoRefresh()">
 <h3>stopAutoRefresh</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stopAutoRefresh</span>()</div>
+<div class="block">Stops auto refresh interval.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="destroy()">
 <h3>destroy</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">destroy</span>()</div>
+<div class="block">Destroy ad unit and stop downloading.</div>
 </section>
 </li>
 <li>
@@ -422,14 +439,26 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="fetchDemand(java.lang.Object,org.prebid.mobile.OnCompleteListener)">
 <h3>fetchDemand</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fetchDemand</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;adObj,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fetchDemand</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;adObject,
  <a href="OnCompleteListener.html" title="interface in org.prebid.mobile">OnCompleteListener</a>&nbsp;listener)</span></div>
+<div class="block">Loads ad and applies keywords to the ad object.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>adObject</code> - AdMob's (<code>AdManagerAdRequest</code> or <code>AdManagerAdRequest.Builder</code>)
+                 or AppLovin's (<code>MaxNativeAdLoader</code>) ad object</dd>
+<dd><code>listener</code> - callback when operation is completed (success or fail)</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="fetchDemand(org.prebid.mobile.api.original.OnFetchDemandResult)">
 <h3>fetchDemand</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fetchDemand</span><wbr><span class="parameters">(<a href="api/original/OnFetchDemandResult.html" title="interface in org.prebid.mobile.api.original">OnFetchDemandResult</a>&nbsp;listener)</span></div>
+<div class="block">Loads ad and saves it to cache.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>listener</code> - callback when operation is completed (success or fail)</dd>
+</dl>
 </section>
 </li>
 <li>

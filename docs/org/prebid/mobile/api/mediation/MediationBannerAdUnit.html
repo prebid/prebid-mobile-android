@@ -80,6 +80,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MediationBannerAdUnit</span>
 <span class="extends-implements">extends <a href="MediationBaseAdUnit.html" title="class in org.prebid.mobile.api.mediation">MediationBaseAdUnit</a></span></div>
+<div class="block">Mediation banner ad unit for Rendering API with AdMob or AppLovin MAX.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -104,7 +105,9 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;configId,
  <a href="../../AdSize.html" title="class in org.prebid.mobile">AdSize</a>&nbsp;size,
  PrebidMediationDelegate&nbsp;mediationDelegate)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Default constructor.</div>
+</div>
 </div>
 </section>
 </li>
@@ -124,10 +127,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#destroy()" class="member-name-link">destroy</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Destroy ad unit.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchDemand(org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener)" class="member-name-link">fetchDemand</a><wbr>(<a href="listeners/OnFetchCompleteListener.html" title="interface in org.prebid.mobile.api.mediation.listeners">OnFetchCompleteListener</a>&nbsp;listener)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Loads ad and applies mediation delegate.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../data/BannerAdPosition.html" title="enum class in org.prebid.mobile.api.data">BannerAdPosition</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAdPosition()" class="member-name-link">getAdPosition</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -177,6 +184,14 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;configId,
  <a href="../../AdSize.html" title="class in org.prebid.mobile">AdSize</a>&nbsp;size,
  PrebidMediationDelegate&nbsp;mediationDelegate)</span></div>
+<div class="block">Default constructor.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - <code>Context</code></dd>
+<dd><code>configId</code> - config id</dd>
+<dd><code>size</code> - ad size</dd>
+<dd><code>mediationDelegate</code> - mediation delegate (<code>AdMobBannerMediationUtils</code> or <code>MaxMediationBannerUtils</code>.</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -202,6 +217,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="destroy()">
 <h3>destroy</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">destroy</span>()</div>
+<div class="block">Destroy ad unit.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="MediationBaseAdUnit.html#destroy()">destroy</a></code>&nbsp;in class&nbsp;<code><a href="MediationBaseAdUnit.html" title="class in org.prebid.mobile.api.mediation">MediationBaseAdUnit</a></code></dd>
@@ -222,9 +238,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="fetchDemand(org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener)">
 <h3>fetchDemand</h3>
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fetchDemand</span><wbr><span class="parameters">(<a href="listeners/OnFetchCompleteListener.html" title="interface in org.prebid.mobile.api.mediation.listeners">OnFetchCompleteListener</a>&nbsp;listener)</span></div>
+<div class="block">Loads ad and applies mediation delegate.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="MediationBaseAdUnit.html#fetchDemand(org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener)">fetchDemand</a></code>&nbsp;in class&nbsp;<code><a href="MediationBaseAdUnit.html" title="class in org.prebid.mobile.api.mediation">MediationBaseAdUnit</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>listener</code> - callback when operation is completed (success or fail)</dd>
 </dl>
 </section>
 </li>

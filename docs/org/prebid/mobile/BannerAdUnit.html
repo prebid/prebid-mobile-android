@@ -82,6 +82,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">BannerAdUnit</span>
 <span class="extends-implements">extends <a href="BannerBaseAdUnit.html" title="class in org.prebid.mobile">BannerBaseAdUnit</a></span></div>
+<div class="block">Original API banner ad unit for displaying banner ad.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -114,13 +115,15 @@ loadScripts(document, 'script');</script>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,int,int)" class="member-name-link">BannerAdUnit</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;configId,
  int&nbsp;width,
  int&nbsp;height)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Default constructor for banner ad.</div>
+</div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.String,int,int,java.util.EnumSet)" class="member-name-link">BannerAdUnit</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;configId,
  int&nbsp;width,
  int&nbsp;height,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/EnumSet.html" title="class or interface in java.util" class="external-link">EnumSet</a>&lt;<a href="api/data/AdUnitFormat.html" title="enum class in org.prebid.mobile.api.data">AdUnitFormat</a>&gt;&nbsp;adUnitFormats)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Constructor for multi-format or video banner request.</div>
+<div class="block">Constructor with ad formats.</div>
 </div>
 </div>
 </section>
@@ -139,7 +142,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addAdditionalSize(int,int)" class="member-name-link">addAdditionalSize</a><wbr>(int&nbsp;width,
  int&nbsp;height)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Add additional size.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOrtbConfig()" class="member-name-link">getOrtbConfig</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -175,6 +180,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">BannerAdUnit</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;configId,
  int&nbsp;width,
  int&nbsp;height)</span></div>
+<div class="block">Default constructor for banner ad.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>configId</code> - config id</dd>
+<dd><code>width</code> - ad width</dd>
+<dd><code>height</code> - ad height</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -184,13 +196,15 @@ loadScripts(document, 'script');</script>
  int&nbsp;width,
  int&nbsp;height,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/EnumSet.html" title="class or interface in java.util" class="external-link">EnumSet</a>&lt;<a href="api/data/AdUnitFormat.html" title="enum class in org.prebid.mobile.api.data">AdUnitFormat</a>&gt;&nbsp;adUnitFormats)</span></div>
-<div class="block">Constructor for multi-format or video banner request.</div>
+<div class="block">Constructor with ad formats.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>adUnitFormats</code> - <p>
-                      for multi-format request `EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO);`
-                      <p>
-                      for video banner `EnumSet.of(AdUnitFormat.VIDEO);`</dd>
+<dd><code>configId</code> - config id</dd>
+<dd><code>width</code> - ad width</dd>
+<dd><code>height</code> - ad height</dd>
+<dd><code>adUnitFormats</code> - ad formats (<a href="api/data/AdUnitFormat.html" title="enum class in org.prebid.mobile.api.data"><code>AdUnitFormat</code></a>). <br>
+                      For multi-format request <code>EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO);</code> <br>
+                      For only video request <code>EnumSet.of(AdUnitFormat.VIDEO);</code></dd>
 </dl>
 </section>
 </li>
@@ -207,6 +221,7 @@ loadScripts(document, 'script');</script>
 <h3>addAdditionalSize</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addAdditionalSize</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height)</span></div>
+<div class="block">Add additional size.</div>
 </section>
 </li>
 <li>
