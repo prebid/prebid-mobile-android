@@ -7,8 +7,8 @@ dependencies {
 
 task combinedJavadoc(type: Javadoc, dependsOn: assemble) {
     title = """
-        <h1>Prebid Mobile Android SDK</h1>
-        <p>Documentation to the public API.</p>
+        <h1>Prebid Mobile Android SDK. </h1>
+        <p>Documentation to the public API. </p>
     """
 
     var sourcePaths = project(":PrebidMobile-core").files("src/main/java")
