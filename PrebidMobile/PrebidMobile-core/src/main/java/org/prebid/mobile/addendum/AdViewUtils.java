@@ -50,9 +50,7 @@ public final class AdViewUtils {
 
     private AdViewUtils() { }
 
-    @SuppressWarnings("deprecation")
     public static void findPrebidCreativeSize(@Nullable View adView, final PbFindSizeListener handler) {
-
         if (adView == null) {
             warnAndTriggerFailure(PbFindSizeErrorFactory.NO_WEB_VIEW, handler);
             return;
