@@ -18,7 +18,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 /**
- * Internal mediation delegate.
+ * Banner mediation delegate.
  */
 public class AdMobMediationBannerUtils implements PrebidMediationDelegate {
 

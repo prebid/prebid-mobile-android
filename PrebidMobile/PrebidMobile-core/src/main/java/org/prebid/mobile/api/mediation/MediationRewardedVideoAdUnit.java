@@ -37,6 +37,9 @@ public class MediationRewardedVideoAdUnit extends MediationBaseFullScreenAdUnit 
 
     private static final String TAG = "MediationRewardedAdUnit";
 
+    /**
+     * Default constructor.
+     */
     public MediationRewardedVideoAdUnit(
         Context context,
         String configId,
@@ -45,6 +48,11 @@ public class MediationRewardedVideoAdUnit extends MediationBaseFullScreenAdUnit 
         super(context, configId, null, mediationDelegate);
     }
 
+    /**
+     * Loads ad and applies mediation delegate.
+     *
+     * @param listener callback when operation is completed (success or fail)
+     */
     public void fetchDemand(@NonNull OnFetchCompleteListener listener) {
         super.fetchDemand(listener);
     }

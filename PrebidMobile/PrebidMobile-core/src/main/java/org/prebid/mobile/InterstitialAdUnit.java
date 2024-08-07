@@ -32,12 +32,18 @@ import java.util.EnumSet;
  */
 public class InterstitialAdUnit extends BannerBaseAdUnit {
 
+    /**
+     * Default constructor.
+     */
     public InterstitialAdUnit(@NonNull String configId) {
         super(configId, EnumSet.of(AdFormat.INTERSTITIAL));
         configuration.setAdPosition(AdPosition.FULLSCREEN);
     }
 
-    public InterstitialAdUnit(@NonNull String configId, int minWidthPerc, int minHeightPerc) {
+    /**
+     * Constructor with min percentage width and height.
+     */
+    public InterstitialAdUnit(@NonNull String configId, @IntRange(from = 0, to = 100) int minWidthPerc, @IntRange(from = 0, to = 100) int minHeightPerc) {
         this(configId);
         configuration.setMinSizePercentage(new AdSize(minWidthPerc, minHeightPerc));
     }

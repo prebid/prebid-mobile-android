@@ -87,12 +87,18 @@ public abstract class AdUnit {
         configuration.setAutoRefreshDelay(periodMillis / 1000);
     }
 
+    /**
+     * Auto refresh interval for banner ad.
+     */
     public void setAutoRefreshInterval(
             @IntRange(from = AUTO_REFRESH_DELAY_MIN / 1000, to = AUTO_REFRESH_DELAY_MAX / 1000) int seconds
     ) {
         configuration.setAutoRefreshDelay(seconds);
     }
 
+    /**
+     * Resumes auto refresh interval after stopping.
+     */
     public void resumeAutoRefresh() {
         LogUtil.verbose("Resuming auto refresh...");
         if (bidLoader != null) {
@@ -100,6 +106,9 @@ public abstract class AdUnit {
         }
     }
 
+    /**
+     * Stops auto refresh interval.
+     */
     public void stopAutoRefresh() {
         LogUtil.verbose("Stopping auto refresh...");
         if (bidLoader != null) {
@@ -107,6 +116,9 @@ public abstract class AdUnit {
         }
     }
 
+    /**
+     * Destroy ad unit and stop downloading.
+     */
     public void destroy() {
         if (bidLoader != null) {
             bidLoader.destroy();
@@ -127,7 +139,14 @@ public abstract class AdUnit {
         });
     }
 
-    public void fetchDemand(Object adObj, @NonNull OnCompleteListener listener) {
+    /**
+     * Loads ad and applies keywords to the ad object.
+     *
+     * @param adObject AdMob's ({@code AdManagerAdRequest} or {@code AdManagerAdRequest.Builder})
+     *                 or AppLovin's ({@code MaxNativeAdLoader}) ad object
+     * @param listener callback when operation is completed (success or fail)
+     */
+    public void fetchDemand(Object adObject, @NonNull OnCompleteListener listener) {
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
             LogUtil.error("Empty account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
@@ -170,8 +189,8 @@ public abstract class AdUnit {
             return;
         }
 
-        if (Util.supportedAdObject(adObj) || allowNullableAdObject) {
-            adObject = adObj;
+        if (Util.supportedAdObject(adObject) || allowNullableAdObject) {
+            this.adObject = adObject;
             bidLoader = new BidLoader(
                     configuration,
                     createBidListener(listener)
@@ -188,12 +207,17 @@ public abstract class AdUnit {
 
             bidLoader.load();
         } else {
-            adObject = null;
+            this.adObject = null;
             listener.onComplete(ResultCode.INVALID_AD_OBJECT);
         }
 
     }
 
+    /**
+     * Loads ad and saves it to cache.
+     *
+     * @param listener callback when operation is completed (success or fail)
+     */
     public void fetchDemand(OnFetchDemandResult listener) {
         if (listener == null) {
             LogUtil.error("Parameter OnFetchDemandResult in fetchDemand() must be not null.");
@@ -310,6 +334,7 @@ public abstract class AdUnit {
 
     /**
      * This method allows to remove specific context keyword from adunit context targeting
+     *
      * @deprecated Use removeExtKeyword
      */
     @Deprecated
@@ -407,9 +432,13 @@ public abstract class AdUnit {
     }
 
     @Nullable
-    public String getOrtbConfig() { return configuration.getOrtbConfig();}
+    public String getOrtbConfig() {
+        return configuration.getOrtbConfig();
+    }
 
-    public void setOrtbConfig(@Nullable String ortbConfig) {configuration.setOrtbConfig(ortbConfig);}
+    public void setOrtbConfig(@Nullable String ortbConfig) {
+        configuration.setOrtbConfig(ortbConfig);
+    }
 
     protected BidRequesterListener createBidListener(OnCompleteListener originalListener) {
         return new BidRequesterListener() {

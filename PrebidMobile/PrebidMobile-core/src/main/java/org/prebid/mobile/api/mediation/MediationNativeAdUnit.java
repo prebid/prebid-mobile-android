@@ -25,19 +25,31 @@ public class MediationNativeAdUnit {
     private final Object adObject;
     private final NativeAdUnit nativeAdUnit;
 
+    /**
+     * Default constructor.
+     *
+     * @param configId config id.
+     * @param adObject AdMob's ({@code AdManagerAdRequest} or {@code AdManagerAdRequest.Builder})
+     *                 or AppLovin's ({@code MaxNativeAdLoader}) ad object
+     */
     public MediationNativeAdUnit(
-        @NonNull String configId,
-        @NonNull Object adObject
+            @NonNull String configId,
+            @NonNull Object adObject
     ) {
         this.adObject = adObject;
         this.nativeAdUnit = new NativeAdUnit(configId);
     }
 
+    /**
+     * Loads ad and applies mediation delegate.
+     *
+     * @param listener callback when operation is completed (success or fail)
+     */
     public void fetchDemand(
-        @NonNull OnFetchCompleteListener listener
+            @NonNull OnFetchCompleteListener listener
     ) {
         nativeAdUnit.fetchDemand(adObject, resultCode ->
-            listener.onComplete(convertResultCode(resultCode))
+                listener.onComplete(convertResultCode(resultCode))
         );
     }
 
@@ -110,15 +122,15 @@ public class MediationNativeAdUnit {
     }
 
     public void addExtData(
-        String key,
-        String value
+            String key,
+            String value
     ) {
         nativeAdUnit.addExtData(key, value);
     }
 
     public void updateExtData(
-        String key,
-        Set<String> value
+            String key,
+            Set<String> value
     ) {
         nativeAdUnit.updateExtData(key, value);
     }

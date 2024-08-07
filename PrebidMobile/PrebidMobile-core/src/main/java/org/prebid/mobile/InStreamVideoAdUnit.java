@@ -28,6 +28,9 @@ import java.util.EnumSet;
  */
 public class InStreamVideoAdUnit extends VideoBaseAdUnit {
 
+    /**
+     * Default constructor.
+     */
     public InStreamVideoAdUnit(@NonNull String configId, int width, int height) {
         super(configId, EnumSet.of(AdFormat.VAST));
         configuration.addSize(new AdSize(width, height));

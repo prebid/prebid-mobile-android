@@ -21,10 +21,16 @@ import java.util.HashMap;
  */
 public class NativeAdUnit extends AdUnit {
 
+    /**
+     * Internal key for caching native ad.
+     */
     public static final String BUNDLE_KEY_CACHE_ID = "NativeAdUnitCacheId";
 
     private final NativeAdUnitConfiguration nativeConfiguration;
 
+    /**
+     * Default constructor.
+     */
     public NativeAdUnit(@NonNull String configId) {
         super(configId, EnumSet.of(AdFormat.NATIVE));
         nativeConfiguration = configuration.getNativeConfiguration();

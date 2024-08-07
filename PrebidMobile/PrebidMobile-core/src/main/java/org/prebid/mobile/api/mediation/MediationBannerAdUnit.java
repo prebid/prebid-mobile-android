@@ -40,6 +40,14 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
 
     private boolean adFailed;
 
+    /**
+     * Default constructor.
+     *
+     * @param context           {@link Context}
+     * @param configId          config id
+     * @param size              ad size
+     * @param mediationDelegate mediation delegate ({@code AdMobBannerMediationUtils} or {@code MaxMediationBannerUtils}.
+     */
     public MediationBannerAdUnit(
         Context context,
         String configId,
@@ -60,6 +68,9 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         adUnitConfig.setAdFormat(AdFormat.BANNER);
     }
 
+    /**
+     * Destroy ad unit.
+     */
     @Override
     public void destroy() {
         super.destroy();
@@ -84,10 +95,14 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         });
     }
 
+    /**
+     * Loads ad and applies mediation delegate.
+     *
+     * @param listener callback when operation is completed (success or fail)
+     */
     @Override
     public final void fetchDemand(
-        @NonNull
-            OnFetchCompleteListener listener
+            @NonNull OnFetchCompleteListener listener
     ) {
         super.fetchDemand(listener);
     }

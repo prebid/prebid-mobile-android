@@ -145,18 +145,33 @@ public class PrebidMobile {
     private PrebidMobile() {
     }
 
+
+    /**
+     * {@link #useCacheForReportingWithRenderingApi}
+     */
     public static boolean isUseCacheForReportingWithRenderingApi() {
         return useCacheForReportingWithRenderingApi;
     }
 
+    /**
+     * Sets boolean for caching ad for rendering API.
+     *
+     * @param useCacheForReportingWithRenderingApi
+     */
     public static void setUseCacheForReportingWithRenderingApi(boolean useCacheForReportingWithRenderingApi) {
         PrebidMobile.useCacheForReportingWithRenderingApi = useCacheForReportingWithRenderingApi;
     }
 
+    /**
+     * {@link #setTimeoutMillis(int)}.
+     */
     public static int getTimeoutMillis() {
         return timeoutMillis;
     }
 
+    /**
+     * Sets connection timeout for bid request.
+     */
     public static void setTimeoutMillis(int timeoutMillis) {
         PrebidMobile.timeoutMillis = timeoutMillis;
     }
@@ -181,10 +196,16 @@ public class PrebidMobile {
         return host;
     }
 
+    /**
+     * Allows the SDK to share geolocation if permission is granted by the user.
+     */
     public static void setShareGeoLocation(boolean share) {
         PrebidMobile.shareGeoLocation = share;
     }
 
+    /**
+     * {@link #setShareGeoLocation(boolean)}
+     */
     public static boolean isShareGeoLocation() {
         return shareGeoLocation;
     }
@@ -257,10 +278,16 @@ public class PrebidMobile {
         return PrebidContextHolder.getContext();
     }
 
+    /**
+     * Sets stored auction response for testing purposes.
+     */
     public static void setStoredAuctionResponse(@Nullable String storedAuctionResponse) {
         PrebidMobile.storedAuctionResponse = storedAuctionResponse;
     }
 
+    /**
+     * {@link #setStoredAuctionResponse(String)}
+     */
     @Nullable
     public static String getStoredAuctionResponse() {
         return storedAuctionResponse;
@@ -312,19 +339,31 @@ public class PrebidMobile {
         return PrebidContextHolder.getContext() != null && InitializationNotifier.wereTasksCompletedSuccessfully();
     }
 
+    /**
+     * {@link #setLogLevel(LogLevel)}
+     */
     public static LogLevel getLogLevel() {
         return PrebidMobile.logLevel;
     }
 
+    /**
+     * Sets log level for the SDK.
+     */
     public static void setLogLevel(LogLevel logLevel) {
         PrebidMobile.logLevel = logLevel;
     }
 
+    /**
+     * {@link #setCustomLogger(PrebidLogger)}
+     */
     @Nullable
     public static PrebidLogger getCustomLogger() {
         return PrebidMobile.customLogger;
     }
 
+    /**
+     * Sets custom logger for the SDK.
+     */
     public static void setCustomLogger(@NonNull PrebidLogger logger) {
         PrebidMobile.customLogger = logger;
     }
@@ -381,22 +420,38 @@ public class PrebidMobile {
         }
     }
 
+    /**
+     * {@link #setCustomStatusEndpoint(String)}
+     */
     @Nullable
     public static String getCustomStatusEndpoint() {
         return customStatusEndpoint;
     }
+
+    /**
+     * Sets 'includewinners' parameter for ad request to receive additional info about winners in response.
+     */
     public static void setIncludeWinnersFlag(boolean includeWinners) {
         PrebidMobile.includeWinners = includeWinners;
     }
 
+    /**
+     * {@link #setIncludeWinnersFlag(boolean)}
+     */
     public static boolean getIncludeWinnersFlag() {
         return PrebidMobile.includeWinners;
     }
 
+    /**
+     * Sets 'includebidderkeys' parameter for ad request to receive additional info about bidders.
+     */
     public static boolean setIncludeBidderKeysFlag(boolean includeBidderKeys) {
         return PrebidMobile.includeBidderKeys = includeBidderKeys;
     }
 
+    /**
+     * {@link #setIncludeBidderKeysFlag(boolean)}
+     */
     public static boolean getIncludeBidderKeysFlag() {
         return PrebidMobile.includeBidderKeys;
     }
@@ -410,8 +465,7 @@ public class PrebidMobile {
     }
 
     /**
-     * Priority Policy: PBSConfig > SDKConfig > Default
-     * @return creativeFactoryTimeout in ms
+     * {@link #setCreativeFactoryTimeout(int)}
      */
     public static int getCreativeFactoryTimeout() {
         if (pbsConfig != null){
@@ -422,6 +476,11 @@ public class PrebidMobile {
         return creativeFactoryTimeout;
     }
 
+    /**
+     * Sets creative factory timeout. It's time to parse and render banner ads.
+     *
+     * @param creativeFactoryTimeout in ms (default 6000ms)
+     */
     public static void setCreativeFactoryTimeout(int creativeFactoryTimeout) {
         PrebidMobile.creativeFactoryTimeout = creativeFactoryTimeout;
     }
@@ -439,23 +498,37 @@ public class PrebidMobile {
         return creativeFactoryTimeoutPreRenderContent;
     }
 
+
+    /**
+     * Sets creative factory timeout for prerender content. It's time to parse and render interstitial ads.
+     *
+     * @param creativeFactoryTimeoutPreRenderContent in ms (default 30000ms)
+     */
     public static void setCreativeFactoryTimeoutPreRenderContent(int creativeFactoryTimeoutPreRenderContent) {
         PrebidMobile.creativeFactoryTimeoutPreRenderContent = creativeFactoryTimeoutPreRenderContent;
     }
 
-    //region PluginRenderer methods
+    /**
+     * Registers plugin renderer for displaying ad in custom wrapper.
+     * Prebid SDK will choose this renderer only if the winning bid contains this renderer.
+     */
     public static void registerPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         PrebidMobilePluginRegister.getInstance().registerPlugin(prebidMobilePluginRenderer);
     }
 
+    /**
+     * Remove plugin renderer. {@link #registerPluginRenderer(PrebidMobilePluginRenderer)}
+     */
     public static void unregisterPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         PrebidMobilePluginRegister.getInstance().unregisterPlugin(prebidMobilePluginRenderer);
     }
 
+    /**
+     * Return whether SDK already registered this renderer.
+     */
     public static Boolean containsPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         return PrebidMobilePluginRegister.getInstance().containsPlugin(prebidMobilePluginRenderer);
     }
-    //endregion
 
     /**
      * LogLevel for logging control.

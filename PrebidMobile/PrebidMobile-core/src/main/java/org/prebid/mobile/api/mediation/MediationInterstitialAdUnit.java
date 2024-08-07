@@ -62,6 +62,11 @@ public class MediationInterstitialAdUnit extends MediationBaseFullScreenAdUnit {
         adUnitConfig.setAdUnitFormats(adUnitFormats);
     }
 
+    /**
+     * Loads ad and applies mediation delegate.
+     *
+     * @param listener callback when operation is completed (success or fail)
+     */
     @Override
     public final void fetchDemand(@NonNull OnFetchCompleteListener listener) {
         super.fetchDemand(listener);
