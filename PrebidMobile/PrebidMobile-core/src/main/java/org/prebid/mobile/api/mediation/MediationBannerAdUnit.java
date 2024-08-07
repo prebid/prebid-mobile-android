@@ -17,7 +17,9 @@
 package org.prebid.mobile.api.mediation;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
+
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
@@ -27,6 +29,9 @@ import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 
+/**
+ * Mediation banner ad unit for Rendering API with AdMob or AppLovin MAX.
+ */
 public class MediationBannerAdUnit extends MediationBaseAdUnit {
 
     private static final String TAG = MediationBannerAdUnit.class.getSimpleName();

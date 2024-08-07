@@ -19,13 +19,16 @@ package org.prebid.mobile.eventhandlers;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AppEventListener;
+
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.eventhandlers.global.Constants;
@@ -36,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class is responsible for wrapping usage of PublisherAdView from GAM SDK.
+ * Internal wrapper of PublisherAdView from GAM SDK.
  * To achieve safe integration between various GAM SDK versions we have to wrap all PublisherAdView method execution in try / catch.
  * This class instance should be created via newInstance method, which will catch any potential exception on PublisherAdView / PublisherAdViewWrapper instance creation
  */

@@ -12,6 +12,9 @@ import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 
+/**
+ * Prebid interstitial adapter for AdMob integration.
+ */
 public class PrebidInterstitialAdapter extends PrebidBaseAdapter {
 
     public static final String EXTRA_RESPONSE_ID = "PrebidInterstitialAdapterExtraId";

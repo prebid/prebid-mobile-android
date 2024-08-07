@@ -15,6 +15,9 @@ import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
 import java.util.ArrayList;
 import java.util.Set;
 
+/**
+ * Mediation native ad unit for Rendering API with AdMob or AppLovin MAX.
+ */
 public class MediationNativeAdUnit {
 
     private static final String TAG = "MediationNativeAdUnit";

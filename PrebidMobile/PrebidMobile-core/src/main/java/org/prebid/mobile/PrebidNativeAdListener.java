@@ -16,6 +16,9 @@
 
 package org.prebid.mobile;
 
+/**
+ * Native ad listener.
+ */
 public interface PrebidNativeAdListener {
     /**
      * A successful Prebid Native ad is returned

@@ -32,6 +32,9 @@ import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
 
 import java.util.EnumSet;
 
+/**
+ * Rewarded ad unit for rendering API.
+ */
 public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
     private static final String TAG = RewardedAdUnit.class.getSimpleName();

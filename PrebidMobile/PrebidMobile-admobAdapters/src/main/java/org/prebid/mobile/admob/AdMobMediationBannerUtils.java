@@ -2,8 +2,11 @@ package org.prebid.mobile.admob;
 
 import android.os.Bundle;
 import android.util.Log;
+
 import androidx.annotation.Nullable;
+
 import com.google.android.gms.ads.AdView;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
@@ -14,6 +17,9 @@ import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
+/**
+ * Internal mediation delegate.
+ */
 public class AdMobMediationBannerUtils implements PrebidMediationDelegate {
 
     private static final String TAG = "BannerMediationUtils";

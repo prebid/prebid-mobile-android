@@ -26,6 +26,10 @@ import androidx.annotation.VisibleForTesting;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Original API cache manager. Manages saving and receiving cached ad.
+ * It is also responsible for native ad expiration.
+ */
 public class CacheManager {
     private static final int NATIVE_AD_EXPIRY_TIMEOUT = 300000;
     private static HashMap<String, String> savedValues = new HashMap<>();

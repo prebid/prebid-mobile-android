@@ -9,6 +9,7 @@ import org.prebid.mobile.configuration.NativeAdUnitConfiguration;
 import java.util.List;
 
 /**
+ * Native parameters.
  * For details of the configuration of native parameters, please check this documentation:
  * https://www.iab.com/wp-content/uploads/2018/03/OpenRTB-Native-Ads-Specification-Final-1.2.pdf
  */

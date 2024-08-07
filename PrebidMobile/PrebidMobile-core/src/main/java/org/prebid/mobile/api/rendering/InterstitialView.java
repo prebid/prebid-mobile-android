@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
 import android.view.View;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -39,6 +40,9 @@ import org.prebid.mobile.rendering.views.interstitial.InterstitialVideo;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Internal view for {@link InterstitialAdUnit}.
+ */
 public class InterstitialView extends BaseAdView {
 
     private static final String TAG = InterstitialView.class.getSimpleName();

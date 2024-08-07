@@ -17,7 +17,9 @@
 package org.prebid.mobile.api.mediation;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
+
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
@@ -28,6 +30,9 @@ import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 import org.prebid.mobile.rendering.models.AdPosition;
 
+/**
+ * Mediation rewarded ad unit for Rendering API with AdMob or AppLovin MAX.
+ */
 public class MediationRewardedVideoAdUnit extends MediationBaseFullScreenAdUnit {
 
     private static final String TAG = "MediationRewardedAdUnit";

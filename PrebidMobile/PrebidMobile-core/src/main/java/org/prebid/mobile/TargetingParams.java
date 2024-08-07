@@ -128,6 +128,9 @@ public class TargetingParams {
         }
     }
 
+    /**
+     * Gender.
+     */
     public enum GENDER {
         FEMALE,
         MALE,

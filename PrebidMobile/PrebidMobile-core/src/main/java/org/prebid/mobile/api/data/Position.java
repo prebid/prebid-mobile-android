@@ -2,6 +2,9 @@ package org.prebid.mobile.api.data;
 
 import androidx.annotation.Nullable;
 
+/**
+ * Control item position. It's used for controlling rendering API button positions.
+ */
 public enum Position {
     TOP_LEFT,
     TOP,

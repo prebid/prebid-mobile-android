@@ -16,6 +16,9 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
+/**
+ * Prebid banner adapter for AdMob integration.
+ */
 public class PrebidBannerAdapter extends PrebidBaseAdapter {
 
     public static final String EXTRA_RESPONSE_ID = "PrebidBannerAdapterExtraId";

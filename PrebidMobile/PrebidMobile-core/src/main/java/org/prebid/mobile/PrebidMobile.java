@@ -43,6 +43,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Main class for managing Prebid SDK. It allows to initialize, set log level
+ * and manage internal behaviour.
+ */
 public class PrebidMobile {
 
     public static boolean isCoppaEnabled = false;

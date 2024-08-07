@@ -16,6 +16,9 @@
 
 package org.prebid.mobile;
 
+/**
+ * Result code for fetch demand.
+ */
 public enum ResultCode {
     /**
      * The attaching keywords was successful, which means

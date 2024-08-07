@@ -24,6 +24,9 @@ import org.prebid.mobile.rendering.models.PlacementType;
 
 import java.util.EnumSet;
 
+/**
+ * Original API rewarded video ad unit.
+ */
 public class RewardedVideoAdUnit extends VideoBaseAdUnit {
 
     public RewardedVideoAdUnit(@NonNull String configId) {

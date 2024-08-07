@@ -17,8 +17,12 @@
 package org.prebid.mobile.api.mediation.listeners;
 
 import androidx.annotation.MainThread;
+
 import org.prebid.mobile.api.data.FetchDemandResult;
 
+/**
+ * Fetch demand listener for mediation ad units.
+ */
 public interface OnFetchCompleteListener {
 
     @MainThread

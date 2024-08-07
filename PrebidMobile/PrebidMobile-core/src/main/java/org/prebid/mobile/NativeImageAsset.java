@@ -5,6 +5,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+/**
+ * Native image object for requesting asset.
+ */
 public class NativeImageAsset extends NativeAsset {
 
     @Deprecated
@@ -26,6 +29,9 @@ public class NativeImageAsset extends NativeAsset {
         hmin = minHeight;
     }
 
+    /**
+     * Image type.
+     */
     public enum IMAGE_TYPE {
         ICON(1),
         MAIN(3),

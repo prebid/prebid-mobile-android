@@ -21,6 +21,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Size;
 
+/**
+ * Prebid logger. Allows to control log level.
+ */
 public class LogUtil {
     private static final String BASE_TAG = "PrebidMobile";
 
@@ -176,6 +179,9 @@ public class LogUtil {
         }
     }
 
+    /**
+     * Internal interface.
+     */
     public interface PrebidLogger {
 
         void println(int messagePriority, String tag, String message);
@@ -183,6 +189,9 @@ public class LogUtil {
         void e(final String tag, String message, Throwable throwable);
     }
 
+    /**
+     * Default implementation.
+     */
     private static class LogCatLogger implements PrebidLogger {
 
         @Override

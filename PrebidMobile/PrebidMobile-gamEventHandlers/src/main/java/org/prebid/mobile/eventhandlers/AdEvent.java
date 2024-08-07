@@ -16,6 +16,9 @@
 
 package org.prebid.mobile.eventhandlers;
 
+/**
+ * Ad event.
+ */
 public enum AdEvent {
     APP_EVENT_RECEIVED,
     LOADED,

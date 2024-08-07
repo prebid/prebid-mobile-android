@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Describes an <a href="https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf">OpenRTB</a> banner object
+ * Banner parameters for the
+ * <a href="https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf">OpenRTB</a>
+ * banner object.
  */
 public class BannerParameters {
 

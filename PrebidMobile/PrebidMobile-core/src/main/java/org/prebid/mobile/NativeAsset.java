@@ -2,6 +2,9 @@ package org.prebid.mobile;
 
 import org.json.JSONObject;
 
+/**
+ * Base class for requesting native assets.
+ */
 public abstract class NativeAsset {
 
     enum REQUEST_ASSET {

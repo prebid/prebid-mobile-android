@@ -3,11 +3,17 @@ package org.prebid.mobile;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * Native data object for requesting asset.
+ */
 public class NativeDataAsset extends NativeAsset {
     public NativeDataAsset() {
         super(REQUEST_ASSET.DATA);
     }
 
+    /**
+     * Data type.
+     */
     public enum DATA_TYPE {
         SPONSORED(1),
         DESC(2),

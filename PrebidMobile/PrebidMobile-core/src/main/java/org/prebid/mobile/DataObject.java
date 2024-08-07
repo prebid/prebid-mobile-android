@@ -10,6 +10,9 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 
 import java.util.ArrayList;
 
+/**
+ * Data content object for additional targeting.
+ */
 public class DataObject {
 
     /**
@@ -113,6 +116,9 @@ public class DataObject {
         return result;
     }
 
+    /**
+     * Segment object.
+     */
     public static class SegmentObject {
 
         /**

@@ -24,12 +24,15 @@ import androidx.annotation.Nullable;
 
 import org.json.JSONObject;
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface;
-import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
+import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
+/**
+ * Main plugin renderer interface.
+ */
 public interface PrebidMobilePluginRenderer {
 
     String getName();

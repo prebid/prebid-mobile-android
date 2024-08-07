@@ -1,13 +1,18 @@
 package org.prebid.mobile;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
+/**
+ * Internal class for comparing parameters in adapters.
+ */
 public class ParametersMatcher {
 
     private static final String TAG = "ParametersMatcher";

@@ -39,6 +39,9 @@ import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.video.VideoViewListener;
 
+/**
+ * Internal view renderer for plugin renderer.
+ */
 public class PrebidDisplayView extends FrameLayout {
 
     private final static String TAG = DisplayView.class.getSimpleName();

@@ -15,6 +15,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 
 /**
+ * Original API native ad unit.
  * For details of the configuration of native imps, please check this documentation:
  * https://www.iab.com/wp-content/uploads/2018/03/OpenRTB-Native-Ads-Specification-Final-1.2.pdf
  */
@@ -55,6 +56,9 @@ public class NativeAdUnit extends AdUnit {
         };
     }
 
+    /**
+     * Context type for native request.
+     */
     public enum CONTEXT_TYPE {
         CONTENT_CENTRIC(1),
         SOCIAL_CENTRIC(2),
@@ -91,6 +95,9 @@ public class NativeAdUnit extends AdUnit {
         nativeConfiguration.setContextType(type);
     }
 
+    /**
+     * Context subtype for native request.
+     */
     public enum CONTEXTSUBTYPE {
         GENERAL(10),
         ARTICAL(11),
@@ -136,6 +143,9 @@ public class NativeAdUnit extends AdUnit {
         nativeConfiguration.setContextSubtype(type);
     }
 
+    /**
+     * Placement type for native request.
+     */
     public enum PLACEMENTTYPE {
         CONTENT_FEED(1),
         CONTENT_ATOMIC_UNIT(2),

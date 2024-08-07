@@ -16,6 +16,9 @@
 
 package org.prebid.mobile;
 
+/**
+ * Signals for the request.
+ */
 public class Signals {
 
     static class SingleContainerInt {

@@ -21,6 +21,9 @@ import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Base Prebid adapter for all ad types.
+ */
 public abstract class PrebidBaseAdapter extends Adapter {
 
     private final VersionInfo prebidVersion = getPrebidVersion();

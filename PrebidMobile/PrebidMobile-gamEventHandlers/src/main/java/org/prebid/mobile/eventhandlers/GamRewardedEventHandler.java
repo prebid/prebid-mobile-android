@@ -20,8 +20,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.eventhandlers.global.Constants;
@@ -31,6 +33,9 @@ import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
 
 import java.lang.ref.WeakReference;
 
+/**
+ * Rewarded event handler for communication between Prebid rendering API and the GAM SDK.
+ */
 public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEventListener {
 
     private static final String TAG = GamRewardedEventHandler.class.getSimpleName();

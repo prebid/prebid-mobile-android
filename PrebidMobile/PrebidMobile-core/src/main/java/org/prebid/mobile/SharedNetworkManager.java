@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
 import org.prebid.mobile.http.HTTPGet;
 import org.prebid.mobile.http.HTTPResponse;
 import org.prebid.mobile.http.HttpErrorCode;
@@ -29,6 +30,9 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Internal class for network operations.
+ */
 public class SharedNetworkManager {
 
     private static SharedNetworkManager manager;

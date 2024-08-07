@@ -19,6 +19,9 @@ package org.prebid.mobile.api.data;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Enum fetch demand status for all ads.
+ */
 public enum FetchDemandResult {
 
     /**

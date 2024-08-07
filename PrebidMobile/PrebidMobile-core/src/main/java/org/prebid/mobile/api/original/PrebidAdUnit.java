@@ -11,6 +11,10 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.api.data.BidInfo;
 
+/**
+ * Universal ad unit for original API. It allows to make multi-format request.
+ * Fetch demand result provides access to bid info data {@link BidInfo}.
+ */
 public class PrebidAdUnit {
 
     @NonNull

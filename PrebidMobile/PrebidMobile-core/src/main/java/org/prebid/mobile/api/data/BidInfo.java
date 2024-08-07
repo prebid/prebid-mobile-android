@@ -11,6 +11,9 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 import java.util.Map;
 
+/**
+ * Bid info object for {@link org.prebid.mobile.api.original.PrebidAdUnit}.
+ */
 public class BidInfo {
 
     @NonNull

@@ -51,6 +51,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Base ad unit for the original API.
+ */
 public abstract class AdUnit {
 
     protected AdUnitConfiguration configuration = new AdUnitConfiguration();

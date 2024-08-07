@@ -27,6 +27,9 @@ import org.prebid.mobile.rendering.models.PlacementType;
 
 import java.util.EnumSet;
 
+/**
+ * Original API interstitial ad unit.
+ */
 public class InterstitialAdUnit extends BannerBaseAdUnit {
 
     public InterstitialAdUnit(@NonNull String configId) {

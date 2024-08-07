@@ -43,6 +43,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Internal base mediation ad unit.
+ */
 public abstract class MediationBaseAdUnit {
 
     private static final String TAG = MediationBaseAdUnit.class.getSimpleName();

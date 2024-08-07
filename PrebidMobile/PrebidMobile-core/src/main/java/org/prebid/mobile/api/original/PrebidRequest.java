@@ -13,6 +13,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Request parameters for {@link PrebidAdUnit}.
+ */
 public class PrebidRequest {
 
     @Nullable

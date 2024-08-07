@@ -25,6 +25,9 @@ import org.prebid.mobile.api.data.AdUnitFormat;
 import java.util.EnumSet;
 import java.util.HashSet;
 
+/**
+ * Original API banner ad unit for displaying banner ad.
+ */
 public class BannerAdUnit extends BannerBaseAdUnit {
 
     public BannerAdUnit(@NonNull String configId, int width, int height) {

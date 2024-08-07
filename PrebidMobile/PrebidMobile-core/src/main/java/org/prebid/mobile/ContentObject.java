@@ -2,6 +2,7 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +10,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Application content object for additional targeting.
+ */
 public class ContentObject {
 
     /**
@@ -442,6 +446,9 @@ public class ContentObject {
         this.producerObject = producerObject;
     }
 
+    /**
+     * Producer info.
+     */
     public static class ProducerObject {
 
         /**

@@ -29,6 +29,9 @@ import org.prebid.mobile.rendering.models.AdPosition;
 
 import java.util.EnumSet;
 
+/**
+ * Mediation interstitial ad unit for Rendering API with AdMob or AppLovin MAX.
+ */
 public class MediationInterstitialAdUnit extends MediationBaseFullScreenAdUnit {
 
     private static final String TAG = MediationInterstitialAdUnit.class.getSimpleName();

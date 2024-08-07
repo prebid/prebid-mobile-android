@@ -38,6 +38,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+/**
+ * Utils for original API reflection manipulations.
+ */
 public class Util {
 
 
@@ -63,12 +66,6 @@ public class Util {
 
     private Util() {
 
-    }
-
-    public interface ResizeInBannerNativeListener {
-        void onResizePrebidAdSuccessful();
-
-        void onPrebidAdNotFound();
     }
 
 
@@ -512,6 +509,9 @@ public class Util {
 
     }
 
+    /**
+     * Internal interface.
+     */
     public interface Function1<R, T> {
         R apply(T element);
     }

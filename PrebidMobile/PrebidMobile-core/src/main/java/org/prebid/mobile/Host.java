@@ -16,6 +16,9 @@
 
 package org.prebid.mobile;
 
+/**
+ * Host for requesting ad.
+ */
 public enum Host {
 
     /**

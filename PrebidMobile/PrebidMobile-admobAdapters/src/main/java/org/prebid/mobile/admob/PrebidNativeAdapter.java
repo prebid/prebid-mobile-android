@@ -19,6 +19,9 @@ import org.prebid.mobile.rendering.bidding.events.EventsNotifier;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Prebid native adapter for AdMob integration.
+ */
 public class PrebidNativeAdapter extends PrebidBaseAdapter {
 
     private static final String TAG = "PrebidNative";

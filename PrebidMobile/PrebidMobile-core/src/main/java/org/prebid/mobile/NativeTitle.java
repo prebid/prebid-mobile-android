@@ -2,6 +2,9 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 
+/**
+ * Response object for native title asset.
+ */
 public class NativeTitle {
 
     private final String text;

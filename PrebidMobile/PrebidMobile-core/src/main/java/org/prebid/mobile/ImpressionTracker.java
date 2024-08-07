@@ -22,6 +22,9 @@ import android.content.Context;
 import org.prebid.mobile.http.HTTPGet;
 import org.prebid.mobile.http.HTTPResponse;
 
+/**
+ * Impression tracker for native ad.
+ */
 class ImpressionTracker {
     private String url;
     private VisibilityDetector visibilityDetector;

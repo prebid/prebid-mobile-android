@@ -17,13 +17,15 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import org.prebid.mobile.api.data.AdFormat;
 
 import java.util.EnumSet;
 
 
+/**
+ * Original API in-stream video ad unit.
+ */
 public class InStreamVideoAdUnit extends VideoBaseAdUnit {
 
     public InStreamVideoAdUnit(@NonNull String configId, int width, int height) {

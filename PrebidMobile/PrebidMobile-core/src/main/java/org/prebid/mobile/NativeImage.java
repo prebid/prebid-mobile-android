@@ -2,6 +2,9 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 
+/**
+ * Response object for native image asset.
+ */
 public class NativeImage {
 
     private final int typeNumber;
@@ -42,6 +45,9 @@ public class NativeImage {
         return typeNumber == that.typeNumber && url.equals(that.url);
     }
 
+    /**
+     * Enum type of native image.
+     */
     public enum Type {
         ICON,
         MAIN_IMAGE,
