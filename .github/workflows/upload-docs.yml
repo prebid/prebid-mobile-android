@@ -27,6 +27,7 @@ jobs:
       with:
         fetch-depth: 0
         ref: docs
+        clean: false
     - name: Commit documentation changes
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -35,7 +36,8 @@ jobs:
         TAG_NAME=${{ github.ref }}
         TAG_NAME=${TAG_NAME#refs/tags/}
         echo "Current tag: $TAG_NAME"
-        git add docs/
+        ls -l
+        git add docs
         git commit -m "Generate docs - $TAG_NAME"
     - name: Push changes
       uses: ad-m/github-push-action@master
