@@ -1,0 +1,38 @@
+name: Upload Docs iOS
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+      - 'test-doc-*'
+
+jobs:
+  upload-docs:
+
+    runs-on: macos-latest
+
+    steps:
+    - name: Generate docs
+      run: |
+        rm -rf docs
+        ./gradlew :PrebidMobile:combinedJavadoc
+        cp -r PrebidMobile/build/combinedJavadoc docs
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: docs
+    - name: Commit documentation changes
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git status
+        TAG_NAME=${{ github.ref }}
+        TAG_NAME=${TAG_NAME#refs/tags/}
+        echo "Current tag: $TAG_NAME"
+        git add -A && git commit -m "Generate docs - $TAG_NAME"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: docs
