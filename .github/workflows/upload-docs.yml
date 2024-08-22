@@ -35,7 +35,8 @@ jobs:
         TAG_NAME=${{ github.ref }}
         TAG_NAME=${TAG_NAME#refs/tags/}
         echo "Current tag: $TAG_NAME"
-        git add -A && git commit -m "Generate docs - $TAG_NAME"
+        git add docs/
+        git commit -m "Generate docs - $TAG_NAME"
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
