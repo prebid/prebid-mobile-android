@@ -1,4 +1,4 @@
-name: Upload Docs iOS
+name: Upload Docs Android
 
 on:
   push:
@@ -19,9 +19,8 @@ jobs:
         distribution: 'temurin'
     - name: Generate docs
       run: |
-        rm -rf docs
         ./gradlew :PrebidMobile:combinedJavadoc
-        cp -r PrebidMobile/build/combinedJavadoc docs
+        cp -r PrebidMobile/build/combinedJavadoc docs_new
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
@@ -37,6 +36,9 @@ jobs:
         TAG_NAME=${TAG_NAME#refs/tags/}
         echo "Current tag: $TAG_NAME"
         ls -l
+        rm -rf docs
+        cp -r docs_new docs
+        rm -rf docs_new
         git add docs
         git commit -m "Generate docs - $TAG_NAME"
     - name: Push changes
