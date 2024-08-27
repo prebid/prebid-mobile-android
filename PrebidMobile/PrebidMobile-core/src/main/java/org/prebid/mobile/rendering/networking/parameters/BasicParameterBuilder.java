@@ -381,7 +381,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
         //Send 1 for interstitial/interstitial video and 0 for banners
         imp.instl = isInterstitial ? 1 : 0;
         // 0 == embedded, 1 == native
-        imp.clickBrowser = !PrebidMobile.useExternalBrowser && browserActivityAvailable ? 0 : 1;
+        imp.clickBrowser = browserActivityAvailable ? 0 : 1;
         //set secure=1 for https or secure=0 for http
         if (!adConfiguration.isAdType(AdFormat.VAST)) {
             imp.secure = 1;
