@@ -50,12 +50,6 @@ import java.util.Map;
 public class PrebidMobile {
 
     /**
-     * In the upcoming major release, the property will be removed.
-     */
-    @Deprecated
-    public static boolean useExternalBrowser = false;
-
-    /**
      * In the upcoming major release, the property will be replaced with the method to setup supported MRAID versions.
      * If true, the SDK sends "af=3,5,6", indicating support for MRAID
      */
