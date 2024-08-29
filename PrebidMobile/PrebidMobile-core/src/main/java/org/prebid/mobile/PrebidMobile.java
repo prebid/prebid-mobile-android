@@ -45,7 +45,6 @@ import java.util.Map;
 
 public class PrebidMobile {
 
-    public static boolean isCoppaEnabled = false;
     public static boolean useExternalBrowser = false;
 
     /**

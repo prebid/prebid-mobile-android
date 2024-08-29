@@ -54,7 +54,6 @@ public class Mraid3TestProperties extends MraidBasicPage {
         envJson.put("appId", AppInfoManager.getPackageName());
         envJson.put("ifa", AdIdManager.getAdId());
         envJson.put("limitAdTracking", AdIdManager.isLimitAdTrackingEnabled());
-        envJson.put("coppa", PrebidMobile.isCoppaEnabled);
 
         String viewText = clearStringFromWhitespace(device.wait(Until.findObject(Locators.envContainer), TIMEOUT).getText());
         assertEquals(envJson.toString(), viewText);

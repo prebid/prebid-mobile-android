@@ -130,7 +130,6 @@ public class BasicParameterBuilderTest {
 
         PrebidMobile.sendMraidSupportParams = true;
         PrebidMobile.useExternalBrowser = false;
-        PrebidMobile.isCoppaEnabled = false;
         PrebidMobile.clearStoredBidResponses();
         PrebidMobile.setStoredAuctionResponse(null);
 
@@ -509,8 +508,6 @@ public class BasicParameterBuilderTest {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.setAdFormat(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
-
-        PrebidMobile.isCoppaEnabled = true;
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
                 context.getResources(),
@@ -1117,10 +1114,6 @@ public class BasicParameterBuilderTest {
                 "prebid",
                 Prebid.getJsonObjectForBidRequest(PrebidMobile.getPrebidServerAccountId(), isVideo, adConfiguration)
         );
-        //if coppaEnabled - set 1, else No coppa is sent
-        if (PrebidMobile.isCoppaEnabled) {
-            bidRequest.getRegs().coppa = 1;
-        }
 
         Imp imp = getExpectedImp(adConfiguration, uuid);
         bidRequest.getImp().add(imp);
