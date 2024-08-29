@@ -28,7 +28,6 @@ public class MraidEnvTest {
 
     @Test
     public void getWindowMraidEnv_ReturnProperlyFormedMraid() {
-        PrebidMobile.isCoppaEnabled = true;
         String expectedValue = "window.MRAID_ENV = {"
                 + "version: \"" + PrebidMobile.MRAID_VERSION + "\","
                 + "sdk: \"" + PrebidMobile.SDK_NAME + "\","
