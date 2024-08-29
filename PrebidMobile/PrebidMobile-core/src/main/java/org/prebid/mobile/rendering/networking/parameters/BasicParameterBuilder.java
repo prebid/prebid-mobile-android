@@ -137,10 +137,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
             }
         }
         bidRequest.getExt().put("prebid", Prebid.getJsonObjectForBidRequest(storedRequestId, isVideo, adConfiguration));
-        //if coppaEnabled - set 1, else No coppa is sent
-        if (PrebidMobile.isCoppaEnabled) {
-            bidRequest.getRegs().coppa = 1;
-        }
     }
 
     private void configureSource(Source source, String uuid) {

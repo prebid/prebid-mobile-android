@@ -53,11 +53,6 @@ public class PrebidMobile {
      * In the upcoming major release, the property will be removed.
      */
     @Deprecated
-    public static boolean isCoppaEnabled = false;
-    /**
-     * In the upcoming major release, the property will be removed.
-     */
-    @Deprecated
     public static boolean useExternalBrowser = false;
 
     /**
