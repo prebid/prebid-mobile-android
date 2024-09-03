@@ -359,27 +359,6 @@ public class TargetingParams {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
-     * Sets buyerId
-     *
-     * @param buyerId Buyer-specific ID for the user as mapped by the exchange for
-     *                the buyer. At least one of buyeruid or id is recommended.
-     */
-    @Deprecated
-    public static void setBuyerId(@Nullable String buyerId) {
-        buyerUserId = buyerId;
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed.
-     */
-    @Deprecated
-    @Nullable
-    public static String getBuyerId() {
-        return buyerUserId;
-    }
-
-    /**
      * Sets external user ids. Set null for clearing.
      * See: {@link ExternalUserId}.
      */
@@ -402,6 +381,7 @@ public class TargetingParams {
     }
 
     /**
+     * Use this API for storing the externalUserId in the SharedPreference.
      * Prebid server provide them participating server-side bid adapters.
      *
      * @param externalUserId the externalUserId instance to be stored in the SharedPreference

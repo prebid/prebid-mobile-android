@@ -166,7 +166,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
         user.id = TargetingParams.getUserId();
         user.keywords = TargetingParams.getUserKeywords();
         user.customData = TargetingParams.getUserCustomData();
-        user.buyerUid = TargetingParams.getBuyerId();
         user.ext = TargetingParams.getUserExt();
 
         ArrayList<DataObject> userData = adConfiguration.getUserData();

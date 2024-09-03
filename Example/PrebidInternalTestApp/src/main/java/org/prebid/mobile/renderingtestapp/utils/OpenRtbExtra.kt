@@ -25,7 +25,6 @@ data class OpenRtbExtra(
         @SerializedName("ip") val ipAddress: String?,
         @SerializedName("xid") val userId: String?,
         @SerializedName("gen") val gender: String?,
-        @SerializedName("buyerid") val buyerId: String?,
         @SerializedName("customdata") val customData: String?,
         @SerializedName("keywords") val keywords: String?,
         @SerializedName("geo") val geo: Geo?,
