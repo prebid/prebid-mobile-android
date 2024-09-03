@@ -91,7 +91,6 @@ public class BasicParameterBuilderTest {
         TargetingParams.setUserLatLng(null, null);
         TargetingParams.setGender(TargetingParams.GENDER.UNKNOWN);
         TargetingParams.clearStoredExternalUserIds();
-        TargetingParams.setBuyerId(null);
         TargetingParams.setUserId(null);
         TargetingParams.setUserCustomData(null);
         TargetingParams.setYearOfBirth(0);
@@ -521,7 +520,6 @@ public class BasicParameterBuilderTest {
         TargetingParams.addUserKeyword(USER_KEYWORDS);
         TargetingParams.setUserCustomData(USER_CUSTOM);
         TargetingParams.setGender(TargetingParams.GENDER.MALE);
-        TargetingParams.setBuyerId(USER_BUYER_ID);
         TargetingParams.setUserExt(new Ext());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
 
