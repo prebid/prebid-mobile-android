@@ -333,6 +333,11 @@ public abstract class AdUnit {
      * This method obtains the context keyword for adunit context targeting
      * Inserts the given element in the set if it is not already present.
      */
+    
+    /**
+     * @deprecated imp.ext.context.keywords doesn't exist
+     */
+    @Deprecated
     public void addExtKeyword(String keyword) {
         configuration.addExtKeyword(keyword);
     }
@@ -341,6 +346,10 @@ public abstract class AdUnit {
      * This method obtains the context keyword set for adunit context targeting
      * Adds the elements of the given set to the set.
      */
+    /**
+     * @deprecated imp.ext.context.keywords doesn't exist
+     */
+    @Deprecated
     public void addExtKeywords(Set<String> keywords) {
         configuration.addExtKeywords(keywords);
     }

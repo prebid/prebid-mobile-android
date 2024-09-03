@@ -238,6 +238,10 @@ public abstract class BaseInterstitialAdUnit {
         return adUnitConfig.getExtDataDictionary();
     }
 
+    /**
+     * @deprecated imp.ext.context.keywords doesn't exist
+     */
+    @Deprecated
     public void addExtKeyword(String keyword) {
         adUnitConfig.addExtKeyword(keyword);
     }
