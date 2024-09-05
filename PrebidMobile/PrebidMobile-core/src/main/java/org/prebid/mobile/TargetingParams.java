@@ -287,7 +287,10 @@ public class TargetingParams {
      * be used to include “escaped” quotation marks.
      *
      * @param data Custom data to be passed
+     *
+     * @deprecated this is exchange-specific information
      */
+    @Deprecated
     public static void setUserCustomData(@Nullable String data) {
         userCustomData = data;
     }
