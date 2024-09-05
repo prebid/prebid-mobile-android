@@ -73,7 +73,10 @@ public class TargetingParams {
 
 
     /* -------------------- User data -------------------- */
-
+     /**
+        * @deprecated by ORTB
+     */
+    @Deprecated
     public static void setUserAge(@Nullable Integer age) {
         if (age == null) {
             yearOfBirth = 0;
@@ -93,6 +96,10 @@ public class TargetingParams {
         TargetingParams.yearOfBirth = yearOfBirth;
     }
 
+    /**
+        * @deprecated by ORTB
+    */
+    @Deprecated
     @Nullable
     public static Integer getUserAge() {
         return userAge;
@@ -102,7 +109,10 @@ public class TargetingParams {
      * Get the year of birth for targeting
      *
      * @return yob
+     *
+     * @deprecated by ORTB
      */
+    @Deprecated
     public static int getYearOfBirth() {
         return yearOfBirth;
     }
@@ -111,7 +121,10 @@ public class TargetingParams {
      * Set the year of birth and user age for targeting
      *
      * @param yob yob of the user
+     *
+     * @deprecated by ORTB
      */
+    @Deprecated
     public static void setYearOfBirth(int yob) throws Exception {
         if (yob == 0) {
             TargetingParams.yearOfBirth = 0;
@@ -128,6 +141,10 @@ public class TargetingParams {
         }
     }
 
+     /**
+      * @deprecated by ORTB
+     */
+    @Deprecated
     public enum GENDER {
         FEMALE,
         MALE,
@@ -160,7 +177,10 @@ public class TargetingParams {
      * Get the current user's gender, if it's available.  The default value is UNKNOWN.
      *
      * @return The user's gender.
+     *
+     * @deprecated by ORTB
      */
+    @Deprecated
     @NonNull
     public static GENDER getGender() {
         return gender;
@@ -172,7 +192,10 @@ public class TargetingParams {
      * value is UNKNOWN.
      *
      * @param gender The user's gender.
+     *
+     * @deprecated by ORTB
      */
+    @Deprecated
     public static void setGender(@Nullable GENDER gender) {
         if (gender != null) {
             TargetingParams.gender = gender;

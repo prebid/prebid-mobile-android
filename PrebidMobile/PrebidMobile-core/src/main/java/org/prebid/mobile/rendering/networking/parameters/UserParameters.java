@@ -32,7 +32,10 @@ public class UserParameters {
 
     /**
      * User gender.
+     *
+     * @deprecated by ORTB
      */
+    @Deprecated
     public enum Gender {
         /**
          * User is male.
