@@ -36,9 +36,16 @@ jobs:
         TAG_NAME=${TAG_NAME#refs/tags/}
         echo "Current tag: $TAG_NAME"
         ls -l
-        rm -rf docs
-        cp -r docs_new docs
-        rm -rf docs_new
+        
+        MIN_SIZE=5120
+        if [ -d docs_new ] && [ "$(du -s docs_new | cut -f1)" -ge "$MIN_SIZE" ]; then
+          rm -rf docs
+          cp -r docs_new docs
+          rm -rf docs_new
+        else
+          echo "docs_new directory either does not exist or is too small."
+          exit 1
+        fi
         git add docs
         git commit -m "Generate docs - $TAG_NAME"
     - name: Push changes
