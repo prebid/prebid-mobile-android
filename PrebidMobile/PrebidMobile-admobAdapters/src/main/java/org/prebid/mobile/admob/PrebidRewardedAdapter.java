@@ -13,6 +13,9 @@ import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 
+/**
+ * Prebid rewarded adapter for AdMob integration.
+ */
 @Keep
 public class PrebidRewardedAdapter extends PrebidBaseAdapter {
 

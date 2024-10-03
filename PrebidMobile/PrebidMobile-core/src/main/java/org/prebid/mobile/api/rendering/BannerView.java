@@ -65,6 +65,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Ad view for banner ad with rendering API.
+ */
 public class BannerView extends FrameLayout {
 
     private final static String TAG = BannerView.class.getSimpleName();

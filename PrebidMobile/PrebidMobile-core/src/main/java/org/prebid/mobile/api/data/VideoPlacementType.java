@@ -17,8 +17,12 @@
 package org.prebid.mobile.api.data;
 
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.rendering.models.PlacementType;
 
+/**
+ * Video placement type for additional targeting.
+ */
 public enum VideoPlacementType {
     IN_BANNER(2),
     IN_ARTICLE(3),

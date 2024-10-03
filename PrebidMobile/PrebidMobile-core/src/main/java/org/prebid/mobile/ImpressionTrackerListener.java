@@ -16,6 +16,9 @@
 
 package org.prebid.mobile;
 
+/**
+ * Impression tracker listener.
+ */
 public interface ImpressionTrackerListener {
     public void onImpressionTrackerFired();
 

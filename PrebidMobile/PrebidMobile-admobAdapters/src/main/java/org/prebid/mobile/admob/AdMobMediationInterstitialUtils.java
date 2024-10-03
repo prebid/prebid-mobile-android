@@ -1,12 +1,17 @@
 package org.prebid.mobile.admob;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 
 import java.util.HashMap;
 
+/**
+ * Internal mediation delegate.
+ */
 public class AdMobMediationInterstitialUtils implements PrebidMediationDelegate {
 
     private final Bundle extras;

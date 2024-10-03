@@ -2,6 +2,9 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 
+/**
+ * Response object for native data asset.
+ */
 public class NativeData {
 
     private final int typeNumber;
@@ -42,6 +45,9 @@ public class NativeData {
         return typeNumber == that.typeNumber && value.equals(that.value);
     }
 
+    /**
+     * Enum type of native data.
+     */
     public enum Type {
         SPONSORED_BY,
         DESCRIPTION,

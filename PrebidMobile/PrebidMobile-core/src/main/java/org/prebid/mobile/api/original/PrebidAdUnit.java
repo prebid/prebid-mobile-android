@@ -11,6 +11,10 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.api.data.BidInfo;
 
+/**
+ * Universal ad unit for original API. It allows to make multi-format request.
+ * Fetch demand result provides access to bid info data {@link BidInfo}.
+ */
 public class PrebidAdUnit {
 
     @NonNull
@@ -18,10 +22,19 @@ public class PrebidAdUnit {
     @Nullable
     private MultiformatAdUnitFacade adUnit;
 
+    /**
+     * Default constructor.
+     */
     public PrebidAdUnit(@NonNull String configId) {
         this.configId = configId;
     }
 
+    /**
+     * Loads ad and calls listener with bid info data.
+     *
+     * @param request  request object
+     * @param listener callback when operation is completed (success or fail)
+     */
     public void fetchDemand(
             PrebidRequest request,
             OnFetchDemandResult listener
@@ -29,6 +42,13 @@ public class PrebidAdUnit {
         baseFetchDemand(request, null, listener);
     }
 
+    /**
+     * Loads ad, applies keywords to the ad object, and calls listener with bid info data.
+     * @param adObject AdMob's ({@code AdManagerAdRequest} or @{@code AdManagerAdRequest.Builder})
+     *                 or AppLovin's ({@code MaxNativeAdLoader}) ad object
+     * @param request request object
+     * @param listener callback when operation is completed (success or fail)
+     */
     public void fetchDemand(
             Object adObject,
             PrebidRequest request,
@@ -37,6 +57,9 @@ public class PrebidAdUnit {
         baseFetchDemand(request, adObject, listener);
     }
 
+    /**
+     * Auto refresh interval for banner ad.
+     */
     public void setAutoRefreshInterval(
             @IntRange(from = AUTO_REFRESH_DELAY_MIN / 1000, to = AUTO_REFRESH_DELAY_MAX / 1000) int seconds
     ) {
@@ -45,18 +68,27 @@ public class PrebidAdUnit {
         }
     }
 
+    /**
+     * Resumes auto refresh interval after stopping.
+     */
     public void resumeAutoRefresh() {
         if (adUnit != null) {
             adUnit.resumeAutoRefresh();
         }
     }
 
+    /**
+     * Stops auto refresh interval.
+     */
     public void stopAutoRefresh() {
         if (adUnit != null) {
             adUnit.stopAutoRefresh();
         }
     }
 
+    /**
+     * Destroy ad unit and stop downloading.
+     */
     public void destroy() {
         if (adUnit != null) {
             adUnit.destroy();

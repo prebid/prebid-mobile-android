@@ -37,6 +37,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Response native ad object for all assets.
+ */
 public class PrebidNativeAd {
 
     private static final String TAG = "PrebidNativeAd";

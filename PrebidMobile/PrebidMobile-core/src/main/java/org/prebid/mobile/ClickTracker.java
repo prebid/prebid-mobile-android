@@ -22,6 +22,9 @@ import android.content.Context;
 import org.prebid.mobile.http.HTTPGet;
 import org.prebid.mobile.http.HTTPResponse;
 
+/**
+ * Internal click tracker.
+ */
 class ClickTracker {
     private String url;
     private boolean fired = false;

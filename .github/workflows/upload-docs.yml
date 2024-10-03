@@ -1,0 +1,55 @@
+name: Upload Docs Android
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+      - 'test-doc-*'
+
+jobs:
+  upload-docs:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Generate docs
+      run: |
+        ./gradlew :PrebidMobile:combinedJavadoc
+        cp -r PrebidMobile/build/combinedJavadoc docs_new
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: docs
+        clean: false
+    - name: Commit documentation changes
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git status
+        TAG_NAME=${{ github.ref }}
+        TAG_NAME=${TAG_NAME#refs/tags/}
+        echo "Current tag: $TAG_NAME"
+        ls -l
+        
+        MIN_SIZE=5120
+        if [ -d docs_new ] && [ "$(du -s docs_new | cut -f1)" -ge "$MIN_SIZE" ]; then
+          rm -rf docs
+          cp -r docs_new docs
+          rm -rf docs_new
+        else
+          echo "docs_new directory either does not exist or is too small."
+          exit 1
+        fi
+        git add docs
+        git commit -m "Generate docs - $TAG_NAME"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: docs

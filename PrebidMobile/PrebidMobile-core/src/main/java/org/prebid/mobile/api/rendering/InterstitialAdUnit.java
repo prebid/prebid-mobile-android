@@ -40,6 +40,9 @@ import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 
 import java.util.EnumSet;
 
+/**
+ * Interstitial ad unit for rendering API.
+ */
 public class InterstitialAdUnit extends BaseInterstitialAdUnit {
 
     private static final String TAG = InterstitialAdUnit.class.getSimpleName();

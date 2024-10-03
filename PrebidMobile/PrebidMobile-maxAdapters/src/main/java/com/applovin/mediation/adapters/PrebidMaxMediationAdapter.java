@@ -23,6 +23,9 @@ import com.applovin.sdk.AppLovinSdk;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
 
+/**
+ * Prebid mediation adapter for AppLovin MAX integration.
+ */
 public class PrebidMaxMediationAdapter extends MediationAdapterBase implements MaxAdViewAdapter, MaxInterstitialAdapter, MaxRewardedAdapter, MaxNativeAdAdapter {
 
     public static final String TAG = PrebidMaxMediationAdapter.class.getSimpleName();

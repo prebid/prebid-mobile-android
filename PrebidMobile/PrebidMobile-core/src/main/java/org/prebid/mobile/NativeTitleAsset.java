@@ -3,6 +3,9 @@ package org.prebid.mobile;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * Native title object for requesting asset.
+ */
 public class NativeTitleAsset extends NativeAsset {
 
     private int len;

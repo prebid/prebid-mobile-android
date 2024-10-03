@@ -18,6 +18,9 @@ package org.prebid.mobile;
 
 import androidx.annotation.MainThread;
 
+/**
+ * Fetch demand listener for original API.
+ */
 public interface OnCompleteListener {
     /**
      * This method will be called when PrebidMobile finishes attaching keywords to your ad object.

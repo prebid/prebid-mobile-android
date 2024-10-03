@@ -25,26 +25,41 @@ import org.prebid.mobile.api.data.AdUnitFormat;
 import java.util.EnumSet;
 import java.util.HashSet;
 
+/**
+ * Original API banner ad unit for displaying banner ad.
+ */
 public class BannerAdUnit extends BannerBaseAdUnit {
 
+    /**
+     * Default constructor for banner ad.
+     *
+     * @param configId config id
+     * @param width    ad width
+     * @param height   ad height
+     */
     public BannerAdUnit(@NonNull String configId, int width, int height) {
         super(configId, EnumSet.of(AdFormat.BANNER));
         configuration.addSize(new AdSize(width, height));
     }
 
     /**
-     * Constructor for multi-format or video banner request.
+     * Constructor with ad formats.
      *
-     * @param adUnitFormats <p>
-     *                      for multi-format request `EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO);`
-     *                      <p>
-     *                      for video banner `EnumSet.of(AdUnitFormat.VIDEO);`
+     * @param configId      config id
+     * @param width         ad width
+     * @param height        ad height
+     * @param adUnitFormats ad formats ({@link AdUnitFormat}). <br>
+     *                      For multi-format request {@code EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO);} <br>
+     *                      For only video request {@code EnumSet.of(AdUnitFormat.VIDEO);}
      */
     public BannerAdUnit(@NonNull String configId, int width, int height, EnumSet<AdUnitFormat> adUnitFormats) {
         super(configId, AdFormat.fromSet(adUnitFormats, false));
         configuration.addSize(new AdSize(width, height));
     }
 
+    /**
+     * Add additional size.
+     */
     public void addAdditionalSize(int width, int height) {
         configuration.addSize(new AdSize(width, height));
     }

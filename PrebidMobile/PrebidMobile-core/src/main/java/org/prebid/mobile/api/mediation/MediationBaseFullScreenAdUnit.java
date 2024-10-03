@@ -1,12 +1,17 @@
 package org.prebid.mobile.api.mediation;
 
 import android.content.Context;
+
 import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 
+/**
+ * Internal base interstitial ad unit.
+ */
 public abstract class MediationBaseFullScreenAdUnit extends MediationBaseAdUnit {
 
     private static final String TAG = MediationBaseFullScreenAdUnit.class.getSimpleName();

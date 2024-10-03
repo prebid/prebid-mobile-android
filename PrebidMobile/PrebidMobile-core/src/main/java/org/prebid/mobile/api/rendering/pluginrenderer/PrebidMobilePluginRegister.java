@@ -27,6 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Plugin registerer.
+ */
 public class PrebidMobilePluginRegister {
 
     public static final String PREBID_MOBILE_RENDERER_NAME = "PrebidRenderer";

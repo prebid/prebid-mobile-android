@@ -32,6 +32,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Prebid native ad mapper for converting to AdMob native ad.
+ */
 public class PrebidNativeAdMapper extends UnifiedNativeAdMapper {
 
     private final PrebidNativeAd prebidAd;

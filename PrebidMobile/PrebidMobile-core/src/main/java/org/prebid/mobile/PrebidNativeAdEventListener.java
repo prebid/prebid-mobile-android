@@ -18,6 +18,9 @@ package org.prebid.mobile;
 
 import androidx.annotation.WorkerThread;
 
+/**
+ * Native events listener.
+ */
 public interface PrebidNativeAdEventListener {
 
     /**

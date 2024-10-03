@@ -18,6 +18,9 @@ package org.prebid.mobile.api.data;
 
 import org.prebid.mobile.rendering.models.AdPosition;
 
+/**
+ * Banner ad position for additional targeting.
+ */
 public enum BannerAdPosition {
     UNDEFINED(-1),
     UNKNOWN(0),

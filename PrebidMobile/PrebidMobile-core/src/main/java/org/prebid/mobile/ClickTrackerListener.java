@@ -16,6 +16,9 @@
 
 package org.prebid.mobile;
 
+/**
+ * Internal click tracker listener.
+ */
 public interface ClickTrackerListener {
     public void onClickTrackerFired();
 

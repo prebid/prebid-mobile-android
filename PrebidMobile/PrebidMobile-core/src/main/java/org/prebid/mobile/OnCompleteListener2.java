@@ -21,6 +21,9 @@ import androidx.annotation.Nullable;
 
 import java.util.Map;
 
+/**
+ * Additional fetch demand listener.
+ */
 public interface OnCompleteListener2 {
     /**
      * This method will be called when PrebidMobile finishes attaching keywords to unmodifiableMap.

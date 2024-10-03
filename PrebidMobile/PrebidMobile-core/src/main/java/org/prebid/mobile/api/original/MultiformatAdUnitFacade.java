@@ -32,7 +32,7 @@ import java.util.Set;
 
 /**
  * Internal AdUnit implementation that is used for PrebidAdUnit
- * with multiformat configuration. It separates logic for multiformat ad unit.
+ * with multi-format configuration. It separates logic for multi-format ad unit.
  */
 class MultiformatAdUnitFacade extends AdUnit {
 

@@ -17,7 +17,9 @@
 package org.prebid.mobile.api.mediation;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
+
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
@@ -27,6 +29,9 @@ import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 
+/**
+ * Mediation banner ad unit for Rendering API with AdMob or AppLovin MAX.
+ */
 public class MediationBannerAdUnit extends MediationBaseAdUnit {
 
     private static final String TAG = MediationBannerAdUnit.class.getSimpleName();
@@ -35,6 +40,14 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
 
     private boolean adFailed;
 
+    /**
+     * Default constructor.
+     *
+     * @param context           {@link Context}
+     * @param configId          config id
+     * @param size              ad size
+     * @param mediationDelegate mediation delegate ({@code AdMobBannerMediationUtils} or {@code MaxMediationBannerUtils}.
+     */
     public MediationBannerAdUnit(
         Context context,
         String configId,
@@ -55,6 +68,9 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         adUnitConfig.setAdFormat(AdFormat.BANNER);
     }
 
+    /**
+     * Destroy ad unit.
+     */
     @Override
     public void destroy() {
         super.destroy();
@@ -79,10 +95,14 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         });
     }
 
+    /**
+     * Loads ad and applies mediation delegate.
+     *
+     * @param listener callback when operation is completed (success or fail)
+     */
     @Override
     public final void fetchDemand(
-        @NonNull
-            OnFetchCompleteListener listener
+            @NonNull OnFetchCompleteListener listener
     ) {
         super.fetchDemand(listener);
     }

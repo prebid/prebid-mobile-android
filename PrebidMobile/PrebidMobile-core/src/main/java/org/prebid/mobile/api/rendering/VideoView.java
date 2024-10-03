@@ -20,7 +20,9 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+
 import androidx.core.content.ContextCompat;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -40,6 +42,9 @@ import org.prebid.mobile.rendering.views.base.BaseAdView;
 import org.prebid.mobile.rendering.views.video.VideoViewListener;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
+/**
+ * Internal video player view for displaying banner video ads.
+ */
 public class VideoView extends BaseAdView {
 
     private final static String TAG = VideoView.class.getSimpleName();

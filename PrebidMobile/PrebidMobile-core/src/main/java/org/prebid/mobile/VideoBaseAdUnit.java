@@ -24,6 +24,9 @@ import org.prebid.mobile.api.data.AdFormat;
 import java.util.EnumSet;
 import java.util.List;
 
+/**
+ * Video base ad unit with video parameters.
+ */
 public abstract class VideoBaseAdUnit extends AdUnit {
 
     VideoBaseAdUnit(@NonNull String configId, @NonNull EnumSet<AdFormat> adType) {
