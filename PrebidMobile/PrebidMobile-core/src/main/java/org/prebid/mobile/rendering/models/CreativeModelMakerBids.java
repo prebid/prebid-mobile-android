@@ -18,9 +18,7 @@ package org.prebid.mobile.rendering.models;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -77,6 +75,10 @@ public class CreativeModelMakerBids {
         if (!jsScriptsManager.checkIfScriptsDownloadedAndStartDownloadingIfNot()) {
             notifyErrorListener("JS libraries has not been downloaded yet. Starting downloading...");
             return;
+        }
+
+        if (adConfiguration.isRewarded()) {
+            adConfiguration.getRewardManager().setRewardedExt(winningBid.getRewardedExt());
         }
 
         if (bidResponse.isVideo()) {

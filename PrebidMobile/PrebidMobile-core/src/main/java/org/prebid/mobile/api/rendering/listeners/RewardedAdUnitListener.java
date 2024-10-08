@@ -16,8 +16,10 @@
 
 package org.prebid.mobile.api.rendering.listeners;
 
+import androidx.annotation.Nullable;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.RewardedAdUnit;
+import org.prebid.mobile.rendering.interstitial.rewarded.Reward;
 
 /**
  * Listener interface representing RewardedAdUnit events.
@@ -65,5 +67,5 @@ public interface RewardedAdUnitListener {
      *
      * @param rewardedAdUnit view of the corresponding event. Contains reward instance inside. Prebid reward is always null.
      */
-    void onUserEarnedReward(RewardedAdUnit rewardedAdUnit);
+    void onUserEarnedReward(RewardedAdUnit rewardedAdUnit, @Nullable Reward reward);
 }

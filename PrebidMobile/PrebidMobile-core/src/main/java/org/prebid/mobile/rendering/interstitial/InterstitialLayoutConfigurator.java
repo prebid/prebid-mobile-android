@@ -45,5 +45,7 @@ public class InterstitialLayoutConfigurator {
         displayProperties.skipDelay = adConfiguration.getSkipDelay();
         displayProperties.skipButtonArea = adConfiguration.getSkipButtonArea();
         displayProperties.skipButtonPosition = adConfiguration.getSkipButtonPosition();
+
+        displayProperties.config = adConfiguration;
     }
 }

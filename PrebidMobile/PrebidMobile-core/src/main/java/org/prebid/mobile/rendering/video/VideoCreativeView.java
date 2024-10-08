@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
 import org.prebid.mobile.rendering.models.ViewPool;
@@ -48,6 +49,7 @@ public class VideoCreativeView extends RelativeLayout {
     @Nullable private View callToActionView;
     private ExoPlayerView exoPlayerView;
     private VolumeControlView volumeControlView;
+    private AdUnitConfiguration config;
 
     private String callToActionUrl;
     private boolean urlHandleInProgress;
@@ -57,12 +59,17 @@ public class VideoCreativeView extends RelativeLayout {
 
     public VideoCreativeView(
         Context context,
-        VideoCreativeViewListener videoCreativeViewListener
-
+        VideoCreativeViewListener videoCreativeViewListener,
+        AdUnitConfiguration config
     ) throws AdException {
         super(context);
+        this.config = config;
         this.videoCreativeViewListener = videoCreativeViewListener;
         init();
+    }
+
+    public void setAdUnitConfiguration(AdUnitConfiguration config) {
+        this.config = config;
     }
 
     public void setVideoUri(Uri videoUri) {
@@ -129,8 +136,8 @@ public class VideoCreativeView extends RelativeLayout {
         updateVolumeControlView(VolumeControlView.VolumeState.UN_MUTED);
     }
 
-    public void showCallToAction() {
-        addCallToActionView();
+    public void showCallToAction(boolean visibility) {
+        addCallToActionView(visibility);
     }
 
     public void hideCallToAction() {
@@ -191,10 +198,11 @@ public class VideoCreativeView extends RelativeLayout {
                                                         null
                                                 );
 
+        exoPlayerView.setAdUnitConfiguration(config);
         addView(exoPlayerView);
     }
 
-    private void addCallToActionView() {
+    private void addCallToActionView(boolean visibility) {
         callToActionView = inflate(getContext(), R.layout.lyt_call_to_action, null);
         callToActionView.setOnClickListener(v -> handleCallToActionClick());
 
@@ -207,6 +215,10 @@ public class VideoCreativeView extends RelativeLayout {
         layoutParams.addRule(ALIGN_PARENT_BOTTOM);
         layoutParams.addRule(ALIGN_PARENT_RIGHT);
         layoutParams.setMargins(margin, margin, margin, margin);
+
+        if (!visibility) {
+            callToActionView.setVisibility(View.GONE);
+        }
 
         addView(callToActionView, layoutParams);
         InsetsUtils.addCutoutAndNavigationInsets(callToActionView);

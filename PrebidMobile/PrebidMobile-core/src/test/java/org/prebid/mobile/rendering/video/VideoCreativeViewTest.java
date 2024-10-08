@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -46,7 +47,7 @@ public class VideoCreativeViewTest {
         Context context = Robolectric.buildActivity(Activity.class).create().get();
         mockCreative = Mockito.mock(VideoCreative.class);
 
-        videoCreativeView = new VideoCreativeView(context, mockCreative);
+        videoCreativeView = new VideoCreativeView(context, mockCreative, new AdUnitConfiguration());
     }
 
     @Test

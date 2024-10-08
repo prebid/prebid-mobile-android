@@ -83,7 +83,7 @@ public class VideoCreativeTest {
 
     @Test
     public void initNativeAdSessionManagerSuccessTest() throws Exception {
-        videoCreative.videoCreativeView = new VideoCreativeView(context, videoCreative);
+        videoCreative.videoCreativeView = new VideoCreativeView(context, videoCreative, new AdUnitConfiguration());
         VideoCreative spyVideoCreative = spy(videoCreative);
 
         spyVideoCreative.createOmAdSession();

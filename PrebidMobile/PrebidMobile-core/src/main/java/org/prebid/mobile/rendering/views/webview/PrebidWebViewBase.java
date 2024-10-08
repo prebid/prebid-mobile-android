@@ -27,9 +27,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
-
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.listeners.WebViewDelegate;
 import org.prebid.mobile.rendering.models.HTMLCreative;
@@ -298,6 +295,10 @@ public class PrebidWebViewBase extends FrameLayout implements PreloadManager.Pre
     protected void runOnUiThread(Runnable runnable) {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(runnable);
+    }
+
+    public void setActionUrl(ActionUrl actionUrl) {
+        webView.setActionUrl(actionUrl);
     }
 
     private static final class WebViewCleanupRunnable implements Runnable {

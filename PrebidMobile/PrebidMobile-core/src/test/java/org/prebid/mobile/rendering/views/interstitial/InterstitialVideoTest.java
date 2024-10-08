@@ -85,7 +85,7 @@ public class InterstitialVideoTest {
         spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
 
         assertTrue(spyInterstitialVideo.shouldShowCloseButtonOnComplete());
-        verify(spyInterstitialVideo, times(1)).scheduleTimer(eq(7000L));
+        verify(spyInterstitialVideo, times(1)).scheduleAllTimers(eq(7000L));
     }
 
     @Test
@@ -97,7 +97,7 @@ public class InterstitialVideoTest {
         spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
 
         assertTrue(spyInterstitialVideo.shouldShowCloseButtonOnComplete());
-        verify(spyInterstitialVideo, never()).scheduleTimer(anyLong());
+        verify(spyInterstitialVideo, never()).scheduleAllTimers(anyLong());
     }
 
     @Test
@@ -109,7 +109,7 @@ public class InterstitialVideoTest {
         spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
 
         assertTrue(spyInterstitialVideo.shouldShowCloseButtonOnComplete());
-        verify(spyInterstitialVideo, never()).scheduleTimer(anyLong());
+        verify(spyInterstitialVideo, never()).scheduleAllTimers(anyLong());
     }
 
     @Test
@@ -118,7 +118,7 @@ public class InterstitialVideoTest {
 
         spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
 
-        verify(spyInterstitialVideo).scheduleTimer(7000L);
+        verify(spyInterstitialVideo).scheduleAllTimers(7000L);
     }
 
     @Test
@@ -141,7 +141,7 @@ public class InterstitialVideoTest {
         verify(mockTimer, times(1)).cancel();
         verify(mockTimer, times(1)).purge();
         verify(mockTimerTask, times(1)).cancel();
-        verify(spyInterstitialVideo, never()).scheduleTimer(anyLong());
+        verify(spyInterstitialVideo, never()).scheduleAllTimers(anyLong());
     }
 
     @Test
@@ -152,7 +152,7 @@ public class InterstitialVideoTest {
         spyInterstitialVideo.resumeVideo();
 
         assertFalse(spyInterstitialVideo.shouldShowCloseButtonOnComplete());
-        verify(spyInterstitialVideo, times(1)).scheduleTimer(5 * 1000L);
+        verify(spyInterstitialVideo, times(1)).scheduleAllTimers(5 * 1000L);
     }
 
     @Test
@@ -205,7 +205,7 @@ public class InterstitialVideoTest {
         when(mockAdView.getMediaOffset()).thenReturn(adViewManager.getSkipOffset());
 
         spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
-        verify(spyInterstitialVideo).scheduleTimer(10L * 1000);
+        verify(spyInterstitialVideo).scheduleAllTimers(10L * 1000);
     }
 
     @Test
@@ -229,7 +229,7 @@ public class InterstitialVideoTest {
         when(mockAdView.getMediaOffset()).thenReturn(adViewManager.getSkipOffset());
 
         spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
-        verify(spyInterstitialVideo).scheduleTimer(10L * 1000);
+        verify(spyInterstitialVideo).scheduleAllTimers(10L * 1000);
     }
 
     @Test
@@ -256,13 +256,13 @@ public class InterstitialVideoTest {
         spyInterstitialVideo.setRemainingTimeInMs(3000);
 
         spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView, 3000);
-        verify(spyInterstitialVideo).scheduleTimer(3L * 1000);
+        verify(spyInterstitialVideo).scheduleAllTimers(3L * 1000);
     }
 
     @Test
     public void whenNoOffsetPresent_UseDefaultOffset() {
         spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
-        verify(spyInterstitialVideo).scheduleTimer(10L * 1000);
+        verify(spyInterstitialVideo).scheduleAllTimers(10L * 1000);
     }
 
     private void mockMediaDuration(long duration) {
@@ -312,7 +312,7 @@ public class InterstitialVideoTest {
 
         spyInterstitialVideo.scheduleShowButtonTask();
 
-        verify(spyInterstitialVideo).scheduleTimer(videoDuration);
+        verify(spyInterstitialVideo).scheduleAllTimers(videoDuration);
     }
 
     @Test
@@ -324,7 +324,7 @@ public class InterstitialVideoTest {
 
         spyInterstitialVideo.scheduleShowButtonTask();
 
-        verify(spyInterstitialVideo).scheduleTimer(skipDelay);
+        verify(spyInterstitialVideo).scheduleAllTimers(skipDelay);
     }
 
 }

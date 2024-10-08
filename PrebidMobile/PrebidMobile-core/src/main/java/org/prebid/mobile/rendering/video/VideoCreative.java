@@ -21,10 +21,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -334,7 +332,7 @@ public class VideoCreative extends VideoCreativeProtocol
         final Context context = contextReference.get();
         if (context != null) {
             final AdUnitConfiguration adConfiguration = model.getAdConfiguration();
-            videoCreativeView = new VideoCreativeView(context, this);
+            videoCreativeView = new VideoCreativeView(context, this, adConfiguration);
             videoCreativeView.setBroadcastId(adConfiguration.getBroadcastId());
 
             // Get the preloaded video from device file storage
@@ -397,7 +395,9 @@ public class VideoCreative extends VideoCreativeProtocol
                 && Utils.isNotBlank(model.getVastClickthroughUrl())
                 && !model.getAdConfiguration().isRewarded()
         ) {
-            videoCreativeView.showCallToAction();
+            videoCreativeView.showCallToAction(true);
+        } else if (model.getAdConfiguration().isRewarded()) {
+            videoCreativeView.showCallToAction(false);
         }
     }
 

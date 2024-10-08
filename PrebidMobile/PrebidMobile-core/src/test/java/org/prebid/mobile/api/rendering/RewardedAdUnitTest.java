@@ -25,8 +25,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -77,7 +77,7 @@ public class RewardedAdUnitTest {
         WhiteBox.setInternalState(rewardedAdUnit, "bidLoader", mockBidLoader);
         WhiteBox.setInternalState(rewardedAdUnit, "interstitialController", mockInterstitialController);
 
-        final AdUnitConfiguration adUnitConfig = rewardedAdUnit.adUnitConfig;
+        final AdUnitConfiguration adUnitConfig = rewardedAdUnit.config;
         assertEquals(AdPosition.FULLSCREEN.getValue(), adUnitConfig.getAdPositionValue());
     }
 

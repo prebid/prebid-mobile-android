@@ -25,6 +25,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import org.prebid.mobile.LogUtil;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import static android.webkit.WebView.HitTestResult.SRC_ANCHOR_TYPE;
@@ -42,6 +43,7 @@ public class AdWebViewClient extends WebViewClient {
 
     private HashSet<String> urls = new HashSet<>();
     private String pageUrl;
+    private ArrayList<ActionUrl> actionUrls = new ArrayList<>();
 
     public interface AdAssetsLoadedListener {
 
@@ -141,6 +143,10 @@ public class AdWebViewClient extends WebViewClient {
         }
 
         try {
+            if (checkSpecialUrls(url)) {
+                return true;
+            }
+
             WebViewBase webViewBase = ((WebViewBase) view);
 
             if (!webViewBase.isClicked()) {
@@ -170,6 +176,24 @@ public class AdWebViewClient extends WebViewClient {
     public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
         return super.shouldOverrideKeyEvent(view, event);
     }
+
+    public void registerSpecialUrl(ActionUrl actionUrl) {
+        if (actionUrl == null || actionUrl.action == null || actionUrl.url == null) return;
+
+        actionUrls.add(actionUrl);
+    }
+
+    private boolean checkSpecialUrls(String url) {
+        for (ActionUrl actionUrl : actionUrls) {
+            if (url.equals(actionUrl.url)) {
+                actionUrl.action.run();
+                actionUrls.remove(actionUrl);
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private void reloadUrl(WebView view, String s) {
         view.stopLoading();

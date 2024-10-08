@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.models;
 
 import android.content.pm.ActivityInfo;
 import org.prebid.mobile.api.data.Position;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 
 public class InterstitialDisplayPropertiesInternal extends InterstitialDisplayPropertiesPublic {
 
@@ -34,6 +35,7 @@ public class InterstitialDisplayPropertiesInternal extends InterstitialDisplayPr
 
     public Position closeButtonPosition = Position.TOP_RIGHT;
     public Position skipButtonPosition = Position.TOP_RIGHT;
+    public AdUnitConfiguration config;
 
     public void resetExpandValues() {
         expandHeight = 0;

@@ -21,8 +21,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedClosingRules;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedCompletionRules;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedExt;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
 import org.prebid.mobile.rendering.models.AbstractCreative;
 
@@ -36,26 +41,35 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
     private static String TAG = AdViewProgressUpdateTask.class.getSimpleName();
     private long current = 0;
     private WeakReference<View> creativeViewWeakReference;
-    private long duration;
+    private long videoDuration;
     private VideoCreativeViewListener trackEventListener;
-    private boolean firstQuartile, midpoint, thirdQuartile;
+    private boolean start, firstQuartile, midpoint, thirdQuartile;
     private long vastVideoDuration = -1;
     private Handler mainHandler;
+    private AdUnitConfiguration config;
+    @Nullable
+    private Integer percentageForReward;
+    @Nullable
+    private Integer autoCloseTime;
 
     private long lastTime;
 
     public AdViewProgressUpdateTask(
             VideoCreativeViewListener trackEventListener,
-            int duration
+            int videoDuration,
+            AdUnitConfiguration config
     ) throws AdException {
         if (trackEventListener == null) {
             throw new AdException(AdException.INTERNAL_ERROR, "VideoViewListener is null");
         }
+        this.config = config;
         this.trackEventListener = trackEventListener;
         AbstractCreative creative = (AbstractCreative) trackEventListener;
         creativeViewWeakReference = new WeakReference<>(creative.getCreativeView());
-        this.duration = duration;
+        this.videoDuration = videoDuration;
         mainHandler = new Handler(Looper.getMainLooper());
+        percentageForReward = getVideoLengthPercentageForReward(videoDuration, config);
+        autoCloseTime = getAutoCloseTime();
     }
 
     @Override
@@ -87,13 +101,18 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
                                         if (vastVideoDuration != -1 && newCurrent >= vastVideoDuration) {
                                             LogUtil.debug(
                                                     VideoCreativeView.class.getName(),
-                                                    "VAST duration reached, video interrupted. VAST duration:" + vastVideoDuration + " ms, Video duration: " + duration + " ms"
+                                                    "VAST duration reached, video interrupted. VAST duration:" + vastVideoDuration + " ms, Video duration: " + videoDuration + " ms"
                                             );
                                             videoView.forceStop();
                                         }
 
+                                        if (autoCloseTime != null && newCurrent >= autoCloseTime) {
+                                            LogUtil.debug("Auto close time reached. Auto close time: " + autoCloseTime + " ms");
+                                            videoView.forceStop();
+                                        }
+
                                         if (newCurrent == 0 && current > 0) {
-                                            current = duration;
+                                            current = videoDuration;
                                         } else {
                                             current = newCurrent;
                                         }
@@ -106,10 +125,10 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
                         }
 
                         try {
-                            if (duration > 0) {
-                                publishProgress((current * 100 / duration), duration);
+                            if (videoDuration > 0) {
+                                publishProgress((current * 100 / videoDuration), videoDuration);
                             }
-                            if (current >= duration) {
+                            if (current >= videoDuration) {
                                 break;
                             }
                         } catch (Exception e) {
@@ -118,7 +137,7 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
                     }
                     lastTime = System.currentTimeMillis();
                 }
-            } while (current <= duration && !isCancelled());
+            } while (current <= videoDuration && !isCancelled());
         }
         catch (Exception e) {
             LogUtil.error(TAG, "Failed to update video progress: " + Log.getStackTraceString(e));
@@ -139,23 +158,30 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
             return;
         }
         super.onProgressUpdate(values);
-        // PbLog.debug(TAG, "progress: " + values[0]);
 
-        //TODO - uncomment when we have to show the countdown on video
-        //trackEventListener.countdown(values[1]);
+        Long completionPercentage = values[0];
 
-        if (!firstQuartile && values[0] >= 25) {
-            LogUtil.debug(TAG, "firstQuartile: " + values[0]);
+        if (percentageForReward != null && completionPercentage >= percentageForReward) {
+            config.getRewardManager().notifyRewardListener();
+            percentageForReward = null;
+        }
+
+        if (!start && completionPercentage >= 1) {
+            start = true;
+        }
+
+        if (!firstQuartile && completionPercentage >= 25) {
+            LogUtil.debug(TAG, "firstQuartile: " + completionPercentage);
             firstQuartile = true;
             trackEventListener.onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
         }
-        if (!midpoint && values[0] >= 50) {
-            LogUtil.debug(TAG, "midpoint: " + values[0]);
+        if (!midpoint && completionPercentage >= 50) {
+            LogUtil.debug(TAG, "midpoint: " + completionPercentage);
             midpoint = true;
             trackEventListener.onEvent(VideoAdEvent.Event.AD_MIDPOINT);
         }
-        if (!thirdQuartile && values[0] >= 75) {
-            LogUtil.debug(TAG, "thirdQuartile: " + values[0]);
+        if (!thirdQuartile && completionPercentage >= 75) {
+            LogUtil.debug(TAG, "thirdQuartile: " + completionPercentage);
             thirdQuartile = true;
             trackEventListener.onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
         }
@@ -180,4 +206,70 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
     public void setVastVideoDuration(long vastVideoDuration) {
         this.vastVideoDuration = vastVideoDuration;
     }
+
+
+    /**
+     * Returns video length percentage for receiving reward.
+     */
+    @Nullable
+    protected static Integer getVideoLengthPercentageForReward(int videoDuration, AdUnitConfiguration config) {
+        boolean hasEndCard = !config.isRewarded() || config.getHasEndCard();
+        if (hasEndCard) {
+            return null;
+        }
+
+        RewardedExt rewardedExt = config.getRewardManager().getRewardedExt();
+        RewardedCompletionRules.PlaybackEvent playbackEvent = rewardedExt.getCompletionRules().getVideoEvent();
+        if (playbackEvent != null) {
+            if (playbackEvent == RewardedCompletionRules.PlaybackEvent.COMPLETE) {
+                return 100;
+            } else if (playbackEvent == RewardedCompletionRules.PlaybackEvent.THIRD_QUARTILE) {
+                return 75;
+            } else if (playbackEvent == RewardedCompletionRules.PlaybackEvent.MIDPOINT) {
+                return 50;
+            } else if (playbackEvent == RewardedCompletionRules.PlaybackEvent.FIRST_QUARTILE) {
+                return 25;
+            } else if (playbackEvent == RewardedCompletionRules.PlaybackEvent.START) {
+                return 1;
+            }
+        }
+
+        Integer secondsToReward = rewardedExt.getCompletionRules().getVideoTime();
+        if (secondsToReward != null && videoDuration != 0) {
+            int percentage = (int) (secondsToReward * 1000 / ((double) videoDuration) * 100);
+            if (percentage > 100 || percentage < 0) {
+                percentage = 100;
+            }
+            return percentage;
+        }
+
+        return null;
+    }
+
+    private Integer getAutoCloseTime() {
+        boolean hasEndCard = !config.isRewarded() || config.getHasEndCard();
+        if (hasEndCard) {
+            return null;
+        }
+
+        RewardedExt rewardedExt = config.getRewardManager().getRewardedExt();
+        RewardedClosingRules.Action action = rewardedExt.getClosingRules().getAction();
+        if (action != RewardedClosingRules.Action.AUTO_CLOSE) {
+            return null;
+        }
+
+        Integer percentageForReward = getVideoLengthPercentageForReward((int) videoDuration, config);
+        if (percentageForReward == null) {
+            return null;
+        }
+
+        int postRewardTime = rewardedExt.getClosingRules().getPostRewardTime() * 1000;
+        double autoCloseTime = percentageForReward / 100.0 * videoDuration + postRewardTime;
+        if (autoCloseTime > videoDuration) {
+            return null;
+        }
+
+        return (int) autoCloseTime;
+    }
+
 }

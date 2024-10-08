@@ -18,12 +18,13 @@ package org.prebid.mobile.rendering.bidding.data.bid;
 
 
 import android.util.Base64;
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.api.data.BidInfo;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedExt;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedExtParser;
 import org.prebid.mobile.rendering.models.internal.MacrosModel;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.utils.helpers.MacrosResolutionHelper;
@@ -134,6 +135,9 @@ public class Bid {
     private Map<String, String> events;
 
     private MobileSdkPassThrough mobileSdkPassThrough;
+
+    @NonNull
+    private RewardedExt rewardedExt;
 
     protected Bid() {
     }
@@ -302,6 +306,7 @@ public class Bid {
             setEvents(bid, prebidObject);
             bid.prebid = prebidObject;
             bid.mobileSdkPassThrough = MobileSdkPassThrough.create(ext);
+            bid.rewardedExt = RewardedExtParser.parse(ext);
         }
 
         substituteMacros(bid);
@@ -372,4 +377,8 @@ public class Bid {
         }
     }
 
+    @NonNull
+    public RewardedExt getRewardedExt() {
+        return rewardedExt;
+    }
 }

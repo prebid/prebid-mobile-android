@@ -16,26 +16,15 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
-import static org.prebid.mobile.PrebidMobile.SDK_VERSION;
-
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Pair;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.prebid.mobile.AdSize;
-import org.prebid.mobile.BannerParameters;
-import org.prebid.mobile.DataObject;
-import org.prebid.mobile.ExternalUserId;
-import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.Signals;
-import org.prebid.mobile.TargetingParams;
-import org.prebid.mobile.VideoParameters;
+import org.prebid.mobile.*;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
@@ -50,13 +39,9 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+
+import static org.prebid.mobile.PrebidMobile.SDK_VERSION;
 
 public class BasicParameterBuilder extends ParameterBuilder {
 
@@ -385,6 +370,9 @@ public class BasicParameterBuilder extends ParameterBuilder {
         //set secure=1 for https or secure=0 for http
         if (!adConfiguration.isAdType(AdFormat.VAST)) {
             imp.secure = 1;
+        }
+        if (adConfiguration.isRewarded()) {
+            imp.rewarded = 1;
         }
         imp.getExt().put("prebid", Prebid.getJsonObjectForImp(adConfiguration));
 

@@ -19,16 +19,15 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.base
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.RewardedAdUnit
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener
+import org.prebid.mobile.rendering.interstitial.rewarded.Reward
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingInterstitialBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 abstract class BaseBidRewardedFragment : AdFragment() {
 
@@ -84,11 +83,10 @@ abstract class BaseBidRewardedFragment : AdFragment() {
         }
     }
 
-    protected fun createRewardedAdUnitListener() = object :
-        RewardedAdUnitListener {
+    protected fun createRewardedAdUnitListener() = object : RewardedAdUnitListener {
 
         override fun onAdLoaded(rewardedAdUnit: RewardedAdUnit?) {
-            Log.d(TAG, "onAdLoaded() called with: reward = [${rewardedAdUnit?.userReward}]")
+            Log.d(TAG, "onAdLoaded() called")
             events.loaded(true)
             binding.btnLoad.setText(R.string.text_show)
             binding.btnLoad.isEnabled = true
@@ -115,8 +113,8 @@ abstract class BaseBidRewardedFragment : AdFragment() {
             events.closed(true)
         }
 
-        override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?) {
-            Log.d(TAG, "onUserEarnedReward() called with: reward = [${rewardedAdUnit?.userReward}]")
+        override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?, reward: Reward?) {
+            Log.d(TAG, "onUserEarnedReward() called with: reward = [$reward]")
         }
 
     }

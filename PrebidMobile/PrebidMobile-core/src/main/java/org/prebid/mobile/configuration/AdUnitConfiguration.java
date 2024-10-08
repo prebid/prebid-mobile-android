@@ -3,30 +3,19 @@ package org.prebid.mobile.configuration;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import org.prebid.mobile.AdSize;
-import org.prebid.mobile.BannerParameters;
-import org.prebid.mobile.ContentObject;
-import org.prebid.mobile.DataObject;
-import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.VideoParameters;
+import org.prebid.mobile.*;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.interstitial.InterstitialSizes;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardManager;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class AdUnitConfiguration {
@@ -39,6 +28,7 @@ public class AdUnitConfiguration {
     private boolean isMuted = false;
     private boolean isSoundButtonVisible = false;
     private boolean isOriginalAdUnit = false;
+    private boolean hasEndCard = false;
 
     private int videoSkipOffset = SKIP_OFFSET_NOT_ASSIGNED;
     private int autoRefreshDelayInMillis = 0;
@@ -70,6 +60,7 @@ public class AdUnitConfiguration {
     private BannerParameters bannerParameters;
     private VideoParameters videoParameters;
     private NativeAdUnitConfiguration nativeConfiguration;
+    private RewardManager rewardManager = new RewardManager();
 
     private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
     private final HashSet<AdSize> adSizes = new HashSet<>();
@@ -549,6 +540,22 @@ public class AdUnitConfiguration {
 
     public void setOrtbConfig(@Nullable String ortbConfig) {
         this.ortbConfig = ortbConfig;
+    }
+
+    public boolean getHasEndCard() {
+        return hasEndCard;
+    }
+
+    public void setHasEndCard(boolean hasEndCard) {
+        this.hasEndCard = hasEndCard;
+    }
+
+    public RewardManager getRewardManager() {
+        return rewardManager;
+    }
+
+    public void setRewardManager(RewardManager rewardManager) {
+        this.rewardManager = rewardManager;
     }
 
     @Override

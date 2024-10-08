@@ -28,4 +28,8 @@ public interface InterstitialControllerListener {
     void onInterstitialDisplayed();
 
     void onInterstitialClosed();
+
+    default void onUserEarnedReward() {
+
+    }
 }
