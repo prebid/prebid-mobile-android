@@ -1,0 +1,12 @@
+{
+  "passthrough": [
+    {
+      "type": "prebidmobilesdk",
+      "rwdd": {
+        "close": {
+          "action": "closebutton"
+        }
+      }
+    }
+  ]
+}

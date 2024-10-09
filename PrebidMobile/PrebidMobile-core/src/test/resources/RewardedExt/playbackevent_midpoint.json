@@ -1,0 +1,14 @@
+{
+  "passthrough": [
+    {
+      "type": "prebidmobilesdk",
+      "rwdd": {
+        "completion": {
+          "video": {
+            "playbackevent": "midpoint"
+          }
+        }
+      }
+    }
+  ]
+}

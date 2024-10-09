@@ -27,6 +27,10 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.api.rendering.InterstitialView;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.reflection.Reflection;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardManager;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedClosingRules;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedCompletionRules;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedExt;
 import org.prebid.mobile.rendering.models.AbstractCreative;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
@@ -37,8 +41,7 @@ import org.prebid.mobile.test.utils.WhiteBox;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class InterstitialVideoTest {
@@ -133,7 +136,7 @@ public class InterstitialVideoTest {
     public void scheduleShowCloseBtnAfterPauseTest() throws IllegalAccessException {
         Timer mockTimer = mock(Timer.class);
         TimerTask mockTimerTask = mock(TimerTask.class);
-        WhiteBox.field(InterstitialVideo.class, "currentTimerTask").set(spyInterstitialVideo, mockTimerTask);
+        WhiteBox.field(InterstitialVideo.class, "showCloseButtonTask").set(spyInterstitialVideo, mockTimerTask);
         WhiteBox.field(InterstitialVideo.class, "timer").set(spyInterstitialVideo, mockTimer);
 
         spyInterstitialVideo.pauseVideo();
@@ -325,6 +328,136 @@ public class InterstitialVideoTest {
         spyInterstitialVideo.scheduleShowButtonTask();
 
         verify(spyInterstitialVideo).scheduleAllTimers(skipDelay);
+    }
+
+
+    @Test
+    public void rewarded_getTimeToReward_default() {
+        RewardedExt rewardedExt = RewardedExt.defaultExt();
+        AdUnitConfiguration mockConfig = mockAdConfiguration;
+
+        RewardManager mockRewardManager = mock(RewardManager.class);
+        when(mockConfig.getRewardManager()).thenReturn(mockRewardManager);
+        when(mockRewardManager.getRewardedExt()).thenReturn(rewardedExt);
+
+        Integer timeToReward = InterstitialVideo.getTimeToReward(10_000, mockConfig);
+
+        assertNull(timeToReward);
+    }
+
+    @Test
+    public void rewarded_getTimeToReward_time() {
+        RewardedExt rewardedExt = mock(RewardedExt.class);
+        AdUnitConfiguration mockConfig = mockAdConfiguration;
+
+        RewardManager mockRewardManager = mock(RewardManager.class);
+        when(mockConfig.getRewardManager()).thenReturn(mockRewardManager);
+        when(mockRewardManager.getRewardedExt()).thenReturn(rewardedExt);
+
+        RewardedCompletionRules mockRules = mock(RewardedCompletionRules.class);
+        when(mockRules.getVideoEvent()).thenReturn(null);
+        when(mockRules.getVideoTime()).thenReturn(6);
+        when(rewardedExt.getCompletionRules()).thenReturn(mockRules);
+
+        Integer timeToReward = InterstitialVideo.getTimeToReward(10_000, mockConfig);
+
+        assertEquals(Integer.valueOf(6_000), timeToReward);
+    }
+
+    @Test
+    public void rewarded_getTimeToReward_completionEvent_1() {
+        testCompletionEvent(RewardedCompletionRules.PlaybackEvent.COMPLETE, 10_000);
+    }
+
+    @Test
+    public void rewarded_getTimeToReward_completionEvent_2() {
+        testCompletionEvent(RewardedCompletionRules.PlaybackEvent.THIRD_QUARTILE, 7_500);
+    }
+
+    @Test
+    public void rewarded_getTimeToReward_completionEvent_3() {
+        testCompletionEvent(RewardedCompletionRules.PlaybackEvent.MIDPOINT, 5_000);
+    }
+
+    @Test
+    public void rewarded_getTimeToReward_completionEvent_4() {
+        testCompletionEvent(RewardedCompletionRules.PlaybackEvent.FIRST_QUARTILE, 2_500);
+    }
+
+    @Test
+    public void rewarded_getTimeToReward_completionEvent_5() {
+        testCompletionEvent(RewardedCompletionRules.PlaybackEvent.START, 0);
+    }
+
+    private void testCompletionEvent(RewardedCompletionRules.PlaybackEvent event, int expected) {
+        RewardedExt rewardedExt = mock(RewardedExt.class);
+        AdUnitConfiguration mockConfig = mockAdConfiguration;
+        RewardManager mockRewardManager = mock(RewardManager.class);
+        when(mockConfig.getRewardManager()).thenReturn(mockRewardManager);
+        when(mockRewardManager.getRewardedExt()).thenReturn(rewardedExt);
+        when(rewardedExt.getCompletionRules()).thenReturn(new RewardedCompletionRules(11, 12, 13, "1", event, "2"));
+
+        Integer timeToReward = InterstitialVideo.getTimeToReward(10_000, mockConfig);
+
+        assertEquals(Integer.valueOf(expected), timeToReward);
+    }
+
+
+    @Test
+    public void rewarded_getDelayToShowCloseButton_1() {
+        int videoDuration = 10_000;
+        int rewardTimeSeconds = 5;
+        int postRewardTimeSeconds = 0;
+        int expected = 5_000;
+        testCloseButtonDelay(videoDuration, rewardTimeSeconds, postRewardTimeSeconds, expected);
+    }
+
+    @Test
+    public void rewarded_getDelayToShowCloseButton_2() {
+        int videoDuration = 10_000;
+        int rewardTimeSeconds = 15;
+        int postRewardTimeSeconds = 0;
+        int expected = 10_000;
+        testCloseButtonDelay(videoDuration, rewardTimeSeconds, postRewardTimeSeconds, expected);
+    }
+
+    @Test
+    public void rewarded_getDelayToShowCloseButton_3() {
+        int videoDuration = 10_000;
+        int rewardTimeSeconds = 5;
+        int postRewardTimeSeconds = 2;
+        int expected = 7_000;
+        testCloseButtonDelay(videoDuration, rewardTimeSeconds, postRewardTimeSeconds, expected);
+    }
+
+    @Test
+    public void rewarded_getDelayToShowCloseButton_4() {
+        int videoDuration = 10_000;
+        int rewardTimeSeconds = 5;
+        int postRewardTimeSeconds = 7;
+        int expected = 10_000;
+        testCloseButtonDelay(videoDuration, rewardTimeSeconds, postRewardTimeSeconds, expected);
+    }
+
+    private void testCloseButtonDelay(int videoDuration, int rewardTime, int postRewardTime, int expected) {
+        RewardedExt rewardedExt = mock(RewardedExt.class);
+        AdUnitConfiguration mockConfig = mockAdConfiguration;
+        RewardManager mockRewardManager = mock(RewardManager.class);
+        when(mockConfig.getRewardManager()).thenReturn(mockRewardManager);
+        when(mockRewardManager.getRewardedExt()).thenReturn(rewardedExt);
+
+        RewardedCompletionRules mockCompletionRules = mock(RewardedCompletionRules.class);
+        when(mockCompletionRules.getVideoEvent()).thenReturn(null);
+        when(mockCompletionRules.getVideoTime()).thenReturn(rewardTime);
+        RewardedClosingRules mockClosingRules = mock(RewardedClosingRules.class);
+        when(mockClosingRules.getPostRewardTime()).thenReturn(postRewardTime);
+
+        when(rewardedExt.getCompletionRules()).thenReturn(mockCompletionRules);
+        when(rewardedExt.getClosingRules()).thenReturn(mockClosingRules);
+
+        Integer timeToReward = InterstitialVideo.getDelayToShowCloseButton(videoDuration, mockConfig);
+
+        assertEquals(Integer.valueOf(expected), timeToReward);
     }
 
 }

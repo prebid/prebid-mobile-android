@@ -16,14 +16,14 @@
 
 package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 
-import static org.junit.Assert.assertEquals;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Pmp;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
+
+import static org.junit.Assert.assertEquals;
 
 public class ImpTest {
 
@@ -41,9 +41,10 @@ public class ImpTest {
         imp.video = new Video();
         imp.pmp = new Pmp();
         imp.clickBrowser = 0;
+        imp.rewarded = 1;
 
         JSONObject actualObj = imp.getJsonObject();
-        String expectedString = "{\"clickbrowser\":0,\"pmp\":{},\"tagid\":\"tagid\",\"displaymanager\":\"prebid\",\"displaymanagerver\":\"1.0\",\"banner\":{},\"video\":{},\"secure\":0,\"instl\":1}";
+        String expectedString = "{\"rwdd\":1,\"clickbrowser\":0,\"pmp\":{},\"tagid\":\"tagid\",\"displaymanager\":\"prebid\",\"displaymanagerver\":\"1.0\",\"banner\":{},\"video\":{},\"secure\":0,\"instl\":1}";
         assertEquals("got: " + actualObj.toString(), expectedString, actualObj.toString());
         imp.getJsonObject();
     }

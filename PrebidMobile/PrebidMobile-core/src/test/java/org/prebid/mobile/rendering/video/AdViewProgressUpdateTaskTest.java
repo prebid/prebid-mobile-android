@@ -22,6 +22,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardManager;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedClosingRules;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedCompletionRules;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedExt;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -152,4 +156,84 @@ public class AdViewProgressUpdateTaskTest {
         verify(mockVideoCreative).onEvent(VideoAdEvent.Event.AD_MIDPOINT);
         verify(mockVideoCreative).onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
     }
+
+
+    @Test
+    public void getVideoLengthPercentageForReward_notRewarded() {
+        int videoDuration = 10_000;
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setRewarded(false);
+
+        Integer result = AdViewProgressUpdateTask.getVideoLengthPercentageForReward(videoDuration, config);
+
+        assertNull(result);
+    }
+
+    @Test
+    public void getVideoLengthPercentageForReward_withEndCard() {
+        int videoDuration = 10_000;
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setRewarded(true);
+        config.setHasEndCard(true);
+
+        Integer result = AdViewProgressUpdateTask.getVideoLengthPercentageForReward(videoDuration, config);
+
+        assertNull(result);
+    }
+
+    @Test
+    public void getVideoLengthPercentageForReward_1() {
+        testReward(10_000, null, RewardedCompletionRules.PlaybackEvent.START, 1);
+    }
+
+    @Test
+    public void getVideoLengthPercentageForReward_2() {
+        testReward(10_000, null, RewardedCompletionRules.PlaybackEvent.FIRST_QUARTILE, 25);
+    }
+
+    @Test
+    public void getVideoLengthPercentageForReward_3() {
+        testReward(10_000, null, RewardedCompletionRules.PlaybackEvent.MIDPOINT, 50);
+    }
+
+    @Test
+    public void getVideoLengthPercentageForReward_4() {
+        testReward(10_000, null, RewardedCompletionRules.PlaybackEvent.THIRD_QUARTILE, 75);
+    }
+
+    @Test
+    public void getVideoLengthPercentageForReward_5() {
+        testReward(10_000, null, RewardedCompletionRules.PlaybackEvent.COMPLETE, 100);
+    }
+
+    @Test
+    public void getVideoLengthPercentageForReward_time() {
+        testReward(10_000, 7, null, 70);
+    }
+
+    @Test
+    public void getVideoLengthPercentageForReward_wrongTime_1() {
+        testReward(10_000, 25, null, 100);
+    }
+
+    @Test
+    public void getVideoLengthPercentageForReward_wrongTime_2() {
+        testReward(10_000, -1, null, 100);
+    }
+
+    private void testReward(int videoDuration, Integer videoTime, RewardedCompletionRules.PlaybackEvent event, Integer expected) {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setRewarded(true);
+        config.setHasEndCard(false);
+
+        RewardedExt rewardedExt = new RewardedExt(null, new RewardedCompletionRules(null, videoTime, null, null, event, null), new RewardedClosingRules());
+        RewardManager rewardManager = new RewardManager();
+        rewardManager.setRewardedExt(rewardedExt);
+        config.setRewardManager(rewardManager);
+
+        Integer result = AdViewProgressUpdateTask.getVideoLengthPercentageForReward(videoDuration, config);
+
+        assertEquals(expected, result);
+    }
+
 }
