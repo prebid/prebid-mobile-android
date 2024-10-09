@@ -11,6 +11,7 @@ package org.prebid.mobile.rendering.interstitial.rewarded;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 
@@ -27,9 +28,7 @@ public class RewardedExtParser {
 
     @NonNull
     public static RewardedExt parse(@Nullable JSONObject bidExtJson) {
-        if (bidExtJson == null) return RewardedExt.defaultExt();
-
-        JSONObject rootRewardedJson = bidExtJson.optJSONObject("rwdd");
+        JSONObject rootRewardedJson = getRootRewardedJson(bidExtJson);
         if (rootRewardedJson == null) return RewardedExt.defaultExt();
 
         JSONObject rewardJson = rootRewardedJson.optJSONObject("reward");
@@ -42,6 +41,25 @@ public class RewardedExtParser {
         RewardedClosingRules closingRules = parseClosingRules(closingJson);
 
         return new RewardedExt(reward, completionRules, closingRules);
+    }
+
+    @Nullable
+    private static JSONObject getRootRewardedJson(@Nullable JSONObject bidExtJson) {
+        if (bidExtJson == null) return null;
+
+        JSONArray passThroughArray = bidExtJson.optJSONArray("passthrough");
+        if (passThroughArray == null || passThroughArray.length() < 1) return null;
+
+        for (int i = 0; i < passThroughArray.length(); i++) {
+            JSONObject passThroughObject = passThroughArray.optJSONObject(i);
+            if (passThroughObject == null) continue;
+
+            String type = passThroughObject.optString("type");
+            if (type.equals("prebidmobilesdk")) {
+                return passThroughObject.optJSONObject("rwdd");
+            }
+        }
+        return null;
     }
 
 

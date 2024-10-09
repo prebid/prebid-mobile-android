@@ -423,6 +423,21 @@ class DemoItemProvider private constructor() {
             val ppmVideoTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.VIDEO, Tag.REMOTE)
             val ppmNativeTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.NATIVE, Tag.REMOTE)
 
+            // TODO: Move down
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_display_rewarded),
+                    ppmRewardedAction,
+                    ppmInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_display_rewarded,
+                        null,
+                        320,
+                        480
+                    )
+                )
+            )
+
             // In-App Banner
             demoList.add(
                 DemoItem(
