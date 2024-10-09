@@ -86,7 +86,7 @@ class InternalTestApplication : MultiDexApplication() {
     }
 
     fun clearAdConfigSettings() {
-        PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply()
+        PreferenceManager.getDefaultSharedPreferences(this).edit().remove(getString(R.string.key_keep_settings)).apply()
     }
 
     private fun checkKeepConsentSettingsFlag() {
