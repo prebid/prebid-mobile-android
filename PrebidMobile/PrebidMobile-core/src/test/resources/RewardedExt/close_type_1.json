@@ -1,12 +1,14 @@
 {
-  "passthrough": [
-    {
-      "type": "prebidmobilesdk",
-      "rwdd": {
-        "close": {
-          "action": "autoclose"
+  "prebid": {
+    "passthrough": [
+      {
+        "type": "prebidmobilesdk",
+        "rwdd": {
+          "close": {
+            "action": "autoclose"
+          }
         }
       }
-    }
-  ]
+    ]
+  }
 }

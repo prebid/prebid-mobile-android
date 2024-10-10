@@ -47,7 +47,10 @@ public class RewardedExtParser {
     private static JSONObject getRootRewardedJson(@Nullable JSONObject bidExtJson) {
         if (bidExtJson == null) return null;
 
-        JSONArray passThroughArray = bidExtJson.optJSONArray("passthrough");
+        JSONObject prebidJson = bidExtJson.optJSONObject("prebid");
+        if (prebidJson == null) return null;
+
+        JSONArray passThroughArray = prebidJson.optJSONArray("passthrough");
         if (passThroughArray == null || passThroughArray.length() < 1) return null;
 
         for (int i = 0; i < passThroughArray.length(); i++) {
