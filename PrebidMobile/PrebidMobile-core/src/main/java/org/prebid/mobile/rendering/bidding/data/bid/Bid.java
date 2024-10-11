@@ -137,7 +137,7 @@ public class Bid {
     private MobileSdkPassThrough mobileSdkPassThrough;
 
     @NonNull
-    private RewardedExt rewardedExt;
+    private RewardedExt rewardedExt = RewardedExt.defaultExt();
 
     protected Bid() {
     }

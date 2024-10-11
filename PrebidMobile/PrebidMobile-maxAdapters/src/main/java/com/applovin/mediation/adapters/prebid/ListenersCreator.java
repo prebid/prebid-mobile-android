@@ -1,10 +1,8 @@
 package com.applovin.mediation.adapters.prebid;
 
-import com.applovin.impl.mediation.MaxRewardImpl;
 import com.applovin.mediation.adapter.MaxAdapterError;
 import com.applovin.mediation.adapter.listeners.MaxAdViewAdapterListener;
 import com.applovin.mediation.adapter.listeners.MaxInterstitialAdapterListener;
-import com.applovin.mediation.adapter.listeners.MaxRewardedAdapterListener;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
@@ -83,36 +81,6 @@ public class ListenersCreator {
             @Override
             public void onInterstitialClosed() {
                 maxListener.onInterstitialAdHidden();
-            }
-        };
-    }
-
-    public static InterstitialControllerListener createRewardedListener(MaxRewardedAdapterListener maxListener) {
-        return new InterstitialControllerListener() {
-            @Override
-            public void onInterstitialReadyForDisplay() {
-                maxListener.onRewardedAdLoaded();
-            }
-
-            @Override
-            public void onInterstitialClicked() {
-                maxListener.onRewardedAdClicked();
-            }
-
-            @Override
-            public void onInterstitialFailedToLoad(AdException exception) {
-                maxListener.onRewardedAdLoadFailed(new MaxAdapterError(2002, "Ad failed: " + exception.getMessage()));
-            }
-
-            @Override
-            public void onInterstitialDisplayed() {
-                maxListener.onRewardedAdDisplayed(); maxListener.onRewardedAdVideoStarted();
-            }
-
-            @Override
-            public void onInterstitialClosed() {
-                maxListener.onRewardedAdVideoCompleted(); maxListener.onRewardedAdHidden();
-                maxListener.onUserRewarded(MaxRewardImpl.createDefault());
             }
         };
     }
