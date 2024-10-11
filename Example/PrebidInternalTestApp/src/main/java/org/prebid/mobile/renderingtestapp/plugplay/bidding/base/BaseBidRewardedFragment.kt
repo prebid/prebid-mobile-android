@@ -25,7 +25,7 @@ import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener
 import org.prebid.mobile.rendering.interstitial.rewarded.Reward
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
-import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingInterstitialBinding
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingRewardedBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 
@@ -33,10 +33,10 @@ abstract class BaseBidRewardedFragment : AdFragment() {
 
     private val TAG = BaseBidRewardedFragment::class.java.simpleName
 
-    override val layoutRes = R.layout.fragment_bidding_interstitial
+    override val layoutRes = R.layout.fragment_bidding_rewarded
     protected var rewardedAdUnit: RewardedAdUnit? = null
 
-    protected val binding: FragmentBiddingInterstitialBinding
+    protected val binding: FragmentBiddingRewardedBinding
         get() = getBinding()
     protected lateinit var events: Events
 
@@ -115,6 +115,7 @@ abstract class BaseBidRewardedFragment : AdFragment() {
 
         override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?, reward: Reward?) {
             Log.d(TAG, "onUserEarnedReward() called with: reward = [$reward]")
+            events.reward(true)
         }
 
     }
@@ -126,6 +127,7 @@ abstract class BaseBidRewardedFragment : AdFragment() {
         fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
         fun closed(b: Boolean) = enable(R.id.btnAdClosed, b)
         fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+        fun reward(b: Boolean) = enable(R.id.btnReward, b)
 
         fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
 
