@@ -50,6 +50,8 @@ public abstract class BaseInterstitialAdUnit {
 
     private static final String TAG = BaseInterstitialAdUnit.class.getSimpleName();
 
+    protected boolean userHasNotEarnedRewardYet = true;
+
     protected AdUnitConfiguration config = new AdUnitConfiguration();
 
     private BidLoader bidLoader;
@@ -79,6 +81,8 @@ public abstract class BaseInterstitialAdUnit {
      * Executes ad loading if no request is running.
      */
     public void loadAd() {
+        userHasNotEarnedRewardYet = true;
+
         if (bidLoader == null) {
             LogUtil.error(TAG, "loadAd: Failed. BidLoader is not initialized.");
             return;
@@ -473,14 +477,21 @@ public abstract class BaseInterstitialAdUnit {
             @Override
             public void onInterstitialClosed() {
                 notifyAdEventListener(AdListenerEvent.AD_CLOSE);
-                notifyAdEventListener(AdListenerEvent.USER_RECEIVED_PREBID_REWARD);
+                notifyUserReward();
             }
 
             @Override
             public void onUserEarnedReward() {
-                notifyAdEventListener(AdListenerEvent.USER_RECEIVED_PREBID_REWARD);
+                notifyUserReward();
             }
         };
+    }
+
+    protected void notifyUserReward() {
+        if (userHasNotEarnedRewardYet) {
+            notifyAdEventListener(AdListenerEvent.USER_RECEIVED_PREBID_REWARD);
+            userHasNotEarnedRewardYet = false;
+        }
     }
 
 

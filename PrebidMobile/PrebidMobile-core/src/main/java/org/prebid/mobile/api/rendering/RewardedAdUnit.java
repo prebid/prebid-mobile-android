@@ -39,8 +39,6 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
     private static final String TAG = RewardedAdUnit.class.getSimpleName();
 
-    private boolean userHasNotEarnedRewardYet = true;
-
     private final RewardedEventHandler eventHandler;
     @Nullable
     private RewardedAdUnitListener userListener;
@@ -129,6 +127,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
                 break;
             case USER_RECEIVED_PREBID_REWARD:
                 Reward reward = config.getRewardManager().getRewardedExt().getReward();
+                LogUtil.debug(TAG, "User earned reward: " + reward);
                 userListener.onUserEarnedReward(RewardedAdUnit.this, reward);
                 break;
         }
@@ -138,13 +137,6 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
     void notifyErrorListener(AdException exception) {
         if (userListener != null) {
             userListener.onAdFailed(RewardedAdUnit.this, exception);
-        }
-    }
-
-    private void notifyUserReward() {
-        if (userHasNotEarnedRewardYet) {
-            notifyAdEventListener(AdListenerEvent.USER_RECEIVED_PREBID_REWARD);
-            userHasNotEarnedRewardYet = false;
         }
     }
 
@@ -189,10 +181,6 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
             @Override
             public void onAdClosed() {
                 notifyAdEventListener(AdListenerEvent.AD_CLOSE);
-                if (userHasNotEarnedRewardYet) {
-                    LogUtil.debug("Reward due to the ad finish.");
-                }
-                notifyUserReward();
             }
 
             @Override
