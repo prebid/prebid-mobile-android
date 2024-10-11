@@ -3,15 +3,16 @@ package org.prebid.mobile.admob;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
 import com.google.android.gms.ads.mediation.MediationRewardedAd;
 import com.google.android.gms.ads.mediation.MediationRewardedAdCallback;
 import com.google.android.gms.ads.mediation.MediationRewardedAdConfiguration;
-
+import com.google.android.gms.ads.rewarded.RewardItem;
+import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
+import org.prebid.mobile.rendering.interstitial.rewarded.Reward;
 
 /**
  * Prebid rewarded adapter for AdMob integration.
@@ -41,8 +42,9 @@ public class PrebidRewardedAdapter extends PrebidBaseAdapter {
         }
 
         try {
-            InterstitialControllerListener listener = getListener(adMobLoadListener);
-            interstitialController = new InterstitialController(configuration.getContext(), listener);
+            InterstitialControllerListener prebidListener = getListener(adMobLoadListener);
+            interstitialController = new InterstitialController(configuration.getContext(), prebidListener);
+            interstitialController.setRewardListener(prebidListener::onUserEarnedReward);
             interstitialController.loadAd(responseId, true);
         } catch (AdException e) {
             adMobLoadListener.onFailure(AdErrors.interstitialControllerError(e.getMessage()));
@@ -91,6 +93,31 @@ public class PrebidRewardedAdapter extends PrebidBaseAdapter {
                 adMobCallback.onFailure(AdErrors.failedToLoadAd(
                         exception.getMessage() != null ? exception.getMessage() : "Failed to load ad"
                 ));
+            }
+
+            @Override
+            public void onUserEarnedReward() {
+                if (rewardedAdCallback != null && interstitialController != null) {
+                    Reward reward = interstitialController.getReward();
+                    rewardedAdCallback.onUserEarnedReward(new RewardItem() {
+                        @Override
+                        public int getAmount() {
+                            if (reward != null) {
+                                return reward.getCount();
+                            }
+                            return 0;
+                        }
+
+                        @NonNull
+                        @Override
+                        public @NotNull String getType() {
+                            if (reward != null) {
+                                return reward.getType();
+                            }
+                            return "";
+                        }
+                    });
+                }
             }
         };
     }
