@@ -114,7 +114,6 @@ abstract class BaseBidRewardedFragment : AdFragment() {
         }
 
         override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?, reward: Reward?) {
-            Log.d(TAG, "onUserEarnedReward() called with: reward = [$reward]")
             events.reward(true)
         }
 

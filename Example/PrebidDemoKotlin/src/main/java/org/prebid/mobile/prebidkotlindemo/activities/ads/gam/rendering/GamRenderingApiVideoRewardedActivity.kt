@@ -34,7 +34,7 @@ class GamRenderingApiVideoRewardedActivity : BaseAdActivity() {
     private var adUnit: RewardedAdUnit? = null
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {    
         super.onCreate(savedInstanceState)
 
         createAd()
@@ -53,7 +53,7 @@ class GamRenderingApiVideoRewardedActivity : BaseAdActivity() {
             override fun onAdClicked(rewardedAdUnit: RewardedAdUnit?) {}
             override fun onAdClosed(rewardedAdUnit: RewardedAdUnit?) {}
             override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?, reward: Reward?) {
-                Log.d("GamRenderingApiVideoRew", "User earned reward $reward")
+                Log.d("AdActivity", "User earned reward: $reward")
             }
         })
         adUnit?.loadAd()

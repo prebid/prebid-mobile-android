@@ -126,8 +126,8 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
                 userListener.onAdClicked(RewardedAdUnit.this);
                 break;
             case USER_RECEIVED_PREBID_REWARD:
-                Reward reward = config.getRewardManager().getRewardedExt().getReward();
-                LogUtil.debug(TAG, "User earned reward: " + reward);
+                Reward reward = getReward();
+                LogUtil.debug(TAG, "Internal reward listener: " + reward);
                 userListener.onUserEarnedReward(RewardedAdUnit.this, reward);
                 break;
         }
@@ -138,6 +138,16 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
         if (userListener != null) {
             userListener.onAdFailed(RewardedAdUnit.this, exception);
         }
+    }
+
+    @Nullable
+    private Reward getReward() {
+        Reward reward = config.getRewardManager().getRewardedExt().getReward();
+        if (reward != null) {
+            return reward;
+        }
+
+        return eventHandler.getReward();
     }
 
     private RewardedVideoEventListener createRewardedListener() {

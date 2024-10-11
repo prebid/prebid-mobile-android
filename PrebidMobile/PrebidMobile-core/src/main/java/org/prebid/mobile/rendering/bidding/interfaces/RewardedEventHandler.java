@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
+import org.prebid.mobile.rendering.interstitial.rewarded.Reward;
 
 public interface RewardedEventHandler {
     void setRewardedEventListener(
@@ -34,4 +35,8 @@ public interface RewardedEventHandler {
     void trackImpression();
 
     void destroy();
+
+    default Reward getReward() {
+        return null;
+    }
 }
