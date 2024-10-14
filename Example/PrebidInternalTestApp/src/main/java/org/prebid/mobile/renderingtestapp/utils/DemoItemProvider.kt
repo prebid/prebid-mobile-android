@@ -1134,7 +1134,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_in_app_display_rewarded_time),
                     ppmRewardedAction,
-                    ppmInterstitialTagList,
+                    ppmVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_display_rewarded_time,
                         null,
@@ -1147,7 +1147,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_in_app_display_rewarded_event),
                     ppmRewardedAction,
-                    ppmInterstitialTagList,
+                    ppmVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_display_rewarded_event,
                         null,
@@ -1160,7 +1160,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_in_app_display_rewarded_default),
                     ppmRewardedAction,
-                    ppmInterstitialTagList,
+                    ppmVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_display_rewarded_default,
                         null,
@@ -1173,7 +1173,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_in_app_video_rewarded_time),
                     ppmRewardedAction,
-                    ppmInterstitialTagList,
+                    ppmVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_time,
                         null,
@@ -1186,7 +1186,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_in_app_video_rewarded_event),
                     ppmRewardedAction,
-                    ppmInterstitialTagList,
+                    ppmVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_event,
                         null,
@@ -1199,7 +1199,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_in_app_video_rewarded_default),
                     ppmRewardedAction,
-                    ppmInterstitialTagList,
+                    ppmVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_default,
                         null,
@@ -1212,7 +1212,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_in_app_video_rewarded_endcard_time),
                     ppmRewardedAction,
-                    ppmInterstitialTagList,
+                    ppmVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_endcard_time,
                         null,
@@ -1225,7 +1225,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_in_app_video_rewarded_endcard_event),
                     ppmRewardedAction,
-                    ppmInterstitialTagList,
+                    ppmVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_endcard_event,
                         null,
@@ -1238,7 +1238,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_in_app_video_rewarded_endcard_default),
                     ppmRewardedAction,
-                    ppmInterstitialTagList,
+                    ppmVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_endcard_default,
                         null,

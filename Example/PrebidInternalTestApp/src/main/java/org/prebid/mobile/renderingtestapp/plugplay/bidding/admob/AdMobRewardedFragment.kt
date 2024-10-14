@@ -115,6 +115,7 @@ open class AdMobRewardedFragment : AdFragment() {
                 val rewardAmount = rewardItem.amount
                 val rewardType = rewardItem.type
                 Log.d(TAG, "User earned the reward ($rewardAmount, $rewardType)")
+                events.rewarded(true)
             }
             binding.btnLoad.text = getString(R.string.text_retry)
         } else if (binding.btnLoad.text == getString(R.string.text_retry)) {
@@ -155,6 +156,7 @@ open class AdMobRewardedFragment : AdFragment() {
         fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
         fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
         fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+        fun rewarded(b: Boolean) = enable(R.id.btnUserRewarded, b)
 
         fun showed(b: Boolean) = enable(R.id.btnAdShowed, b)
         fun dismissed(b: Boolean) = enable(R.id.btnAdDismissed, b)

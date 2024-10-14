@@ -60,7 +60,9 @@ class AdMobVideoRewardedActivity : BaseAdActivity() {
                 override fun onAdLoaded(ad: RewardedAd) {
                     Log.d("AdMobRewarded", "Ad was loaded.")
                     rewardedAd = ad
-                    rewardedAd?.show(this@AdMobVideoRewardedActivity) {}
+                    rewardedAd?.show(this@AdMobVideoRewardedActivity) {
+                        Log.d("AdExample", "User earned reward: ${it.amount} ${it.type}")
+                    }
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {

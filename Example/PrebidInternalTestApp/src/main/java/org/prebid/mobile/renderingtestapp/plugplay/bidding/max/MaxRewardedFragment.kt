@@ -3,8 +3,6 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.max
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxError
 import com.applovin.mediation.MaxReward
@@ -17,7 +15,6 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingRewardedApplovinMaxBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class MaxRewardedFragment : AdFragment() {
 
@@ -139,6 +136,7 @@ open class MaxRewardedFragment : AdFragment() {
             }
 
             override fun onUserRewarded(ad: MaxAd?, reward: MaxReward?) {
+                Log.d(TAG, "User earned reward: ${reward?.label} ${reward?.amount}")
                 events.userRewarded(true)
             }
         }

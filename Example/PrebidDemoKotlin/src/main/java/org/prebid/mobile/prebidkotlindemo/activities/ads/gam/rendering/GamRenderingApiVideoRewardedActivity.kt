@@ -53,7 +53,7 @@ class GamRenderingApiVideoRewardedActivity : BaseAdActivity() {
             override fun onAdClicked(rewardedAdUnit: RewardedAdUnit?) {}
             override fun onAdClosed(rewardedAdUnit: RewardedAdUnit?) {}
             override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?, reward: Reward?) {
-                Log.d("AdActivity", "User earned reward: $reward")
+                Log.d("AdExample", "User earned reward: $reward")
             }
         })
         adUnit?.loadAd()
