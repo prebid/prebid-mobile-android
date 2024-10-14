@@ -97,7 +97,12 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
             LogUtil.debug(TAG, "onAdClosed");
             if (listener != null) {
                 listener.onInterstitialClosed();
-                listener.onUserEarnedReward();
+
+                if (config == null) return;
+                boolean userIsNotRewarded = !config.getRewardManager().getUserRewardedAlready();
+                if (userIsNotRewarded) {
+                    listener.onUserEarnedReward();
+                }
             }
         }
     };
@@ -113,6 +118,7 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
     }
 
     public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
+        config = adUnitConfiguration;
         adUnitConfiguration.modifyUsingBidResponse(bidResponse);
         setRenderingControlSettings(adUnitConfiguration, bidResponse);
         WinNotifier winNotifier = new WinNotifier();

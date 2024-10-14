@@ -24,7 +24,7 @@ public class RewardManager {
     private RewardedExt rewardedExt = RewardedExt.defaultExt();
 
     public void notifyRewardListener() {
-        if (rewardListener != null) {
+        if (rewardListener != null && !userRewardedAlready) {
             userRewardedAlready = true;
             rewardListener.run();
             if (afterRewardListener != null) {
