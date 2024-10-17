@@ -52,6 +52,12 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
     private boolean isExpectingAppEvent;
     private boolean didNotifiedBidWin;
 
+    /**
+     * Default constructor.
+     *
+     * @param activity    Android activity
+     * @param gamAdUnitId the GAM ad unit id for the rewarded ad unit
+     */
     public GamRewardedEventHandler(
             Activity activity,
             String gamAdUnitId

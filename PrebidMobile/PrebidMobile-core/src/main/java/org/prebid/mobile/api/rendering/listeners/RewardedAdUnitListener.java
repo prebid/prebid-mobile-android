@@ -65,7 +65,8 @@ public interface RewardedAdUnitListener {
     /**
      * Executed when user receives reward.
      *
-     * @param rewardedAdUnit view of the corresponding event. Contains reward instance inside. Prebid reward is always null.
+     * @param rewardedAdUnit the rewarded ad unit
+     * @param reward the reward object. It can be null if it is not set in the ad server.
      */
     void onUserEarnedReward(RewardedAdUnit rewardedAdUnit, @Nullable Reward reward);
 }

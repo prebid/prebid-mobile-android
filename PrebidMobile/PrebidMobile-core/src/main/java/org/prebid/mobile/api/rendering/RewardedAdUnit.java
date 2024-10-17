@@ -39,11 +39,46 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
     private static final String TAG = RewardedAdUnit.class.getSimpleName();
 
+    /**
+     * Handler that is responsible for requesting, displaying and destroying of
+     * primary ad (e.g. GAM). Also it tracks impression and sets listener.
+     */
     private final RewardedEventHandler eventHandler;
+
+    /**
+     * Interstitial ad units events listener (like onAdLoaded, onAdFailed...)
+     */
     @Nullable
     private RewardedAdUnitListener userListener;
+
+    /**
+     * Listener that must be applied to InterstitialEventHandler.
+     * It is responsible for onAdServerWin or onPrebidSdkWin.
+     */
     private final RewardedVideoEventListener eventListener = createRewardedListener();
 
+    /**
+     * Constructor that creates the instance with a {@link StandaloneRewardedVideoEventHandler}
+     * for integration without any primary ad server.
+     *
+     * @param context  Android context
+     * @param configId configuration id for on Prebid Server
+     */
+    public RewardedAdUnit(
+            Context context,
+            String configId
+    ) {
+        this(context, configId, new StandaloneRewardedVideoEventHandler());
+    }
+
+    /**
+     * Constructor that initializes a RewardedAdUnit with a custom event handler.
+     * It supports GAM integration (use {@code GamRewardedEventHandler})
+     *
+     * @param context      the Android context
+     * @param configId     the configuration id on Prebid Server
+     * @param eventHandler the event handler for primary ad server responsible for managing rewarded ad
+     */
     public RewardedAdUnit(
         Context context,
         String configId,
@@ -61,13 +96,9 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
         init(adUnitConfiguration);
     }
 
-    public RewardedAdUnit(
-        Context context,
-        String configId
-    ) {
-        this(context, configId, new StandaloneRewardedVideoEventHandler());
-    }
-
+    /**
+     * Executes ad loading if no request is running.
+     */
     @Override
     public void loadAd() {
         super.loadAd();
@@ -76,6 +107,9 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
         rewardManager.setRewardListener(controllerListener::onUserEarnedReward);
     }
 
+    /**
+     * Cleans up resources when destroyed. It has to be called if the ad unit is no longer needed.
+     */
     @Override
     public void destroy() {
         super.destroy();
@@ -85,6 +119,9 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
         }
     }
 
+    /**
+     * Sets the listener for the rewarded ad events.
+     */
     public void setRewardedAdUnitListener(@Nullable RewardedAdUnitListener userListener) {
         this.userListener = userListener;
     }
