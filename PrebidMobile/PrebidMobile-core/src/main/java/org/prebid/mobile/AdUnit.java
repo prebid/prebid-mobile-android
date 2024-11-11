@@ -24,6 +24,8 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -43,6 +45,7 @@ import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.tasksmanager.TasksManager;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -64,6 +67,9 @@ public abstract class AdUnit {
     protected Object adObject;
     @Nullable
     protected BidResponse bidResponse;
+
+    protected final VisibilityMonitor visibilityMonitor = new VisibilityMonitor();
+    protected WeakReference<View> adViewReference = new WeakReference<>(null);
 
     protected boolean allowNullableAdObject = false;
 
@@ -123,6 +129,7 @@ public abstract class AdUnit {
         if (bidLoader != null) {
             bidLoader.destroy();
         }
+        visibilityMonitor.cancel();
     }
 
     /**
@@ -137,6 +144,12 @@ public abstract class AdUnit {
                     listener.onComplete(resultCode, keywordsMap.size() != 0 ? Collections.unmodifiableMap(keywordsMap) : null)
             );
         });
+    }
+
+    public void fetchDemand(Object adObject, View adView, @NonNull OnCompleteListener listener) {
+        adViewReference = new WeakReference<>(adView);
+        visibilityMonitor.cancel();
+        fetchDemand(adObject, listener);
     }
 
     /**
@@ -472,6 +485,8 @@ public abstract class AdUnit {
                 HashMap<String, String> keywords = response.getTargeting();
                 Util.apply(keywords, adObject);
                 originalListener.onComplete(ResultCode.SUCCESS);
+
+                registerVisibilityTrackerIfNeeded(bidResponse, adViewReference);
             }
 
             @Override
@@ -515,6 +530,22 @@ public abstract class AdUnit {
     @VisibleForTesting
     public AdUnitConfiguration getConfiguration() {
         return configuration;
+    }
+
+    private void registerVisibilityTrackerIfNeeded(BidResponse response, WeakReference<View> adViewReference) {
+        visibilityMonitor.cancel();
+
+        if (response == null || response.getWinningBid() == null || response.getWinningBid().getBurl() == null) {
+            return;
+        }
+
+        String burl = response.getWinningBid().getBurl();
+        View adViewContainer = adViewReference != null ? adViewReference.get() : null;
+        if (adViewContainer == null) {
+            return;
+        }
+
+        visibilityMonitor.trackView(adViewContainer, burl);
     }
 
 }
