@@ -22,6 +22,7 @@ public class VisibilityMonitor {
     private final VisibilityTimer visibilityTimer = new VisibilityTimer();
 
     public void trackView(@NotNull View adViewContainer, @NotNull String burl) {
+        visibilityTimer.destroy();
         visibilityTimer.start(adViewContainer, burl);
     }
 
@@ -34,6 +35,7 @@ public class VisibilityMonitor {
 
         private static final int LONGEVITY = Integer.MAX_VALUE;
         private static final int INTERVAL = 500;
+        private static final String TAG = "VisibilityTimer";
 
         private int lastWebViewHash;
         private String burl;
@@ -57,6 +59,7 @@ public class VisibilityMonitor {
             View containerView = containerViewReference.get();
             if (containerView == null) {
                 cancel();
+                LogUtil.debug(TAG, "Cancelled due to ad view is null");
                 return;
             }
 
@@ -66,15 +69,12 @@ public class VisibilityMonitor {
             }
 
             if (lastWebViewHash == webView.hashCode()) {
-                Log.d("TESTV", "Ignored");
                 return;
             }
             lastWebViewHash = webView.hashCode();
 
-            Log.d("TESTV", "Registering web view with hash: " + lastWebViewHash);
             attachVisibilityTracker(webView);
-            cancel();
-            LogUtil.info("Ad view impression tracker injected");
+            LogUtil.debug(TAG, "Registering the new WebView: " + lastWebViewHash);
         }
 
         private void attachVisibilityTracker(WebView webView) {
@@ -86,7 +86,7 @@ public class VisibilityMonitor {
             visibilityTracker.setVisibilityTrackerListener(result -> {
                 boolean visible = result.isVisible();
                 if (visible) {
-                    Log.d("TESTV", "FIRING BURL: " + burl);
+                    LogUtil.debug(TAG, "View is visible. Firing event: " + burl);
                     ServerConnection.fireAndForget(burl);
                     visibilityTracker.stopVisibilityCheck();
                 }
@@ -100,7 +100,9 @@ public class VisibilityMonitor {
 
         public void destroy() {
             if (visibilityTracker != null) {
+                LogUtil.debug(TAG, "Destroying");
                 visibilityTracker.stopVisibilityCheck();
+                visibilityTracker = null;
             }
             cancel();
         }
