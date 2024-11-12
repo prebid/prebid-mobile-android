@@ -545,7 +545,13 @@ public abstract class AdUnit {
             return;
         }
 
-        visibilityMonitor.trackView(adViewContainer, burl);
+        String cacheId = response.getTargeting().get("hb_cache_id");
+        if (cacheId == null) {
+            LogUtil.warning("Can't register visibility tracker. There is no hb_cache_id keyword.");
+            return;
+        }
+
+        visibilityMonitor.trackView(adViewContainer, burl, cacheId);
     }
 
 }

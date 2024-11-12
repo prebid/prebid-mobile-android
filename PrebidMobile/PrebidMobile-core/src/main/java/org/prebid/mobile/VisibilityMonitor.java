@@ -1,7 +1,6 @@
 package org.prebid.mobile;
 
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -9,6 +8,7 @@ import android.webkit.WebView;
 import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
+import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.rendering.models.CreativeVisibilityTracker;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
@@ -21,9 +21,9 @@ public class VisibilityMonitor {
 
     private final VisibilityTimer visibilityTimer = new VisibilityTimer();
 
-    public void trackView(@NotNull View adViewContainer, @NotNull String burl) {
+    public void trackView(@NotNull View adViewContainer, @NotNull String burl, @NotNull String cacheId) {
         visibilityTimer.destroy();
-        visibilityTimer.start(adViewContainer, burl);
+        visibilityTimer.start(adViewContainer, burl, cacheId);
     }
 
     public void cancel() {
@@ -39,6 +39,7 @@ public class VisibilityMonitor {
 
         private int lastWebViewHash;
         private String burl;
+        private String responseCacheId;
 
         private WeakReference<View> containerViewReference;
         @Nullable
@@ -48,8 +49,9 @@ public class VisibilityMonitor {
             super(LONGEVITY, INTERVAL);
         }
 
-        public void start(View containerView, String burl) {
+        public void start(View containerView, String burl, String cacheId) {
             this.burl = burl;
+            this.responseCacheId = cacheId;
             this.containerViewReference = new WeakReference<>(containerView);
             start();
         }
@@ -71,10 +73,21 @@ public class VisibilityMonitor {
             if (lastWebViewHash == webView.hashCode()) {
                 return;
             }
-            lastWebViewHash = webView.hashCode();
 
-            attachVisibilityTracker(webView);
-            LogUtil.debug(TAG, "Registering the new WebView: " + lastWebViewHash);
+            AdViewUtils.findCacheId(webView, cacheId -> {
+                if (cacheId == null || cacheId.isEmpty()) {
+                    return;
+                }
+
+                if (!cacheId.equals(responseCacheId)) {
+                    LogUtil.warning(TAG, "Different cache ids;");
+                    return;
+                }
+
+                lastWebViewHash = webView.hashCode();
+                attachVisibilityTracker(webView);
+                LogUtil.debug(TAG, "Registering the new WebView: " + lastWebViewHash);
+            });
         }
 
         private void attachVisibilityTracker(WebView webView) {
