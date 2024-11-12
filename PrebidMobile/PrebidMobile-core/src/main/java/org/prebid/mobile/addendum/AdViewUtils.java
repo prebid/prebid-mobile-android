@@ -23,9 +23,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
+
 import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidNativeAd;
@@ -33,22 +35,35 @@ import org.prebid.mobile.PrebidNativeAdListener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class AdViewUtils {
 
+    /**
+     * Escaped double quotes.
+     */
+    private static final String EDQ = "\\\\\"";
+
     private static final String INNER_HTML_SCRIPT = "document.body.innerHTML";
     private static final String SIZE_VALUE_REGEX_EXPRESSION = "[0-9]+x[0-9]+";
     private static final String SIZE_OBJECT_REGEX_EXPRESSION = "hb_size\\W+" + SIZE_VALUE_REGEX_EXPRESSION; //"hb_size\\W+[0-9]+x[0-9]+"
+
+    private static final String CACHE_ID_REGEX = EDQ + "hb_cache_id" + EDQ + ":\\[" + EDQ + "(.*?)" + EDQ + "\\]";
+
 
     private static final String GAM_VIEW_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdView";
     private static final String GAM_VIEW_CLASS_2 = "com.google.android.gms.ads.admanager.AdManagerAdView";
     private static final String GAM_CUSTOM_TEMPLATE_AD_CLASS = "com.google.android.gms.ads.formats.NativeCustomTemplateAd";
     private static final String GAM_CUSTOM_TEMPLATE_AD_CLASS_2 = "com.google.android.gms.ads.nativead.NativeCustomFormatAd";
 
-    private AdViewUtils() { }
+    private AdViewUtils() {
+    }
 
     public static void findPrebidCreativeSize(@Nullable View adView, final PbFindSizeListener handler) {
         if (adView == null) {
@@ -75,6 +90,7 @@ public final class AdViewUtils {
         fixZoomIn(webView, width, height);
 
     }
+
     //a fix of strange bug on Android with image scaling up
     //case: should be called after PublisherAdView.setAdSizes()
     static void fixZoomIn(final WebView webView, final int expectedWidth, final int expectedHeight) {
@@ -356,6 +372,29 @@ public final class AdViewUtils {
         return firstResult;
     }
 
+    public static void findCacheId(WebView webView, CacheIdResult onResult) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            onResult.run(null);
+            return;
+        }
+
+        webView.evaluateJavascript(INNER_HTML_SCRIPT, value -> {
+            String result = findCacheId(value);
+            onResult.run(result);
+        });
+    }
+
+    @Nullable
+    static String findCacheId(String html) {
+        Pattern pattern = Pattern.compile(CACHE_ID_REGEX);
+        Matcher matcher = pattern.matcher(html);
+
+        if (!matcher.find() || matcher.groupCount() == 0) {
+            return null;
+        }
+        return matcher.group(1);
+    }
+
     @Nullable
     static Pair<Integer, Integer> stringToSize(String size) {
         String[] sizeArr = size.split("x");
@@ -469,12 +508,17 @@ public final class AdViewUtils {
         return null;
     }
 
+    public interface CacheIdResult {
+        void run(String cacheId);
+    }
+
 }
 
 //It is not possible to use Enum because we should have a possibility to pass additional information
 final class PbFindSizeErrorFactory {
 
-    private PbFindSizeErrorFactory() { }
+    private PbFindSizeErrorFactory() {
+    }
 
     //common errors
     static final int UNSPECIFIED_CODE = 201;
