@@ -70,4 +70,8 @@ public class InterstitialAdUnit extends BannerBaseAdUnit {
         configuration.setMinSizePercentage(new AdSize(width, height));
     }
 
+    public void useInterstitialVisibilityTracker(boolean enable) {
+        this.useInterstitialVisibilityTracker = enable;
+    }
+
 }

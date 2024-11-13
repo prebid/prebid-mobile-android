@@ -19,13 +19,15 @@ package org.prebid.mobile;
 import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
 import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -72,6 +74,7 @@ public abstract class AdUnit {
     protected WeakReference<View> adViewReference = new WeakReference<>(null);
 
     protected boolean allowNullableAdObject = false;
+    protected boolean useInterstitialVisibilityTracker = false;
 
     public AdUnit(@NotNull String configId) {
         configuration.setConfigId(configId);
@@ -129,7 +132,7 @@ public abstract class AdUnit {
         if (bidLoader != null) {
             bidLoader.destroy();
         }
-        visibilityMonitor.cancel();
+        visibilityMonitor.stopTracking();
     }
 
     /**
@@ -146,9 +149,17 @@ public abstract class AdUnit {
         });
     }
 
+    /**
+     * Loads ad and applies keywords to the ad object.
+     * Fetch demand with the visibility tracking for the
+     *
+     * @param adObject AdMob's ({@code AdManagerAdRequest} or {@code AdManagerAdRequest.Builder})
+     *                 or AppLovin's ({@code MaxNativeAdLoader}) ad object
+     * @param adView   the ad view object (f.e. {@code AdManagerAdView})
+     * @param listener callback when operation is completed (success or fail)
+     */
     public void fetchDemand(Object adObject, View adView, @NonNull OnCompleteListener listener) {
         adViewReference = new WeakReference<>(adView);
-        visibilityMonitor.cancel();
         fetchDemand(adObject, listener);
     }
 
@@ -160,6 +171,8 @@ public abstract class AdUnit {
      * @param listener callback when operation is completed (success or fail)
      */
     public void fetchDemand(Object adObject, @NonNull OnCompleteListener listener) {
+        visibilityMonitor.stopTracking();
+
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
             LogUtil.error("Empty account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
@@ -486,7 +499,7 @@ public abstract class AdUnit {
                 Util.apply(keywords, adObject);
                 originalListener.onComplete(ResultCode.SUCCESS);
 
-                registerVisibilityTrackerIfNeeded(bidResponse, adViewReference);
+                registerVisibilityTrackerIfNeeded(bidResponse);
             }
 
             @Override
@@ -532,18 +545,13 @@ public abstract class AdUnit {
         return configuration;
     }
 
-    private void registerVisibilityTrackerIfNeeded(BidResponse response, WeakReference<View> adViewReference) {
-        visibilityMonitor.cancel();
+    private void registerVisibilityTrackerIfNeeded(BidResponse response) {
+        visibilityMonitor.stopTracking();
 
         if (response == null || response.getWinningBid() == null || response.getWinningBid().getBurl() == null) {
             return;
         }
-
         String burl = response.getWinningBid().getBurl();
-        View adViewContainer = adViewReference != null ? adViewReference.get() : null;
-        if (adViewContainer == null) {
-            return;
-        }
 
         String cacheId = response.getTargeting().get("hb_cache_id");
         if (cacheId == null) {
@@ -551,7 +559,27 @@ public abstract class AdUnit {
             return;
         }
 
+        boolean isBannerTracker = !useInterstitialVisibilityTracker;
+        if (isBannerTracker) {
+            bannerVisibilityTracker(burl, cacheId);
+        } else {
+            interstitialVisibilityTracker(burl, cacheId);
+        }
+    }
+
+    private void bannerVisibilityTracker(String burl, String cacheId) {
+        View adViewContainer = adViewReference != null ? adViewReference.get() : null;
+        if (adViewContainer == null) {
+            return;
+        }
+
         visibilityMonitor.trackView(adViewContainer, burl, cacheId);
+    }
+
+    private void interstitialVisibilityTracker(String burl, String cacheId) {
+
+
+        visibilityMonitor.trackInterstitial(burl, cacheId);
     }
 
 }
