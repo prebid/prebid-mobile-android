@@ -32,6 +32,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.listeners.AdIdFetchListener;
 
 import java.lang.ref.WeakReference;
+import java.util.Date;
 
 public class AdIdManager {
     private static final String TAG = AdIdManager.class.getSimpleName();
@@ -42,7 +43,10 @@ public class AdIdManager {
      */
     private static final long AD_ID_TIMEOUT_MS = 3000;
 
+    private static final long AD_ID_MINIMUM_UPDATE_MS = 60000;
+
     private static volatile String sAdId = null;
+    private static Date adIdLastUpdateTime = null;
     private static boolean sLimitAdTrackingEnabled;
 
     private AdIdManager() {
@@ -50,7 +54,7 @@ public class AdIdManager {
     }
 
     // Wrap method execution in try / catch to avoid crashes in runtime if publisher didn't include identifier dependencies
-    public static FetchAdIdInfoTask initAdId(final Context context, final AdIdFetchListener listener) {
+    public static void initAdId(final Context context, final AdIdFetchListener listener) {
         try {
             GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
             int resultCode = apiAvailability.isGooglePlayServicesAvailable(context);
@@ -67,7 +71,6 @@ public class AdIdManager {
                         listener.adIdFetchFailure();
                     }
                 }, AD_ID_TIMEOUT_MS);
-                return getAdIdInfoTask;
             }
             else {
                 listener.adIdFetchCompletion();
@@ -76,7 +79,39 @@ public class AdIdManager {
         catch (Throwable throwable) {
             LogUtil.error(TAG, "Failed to initAdId: " + Log.getStackTraceString(throwable) + "\nDid you add necessary dependencies?");
         }
-        return null;
+    }
+
+    /**
+     * Updates Advertising Id only if a minute has passed instead of fetching with every bid request
+     */
+    public static void fetchAdvertisingId(Context context, AdIdFetchListener listener) {
+        Date now = new Date();
+        if (adIdLastUpdateTime == null) {
+            initAdId(context, listener);
+        } else {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    if (listener != null) {
+                        listener.adIdFetchCompletion();
+                    }
+                    return null;
+                }
+            }.execute();
+            if (now.getTime() - adIdLastUpdateTime.getTime() >= AD_ID_MINIMUM_UPDATE_MS) {
+                initAdId(context, new AdIdFetchListener() {
+                    @Override
+                    public void adIdFetchCompletion() {
+                        LogUtil.info(TAG, "Advertising id was updated");
+                    }
+
+                    @Override
+                    public void adIdFetchFailure() {
+                        LogUtil.warning(TAG, "Can't update advertising id");
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -130,6 +165,7 @@ public class AdIdManager {
             try {
                 AdvertisingIdClient.Info adInfo = AdvertisingIdClient.getAdvertisingIdInfo(context);
                 sAdId = adInfo.getId();
+                adIdLastUpdateTime = new Date();
                 sLimitAdTrackingEnabled = adInfo.isLimitAdTrackingEnabled();
             }
             catch (Throwable e) {

@@ -61,7 +61,6 @@ public abstract class Requester {
     protected URLBuilder urlBuilder;
     protected ResponseHandler adResponseCallBack;
     protected BaseNetworkTask networkTask;
-    protected AdIdManager.FetchAdIdInfoTask fetchAdIdInfoTask;
 
     Requester(
             AdUnitConfiguration config,
@@ -88,11 +87,7 @@ public abstract class Requester {
             networkTask.cancel(true);
         }
         networkTask = null;
-        if (fetchAdIdInfoTask != null) {
-            fetchAdIdInfoTask.cancel(true);
-        }
         adResponseCallBack = null;
-        fetchAdIdInfoTask = null;
     }
 
     protected List<ParameterBuilder> getParameterBuilders() {
@@ -131,17 +126,27 @@ public abstract class Requester {
 
         UserConsentManager userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
         if (userConsentManager.canAccessDeviceData()) {
-            fetchAdIdInfoTask = AdIdManager.initAdId(context, new AdIdFetchListener() {
+            AdIdManager.fetchAdvertisingId(context, new AdIdFetchListener() {
                 @Override
                 public void adIdFetchCompletion() {
-                    LogUtil.info(TAG, "Advertising id was received");
-                    makeAdRequest();
+                    LogUtil.info(TAG, "Advertising id was loaded from cache");
+                    try {
+                        makeAdRequest();
+                    } catch (Exception e) {
+                        LogUtil.info(TAG,
+                                "makeAdRequest() failed because Requester object doesn't exist");
+                    }
                 }
 
                 @Override
                 public void adIdFetchFailure() {
-                    LogUtil.warning(TAG, "Can't get advertising id");
-                    makeAdRequest();
+                    LogUtil.warning(TAG, "Can't get advertising id from cache");
+                    try {
+                        makeAdRequest();
+                    } catch (Exception e) {
+                        LogUtil.info(TAG,
+                                "makeAdRequest() failed because Requester object doesn't exist");
+                    }
                 }
             });
         } else {
