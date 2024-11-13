@@ -1,5 +1,7 @@
 package org.prebid.mobile;
 
+import android.app.Application;
+import android.content.Context;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +23,34 @@ public class VisibilityMonitor {
 
     private final VisibilityTimer visibilityTimer = new VisibilityTimer();
 
+    @Nullable
+    private VisibilityActivityListener activityListener;
+
     public void trackView(@NotNull View adViewContainer, @NotNull String burl, @NotNull String cacheId) {
-        visibilityTimer.destroy();
+        stopTracking();
+
         visibilityTimer.start(adViewContainer, burl, cacheId);
     }
 
-    public void cancel() {
-        visibilityTimer.destroy();
+    public void trackInterstitial(String burl, String cacheId) {
+        stopTracking();
+
+        activityListener = new VisibilityActivityListener(this, burl, cacheId);
+        getApplication().registerActivityLifecycleCallbacks(activityListener);
     }
 
+    public void stopTracking() {
+        visibilityTimer.destroy();
+
+        if (activityListener != null) {
+            getApplication().unregisterActivityLifecycleCallbacks(activityListener);
+        }
+    }
+
+    private Application getApplication() {
+        Context context = PrebidContextHolder.getContext();
+        return (Application) context;
+    }
 
     private static class VisibilityTimer extends CountDownTimer {
 
@@ -73,6 +94,7 @@ public class VisibilityMonitor {
             if (lastWebViewHash == webView.hashCode()) {
                 return;
             }
+            lastWebViewHash = webView.hashCode();
 
             AdViewUtils.findCacheId(webView, cacheId -> {
                 if (cacheId == null || cacheId.isEmpty()) {
@@ -80,11 +102,10 @@ public class VisibilityMonitor {
                 }
 
                 if (!cacheId.equals(responseCacheId)) {
-                    LogUtil.warning(TAG, "Different cache ids;");
+                    LogUtil.warning(TAG, "Different cache ids");
                     return;
                 }
 
-                lastWebViewHash = webView.hashCode();
                 attachVisibilityTracker(webView);
                 LogUtil.debug(TAG, "Registering the new WebView: " + lastWebViewHash);
             });

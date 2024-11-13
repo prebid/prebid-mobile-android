@@ -79,4 +79,8 @@ public class InterstitialAdUnit extends BannerBaseAdUnit {
         configuration.setOrtbConfig(ortbConfig);
     }
 
+    public void useInterstitialVisibilityTracker(boolean enable) {
+        this.useInterstitialVisibilityTracker = enable;
+    }
+
 }
