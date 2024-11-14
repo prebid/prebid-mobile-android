@@ -102,7 +102,7 @@ class GamOriginalInstreamNewApiFragment : AdFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        adUnit?.stopAutoRefresh()
+        adUnit?.destroy()
         adsLoader?.setPlayer(null)
         adsLoader?.release()
         player?.release()

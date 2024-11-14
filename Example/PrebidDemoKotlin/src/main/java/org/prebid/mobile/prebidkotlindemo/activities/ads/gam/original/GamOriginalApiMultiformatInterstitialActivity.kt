@@ -91,6 +91,6 @@ class GamOriginalApiMultiformatInterstitialActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        adUnit?.stopAutoRefresh()
+        adUnit?.destroy()
     }
 }

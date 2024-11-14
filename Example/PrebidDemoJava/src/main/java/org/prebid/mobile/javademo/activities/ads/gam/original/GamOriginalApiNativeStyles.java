@@ -94,7 +94,7 @@ public class GamOriginalApiNativeStyles extends BaseAdActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (nativeAdUnit != null) {
-            nativeAdUnit.stopAutoRefresh();
+            nativeAdUnit.destroy();
         }
     }
 }

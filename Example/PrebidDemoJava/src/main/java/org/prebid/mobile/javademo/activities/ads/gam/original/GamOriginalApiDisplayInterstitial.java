@@ -59,7 +59,7 @@ public class GamOriginalApiDisplayInterstitial extends BaseAdActivity {
         super.onDestroy();
 
         if (adUnit != null) {
-            adUnit.stopAutoRefresh();
+            adUnit.destroy();
         }
     }
 }

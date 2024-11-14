@@ -72,7 +72,7 @@ public class GamOriginalApiMultiformatInterstitial extends BaseAdActivity {
         super.onDestroy();
 
         if (adUnit != null) {
-            adUnit.stopAutoRefresh();
+            adUnit.destroy();
         }
     }
 }

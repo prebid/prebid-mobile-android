@@ -222,7 +222,7 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
     override fun onDestroy() {
         super.onDestroy()
         adView?.destroy()
-        adUnit?.stopAutoRefresh()
+        adUnit?.destroy()
         unifiedNativeAd?.destroy()
     }
 }

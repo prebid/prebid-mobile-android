@@ -100,7 +100,7 @@ public class GamOriginalApiDisplayBanner320x50 extends BaseAdActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (adUnit != null) {
-            adUnit.stopAutoRefresh();
+            adUnit.destroy();
         }
     }
 }

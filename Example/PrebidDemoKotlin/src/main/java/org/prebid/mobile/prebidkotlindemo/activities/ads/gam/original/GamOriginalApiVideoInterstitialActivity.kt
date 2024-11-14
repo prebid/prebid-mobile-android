@@ -89,7 +89,7 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        adUnit?.stopAutoRefresh()
+        adUnit?.destroy()
     }
 
 }

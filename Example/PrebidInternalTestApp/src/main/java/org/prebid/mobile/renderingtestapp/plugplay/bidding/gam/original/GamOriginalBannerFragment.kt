@@ -125,7 +125,7 @@ open class GamOriginalBannerFragment : AdFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         adView?.destroy()
-        adUnit?.stopAutoRefresh()
+        adUnit?.destroy()
     }
 
     private class Events(parentView: View) : BaseEvents(parentView) {

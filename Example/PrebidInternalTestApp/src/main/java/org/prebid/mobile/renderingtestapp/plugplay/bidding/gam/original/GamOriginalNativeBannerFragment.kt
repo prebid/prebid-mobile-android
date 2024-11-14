@@ -144,7 +144,7 @@ class GamOriginalNativeBannerFragment : AdFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        nativeAdUnit?.stopAutoRefresh()
+        nativeAdUnit?.destroy()
     }
 
     private class Events(parentView: View) : BaseEvents(parentView) {
