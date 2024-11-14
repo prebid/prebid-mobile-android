@@ -61,6 +61,8 @@ import java.util.Set;
  */
 public abstract class AdUnit {
 
+    private static final String TAG = "AdUnit";
+
     protected AdUnitConfiguration configuration = new AdUnitConfiguration();
 
     @Nullable
@@ -550,11 +552,16 @@ public abstract class AdUnit {
         if (response == null || response.getWinningBid() == null || response.getWinningBid().getBurl() == null) {
             return;
         }
+        if (response.isVideo()) {
+            LogUtil.debug(TAG, "VisibilityTracker ignored due to the video ad");
+            return;
+        }
+
         String burl = response.getWinningBid().getBurl();
 
         String cacheId = response.getTargeting().get("hb_cache_id");
         if (cacheId == null) {
-            LogUtil.warning("Can't register visibility tracker. There is no hb_cache_id keyword.");
+            LogUtil.warning(TAG, "Can't register visibility tracker. There is no hb_cache_id keyword.");
             return;
         }
 
