@@ -3,6 +3,7 @@ package org.prebid.mobile;
 import android.app.Application;
 import android.content.Context;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -21,6 +22,8 @@ import java.lang.ref.WeakReference;
 
 public class VisibilityMonitor {
 
+    private boolean stopAfterFirstFinding = false;
+
     private final VisibilityTimer visibilityTimer = new VisibilityTimer();
 
     @Nullable
@@ -29,12 +32,13 @@ public class VisibilityMonitor {
     public void trackView(@NotNull View adViewContainer, @NotNull String burl, @NotNull String cacheId) {
         stopTracking();
 
-        visibilityTimer.start(adViewContainer, burl, cacheId);
+        visibilityTimer.start(adViewContainer, burl, cacheId, stopAfterFirstFinding);
     }
 
     public void trackInterstitial(String burl, String cacheId) {
         stopTracking();
 
+        stopAfterFirstFinding = true;
         activityListener = new VisibilityActivityListener(this, burl, cacheId);
         getApplication().registerActivityLifecycleCallbacks(activityListener);
     }
@@ -59,6 +63,7 @@ public class VisibilityMonitor {
         private static final String TAG = "VisibilityTimer";
 
         private int lastWebViewHash;
+        private boolean stopAfterFirstFinding;
         private String burl;
         private String responseCacheId;
 
@@ -70,10 +75,11 @@ public class VisibilityMonitor {
             super(LONGEVITY, INTERVAL);
         }
 
-        public void start(View containerView, String burl, String cacheId) {
+        public void start(View containerView, String burl, String cacheId, boolean stopAfterFirstFinding) {
             this.burl = burl;
             this.responseCacheId = cacheId;
             this.containerViewReference = new WeakReference<>(containerView);
+            this.stopAfterFirstFinding = stopAfterFirstFinding;
             start();
         }
 
@@ -95,6 +101,11 @@ public class VisibilityMonitor {
                 return;
             }
             lastWebViewHash = webView.hashCode();
+
+            if (stopAfterFirstFinding) {
+                Log.d(TAG, "Interstitial WebView found. Stopping...");
+                cancel();
+            }
 
             AdViewUtils.findCacheId(webView, cacheId -> {
                 if (cacheId == null || cacheId.isEmpty()) {
