@@ -74,7 +74,6 @@ public abstract class AdUnit {
     protected WeakReference<View> adViewReference = new WeakReference<>(null);
 
     protected boolean allowNullableAdObject = false;
-    protected boolean useInterstitialVisibilityTracker = false;
 
     public AdUnit(@NotNull String configId) {
         configuration.setConfigId(configId);
@@ -559,7 +558,7 @@ public abstract class AdUnit {
             return;
         }
 
-        boolean isBannerTracker = !useInterstitialVisibilityTracker;
+        boolean isBannerTracker = !(this instanceof InterstitialAdUnit);
         if (isBannerTracker) {
             bannerVisibilityTracker(burl, cacheId);
         } else {
@@ -577,8 +576,6 @@ public abstract class AdUnit {
     }
 
     private void interstitialVisibilityTracker(String burl, String cacheId) {
-
-
         visibilityMonitor.trackInterstitial(burl, cacheId);
     }
 
