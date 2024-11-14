@@ -100,7 +100,7 @@ public class GamOriginalApiVideoInStream extends BaseAdActivity {
         super.onDestroy();
 
         if (adUnit != null) {
-            adUnit.stopAutoRefresh();
+            adUnit.destroy();
         }
         if (adsLoader != null) {
             adsLoader.setPlayer(null);

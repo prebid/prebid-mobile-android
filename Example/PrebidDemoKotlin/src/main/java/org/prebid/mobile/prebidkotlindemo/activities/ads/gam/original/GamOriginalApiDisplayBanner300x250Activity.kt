@@ -76,7 +76,7 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        adUnit?.stopAutoRefresh()
+        adUnit?.destroy()
     }
 
     private fun createGAMListener(adView: AdManagerAdView): AdListener {
