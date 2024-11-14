@@ -80,6 +80,8 @@ public class VisibilityMonitor {
             this.responseCacheId = cacheId;
             this.containerViewReference = new WeakReference<>(containerView);
             this.stopAfterFirstFinding = stopAfterFirstFinding;
+
+            LogUtil.debug(TAG, "Start of monitoring...");
             start();
         }
 
@@ -87,8 +89,8 @@ public class VisibilityMonitor {
         public void onTick(long millisUntilFinished) {
             View containerView = containerViewReference.get();
             if (containerView == null) {
-                cancel();
                 LogUtil.debug(TAG, "Cancelled due to ad view is null");
+                destroy();
                 return;
             }
 
@@ -103,23 +105,14 @@ public class VisibilityMonitor {
             lastWebViewHash = webView.hashCode();
 
             if (stopAfterFirstFinding) {
-                Log.d(TAG, "Interstitial WebView found. Stopping...");
-                cancel();
+                LogUtil.debug(TAG, "Interstitial WebView found. Stopping...");
+                destroy();
             }
 
-            AdViewUtils.findCacheId(webView, cacheId -> {
-                if (cacheId == null || cacheId.isEmpty()) {
-                    return;
-                }
-
-                if (!cacheId.equals(responseCacheId)) {
-                    LogUtil.warning(TAG, "Different cache ids");
-                    return;
-                }
-
-                attachVisibilityTracker(webView);
-                LogUtil.debug(TAG, "Registering the new WebView: " + lastWebViewHash);
-            });
+            AdViewUtils.findCacheId(
+                    webView,
+                    attachVisibilityTrackerTask(new WeakReference<>(webView), this, responseCacheId, lastWebViewHash)
+            );
         }
 
         private void attachVisibilityTracker(WebView webView) {
@@ -179,6 +172,27 @@ public class VisibilityMonitor {
                 }
             }
             return null;
+        }
+
+        private static AdViewUtils.CacheIdResult attachVisibilityTrackerTask(WeakReference<WebView> webViewReference, VisibilityTimer visibilityTimer, String responseCacheId, int lastWebViewHash) {
+            return cacheId -> {
+                if (cacheId == null || cacheId.isEmpty()) {
+                    return;
+                }
+
+                if (!cacheId.equals(responseCacheId)) {
+                    LogUtil.warning(TAG, "Different cache ids");
+                    return;
+                }
+
+                WebView webView = webViewReference.get();
+                if (webView == null) {
+                    return;
+                }
+
+                visibilityTimer.attachVisibilityTracker(webView);
+                LogUtil.debug(TAG, "Registering the new WebView: " + lastWebViewHash);
+            };
         }
     }
 
