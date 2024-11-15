@@ -74,4 +74,8 @@ public class InterstitialAdUnit extends BannerBaseAdUnit {
         this.useInterstitialVisibilityTracker = enable;
     }
 
+    public void activatePrebidImpressionTracker(boolean activate) {
+        this.activatePrebidImpressionTracker = activate;
+    }
+
 }

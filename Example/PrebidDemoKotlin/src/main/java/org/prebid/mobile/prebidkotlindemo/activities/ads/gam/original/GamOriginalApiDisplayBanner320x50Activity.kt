@@ -73,7 +73,7 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
         adUnit?.bannerParameters = parameters
 
         adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
-        adUnit?.fetchDemand(request) {
+        adUnit?.fetchDemand(request, adView) {
             adView.loadAd(request)
         }
     }

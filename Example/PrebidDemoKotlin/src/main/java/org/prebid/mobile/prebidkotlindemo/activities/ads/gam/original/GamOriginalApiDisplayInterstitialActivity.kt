@@ -32,7 +32,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
         const val CONFIG_ID = "prebid-demo-display-interstitial-320-480"
     }
 
-    private var adUnit: AdUnit? = null
+    private var adUnit: InterstitialAdUnit? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +44,9 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
     private fun createAd() {
         // 1. Create InterstitialAdUnit
         adUnit = InterstitialAdUnit(CONFIG_ID, 80, 60)
+
+        // Activate additional impression tracker (for burl)
+        adUnit?.activatePrebidImpressionTracker(true)
 
         // 2. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
