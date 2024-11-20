@@ -88,7 +88,7 @@ public class GamOriginalApiVideoBanner extends BaseAdActivity {
         super.onDestroy();
 
         if (adUnit != null) {
-            adUnit.stopAutoRefresh();
+            adUnit.destroy();
         }
     }
 }
