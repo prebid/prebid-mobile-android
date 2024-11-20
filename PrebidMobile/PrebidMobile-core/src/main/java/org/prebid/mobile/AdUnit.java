@@ -153,20 +153,6 @@ public abstract class AdUnit {
 
     /**
      * Loads ad and applies keywords to the ad object.
-     * Fetch demand with the visibility tracking for the
-     *
-     * @param adObject AdMob's ({@code AdManagerAdRequest} or {@code AdManagerAdRequest.Builder})
-     *                 or AppLovin's ({@code MaxNativeAdLoader}) ad object
-     * @param adView   the ad view object (f.e. {@code AdManagerAdView})
-     * @param listener callback when operation is completed (success or fail)
-     */
-    public void fetchDemand(Object adObject, View adView, @NonNull OnCompleteListener listener) {
-        adViewReference = new WeakReference<>(adView);
-        fetchDemand(adObject, listener);
-    }
-
-    /**
-     * Loads ad and applies keywords to the ad object.
      *
      * @param adObject AdMob's ({@code AdManagerAdRequest} or {@code AdManagerAdRequest.Builder})
      *                 or AppLovin's ({@code MaxNativeAdLoader}) ad object
@@ -259,6 +245,15 @@ public abstract class AdUnit {
             Util.saveCacheId(bidInfo.getNativeCacheId(), adObject);
             listener.onComplete(bidInfo);
         });
+    }
+
+    /**
+     * Applies the native visibility tracker for tracking `burl` url.
+     *
+     * @param adView the ad view object (f.e. {@code AdManagerAdView})
+     */
+    public void activatePrebidImpressionTracker(View adView) {
+        adViewReference = new WeakReference<>(adView);
     }
 
     // MARK: - adunit context data aka inventory data (imp[].ext.data)
