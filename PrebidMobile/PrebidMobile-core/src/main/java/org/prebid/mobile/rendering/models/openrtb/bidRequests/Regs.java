@@ -34,6 +34,9 @@ public class Regs extends BaseBid {
     @Nullable
     private JSONArray gppSid;
 
+    /**
+     * When you add a new field to this list, don't forget to add it to the {@link org.prebid.mobile.OpenRtbMerger}.
+     */
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
