@@ -258,12 +258,7 @@ public class WinNotifierTest {
                 String adMarkup = "";
                 switch (path) {
                     case "/cache?uuid=id":
-                        try {
-                            adMarkup = ResourceUtils.convertResourceToString(PATH_BID_SHORT_JSON);
-                        }
-                        catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        adMarkup = ResourceUtils.convertResourceToString(PATH_BID_SHORT_JSON);
                         break;
                     case "/cache?uuid=nurl":
                     case "/cache?uuid=uuid":
