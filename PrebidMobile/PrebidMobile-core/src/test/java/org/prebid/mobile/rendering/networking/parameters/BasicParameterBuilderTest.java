@@ -320,10 +320,10 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
-    public void setOrtbConfig_configPresentInRequest() {
+    public void setImpOrtbConfig_configPresentInRequest() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         String ortbConfig = "{\"arbitraryparamkey1\":\"arbitraryparamvalue1\",\"ext\":{\"otherExtParam\":\"otherParam\"}}";
-        adConfiguration.setOrtbConfig(ortbConfig);
+        adConfiguration.setImpOrtbConfig(ortbConfig);
 
         BasicParameterBuilder builder = new BasicParameterBuilder(
                 adConfiguration,
@@ -343,10 +343,10 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
-    public void setOrtbConfig_invalidJSONInRequest() {
+    public void setImpOrtbConfig_invalidJSONInRequest() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         String ortbConfig = "\"arbitraryparamkey1\":\"arbitraryparamvalue1\"}";
-        adConfiguration.setOrtbConfig(ortbConfig);
+        adConfiguration.setImpOrtbConfig(ortbConfig);
 
         BasicParameterBuilder builder = new BasicParameterBuilder(
                 adConfiguration,
@@ -365,10 +365,10 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
-    public void setOrtbConfig_illegalParametersPresentInRequest() {
+    public void setImpOrtbConfig_illegalParametersPresentInRequest() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         String ortbConfig = "{\"arbitraryparamkey1\":\"arbitraryparamvalue1\", \"regs\": \"no regs here\", \"ext\":{\"gdpr\":\"no GDPR here\", \"otherExtParam\":\"otherParam\"}}";
-        adConfiguration.setOrtbConfig(ortbConfig);
+        adConfiguration.setImpOrtbConfig(ortbConfig);
 
         BasicParameterBuilder builder = new BasicParameterBuilder(
                 adConfiguration,

@@ -23,14 +23,13 @@ import androidx.annotation.VisibleForTesting;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.OpenRtbMerger;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.*;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class BidRequest extends BaseBid {
 
@@ -42,7 +41,7 @@ public class BidRequest extends BaseBid {
     private User user = null;
     private Source source = null;
     @Nullable
-    private String ortbConfig;
+    private String impOrtbConfig;
     private Ext ext = null;
 
     public JSONObject getJsonObject() throws JSONException {
@@ -52,7 +51,9 @@ public class BidRequest extends BaseBid {
             JSONArray jsonArray = new JSONArray();
 
             for (Imp i : imps) {
-                jsonArray.put(i.getJsonObject());
+                JSONObject impJson = i.getJsonObject();
+                impJson = OpenRtbMerger.globalMerge(impJson, impOrtbConfig);
+                jsonArray.put(impJson);
             }
 
             toJSON(jsonObject, "imp", jsonArray);
@@ -66,7 +67,7 @@ public class BidRequest extends BaseBid {
         toJSON(jsonObject, "source", source != null ? source.getJsonObject() : null);
         toJSON(jsonObject, "ext", ext != null ? ext.getJsonObject() : null);
         toJSON(jsonObject, "test", PrebidMobile.getPbsDebug() ? 1 : null);
-        jsonObject = OpenRtbMerger.globalMerge(jsonObject, ortbConfig);
+        jsonObject = OpenRtbMerger.globalMerge(jsonObject, TargetingParams.getGlobalOrtbConfig());
         return jsonObject;
     }
 
@@ -160,11 +161,11 @@ public class BidRequest extends BaseBid {
     }
 
     @Nullable
-    public String getOrtbConfig() {
-        return ortbConfig;
+    public String getImpOrtbConfig() {
+        return impOrtbConfig;
     }
 
-    public void setOrtbConfig(@Nullable String ortbConfig) {
-        this.ortbConfig = ortbConfig;
+    public void setImpOrtbConfig(@Nullable String impOrtbConfig) {
+        this.impOrtbConfig = impOrtbConfig;
     }
 }
