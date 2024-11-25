@@ -1,0 +1,21 @@
+{
+  "field_int": 1,
+  "field_string": "test",
+  "field_double": 2.5,
+  "field_boolean": true,
+  "field_simple": 10,
+  "object": {
+    "subfield_1": 3,
+    "subfield_2": "inner",
+    "sub_object": {
+      "subfield_3": true,
+      "subfield_4": [
+        1,2,3
+      ]
+    }
+  },
+  "array_int": [],
+  "array_string": [
+    "hello", "world"
+  ]
+}
