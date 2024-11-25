@@ -1,9 +1,5 @@
 package org.prebid.mobile;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,38 +13,96 @@ import org.prebid.mobile.test.utils.ResourceUtils;
 public class OpenRtbMergerTest {
 
     @Test
-    public void test() throws JSONException {
+    public void merge_emptyOpenRtb() throws JSONException {
         String request = "{}";
-        String openRtb = """
-                        {
-                            "field_new": "new"
-                        }
-                """;
+        String openRtb = "";
 
         JSONObject mergedJson = merge(request, openRtb);
 
-        assertTrue(mergedJson.has("field_new"));
-        assertEquals("new", mergedJson.get("field_new"));
+        assertJsonEquals("{}", mergedJson.toString());
     }
 
     @Test
-    public void mergeSensitiveData_emptyRequest() throws JSONException {
+    public void merge_wrongJson() throws JSONException {
         String request = "{}";
-        String openRtb = fromResources("OpenRtbMerger/sensitive_data_fake.json");
+        String openRtb = "not a json string";
 
         JSONObject mergedJson = merge(request, openRtb);
 
-        assertJsonEquals(fromResources("OpenRtbMerger/sensitive_data_empty.json"), mergedJson.toString());
+        assertJsonEquals("{}", mergedJson.toString());
     }
 
     @Test
-    public void mergeSensitiveData_fullRequest() throws JSONException {
-        String request = fromResources("OpenRtbMerger/sensitive_data_real.json");
-        String openRtb = fromResources("OpenRtbMerger/sensitive_data_fake.json");
+    public void mergeSensitiveData_emptyRequest_emptyResult() throws JSONException {
+        String request = "{}";
+        String openRtb = fromResources("sensitive_data_fake.json");
+
+        JSONObject mergedJson = merge(request, openRtb);
+
+        assertJsonEquals(fromResources("sensitive_data_empty.json"), mergedJson.toString());
+    }
+
+    @Test
+    public void mergeSensitiveData_fullRequest_requestFieldsAreNotChanged() throws JSONException {
+        String request = fromResources("sensitive_data_real.json");
+        String openRtb = fromResources("sensitive_data_fake.json");
 
         JSONObject mergedJson = merge(request, openRtb);
 
         assertJsonEquals(request, mergedJson.toString());
+    }
+
+    @Test
+    public void merge_differentTypes() throws JSONException {
+        String request = "{}";
+        String openRtb = fromResources("merge_all_types.json");
+
+        JSONObject mergedJson = merge(request, openRtb);
+
+        assertJsonEquals(openRtb, mergedJson.toString());
+    }
+
+    @Test
+    public void mergeComplex_withReplace() throws JSONException {
+        String request = fromResources("merge_with_replace_request.json");
+        String openRtb = fromResources("merge_with_replace_openrtb.json");
+
+        JSONObject mergedJson = merge(request, openRtb);
+
+        String result = fromResources("merge_with_replace_result.json");
+        assertJsonEquals(result, mergedJson.toString());
+    }
+
+    @Test
+    public void merge_replaceWithNewType() throws JSONException {
+        String request = fromResources("merge_replace_with_new_type_request.json");
+        String openRtb = fromResources("merge_replace_with_new_type_openrtb.json");
+
+        JSONObject mergedJson = merge(request, openRtb);
+
+        assertJsonEquals(openRtb, mergedJson.toString());
+    }
+
+    @Test
+    public void merge_arrayPrimitives() throws JSONException {
+        String request = fromResources("merge_arrays_primitives_request.json");
+        String openRtb = fromResources("merge_arrays_primitives_openrtb.json");
+
+        JSONObject mergedJson = merge(request, openRtb);
+
+        String result = fromResources("merge_arrays_primitives_result.json");
+        assertJsonEquals(result, mergedJson.toString());
+    }
+
+    @Test
+    public void merge_arrayObjects() throws JSONException {
+        String request = fromResources("merge_arrays_objects_request.json");
+        String openRtb = fromResources("merge_arrays_objects_openrtb.json");
+
+        JSONObject mergedJson = merge(request, openRtb);
+
+        String result = fromResources("merge_arrays_objects_result.json");
+        assertJsonEquals(result, mergedJson.toString());
     }
 
     private JSONObject merge(String request, String openRtb) throws JSONException {
@@ -57,7 +111,7 @@ public class OpenRtbMergerTest {
     }
 
     private String fromResources(String path) {
-        return ResourceUtils.convertResourceToString(path);
+        return ResourceUtils.convertResourceToString("OpenRtbMerger/" + path);
     }
 
     private void assertJsonEquals(String json1, String json2) {
