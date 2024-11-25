@@ -281,12 +281,12 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     @Nullable
-    public String getOrtbConfig() {
-        return config.getOrtbConfig();
+    public String getImpOrtbConfig() {
+        return config.getImpOrtbConfig();
     }
 
-    public void setOrtbConfig(@Nullable String ortbConfig) {
-        config.setOrtbConfig(ortbConfig);
+    public void setImpOrtbConfig(@Nullable String ortbConfig) {
+        config.setImpOrtbConfig(ortbConfig);
     }
 
 

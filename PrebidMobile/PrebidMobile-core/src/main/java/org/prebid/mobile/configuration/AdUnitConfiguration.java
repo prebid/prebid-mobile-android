@@ -48,7 +48,7 @@ public class AdUnitConfiguration {
     @Nullable
     private String gpid;
     @Nullable
-    private String ortbConfig;
+    private String impOrtbConfig;
 
     private Position closeButtonPosition = Position.TOP_RIGHT;
     private Position skipButtonPosition = Position.TOP_RIGHT;
@@ -542,12 +542,12 @@ public class AdUnitConfiguration {
     }
 
     @Nullable
-    public String getOrtbConfig() {
-        return ortbConfig;
+    public String getImpOrtbConfig() {
+        return impOrtbConfig;
     }
 
-    public void setOrtbConfig(@Nullable String ortbConfig) {
-        this.ortbConfig = ortbConfig;
+    public void setImpOrtbConfig(@Nullable String impOrtbConfig) {
+        this.impOrtbConfig = impOrtbConfig;
     }
 
     public boolean getHasEndCard() {
