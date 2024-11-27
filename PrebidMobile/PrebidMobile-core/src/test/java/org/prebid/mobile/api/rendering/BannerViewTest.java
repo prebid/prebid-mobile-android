@@ -28,7 +28,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.api.data.AdFormat;
-import org.prebid.mobile.api.data.BannerAdPosition;
 import org.prebid.mobile.api.data.VideoPlacementType;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.BannerVideoListener;
@@ -43,6 +42,7 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
+import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
@@ -94,7 +94,7 @@ public class BannerViewTest {
         bannerView.setBannerListener(mockBannerListener);
         bannerView.setBannerVideoListener(mockBannerVideoListener);
 
-        assertEquals(BannerAdPosition.UNDEFINED.getValue(), bannerView.getAdPosition().getValue());
+        assertEquals(AdPosition.UNDEFINED.getValue(), bannerView.getAdPosition().getValue());
     }
 
     @Test
@@ -496,19 +496,19 @@ public class BannerViewTest {
     @Test
     public void setAdPosition_EqualsGetAdPosition() {
         bannerView.setAdPosition(null);
-        assertEquals(BannerAdPosition.UNDEFINED, bannerView.getAdPosition());
+        assertEquals(AdPosition.UNDEFINED, bannerView.getAdPosition());
 
-        bannerView.setAdPosition(BannerAdPosition.FOOTER);
-        assertEquals(BannerAdPosition.FOOTER, bannerView.getAdPosition());
+        bannerView.setAdPosition(AdPosition.FOOTER);
+        assertEquals(AdPosition.FOOTER, bannerView.getAdPosition());
 
-        bannerView.setAdPosition(BannerAdPosition.HEADER);
-        assertEquals(BannerAdPosition.HEADER, bannerView.getAdPosition());
+        bannerView.setAdPosition(AdPosition.HEADER);
+        assertEquals(AdPosition.HEADER, bannerView.getAdPosition());
 
-        bannerView.setAdPosition(BannerAdPosition.SIDEBAR);
-        assertEquals(BannerAdPosition.SIDEBAR, bannerView.getAdPosition());
+        bannerView.setAdPosition(AdPosition.SIDEBAR);
+        assertEquals(AdPosition.SIDEBAR, bannerView.getAdPosition());
 
-        bannerView.setAdPosition(BannerAdPosition.UNKNOWN);
-        assertEquals(BannerAdPosition.UNKNOWN, bannerView.getAdPosition());
+        bannerView.setAdPosition(AdPosition.UNKNOWN);
+        assertEquals(AdPosition.UNKNOWN, bannerView.getAdPosition());
     }
 
     @Test

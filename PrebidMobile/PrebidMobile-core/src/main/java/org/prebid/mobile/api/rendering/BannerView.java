@@ -35,7 +35,6 @@ import org.prebid.mobile.DataObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
-import org.prebid.mobile.api.data.BannerAdPosition;
 import org.prebid.mobile.api.data.VideoPlacementType;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.BannerVideoListener;
@@ -529,13 +528,12 @@ public class BannerView extends FrameLayout {
     }
 
 
-    public void setAdPosition(BannerAdPosition bannerAdPosition) {
-        final AdPosition adPosition = BannerAdPosition.mapToAdPosition(bannerAdPosition);
+    public void setAdPosition(AdPosition adPosition) {
         adUnitConfig.setAdPosition(adPosition);
     }
 
-    public BannerAdPosition getAdPosition() {
-        return BannerAdPosition.mapToDisplayAdPosition(adUnitConfig.getAdPositionValue());
+    public AdPosition getAdPosition() {
+        return adUnitConfig.getAdPosition();
     }
 
     public void setPbAdSlot(String adSlot) {

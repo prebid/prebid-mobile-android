@@ -27,10 +27,10 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
-import org.prebid.mobile.api.data.BannerAdPosition;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
+import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
@@ -64,7 +64,7 @@ public class MediationBannerAdUnitTest {
         WhiteBox.setInternalState(mediationBannerAdUnit, "bidLoader", mockBidLoader);
         WhiteBox.setInternalState(mediationBannerAdUnit, "screenStateReceiver", mockScreenStateReceiver);
 
-        assertEquals(BannerAdPosition.UNDEFINED.getValue(), mediationBannerAdUnit.getAdPosition().getValue());
+        assertEquals(AdPosition.UNDEFINED.getValue(), mediationBannerAdUnit.getAdPosition().getValue());
     }
 
     @After
@@ -106,19 +106,19 @@ public class MediationBannerAdUnitTest {
     @Test
     public void setAdPosition_EqualsGetAdPosition() {
         mediationBannerAdUnit.setAdPosition(null);
-        assertEquals(BannerAdPosition.UNDEFINED, mediationBannerAdUnit.getAdPosition());
+        assertEquals(AdPosition.UNDEFINED, mediationBannerAdUnit.getAdPosition());
 
-        mediationBannerAdUnit.setAdPosition(BannerAdPosition.FOOTER);
-        assertEquals(BannerAdPosition.FOOTER, mediationBannerAdUnit.getAdPosition());
+        mediationBannerAdUnit.setAdPosition(AdPosition.FOOTER);
+        assertEquals(AdPosition.FOOTER, mediationBannerAdUnit.getAdPosition());
 
-        mediationBannerAdUnit.setAdPosition(BannerAdPosition.HEADER);
-        assertEquals(BannerAdPosition.HEADER, mediationBannerAdUnit.getAdPosition());
+        mediationBannerAdUnit.setAdPosition(AdPosition.HEADER);
+        assertEquals(AdPosition.HEADER, mediationBannerAdUnit.getAdPosition());
 
-        mediationBannerAdUnit.setAdPosition(BannerAdPosition.SIDEBAR);
-        assertEquals(BannerAdPosition.SIDEBAR, mediationBannerAdUnit.getAdPosition());
+        mediationBannerAdUnit.setAdPosition(AdPosition.SIDEBAR);
+        assertEquals(AdPosition.SIDEBAR, mediationBannerAdUnit.getAdPosition());
 
-        mediationBannerAdUnit.setAdPosition(BannerAdPosition.UNKNOWN);
-        assertEquals(BannerAdPosition.UNKNOWN, mediationBannerAdUnit.getAdPosition());
+        mediationBannerAdUnit.setAdPosition(AdPosition.UNKNOWN);
+        assertEquals(AdPosition.UNKNOWN, mediationBannerAdUnit.getAdPosition());
     }
 
 }

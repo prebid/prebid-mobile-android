@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
+import org.prebid.mobile.rendering.models.AdPosition;
 
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -75,6 +76,10 @@ public class BannerAdUnit extends BannerBaseAdUnit {
 
     public void setOrtbConfig(@Nullable String ortbConfig) {
         configuration.setOrtbConfig(ortbConfig);
+    }
+
+    public void setAdPosition(AdPosition adPosition) {
+        configuration.setAdPosition(adPosition);
     }
 
 }

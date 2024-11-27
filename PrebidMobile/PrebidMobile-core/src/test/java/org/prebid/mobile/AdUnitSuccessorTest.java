@@ -31,6 +31,7 @@ import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.reflection.AdUnitReflection;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
+import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -99,6 +100,27 @@ public class AdUnitSuccessorTest {
         AdUnitConfiguration configuration = adUnit.getConfiguration();
         assertEquals(expectedGpid, configuration.getGpid());
     }
+
+    @Test
+    public void adPosition_empty() {
+        BannerAdUnit adUnit = new BannerAdUnit(testConfigId, width, height);
+
+        AdUnitConfiguration configuration = adUnit.getConfiguration();
+        assertEquals(AdPosition.UNDEFINED, configuration.getAdPosition());
+        assertEquals(AdPosition.UNDEFINED.getValue(), configuration.getAdPositionValue());
+    }
+
+    @Test
+    public void adPosition() {
+        BannerAdUnit adUnit = new BannerAdUnit(testConfigId, width, height);
+        adUnit.setAdPosition(AdPosition.SIDEBAR);
+
+        AdUnitConfiguration configuration = adUnit.getConfiguration();
+        assertEquals(AdPosition.SIDEBAR, configuration.getAdPosition());
+        assertEquals(AdPosition.SIDEBAR.getValue(), configuration.getAdPositionValue());
+    }
+
+
 
     @Test
     public void testBannerParametersCreation() {
