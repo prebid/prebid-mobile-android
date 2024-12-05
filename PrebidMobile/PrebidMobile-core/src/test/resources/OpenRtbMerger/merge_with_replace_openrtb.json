@@ -1,0 +1,34 @@
+{
+  "field_int": 2,
+  "field_string": "replaced",
+  "field_double": 3.5,
+  "field_boolean": false,
+  "field_simple": {
+    "subfield_1": "str",
+    "subfield_2": 11
+  },
+  "object": {
+    "subfield_1": 4,
+    "subfield_2": "inner_replaced",
+    "sub_object": {
+      "subfield_3": false,
+      "subfield_4": [
+        4, 5
+      ]
+    }
+  },
+  "array_int": [
+    1,2,3
+  ],
+  "array_string": [
+    "!"
+  ],
+  "new_field": "yes",
+  "new_object": {
+    "subobject": {
+      "ext": {
+        "type": "test"
+      }
+    }
+  }
+}

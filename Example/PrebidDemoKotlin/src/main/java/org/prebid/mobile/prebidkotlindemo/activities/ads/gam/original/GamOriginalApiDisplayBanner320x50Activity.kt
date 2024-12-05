@@ -66,6 +66,7 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
 
         val request = AdManagerAdRequest.Builder().build()
         adUnit = BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT)
+        setOpenRtbConfig()
 
         val parameters = BannerParameters()
         parameters.api = listOf(Signals.Api.MRAID_3, Signals.Api.OMID_1)
@@ -75,6 +76,20 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
         adUnit?.fetchDemand(request) {
             adView.loadAd(request)
         }
+    }
+
+    /**
+     * Optional. Sets additional parameters.
+     */
+    private fun setOpenRtbConfig() {
+        adUnit?.impOrtbConfig = """
+            {
+              "bidfloor": 0.01,
+              "banner": {
+                "battr": [1,2,3,4]
+              }
+            }
+        """
     }
 
 

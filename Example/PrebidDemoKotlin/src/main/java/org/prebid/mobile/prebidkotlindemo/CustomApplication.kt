@@ -54,6 +54,20 @@ class CustomApplication : Application() {
             }
         }
         PrebidMobile.setShareGeoLocation(true)
+
+        TargetingParams.setGlobalOrtbConfig(
+            """
+                {
+                  "displaymanager": "Google",
+                  "displaymanagerver": "${MobileAds.getVersion()}",
+                  "ext": {
+                    "myext": {
+                      "test": 1
+                    }
+                  }
+                }
+            """.trimIndent()
+        )
     }
 
     private fun initAdMob() {

@@ -686,12 +686,12 @@ public class BannerView extends FrameLayout {
     }
 
     @Nullable
-    public String getOrtbConfig() {
-        return adUnitConfig.getOrtbConfig();
+    public String getImpOrtbConfig() {
+        return adUnitConfig.getImpOrtbConfig();
     }
 
-    public void setOrtbConfig(@Nullable String ortbConfig) {
-        adUnitConfig.setOrtbConfig(ortbConfig);
+    public void setImpOrtbConfig(@Nullable String ortbConfig) {
+        adUnitConfig.setImpOrtbConfig(ortbConfig);
     }
 
     //region ==================== HelperMethods for Unit Tests. Should be used only in tests

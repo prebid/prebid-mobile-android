@@ -31,11 +31,15 @@ public class ResourceUtils {
     public final static String ACCEPT_HEADER = "Accept";
     public final static String ACCEPT_HEADER_VALUE = "application/x-www-form-urlencoded,text/plain,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
 
-    public static String convertResourceToString(String fileName) throws IOException {
-        InputStream fileStream = ResourceUtils.class.getClassLoader().getResourceAsStream(fileName);
+    public static String convertResourceToString(String fileName) {
+        try {
+            InputStream fileStream = ResourceUtils.class.getClassLoader().getResourceAsStream(fileName);
 
-        java.util.Scanner s = new java.util.Scanner(fileStream).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
+            java.util.Scanner s = new java.util.Scanner(fileStream).useDelimiter("\\A");
+            return s.hasNext() ? s.next() : "";
+        } catch (Exception exception) {
+            throw new NullPointerException("Can't find resource file " + fileName);
+        }
     }
 
     public static void assertJsonEquals(JSONObject expected, JSONObject actual) {
