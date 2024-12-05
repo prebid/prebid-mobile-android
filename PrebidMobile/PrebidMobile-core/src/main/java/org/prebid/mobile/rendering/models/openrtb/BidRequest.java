@@ -20,13 +20,20 @@ import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.OpenRtbMerger;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.*;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.App;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.BaseBid;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Device;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Regs;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 
 import java.util.ArrayList;
@@ -50,9 +57,12 @@ public class BidRequest extends BaseBid {
 
             JSONArray jsonArray = new JSONArray();
 
-            for (Imp i : imps) {
-                JSONObject impJson = i.getJsonObject();
-                impJson = OpenRtbMerger.globalMerge(impJson, impOrtbConfig);
+            for (int i = 0; i < imps.size(); i++) {
+                Imp imp = imps.get(i);
+                JSONObject impJson = imp.getJsonObject();
+                if (i == 0) {
+                    impJson = OpenRtbMerger.globalMerge(impJson, impOrtbConfig);
+                }
                 jsonArray.put(impJson);
             }
 
