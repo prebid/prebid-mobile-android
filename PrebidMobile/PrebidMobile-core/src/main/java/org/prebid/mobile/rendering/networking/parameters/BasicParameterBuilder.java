@@ -205,6 +205,11 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
     private void setVideoImpValues(Imp imp) {
         Video video = new Video();
+
+        if (adConfiguration.isAdPositionValid()) {
+            video.pos = adConfiguration.getAdPositionValue();
+        }
+
         if (adConfiguration.isOriginalAdUnit()) {
             VideoParameters videoParameters = adConfiguration.getVideoParameters();
             if (videoParameters != null) {
@@ -277,10 +282,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
             //Interstitial video specific values
             video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Leaving Viewport or when Terminated by User
-
-            if (adConfiguration.isAdPositionValid()) {
-                video.pos = adConfiguration.getAdPositionValue();
-            }
 
             if (!adConfiguration.isPlacementTypeValid()) {
                 video.placement = PlacementType.INTERSTITIAL.getValue();

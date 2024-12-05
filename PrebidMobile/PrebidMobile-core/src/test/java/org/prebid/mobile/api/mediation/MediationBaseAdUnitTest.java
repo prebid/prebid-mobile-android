@@ -27,12 +27,12 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.api.data.BannerAdPosition;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
+import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -68,7 +68,7 @@ public class MediationBaseAdUnitTest {
         baseAdUnit = createAdUnit("config");
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
 
-        assertEquals(BannerAdPosition.UNDEFINED.getValue(), baseAdUnit.adUnitConfig.getAdPositionValue());
+        assertEquals(AdPosition.UNDEFINED.getValue(), baseAdUnit.adUnitConfig.getAdPositionValue());
     }
 
     @After

@@ -16,9 +16,16 @@
 
 package org.prebid.mobile.rendering.models;
 
+/**
+ * The ad position for additional targeting.
+ */
 public enum AdPosition {
+
     UNDEFINED(-1),
     UNKNOWN(0),
+    ABOVE_THE_FOLD(1),
+    LOCKED(2),
+    BELOW_THE_FOLD(3),
     HEADER(4),
     FOOTER(5),
     SIDEBAR(6),
@@ -33,4 +40,5 @@ public enum AdPosition {
     public int getValue() {
         return value;
     }
+
 }

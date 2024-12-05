@@ -23,7 +23,6 @@ import androidx.annotation.NonNull;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
-import org.prebid.mobile.api.data.BannerAdPosition;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 import org.prebid.mobile.rendering.models.AdPosition;
@@ -115,13 +114,12 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         adUnitConfig.setAutoRefreshDelay(seconds);
     }
 
-    public void setAdPosition(BannerAdPosition bannerAdPosition) {
-        final AdPosition adPosition = BannerAdPosition.mapToAdPosition(bannerAdPosition);
+    public void setAdPosition(AdPosition adPosition) {
         adUnitConfig.setAdPosition(adPosition);
     }
 
-    public BannerAdPosition getAdPosition() {
-        return BannerAdPosition.mapToDisplayAdPosition(adUnitConfig.getAdPositionValue());
+    public AdPosition getAdPosition() {
+        return adUnitConfig.getAdPosition();
     }
 
     public void stopRefresh() {

@@ -54,7 +54,8 @@ public class AdUnitConfiguration {
     private Position skipButtonPosition = Position.TOP_RIGHT;
     private AdSize minSizePercentage;
     private PlacementType placementType;
-    private AdPosition adPosition;
+    @NonNull
+    private AdPosition adPosition = AdPosition.UNDEFINED;
     @Nullable
     private ContentObject appContent;
     private BannerParameters bannerParameters;
@@ -474,12 +475,19 @@ public class AdUnitConfiguration {
         return getPlacementTypeValue() != PlacementType.UNDEFINED.getValue();
     }
 
-    public void setAdPosition(@Nullable AdPosition adPosition) {
+    public void setAdPosition(AdPosition adPosition) {
+        if (adPosition == null) return;
+
         this.adPosition = adPosition;
     }
 
+    @NonNull
+    public AdPosition getAdPosition() {
+        return adPosition;
+    }
+
     public int getAdPositionValue() {
-        return adPosition != null ? adPosition.getValue() : AdPosition.UNDEFINED.getValue();
+        return adPosition.getValue();
     }
 
     public boolean isAdPositionValid() {
