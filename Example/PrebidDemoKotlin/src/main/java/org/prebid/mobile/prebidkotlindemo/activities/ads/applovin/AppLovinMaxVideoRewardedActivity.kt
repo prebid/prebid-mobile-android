@@ -16,6 +16,7 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.applovin
 
 import android.os.Bundle
+import android.util.Log
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxError
 import com.applovin.mediation.MaxReward
@@ -56,7 +57,9 @@ class AppLovinMaxVideoRewardedActivity : BaseAdActivity() {
             override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {}
             override fun onRewardedVideoStarted(ad: MaxAd?) {}
             override fun onRewardedVideoCompleted(ad: MaxAd?) {}
-            override fun onUserRewarded(ad: MaxAd?, reward: MaxReward?) {}
+            override fun onUserRewarded(ad: MaxAd?, reward: MaxReward?) {
+                Log.d("AdExample", "User earned reward: $reward")
+            }
         })
 
         val mediationUtils = MaxMediationRewardedUtils(maxRewardedAd)

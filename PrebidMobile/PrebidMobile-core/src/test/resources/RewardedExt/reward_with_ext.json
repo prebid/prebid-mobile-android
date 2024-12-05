@@ -1,0 +1,18 @@
+{
+  "prebid": {
+    "passthrough": [
+      {
+        "type": "prebidmobilesdk",
+        "rwdd": {
+          "reward": {
+            "type": "SuperDollars",
+            "count": 11,
+            "ext": {
+              "additional_data": "test"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "prebid": {
+    "passthrough": [
+      {
+        "type": "prebidmobilesdk",
+        "rwdd": {
+          "completion": {
+            "video": {
+              "playbackevent": "firstquartile"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

@@ -96,7 +96,7 @@ public class VideoDialog extends AdBaseDialog {
         adView.unMute();
 
         changeCloseViewVisibility(View.VISIBLE);
-        adView.showCallToAction();
+        adView.showCallToAction(true);
 
         adViewManager.updateAdView(adViewContainer);
     }

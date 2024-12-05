@@ -69,4 +69,11 @@
             android:text="@string/event_admob_failed"
             android:layout_marginTop="@dimen/event_top_margin"/>
 
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+        android:id="@+id/btnUserRewarded"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/onUserRewarded"
+        android:layout_marginTop="@dimen/event_top_margin" />
+
 </LinearLayout>

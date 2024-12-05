@@ -17,9 +17,7 @@
 package org.prebid.mobile.api.rendering;
 
 import android.content.Context;
-
 import androidx.annotation.Nullable;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -29,6 +27,8 @@ import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.RewardedEventHandler;
 import org.prebid.mobile.rendering.bidding.interfaces.StandaloneRewardedVideoEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
+import org.prebid.mobile.rendering.interstitial.rewarded.Reward;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardManager;
 
 import java.util.EnumSet;
 
@@ -39,72 +39,46 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
     private static final String TAG = RewardedAdUnit.class.getSimpleName();
 
+    /**
+     * Handler that is responsible for requesting, displaying and destroying of
+     * primary ad (e.g. GAM). Also it tracks impression and sets listener.
+     */
     private final RewardedEventHandler eventHandler;
 
-    @Nullable private RewardedAdUnitListener rewardedAdUnitListener;
+    /**
+     * Interstitial ad units events listener (like onAdLoaded, onAdFailed...)
+     */
+    @Nullable
+    private RewardedAdUnitListener userListener;
 
-    @Nullable private Object userReward;
+    /**
+     * Listener that must be applied to InterstitialEventHandler.
+     * It is responsible for onAdServerWin or onPrebidSdkWin.
+     */
+    private final RewardedVideoEventListener eventListener = createRewardedListener();
 
-    //region ==================== Listener implementation
+    /**
+     * Constructor that creates the instance with a {@link StandaloneRewardedVideoEventHandler}
+     * for integration without any primary ad server.
+     *
+     * @param context  Android context
+     * @param configId configuration id for on Prebid Server
+     */
+    public RewardedAdUnit(
+            Context context,
+            String configId
+    ) {
+        this(context, configId, new StandaloneRewardedVideoEventHandler());
+    }
 
-    private final RewardedVideoEventListener eventListener = new RewardedVideoEventListener() {
-        @Override
-        public void onPrebidSdkWin() {
-            if (isBidInvalid()) {
-                changeInterstitialAdUnitState(InterstitialAdUnitState.READY_FOR_LOAD);
-                notifyErrorListener(new AdException(
-                    AdException.INTERNAL_ERROR,
-                    "WinnerBid is null when executing onPrebidSdkWin."
-                ));
-                return;
-            }
-
-            loadPrebidAd();
-        }
-
-        @Override
-        public void onAdServerWin(Object userReward) {
-            RewardedAdUnit.this.userReward = userReward;
-            changeInterstitialAdUnitState(InterstitialAdUnitState.READY_TO_DISPLAY_GAM);
-            notifyAdEventListener(AdListenerEvent.AD_LOADED);
-        }
-
-        @Override
-        public void onAdFailed(AdException exception) {
-            if (isBidInvalid()) {
-                changeInterstitialAdUnitState(InterstitialAdUnitState.READY_FOR_LOAD);
-                notifyErrorListener(exception);
-                return;
-            }
-
-            onPrebidSdkWin();
-        }
-
-        @Override
-        public void onAdClicked() {
-            notifyAdEventListener(AdListenerEvent.AD_CLICKED);
-        }
-
-        @Override
-        public void onAdClosed() {
-            notifyAdEventListener(AdListenerEvent.AD_CLOSE);
-        }
-
-        @Override
-        public void onAdDisplayed() {
-            changeInterstitialAdUnitState(InterstitialAdUnitState.READY_FOR_LOAD);
-            notifyAdEventListener(AdListenerEvent.AD_DISPLAYED);
-        }
-
-        @Override
-        public void onUserEarnedReward() {
-            if (rewardedAdUnitListener != null) {
-                rewardedAdUnitListener.onUserEarnedReward(RewardedAdUnit.this);
-            }
-        }
-    };
-    //endregion ==================== Listener implementation
-
+    /**
+     * Constructor that initializes a RewardedAdUnit with a custom event handler.
+     * It supports GAM integration (use {@code GamRewardedEventHandler})
+     *
+     * @param context      the Android context
+     * @param configId     the configuration id on Prebid Server
+     * @param eventHandler the event handler for primary ad server responsible for managing rewarded ad
+     */
     public RewardedAdUnit(
         Context context,
         String configId,
@@ -122,40 +96,35 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
         init(adUnitConfiguration);
     }
 
-    public RewardedAdUnit(
-        Context context,
-        String configId
-    ) {
-        this(context, configId, new StandaloneRewardedVideoEventHandler());
-    }
-
+    /**
+     * Executes ad loading if no request is running.
+     */
     @Override
     public void loadAd() {
         super.loadAd();
-        userReward = null;
+        RewardManager rewardManager = config.getRewardManager();
+        rewardManager.clear();
+        rewardManager.setRewardListener(controllerListener::onUserEarnedReward);
     }
 
+    /**
+     * Cleans up resources when destroyed. It has to be called if the ad unit is no longer needed.
+     */
     @Override
     public void destroy() {
         super.destroy();
+        config.getRewardManager().clear();
         if (eventHandler != null) {
             eventHandler.destroy();
         }
     }
 
-    //region ==================== getters and setters
-    public void setRewardedAdUnitListener(
-        @Nullable
-            RewardedAdUnitListener rewardedAdUnitListener
-    ) {
-        this.rewardedAdUnitListener = rewardedAdUnitListener;
+    /**
+     * Sets the listener for the rewarded ad events.
+     */
+    public void setRewardedAdUnitListener(@Nullable RewardedAdUnitListener userListener) {
+        this.userListener = userListener;
     }
-
-    @Nullable
-    public Object getUserReward() {
-        return userReward;
-    }
-    //endregion ==================== getters and setters
 
     @Override
     void requestAdWithBid(
@@ -171,39 +140,107 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
     }
 
     @Override
-    void notifyAdEventListener(AdListenerEvent adListenerEvent) {
-        if (rewardedAdUnitListener == null) {
+    void notifyAdEventListener(AdListenerEvent event) {
+        if (userListener == null) {
             LogUtil.debug(
                 TAG,
-                "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent
+                    "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + event
             );
             return;
         }
 
-        switch (adListenerEvent) {
+        switch (event) {
             case AD_CLOSE:
-                rewardedAdUnitListener.onAdClosed(RewardedAdUnit.this);
+                userListener.onAdClosed(RewardedAdUnit.this);
                 break;
             case AD_LOADED:
-                rewardedAdUnitListener.onAdLoaded(RewardedAdUnit.this);
+                userListener.onAdLoaded(RewardedAdUnit.this);
                 break;
             case AD_DISPLAYED:
-                rewardedAdUnitListener.onAdDisplayed(RewardedAdUnit.this);
+                userListener.onAdDisplayed(RewardedAdUnit.this);
                 break;
             case AD_CLICKED:
-                rewardedAdUnitListener.onAdClicked(RewardedAdUnit.this);
+                userListener.onAdClicked(RewardedAdUnit.this);
                 break;
             case USER_RECEIVED_PREBID_REWARD:
-                rewardedAdUnitListener.onUserEarnedReward(RewardedAdUnit.this);
+                Reward reward = getReward();
+                LogUtil.debug(TAG, "Internal reward listener: " + reward);
+                userListener.onUserEarnedReward(RewardedAdUnit.this, reward);
                 break;
         }
     }
 
     @Override
     void notifyErrorListener(AdException exception) {
-        if (rewardedAdUnitListener != null) {
-            rewardedAdUnitListener.onAdFailed(RewardedAdUnit.this, exception);
+        if (userListener != null) {
+            userListener.onAdFailed(RewardedAdUnit.this, exception);
         }
+    }
+
+    @Nullable
+    private Reward getReward() {
+        Reward reward = config.getRewardManager().getRewardedExt().getReward();
+        if (reward != null) {
+            return reward;
+        }
+
+        return eventHandler.getReward();
+    }
+
+    private RewardedVideoEventListener createRewardedListener() {
+        return new RewardedVideoEventListener() {
+            @Override
+            public void onPrebidSdkWin() {
+                if (isBidInvalid()) {
+                    changeInterstitialAdUnitState(InterstitialAdUnitState.READY_FOR_LOAD);
+                    notifyErrorListener(new AdException(
+                            AdException.INTERNAL_ERROR,
+                            "WinnerBid is null when executing onPrebidSdkWin."
+                    ));
+                    return;
+                }
+
+                loadPrebidAd();
+            }
+
+            @Override
+            public void onAdServerWin(Object userReward) {
+                changeInterstitialAdUnitState(InterstitialAdUnitState.READY_TO_DISPLAY_GAM);
+                notifyAdEventListener(AdListenerEvent.AD_LOADED);
+            }
+
+            @Override
+            public void onAdFailed(AdException exception) {
+                if (isBidInvalid()) {
+                    changeInterstitialAdUnitState(InterstitialAdUnitState.READY_FOR_LOAD);
+                    notifyErrorListener(exception);
+                    return;
+                }
+
+                onPrebidSdkWin();
+            }
+
+            @Override
+            public void onAdClicked() {
+                notifyAdEventListener(AdListenerEvent.AD_CLICKED);
+            }
+
+            @Override
+            public void onAdClosed() {
+                notifyAdEventListener(AdListenerEvent.AD_CLOSE);
+            }
+
+            @Override
+            public void onAdDisplayed() {
+                changeInterstitialAdUnitState(InterstitialAdUnitState.READY_FOR_LOAD);
+                notifyAdEventListener(AdListenerEvent.AD_DISPLAYED);
+            }
+
+            @Override
+            public void onUserEarnedReward() {
+                notifyUserReward();
+            }
+        };
     }
 
 }

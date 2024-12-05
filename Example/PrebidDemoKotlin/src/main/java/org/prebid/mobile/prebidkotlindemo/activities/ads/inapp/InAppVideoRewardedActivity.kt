@@ -16,10 +16,12 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.inapp
 
 import android.os.Bundle
+import android.util.Log
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.RewardedAdUnit
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
+import org.prebid.mobile.rendering.interstitial.rewarded.Reward
 
 class InAppVideoRewardedActivity : BaseAdActivity() {
 
@@ -47,7 +49,9 @@ class InAppVideoRewardedActivity : BaseAdActivity() {
             override fun onAdFailed(rewardedAdUnit: RewardedAdUnit?, exception: AdException?) {}
             override fun onAdClicked(rewardedAdUnit: RewardedAdUnit?) {}
             override fun onAdClosed(rewardedAdUnit: RewardedAdUnit?) {}
-            override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?) {}
+            override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?, reward: Reward?) {
+                Log.d("InAppVideoRewarded", "User earned reward: $reward")
+            }
         })
         adUnit?.loadAd()
     }

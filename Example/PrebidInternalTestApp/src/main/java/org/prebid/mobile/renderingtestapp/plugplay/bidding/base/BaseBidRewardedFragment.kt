@@ -19,25 +19,24 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.base
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.RewardedAdUnit
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener
+import org.prebid.mobile.rendering.interstitial.rewarded.Reward
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
-import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingInterstitialBinding
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingRewardedBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 abstract class BaseBidRewardedFragment : AdFragment() {
 
     private val TAG = BaseBidRewardedFragment::class.java.simpleName
 
-    override val layoutRes = R.layout.fragment_bidding_interstitial
+    override val layoutRes = R.layout.fragment_bidding_rewarded
     protected var rewardedAdUnit: RewardedAdUnit? = null
 
-    protected val binding: FragmentBiddingInterstitialBinding
+    protected val binding: FragmentBiddingRewardedBinding
         get() = getBinding()
     protected lateinit var events: Events
 
@@ -84,11 +83,10 @@ abstract class BaseBidRewardedFragment : AdFragment() {
         }
     }
 
-    protected fun createRewardedAdUnitListener() = object :
-        RewardedAdUnitListener {
+    protected fun createRewardedAdUnitListener() = object : RewardedAdUnitListener {
 
         override fun onAdLoaded(rewardedAdUnit: RewardedAdUnit?) {
-            Log.d(TAG, "onAdLoaded() called with: reward = [${rewardedAdUnit?.userReward}]")
+            Log.d(TAG, "onAdLoaded() called")
             events.loaded(true)
             binding.btnLoad.setText(R.string.text_show)
             binding.btnLoad.isEnabled = true
@@ -115,8 +113,9 @@ abstract class BaseBidRewardedFragment : AdFragment() {
             events.closed(true)
         }
 
-        override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?) {
-            Log.d(TAG, "onUserEarnedReward() called with: reward = [${rewardedAdUnit?.userReward}]")
+        override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?, reward: Reward?) {
+            Log.d(TAG, "User earned reward: $reward")
+            events.reward(true)
         }
 
     }
@@ -128,6 +127,7 @@ abstract class BaseBidRewardedFragment : AdFragment() {
         fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
         fun closed(b: Boolean) = enable(R.id.btnAdClosed, b)
         fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+        fun reward(b: Boolean) = enable(R.id.btnReward, b)
 
         fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
 

@@ -20,16 +20,16 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
+import com.google.android.gms.ads.rewarded.RewardItem;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.RewardedEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
+import org.prebid.mobile.rendering.interstitial.rewarded.Reward;
 
 import java.lang.ref.WeakReference;
 
@@ -52,6 +52,12 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
     private boolean isExpectingAppEvent;
     private boolean didNotifiedBidWin;
 
+    /**
+     * Default constructor.
+     *
+     * @param activity    Android activity
+     * @param gamAdUnitId the GAM ad unit id for the rewarded ad unit
+     */
     public GamRewardedEventHandler(
             Activity activity,
             String gamAdUnitId
@@ -185,8 +191,17 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
         listener.onAdServerWin(getRewardItem());
     }
 
-    private Object getRewardItem() {
+    private RewardItem getRewardItem() {
         return rewardedAd != null ? rewardedAd.getRewardItem() : null;
+    }
+
+    @Nullable
+    @Override
+    public Reward getReward() {
+        RewardItem rewardItem = getRewardItem();
+        if (rewardItem == null) return null;
+
+        return new Reward(rewardItem.getType(), rewardItem.getAmount(), null);
     }
 
     private void notifyErrorListener(int errorCode) {

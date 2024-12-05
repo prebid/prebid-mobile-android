@@ -16,14 +16,9 @@
 
 package org.prebid.mobile.api.rendering;
 
-import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
-import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
-
 import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
@@ -32,13 +27,15 @@ import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener;
 import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
-import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler;
 import org.prebid.mobile.rendering.bidding.interfaces.StandaloneInterstitialEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 
 import java.util.EnumSet;
+
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
 
 /**
  * Interstitial ad unit for rendering API.
@@ -115,11 +112,10 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         }
         this.eventHandler.setInterstitialEventListener(interstitialEventListener);
 
-        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
-        adUnitConfiguration.setConfigId(configId);
-        adUnitConfiguration.setAdUnitFormats(adUnitFormats);
-        adUnitConfiguration.addAdFormat(AdFormat.INTERSTITIAL);
-        init(adUnitConfiguration);
+        config.setConfigId(configId);
+        config.setAdUnitFormats(adUnitFormats);
+        config.addAdFormat(AdFormat.INTERSTITIAL);
+        init(config);
     }
 
 
@@ -172,11 +168,11 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
     }
 
     public void setPluginEventListener(PluginEventListener pluginEventListener) {
-        PrebidMobilePluginRegister.getInstance().registerEventListener(pluginEventListener, adUnitConfig.getFingerprint());
+        PrebidMobilePluginRegister.getInstance().registerEventListener(pluginEventListener, config.getFingerprint());
     }
 
     public void setMinSizePercentage(AdSize minSizePercentage) {
-        adUnitConfig.setMinSizePercentage(minSizePercentage);
+        config.setMinSizePercentage(minSizePercentage);
     }
 
 
@@ -188,7 +184,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         }
         adUnitEventsListener = null;
 
-        PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig.getFingerprint());
+        PrebidMobilePluginRegister.getInstance().unregisterEventListener(config.getFingerprint());
     }
 
 

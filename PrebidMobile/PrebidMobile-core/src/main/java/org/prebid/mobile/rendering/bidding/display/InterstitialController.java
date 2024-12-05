@@ -17,7 +17,7 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
-
+import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -27,6 +27,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
+import org.prebid.mobile.rendering.interstitial.rewarded.Reward;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
@@ -40,6 +41,8 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
     private final InterstitialView bidInterstitialView;
     private InterstitialControllerListener listener;
     private AdFormat adUnitIdentifierType;
+    private AdUnitConfiguration config;
+    private Runnable rewardListener;
 
     private InterstitialViewListener interstitialViewListener = new InterstitialViewListener() {
         @Override
@@ -94,6 +97,12 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
             LogUtil.debug(TAG, "onAdClosed");
             if (listener != null) {
                 listener.onInterstitialClosed();
+
+                if (config == null) return;
+                boolean userIsNotRewarded = !config.getRewardManager().getUserRewardedAlready();
+                if (userIsNotRewarded) {
+                    listener.onUserEarnedReward();
+                }
             }
         }
     };
@@ -109,6 +118,7 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
     }
 
     public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
+        config = adUnitConfiguration;
         adUnitConfiguration.modifyUsingBidResponse(bidResponse);
         setRenderingControlSettings(adUnitConfiguration, bidResponse);
         WinNotifier winNotifier = new WinNotifier();
@@ -131,9 +141,12 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
             }
             return;
         }
-        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
-        adUnitConfiguration.setRewarded(isRewarded);
-        loadAd(adUnitConfiguration, bidResponse);
+        config = new AdUnitConfiguration();
+        config.setRewarded(isRewarded);
+        if (isRewarded) {
+            config.getRewardManager().setRewardListener(rewardListener);
+        }
+        loadAd(config, bidResponse);
     }
 
     public void show() {
@@ -161,6 +174,17 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
         bidInterstitialView.destroy();
         listener = null;
         interstitialViewListener = null;
+    }
+
+    public void setRewardListener(Runnable rewardListener) {
+        this.rewardListener = rewardListener;
+    }
+
+    @Nullable
+    public Reward getReward() {
+        if (config == null) return null;
+
+        return config.getRewardManager().getRewardedExt().getReward();
     }
 
     private void setRenderingControlSettings(

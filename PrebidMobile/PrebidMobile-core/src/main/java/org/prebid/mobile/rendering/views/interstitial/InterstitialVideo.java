@@ -31,15 +31,16 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.interstitial.AdBaseDialog;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedCompletionRules;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedExt;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
+import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.utils.helpers.InsetsUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
@@ -68,12 +69,12 @@ public class InterstitialVideo extends AdBaseDialog {
     // "If these are pure JVM unit tests (i.e. run on your computer's JVM and not on an Android emulator/device), then you have no real implementations of methods on any Android classes.
     // You are using a mockable jar which just contains empty classes and methods with "final" removed so you can mock them, but they don't really work like when running normal Android."
     private final WeakReference<Context> contextReference;
-    private final AdUnitConfiguration adConfiguration;
+    private final AdUnitConfiguration config;
 
     private Handler handler;
 
     private Timer timer;
-    private TimerTask currentTimerTask = null;
+    private TimerTask showCloseButtonTask = null;
     private int currentTimerTaskHash = 0;
 
     // Flag used by caller to close manually; More intuitive and reliable way to show
@@ -90,13 +91,12 @@ public class InterstitialVideo extends AdBaseDialog {
             Context context,
             FrameLayout adView,
             InterstitialManager interstitialManager,
-            AdUnitConfiguration adConfiguration
+            AdUnitConfiguration config
     ) {
         super(context, interstitialManager);
-
         contextReference = new WeakReference<>(context);
-        this.adConfiguration = adConfiguration;
-        isRewarded = adConfiguration.isRewarded();
+        this.config = config;
+        isRewarded = this.config.isRewarded();
         adViewContainer = adView;
         init();
     }
@@ -150,10 +150,10 @@ public class InterstitialVideo extends AdBaseDialog {
         long videoLength = getDuration(adViewContainer);
 
         if (videoLength <= skipDelay) {
-            scheduleTimer(videoLength);
+            scheduleAllTimers(videoLength);
             showCloseBtnOnComplete = true;
         } else {
-            scheduleTimer(skipDelay);
+            scheduleAllTimers(skipDelay);
         }
     }
 
@@ -176,7 +176,7 @@ public class InterstitialVideo extends AdBaseDialog {
             // Clamp close delay value
             long upperBound = Math.min(videoLength, CLOSE_DELAY_MAX_IN_MS);
             long closeDelayTimeInMs = Utils.clampInMillis((int) delayInMs, 0, (int) upperBound);
-            scheduleTimer(closeDelayTimeInMs);
+            scheduleAllTimers(closeDelayTimeInMs);
         }
     }
 
@@ -278,7 +278,7 @@ public class InterstitialVideo extends AdBaseDialog {
     }
 
     private void createCurrentTimerTask() {
-        currentTimerTask = new TimerTask() {
+        showCloseButtonTask = new TimerTask() {
             @Override
             public void run() {
                 if (currentTimerTaskHash != this.hashCode()) {
@@ -300,7 +300,7 @@ public class InterstitialVideo extends AdBaseDialog {
             }
         };
 
-        currentTimerTaskHash = currentTimerTask.hashCode();
+        currentTimerTaskHash = showCloseButtonTask.hashCode();
     }
 
     protected long getDuration(View view) {
@@ -309,9 +309,9 @@ public class InterstitialVideo extends AdBaseDialog {
 
     private void stopTimer() {
         if (timer != null) {
-            if (currentTimerTask != null) {
-                currentTimerTask.cancel();
-                currentTimerTask = null;
+            if (showCloseButtonTask != null) {
+                showCloseButtonTask.cancel();
+                showCloseButtonTask = null;
             }
 
             timer.cancel();
@@ -340,7 +340,7 @@ public class InterstitialVideo extends AdBaseDialog {
     }
 
     @VisibleForTesting
-    protected void scheduleTimer(long delayInMs) {
+    protected void scheduleAllTimers(long delayInMs) {
         LogUtil.debug(TAG, "Scheduling timer at: " + delayInMs);
 
         stopTimer();
@@ -350,13 +350,25 @@ public class InterstitialVideo extends AdBaseDialog {
         createCurrentTimerTask();
 
         if (delayInMs >= 0) {
-            // we should convert it to milliseconds, so timer.schedule properly gets the delay in millisconds?
-            timer.schedule(currentTimerTask, (delayInMs));
+            long delayToShowCloseButton = delayInMs;
+
+            if (isRewarded) {
+                delayToShowCloseButton = getDelayToShowCloseButton((int) delayInMs, config);
+            }
+
+            timer.schedule(showCloseButtonTask, delayToShowCloseButton);
         }
 
         // Show timer until close
         if (isRewarded) {
-            showDurationTimer(delayInMs);
+            long progressBarDuration = delayInMs;
+
+            Integer completionTime = getTimeToReward((int) delayInMs, config);
+            if (completionTime != null) {
+                progressBarDuration = completionTime;
+            }
+
+            showDurationTimer(progressBarDuration);
         } else {
             startTimer(delayInMs);
         }
@@ -387,6 +399,9 @@ public class InterstitialVideo extends AdBaseDialog {
         if (durationInMillis == 0) {
             return;
         }
+
+        int paddingTop = (int) (50 * PrebidContextHolder.getContext().getResources().getDisplayMetrics().density);
+        lytCountDownCircle.setPadding(0, 0, 0, paddingTop);
 
         final ProgressBar pbProgress = lytCountDownCircle.findViewById(R.id.Progress);
         pbProgress.setMax((int) durationInMillis);
@@ -423,6 +438,11 @@ public class InterstitialVideo extends AdBaseDialog {
                     return;
                 }
                 adViewContainer.removeView(lytCountDownCircle);
+
+                if (isRewarded && !hasEndCard) {
+                    View learnMore = adViewContainer.findViewById(R.id.tv_learn_more);
+                    learnMore.setVisibility(View.VISIBLE);
+                }
             }
         };
         countDownTimer.start();
@@ -448,6 +468,37 @@ public class InterstitialVideo extends AdBaseDialog {
             return Utils.clampInMillis(delay, 0, (int) upperBound);
         }
         return CLOSE_DELAY_DEFAULT_IN_MS;
+    }
+
+    @Nullable
+    @VisibleForTesting
+    protected static Integer getTimeToReward(int durationMs, AdUnitConfiguration config) {
+        RewardedExt rewardedExt = config.getRewardManager().getRewardedExt();
+
+        RewardedCompletionRules rules = rewardedExt.getCompletionRules();
+        if (rules.getVideoEvent() != null) {
+            return (int) rules.getVideoEvent().getCompletionTime(durationMs);
+        }
+
+        if (rules.getVideoTime() != null) {
+            return rules.getVideoTime() * 1000;
+        }
+
+        return null;
+    }
+
+    @VisibleForTesting
+    protected static Integer getDelayToShowCloseButton(int duration, AdUnitConfiguration config) {
+        RewardedExt rewardedExt = config.getRewardManager().getRewardedExt();
+
+        int completionTime = duration;
+        Integer rewardedConfigTime = getTimeToReward(duration, config);
+        if (rewardedConfigTime != null) {
+            completionTime = rewardedConfigTime;
+        }
+
+        int postRewardTime = rewardedExt.getClosingRules().getPostRewardTime();
+        return Math.min(duration, completionTime + (postRewardTime * 1000));
     }
 
 }

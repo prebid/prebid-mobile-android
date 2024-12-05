@@ -205,13 +205,23 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
 
                 endCardModel.setWidth(Integer.parseInt(companionAd.getWidth()));
                 endCardModel.setHeight(Integer.parseInt(companionAd.getHeight()));
-                endCardModel.setAdConfiguration(new AdUnitConfiguration());
-                endCardModel.getAdConfiguration().setAdFormat(AdFormat.INTERSTITIAL);
+
+
+                AdUnitConfiguration endCardConfig = new AdUnitConfiguration();
+                endCardConfig.setRewardManager(adConfiguration.getRewardManager());
+                endCardConfig.setAdFormat(AdFormat.INTERSTITIAL);
+                endCardConfig.setRewarded(adConfiguration.isRewarded());
+                endCardConfig.getRewardManager().setRewardedExt(adConfiguration.getRewardManager().getRewardedExt());
+                endCardConfig.setHasEndCard(true);
+                endCardModel.setAdConfiguration(endCardConfig);
+
+
                 endCardModel.setRequireImpressionUrl(false);
                 result.creativeModels.add(endCardModel);
 
                 // Flag that video creative has a corresponding end card
                 videoModel.setHasEndCard(true);
+                adConfiguration.setHasEndCard(true);
             }
             adConfiguration.setInterstitialSize(videoModel.getWidth() + "x" + videoModel.getHeight());
             listener.onCreativeModelReady(result);

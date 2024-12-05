@@ -3,7 +3,6 @@ package com.applovin.mediation.adapters;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
-
 import com.applovin.mediation.MaxAdFormat;
 import com.applovin.mediation.adapter.MaxAdViewAdapter;
 import com.applovin.mediation.adapter.MaxInterstitialAdapter;
@@ -18,8 +17,8 @@ import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
 import com.applovin.mediation.adapters.prebid.managers.MaxBannerManager;
 import com.applovin.mediation.adapters.prebid.managers.MaxInterstitialManager;
 import com.applovin.mediation.adapters.prebid.managers.MaxNativeManager;
+import com.applovin.mediation.adapters.prebid.managers.MaxRewardedManager;
 import com.applovin.sdk.AppLovinSdk;
-
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
 
@@ -34,6 +33,7 @@ public class PrebidMaxMediationAdapter extends MediationAdapterBase implements M
 
     private MaxBannerManager maxBannerManager;
     private MaxInterstitialManager maxInterstitialManager;
+    private MaxRewardedManager maxRewardedManager;
     private MaxNativeManager maxNativeManager;
 
     public PrebidMaxMediationAdapter(AppLovinSdk appLovinSdk) {
@@ -100,8 +100,8 @@ public class PrebidMaxMediationAdapter extends MediationAdapterBase implements M
             Activity activity,
             MaxRewardedAdapterListener maxListener
     ) {
-        maxInterstitialManager = new MaxInterstitialManager();
-        maxInterstitialManager.loadAd(parameters, activity, maxListener);
+        maxRewardedManager = new MaxRewardedManager();
+        maxRewardedManager.loadAd(parameters, activity, maxListener);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class PrebidMaxMediationAdapter extends MediationAdapterBase implements M
             Activity activity,
             MaxRewardedAdapterListener maxListener
     ) {
-        maxInterstitialManager.showAd();
+        maxRewardedManager.showAd();
     }
 
 
@@ -143,6 +143,10 @@ public class PrebidMaxMediationAdapter extends MediationAdapterBase implements M
 
         if (maxInterstitialManager != null) {
             maxInterstitialManager.destroy();
+        }
+
+        if (maxRewardedManager != null) {
+            maxRewardedManager.destroy();
         }
 
         if (maxNativeManager != null) {

@@ -1,0 +1,33 @@
+{
+  "prebid": {
+    "passthrough": [
+      {
+        "type": "prebidmobilesdk",
+        "rwdd": {
+          "reward": {
+            "type": "SuperDollars",
+            "count": 11
+          },
+          "completion": {
+            "banner": {
+              "time": 12,
+              "event": "banner_event"
+            },
+            "video": {
+              "time": 13,
+              "playbackevent": "complete",
+              "endcard": {
+                "time": 14,
+                "event": "endcard_event"
+              }
+            }
+          },
+          "close": {
+            "postrewardtime": 15,
+            "action": "autoclose"
+          }
+        }
+      }
+    ]
+  }
+}

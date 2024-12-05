@@ -159,4 +159,10 @@ public class AdWebView extends WebView {
     public void setDomain(String domain) {
         this.domain = domain;
     }
+
+    public void setActionUrl(ActionUrl actionUrl) {
+        if (adWebViewClient != null) {
+            adWebViewClient.registerSpecialUrl(actionUrl);
+        }
+    }
 }

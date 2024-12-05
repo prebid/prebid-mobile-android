@@ -16,28 +16,8 @@
 
 package org.prebid.mobile.api.rendering;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.LOADING;
-import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.PREBID_LOADING;
-import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
-import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
-import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID;
-import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
-
 import android.app.Activity;
 import android.content.Context;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,6 +46,11 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.EnumSet;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.*;
+import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
 
 @RunWith(RobolectricTestRunner.class)
 public class InterstitialAdUnitTest {
@@ -98,7 +83,7 @@ public class InterstitialAdUnitTest {
         WhiteBox.setInternalState(interstitialAdUnit, "bidLoader", mockBidLoader);
         WhiteBox.setInternalState(interstitialAdUnit, "interstitialController", mockInterstitialController);
 
-        final AdUnitConfiguration adUnitConfig = interstitialAdUnit.adUnitConfig;
+        final AdUnitConfiguration adUnitConfig = interstitialAdUnit.config;
         assertEquals(AdPosition.FULLSCREEN.getValue(), adUnitConfig.getAdPositionValue());
     }
 
@@ -109,7 +94,7 @@ public class InterstitialAdUnitTest {
                 CONFIGURATION_ID
         );
 
-        EnumSet<AdFormat> adFormats = interstitialAdUnit.adUnitConfig.getAdFormats();
+        EnumSet<AdFormat> adFormats = interstitialAdUnit.config.getAdFormats();
         assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), adFormats);
     }
 
@@ -121,7 +106,7 @@ public class InterstitialAdUnitTest {
                 mock(InterstitialEventHandler.class)
         );
 
-        EnumSet<AdFormat> adFormats = interstitialAdUnit.adUnitConfig.getAdFormats();
+        EnumSet<AdFormat> adFormats = interstitialAdUnit.config.getAdFormats();
         assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), adFormats);
     }
 
@@ -139,7 +124,7 @@ public class InterstitialAdUnitTest {
         assertNotNull(interstitialAdUnit);
         assertTrue(eventHandler instanceof StandaloneInterstitialEventHandler);
         assertNotNull(bidLoader);
-        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), interstitialAdUnit.adUnitConfig.getAdFormats());
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), interstitialAdUnit.config.getAdFormats());
     }
 
     @Test
@@ -150,7 +135,7 @@ public class InterstitialAdUnitTest {
                 EnumSet.of(AdUnitFormat.BANNER)
         );
 
-        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL), interstitialAdUnit.adUnitConfig.getAdFormats());
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL), interstitialAdUnit.config.getAdFormats());
     }
 
     @Test

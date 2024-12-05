@@ -16,24 +16,10 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_NAME;
-import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_VERSION;
-import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.VIDEO_INTERSTITIAL_PLAYBACK_END;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-
 import com.google.common.collect.Sets;
-
 import org.assertj.core.util.Lists;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,16 +28,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.AdSize;
-import org.prebid.mobile.BannerAdUnit;
-import org.prebid.mobile.BannerParameters;
-import org.prebid.mobile.DataObject;
-import org.prebid.mobile.ExternalUserId;
-import org.prebid.mobile.NativeTitleAsset;
-import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.Signals;
-import org.prebid.mobile.TargetingParams;
-import org.prebid.mobile.VideoParameters;
+import org.prebid.mobile.*;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
@@ -62,11 +39,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.Native;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRendererList;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.*;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
@@ -80,13 +53,10 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import static org.junit.Assert.*;
+import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19, qualifiers = "w1920dp-h1080dp")
@@ -1058,6 +1028,34 @@ public class BasicParameterBuilderTest {
             Integer instl = actualRequest.getImp().get(0).instl;
             assertEquals(Integer.valueOf(1), instl);
         }
+    }
+
+
+    @Test
+    public void setRewarded_rwdd1() throws JSONException {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setRewarded(true);
+
+        JSONObject impJson = getImpJson(config);
+
+        assertEquals(1, impJson.optInt("rwdd"));
+    }
+
+    @Test
+    public void notRewarded_rwdd0() throws JSONException {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+
+        JSONObject impJson = getImpJson(config);
+
+        assertEquals(-1, (impJson.optInt("rwdd", -1)));
+    }
+
+    private JSONObject getImpJson(AdUnitConfiguration config) throws JSONException {
+        AdRequestInput adRequestInput = new AdRequestInput();
+        BasicParameterBuilder builder = new BasicParameterBuilder(config, context.getResources(), false);
+        builder.appendBuilderParameters(adRequestInput);
+
+        return adRequestInput.getBidRequest().getImp().get(0).getJsonObject();
     }
 
     private BidRequest getActualRequest(AdUnitConfiguration config) {

@@ -16,11 +16,13 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
+import android.util.Log
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.RewardedAdUnit
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener
 import org.prebid.mobile.eventhandlers.GamRewardedEventHandler
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
+import org.prebid.mobile.rendering.interstitial.rewarded.Reward
 
 class GamRenderingApiVideoRewardedActivity : BaseAdActivity() {
 
@@ -32,7 +34,7 @@ class GamRenderingApiVideoRewardedActivity : BaseAdActivity() {
     private var adUnit: RewardedAdUnit? = null
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {    
         super.onCreate(savedInstanceState)
 
         createAd()
@@ -50,7 +52,9 @@ class GamRenderingApiVideoRewardedActivity : BaseAdActivity() {
             override fun onAdFailed(rewardedAdUnit: RewardedAdUnit?, exception: AdException?) {}
             override fun onAdClicked(rewardedAdUnit: RewardedAdUnit?) {}
             override fun onAdClosed(rewardedAdUnit: RewardedAdUnit?) {}
-            override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?) {}
+            override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?, reward: Reward?) {
+                Log.d("AdExample", "User earned reward: $reward")
+            }
         })
         adUnit?.loadAd()
     }

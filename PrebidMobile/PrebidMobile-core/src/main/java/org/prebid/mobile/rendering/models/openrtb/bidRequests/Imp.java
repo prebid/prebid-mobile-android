@@ -27,6 +27,7 @@ public class Imp extends BaseBid {
     public String displaymanager = null;
     public String displaymanagerver = null;
     public Integer instl = null;
+    public Integer rewarded = null;
     public String tagid = null;
     public Integer secure = null;
     public Banner banner = null;
@@ -46,6 +47,7 @@ public class Imp extends BaseBid {
         toJSON(jsonObject, "displaymanagerver", displaymanagerver);
         toJSON(jsonObject, "instl", instl);
         toJSON(jsonObject, "tagid", tagid);
+        toJSON(jsonObject, "rwdd", rewarded);
         toJSON(jsonObject, "clickbrowser", clickBrowser);
 
         toJSON(jsonObject, "secure", secure);

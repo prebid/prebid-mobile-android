@@ -23,12 +23,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardManager;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedClosingRules;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedCompletionRules;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardedExt;
 import org.prebid.mobile.rendering.listeners.CreativeResolutionListener;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
@@ -40,6 +45,7 @@ import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
+import org.prebid.mobile.rendering.views.webview.ActionUrl;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
@@ -380,4 +386,79 @@ public class HTMLCreativeTest {
 
         verify(mockModel).trackDisplayAdEvent(TrackingEvent.Events.LOADED);
     }
+
+
+    @Test
+    public void rewardedTracking_ignored() {
+        PrebidWebViewBase mockWebView = mock(PrebidWebViewBase.class);
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setRewarded(false);
+
+        HTMLCreative.rewardedTracking(mockWebView, config);
+
+        verify(mockWebView, never()).setActionUrl(any());
+    }
+
+    @Test
+    public void rewardedTracking_nullUrlEvent() {
+        PrebidWebViewBase mockWebView = mock(PrebidWebViewBase.class);
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setRewarded(true);
+        config.setHasEndCard(false);
+
+        RewardedExt rewardedExt = new RewardedExt(
+                null,
+                new RewardedCompletionRules(null, null, null, null, null, null),
+                new RewardedClosingRules()
+        );
+        RewardManager rewardManager = new RewardManager();
+        rewardManager.setRewardedExt(rewardedExt);
+        config.setRewardManager(rewardManager);
+
+
+        HTMLCreative.rewardedTracking(mockWebView, config);
+
+        verify(mockWebView, never()).setActionUrl(any());
+    }
+
+    @Test
+    public void rewardedTracking_withoutEndCard() {
+        PrebidWebViewBase mockWebView = mock(PrebidWebViewBase.class);
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setRewarded(true);
+        config.setHasEndCard(false);
+        RewardedExt rewardedExt = new RewardedExt(null, new RewardedCompletionRules(null, null, null, "bannerEvent", null, "endCardEvent"), new RewardedClosingRules());
+
+        RewardManager rewardManager = new RewardManager();
+        rewardManager.setRewardedExt(rewardedExt);
+        config.setRewardManager(rewardManager);
+
+        HTMLCreative.rewardedTracking(mockWebView, config);
+
+        ArgumentCaptor<ActionUrl> captor = ArgumentCaptor.forClass(ActionUrl.class);
+        verify(mockWebView).setActionUrl(captor.capture());
+
+        assertEquals("bannerEvent", captor.getValue().url);
+    }
+
+    @Test
+    public void rewardedTracking_withEndCard() {
+        PrebidWebViewBase mockWebView = mock(PrebidWebViewBase.class);
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setRewarded(true);
+        config.setHasEndCard(true);
+        RewardedExt rewardedExt = new RewardedExt(null, new RewardedCompletionRules(null, null, null, "bannerEvent", null, "endCardEvent"), new RewardedClosingRules());
+
+        RewardManager rewardManager = new RewardManager();
+        rewardManager.setRewardedExt(rewardedExt);
+        config.setRewardManager(rewardManager);
+
+        HTMLCreative.rewardedTracking(mockWebView, config);
+
+        ArgumentCaptor<ActionUrl> captor = ArgumentCaptor.forClass(ActionUrl.class);
+        verify(mockWebView).setActionUrl(captor.capture());
+
+        assertEquals("endCardEvent", captor.getValue().url);
+    }
+
 }

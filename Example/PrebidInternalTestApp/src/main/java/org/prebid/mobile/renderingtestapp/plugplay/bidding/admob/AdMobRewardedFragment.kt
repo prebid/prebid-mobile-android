@@ -3,8 +3,6 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.admob
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -19,7 +17,6 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentAdmobRewardedBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class AdMobRewardedFragment : AdFragment() {
 
@@ -76,6 +73,9 @@ open class AdMobRewardedFragment : AdFragment() {
 
                     rewardedAd = ad
                     rewardedAd?.fullScreenContentCallback = createFullScreenContentCallback()
+                    rewardedAd?.setOnPaidEventListener {
+                        Log.d(TAG, "User earned reward: $it")
+                    }
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -115,6 +115,7 @@ open class AdMobRewardedFragment : AdFragment() {
                 val rewardAmount = rewardItem.amount
                 val rewardType = rewardItem.type
                 Log.d(TAG, "User earned the reward ($rewardAmount, $rewardType)")
+                events.rewarded(true)
             }
             binding.btnLoad.text = getString(R.string.text_retry)
         } else if (binding.btnLoad.text == getString(R.string.text_retry)) {
@@ -155,6 +156,7 @@ open class AdMobRewardedFragment : AdFragment() {
         fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
         fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
         fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+        fun rewarded(b: Boolean) = enable(R.id.btnUserRewarded, b)
 
         fun showed(b: Boolean) = enable(R.id.btnAdShowed, b)
         fun dismissed(b: Boolean) = enable(R.id.btnAdDismissed, b)
