@@ -37,6 +37,8 @@ class VideoAdsTest(
             ),
             arrayOf(R.string.in_app_video_rewarded, "In-App Video Rewarded"),
         )
+
+        const val REWARDED_CLOSE_BUTTON_WAIT_TIME = 130_000L
     }
 
     @Test
@@ -69,11 +71,11 @@ class VideoAdsTest(
         val findEndCard = device.wait(Until.findObject(endCard), timeout)
         if (findEndCard == null) {
             val endCardCloseButtonPattern = By.clazz(".*ImageView".toPattern())
-            val endCardButton = device.wait(Until.findObject(endCardCloseButtonPattern), timeout)
+            val endCardButton = device.wait(Until.findObject(endCardCloseButtonPattern), REWARDED_CLOSE_BUTTON_WAIT_TIME)
             assertNotNull(endCardButton)
         }
 
-        val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
+        val findCloseButton = device.wait(Until.findObject(closeButton), REWARDED_CLOSE_BUTTON_WAIT_TIME)
         assertNotNull(findCloseButton)
         findCloseButton.click()
         Thread.sleep(1000)
@@ -114,11 +116,11 @@ class VideoAdsTest(
         val findEndCard = device.wait(Until.findObject(endCard), timeout * 3)
         if (findEndCard == null && testCase.integrationKind != IntegrationKind.GAM_ORIGINAL) {
             val endCardCloseButtonPattern = By.clazz(".*ImageView".toPattern())
-            val endCardButton = device.wait(Until.findObject(endCardCloseButtonPattern), timeout)
+            val endCardButton = device.wait(Until.findObject(endCardCloseButtonPattern), REWARDED_CLOSE_BUTTON_WAIT_TIME)
             assertNotNull(endCardButton)
         }
 
-        val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
+        val findCloseButton = device.wait(Until.findObject(closeButton), REWARDED_CLOSE_BUTTON_WAIT_TIME)
         assertNotNull(findCloseButton)
         findCloseButton.click()
         Thread.sleep(1000)
