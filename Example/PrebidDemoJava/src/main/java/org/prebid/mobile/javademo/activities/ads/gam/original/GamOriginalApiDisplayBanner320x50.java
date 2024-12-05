@@ -41,6 +41,7 @@ public class GamOriginalApiDisplayBanner320x50 extends BaseAdActivity {
         BannerParameters parameters = new BannerParameters();
         parameters.setApi(Collections.singletonList(Signals.Api.MRAID_2));
         adUnit.setBannerParameters(parameters);
+        setOpenRtbConfig();
 
         /* For GAM less than version 20 use PublisherAdView */
         final AdManagerAdView gamView = new AdManagerAdView(this);
@@ -67,8 +68,8 @@ public class GamOriginalApiDisplayBanner320x50 extends BaseAdActivity {
                 AdViewUtils.findPrebidCreativeSize(gamView, new AdViewUtils.PbFindSizeListener() {
                     @Override
                     public void success(
-                        int width,
-                        int height
+                            int width,
+                            int height
                     ) {
                         gamView.setAdSizes(new AdSize(width, height));
                     }
@@ -79,6 +80,20 @@ public class GamOriginalApiDisplayBanner320x50 extends BaseAdActivity {
                 });
             }
         };
+    }
+
+    /**
+     * Optional. Sets additional parameters.
+     */
+    private void setOpenRtbConfig() {
+        adUnit.setImpOrtbConfig(
+                "{" +
+                        "  \"bidfloor\": 0.01," +
+                        "  \"banner\": {" +
+                        "    \"battr\": [1,2,3,4]" +
+                        "  }" +
+                        "}"
+        );
     }
 
     @Override
