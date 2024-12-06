@@ -292,6 +292,8 @@
     <string name="demo_bidding_sdk_testing_memory_leak_rendering_api_banner">SDK Testing: Rendering API Banner Memory Leak </string>
     <string name="demo_bidding_sdk_testing_memory_leak_rendering_api_interstitial_display">SDK Testing: Rendering API Display Interstitial Memory Leak</string>
     <string name="demo_bidding_sdk_testing_memory_leak_rendering_api_interstitial_video">SDK Testing: Rendering API Video Interstitial Memory Leak</string>
+    <string name="demo_bidding_sdk_testing_puc_webview">SDK Testing: Prebid Universal Creative (WebView)</string>
+    <string name="demo_bidding_sdk_testing_puc_gam">SDK Testing: Prebid Universal Creative (GAM)</string>
 
     <!--GAM AdUnits-->
     <string name="adunit_dynamic">Ad unit id is set in another place</string>

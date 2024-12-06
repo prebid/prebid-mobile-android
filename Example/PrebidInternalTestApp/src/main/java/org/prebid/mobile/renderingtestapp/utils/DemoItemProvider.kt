@@ -108,6 +108,18 @@ class DemoItemProvider private constructor() {
             demoList.addAll(
                 arrayListOf(
                     DemoItem(
+                        getString(R.string.demo_bidding_sdk_testing_puc_webview),
+                        R.id.action_header_bidding_to_puc_webview,
+                        listOf(Tag.ALL, Tag.IN_APP, Tag.BANNER, Tag.REMOTE),
+                        createBannerBundle(null)
+                    ),
+                    DemoItem(
+                        getString(R.string.demo_bidding_sdk_testing_puc_gam),
+                        R.id.action_header_bidding_to_puc_gam,
+                        listOf(Tag.ALL, Tag.IN_APP, Tag.BANNER, Tag.REMOTE),
+                        createBannerBundle(null)
+                    ),
+                    DemoItem(
                         getString(R.string.demo_bidding_sdk_testing_memory_leak_rendering_api_interstitial_display),
                         R.id.action_header_bidding_to_interstitial_memory_leak_testing,
                         listOf(Tag.ALL, Tag.IN_APP, Tag.INTERSTITIAL, Tag.REMOTE),
