@@ -30,7 +30,7 @@ class AppLovinMaxVideoRewardedActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "897f2fc59d617715"
-        const val CONFIG_ID = "prebid-demo-video-rewarded-320-480"
+        const val CONFIG_ID = "prebid-demo-video-rewarded-endcard-time-close-button"
     }
 
     private var maxRewardedAd: MaxRewardedAd? = null

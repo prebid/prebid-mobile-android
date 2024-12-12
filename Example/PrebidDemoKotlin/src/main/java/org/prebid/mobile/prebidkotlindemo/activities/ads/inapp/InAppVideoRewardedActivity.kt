@@ -26,7 +26,7 @@ import org.prebid.mobile.rendering.interstitial.rewarded.Reward
 class InAppVideoRewardedActivity : BaseAdActivity() {
 
     companion object {
-        const val CONFIG_ID = "prebid-demo-video-rewarded-320-480"
+        const val CONFIG_ID = "prebid-demo-video-rewarded-endcard-time-close-button"
     }
 
     private var adUnit: RewardedAdUnit? = null
