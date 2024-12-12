@@ -804,6 +804,8 @@ public class TargetingParams {
 
     /**
      * Sets global OpenRTB JSON string for merging with the original request.
+     * Expected format: {@code "{"new_field": "value"}"}.
+     * @param config JSON OpenRTB string.
      */
     public static void setGlobalOrtbConfig(String config) {
         openRtbConfig = config;

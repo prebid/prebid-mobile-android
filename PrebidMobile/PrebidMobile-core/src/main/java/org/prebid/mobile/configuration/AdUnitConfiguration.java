@@ -49,6 +49,8 @@ public class AdUnitConfiguration {
     private String gpid;
     @Nullable
     private String impOrtbConfig;
+    @Deprecated
+    private String ortbConfig;
 
     private Position closeButtonPosition = Position.TOP_RIGHT;
     private Position skipButtonPosition = Position.TOP_RIGHT;
@@ -550,6 +552,16 @@ public class AdUnitConfiguration {
         this.impOrtbConfig = impOrtbConfig;
     }
 
+    @Deprecated
+    public String getOrtbConfig() {
+        return ortbConfig;
+    }
+
+    @Deprecated
+    public void setOrtbConfig(String ortbConfig) {
+        this.ortbConfig = ortbConfig;
+    }
+
     public boolean getHasEndCard() {
         return hasEndCard;
     }
@@ -584,4 +596,5 @@ public class AdUnitConfiguration {
     public int hashCode() {
         return configId != null ? configId.hashCode() : 0;
     }
+
 }
