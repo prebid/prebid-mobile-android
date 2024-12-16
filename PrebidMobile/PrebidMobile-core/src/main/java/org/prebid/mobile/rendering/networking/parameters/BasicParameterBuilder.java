@@ -384,7 +384,12 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
         final Map<String, Set<String>> extDataDictionary = adConfiguration.getExtDataDictionary();
         JSONObject data = Utils.toJson(extDataDictionary);
-        Utils.addValue(data, "adslot", adConfiguration.getPbAdSlot());
+        String adSlot = adConfiguration.getPbAdSlot();
+        if (adSlot != null) {
+            LogUtil.warning("Prebid SDK will stop sending imp[].ext.data.adslot field soon. If you still need it, add a comment to: prebid-mobile-android repository issue #810.");
+            Utils.addValue(data, "adslot", adSlot);
+            Utils.addValue(data, "pbadslot", adSlot);
+        }
         if (data.length() > 0) {
             imp.getExt().put("data", data);
         }
