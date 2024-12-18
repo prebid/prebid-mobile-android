@@ -168,8 +168,9 @@ public class CreativeFactory {
         for (VideoAdEvent.Event videoEvent : VideoAdEvent.Event.values()) {
             videoCreativeModel.registerVideoEvent(videoEvent, videoCreativeModel.getVideoEventUrls().get(videoEvent));
         }
-        ArrayList<String> impressions = new ArrayList<>(1);
+        ArrayList<String> impressions = new ArrayList<>(2);
         impressions.add(creativeModel.getImpressionUrl());
+        impressions.add(creativeModel.getViewableUrl());
         videoCreativeModel.registerTrackingEvent(
             TrackingEvent.Events.IMPRESSION,
             impressions
