@@ -83,7 +83,7 @@ class GamOriginalApiDisplayBannerMultiSizeActivity : BaseAdActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        adUnit?.stopAutoRefresh()
+        adUnit?.destroy()
     }
 
 }

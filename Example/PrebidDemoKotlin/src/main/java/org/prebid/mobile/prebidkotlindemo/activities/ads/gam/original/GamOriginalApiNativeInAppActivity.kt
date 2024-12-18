@@ -212,7 +212,7 @@ class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
         adView?.destroy()
-        adUnit?.stopAutoRefresh()
+        adUnit?.destroy()
         unifiedNativeAd?.destroy()
     }
 

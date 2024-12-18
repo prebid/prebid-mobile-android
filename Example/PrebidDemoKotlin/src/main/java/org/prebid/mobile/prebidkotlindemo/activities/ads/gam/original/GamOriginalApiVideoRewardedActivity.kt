@@ -74,7 +74,7 @@ class GamOriginalApiVideoRewardedActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        adUnit?.stopAutoRefresh()
+        adUnit?.destroy()
     }
 
 }
