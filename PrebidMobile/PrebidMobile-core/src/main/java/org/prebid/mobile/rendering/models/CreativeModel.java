@@ -67,6 +67,7 @@ public class CreativeModel {
 
     //all - resolved ri url of an ad
     private String impressionUrl;
+    private String viewableUrl;
 
     // Determines whether an impression is needed
     // For end cards, an impression is not necessary
@@ -215,6 +216,14 @@ public class CreativeModel {
 
     public void setImpressionUrl(String impressionUrl) {
         this.impressionUrl = impressionUrl;
+    }
+
+    public String getViewableUrl() {
+        return viewableUrl;
+    }
+
+    public void setViewableUrl(String viewableUrl) {
+        this.viewableUrl = viewableUrl;
     }
 
     public boolean isRequireImpressionUrl() {
