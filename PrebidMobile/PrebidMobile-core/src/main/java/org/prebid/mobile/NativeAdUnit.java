@@ -49,6 +49,7 @@ public class NativeAdUnit extends AdUnit {
                 String cacheId = CacheManager.save(response.getWinningBidJson());
                 Util.saveCacheId(cacheId, adObject);
 
+                notifyWinEvent(response);
                 originalListener.onComplete(ResultCode.SUCCESS);
             }
 
