@@ -450,7 +450,6 @@ public abstract class AdUnit {
 
                 HashMap<String, String> keywords = response.getTargeting();
                 Util.apply(keywords, adObject);
-                notifyWinEvent(response);
                 originalListener.onComplete(ResultCode.SUCCESS);
             }
 
@@ -489,15 +488,6 @@ public abstract class AdUnit {
             default:
                 return ResultCode.PREBID_SERVER_ERROR;
         }
-    }
-
-    protected void notifyWinEvent(BidResponse response) {
-        if (response == null) return;
-
-        Bid winningBid = response.getWinningBid();
-        if (winningBid == null) return;
-
-        ServerConnection.fireAndForget(winningBid.getNurl());
     }
 
 
