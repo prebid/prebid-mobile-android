@@ -122,24 +122,29 @@ public class CreativeFactory {
         creative = new HTMLCreative(contextReference.get(), creativeModel, omAdSessionManager, interstitialManager);
         creative.setResolutionListener(new CreativeFactoryCreativeResolutionListener(this));
 
-        ArrayList<String> riUrls = new ArrayList<>();
-        ArrayList<String> rcUrls = new ArrayList<>();
-
-        //get the tracking url & do the registration here. add in the tracking stuff here
-        //This needs to be more generalized and allow for multiple click urls
-        if (!creativeModel.isRequireImpressionUrl() || Utils.isNotBlank(creativeModel.getImpressionUrl())) {
-            if (!TextUtils.isEmpty(creativeModel.getImpressionUrl())) {
-                riUrls.add(creativeModel.getImpressionUrl());
-                creativeModel.registerTrackingEvent(TrackingEvent.Events.IMPRESSION, riUrls);
-            }
-            //
-            if (!TextUtils.isEmpty(creativeModel.getClickUrl())) {
-                rcUrls.add(creativeModel.getClickUrl());
-                creativeModel.registerTrackingEvent(TrackingEvent.Events.CLICK, rcUrls);
-            }
-        } else {
-            listener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Tracking info not found"));
+        ArrayList<String> impressionUrls = new ArrayList<>();
+        String viewableUrl = creativeModel.getViewableUrl();
+        if (Utils.isNotBlank(viewableUrl)) {
+            impressionUrls.add(viewableUrl);
         }
+        String impressionUrl = creativeModel.getImpressionUrl();
+        if (Utils.isNotBlank(impressionUrl)) {
+            impressionUrls.add(impressionUrl);
+        }
+
+
+        if (creativeModel.isRequireImpressionUrl() && impressionUrls.isEmpty()) {
+            listener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Tracking info not found"));
+        } else {
+            creativeModel.registerTrackingEvent(TrackingEvent.Events.IMPRESSION, impressionUrls);
+
+            ArrayList<String> clickUrls = new ArrayList<>();
+            if (Utils.isNotBlank(creativeModel.getClickUrl())) {
+                clickUrls.add(creativeModel.getClickUrl());
+            }
+            creativeModel.registerTrackingEvent(TrackingEvent.Events.CLICK, clickUrls);
+        }
+
         long creativeDownloadTimeout = PrebidMobile.getCreativeFactoryTimeout();
         if (creativeModel.getAdConfiguration().isAdType(AdFormat.INTERSTITIAL)) {
             creativeDownloadTimeout = PrebidMobile.getCreativeFactoryTimeoutPreRenderContent();
@@ -163,8 +168,9 @@ public class CreativeFactory {
         for (VideoAdEvent.Event videoEvent : VideoAdEvent.Event.values()) {
             videoCreativeModel.registerVideoEvent(videoEvent, videoCreativeModel.getVideoEventUrls().get(videoEvent));
         }
-        ArrayList<String> impressions = new ArrayList<>(1);
+        ArrayList<String> impressions = new ArrayList<>(2);
         impressions.add(creativeModel.getImpressionUrl());
+        impressions.add(creativeModel.getViewableUrl());
         videoCreativeModel.registerTrackingEvent(
             TrackingEvent.Events.IMPRESSION,
             impressions
