@@ -108,13 +108,9 @@ public class PrebidNativeAdTest {
 
 
     private PrebidNativeAd nativeAdFromFile(String path) {
-        try {
-            String resource = ResourceUtils.convertResourceToString(path);
-            String cacheId = CacheManager.save(resource);
-            return PrebidNativeAd.create(cacheId);
-        } catch (IOException e) {
-            throw new NullPointerException(e.getMessage());
-        }
+        String resource = ResourceUtils.convertResourceToString(path);
+        String cacheId = CacheManager.save(resource);
+        return PrebidNativeAd.create(cacheId);
     }
 
     private View createViewMock() {

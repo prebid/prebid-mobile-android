@@ -42,15 +42,29 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
     private fun createAd() {
         val eventHandler = GamBannerEventHandler(this, AD_UNIT_ID, AdSize(WIDTH, HEIGHT))
         adView = BannerView(this, CONFIG_ID, eventHandler)
+        setOpenRtbConfig()
         adWrapperView.addView(adView)
         adView?.setAutoRefreshDelay(refreshTimeSeconds)
         adView?.loadAd()
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         adView?.destroy()
+    }
+
+    /**
+     * Optional. Sets additional parameters.
+     */
+    private fun setOpenRtbConfig() {
+        adView?.impOrtbConfig = """
+            {
+              "bidfloor": 0.01,
+              "banner": {
+                "battr": [1,2,3,4]
+              }
+            }
+        """.trimIndent()
     }
 
 }

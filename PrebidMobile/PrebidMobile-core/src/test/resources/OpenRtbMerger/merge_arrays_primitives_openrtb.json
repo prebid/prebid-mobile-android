@@ -1,0 +1,6 @@
+{
+  "ints": [4, 5],
+  "strings": ["4", "5"],
+  "doubles": [0.4, 0.5],
+  "booleans": [false]
+}

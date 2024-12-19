@@ -685,13 +685,27 @@ public class BannerView extends FrameLayout {
         return bidResponse;
     }
 
-    @Nullable
-    public String getOrtbConfig() {
-        return adUnitConfig.getOrtbConfig();
+    /**
+     * @deprecated use {@link org.prebid.mobile.TargetingParams#setGlobalOrtbConfig(String)}
+     * or {@link #setImpOrtbConfig(String)}.
+     */
+    @Deprecated(since = "2.2.3", forRemoval = true)
+    public void setOrtbConfig(@Nullable String config) {
+        adUnitConfig.setOrtbConfig(config);
     }
 
-    public void setOrtbConfig(@Nullable String ortbConfig) {
-        adUnitConfig.setOrtbConfig(ortbConfig);
+    @Nullable
+    public String getImpOrtbConfig() {
+        return adUnitConfig.getImpOrtbConfig();
+    }
+
+    /**
+     * Sets imp level OpenRTB config JSON string that will be merged with the original imp object in the bid request.
+     * Expected format: {@code "{"new_field": "value"}"}.
+     * @param ortbConfig JSON config string.
+     */
+    public void setImpOrtbConfig(@Nullable String ortbConfig) {
+        adUnitConfig.setImpOrtbConfig(ortbConfig);
     }
 
     //region ==================== HelperMethods for Unit Tests. Should be used only in tests

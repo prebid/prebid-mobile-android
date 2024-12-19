@@ -97,6 +97,7 @@ public class BasicParameterBuilderTest {
         TargetingParams.setYearOfBirth(0);
         TargetingParams.setOmidPartnerName(null);
         TargetingParams.setOmidPartnerVersion(null);
+        TargetingParams.setGlobalOrtbConfig(null);
 
         PrebidMobile.sendMraidSupportParams = true;
         PrebidMobile.useExternalBrowser = false;
@@ -320,10 +321,10 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
-    public void setOrtbConfig_configPresentInRequest() {
+    public void setImpOrtbConfig_configPresentInRequest() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         String ortbConfig = "{\"arbitraryparamkey1\":\"arbitraryparamvalue1\",\"ext\":{\"otherExtParam\":\"otherParam\"}}";
-        adConfiguration.setOrtbConfig(ortbConfig);
+        TargetingParams.setGlobalOrtbConfig(ortbConfig);
 
         BasicParameterBuilder builder = new BasicParameterBuilder(
                 adConfiguration,
@@ -343,10 +344,10 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
-    public void setOrtbConfig_invalidJSONInRequest() {
+    public void setImpOrtbConfig_invalidJSONInRequest() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         String ortbConfig = "\"arbitraryparamkey1\":\"arbitraryparamvalue1\"}";
-        adConfiguration.setOrtbConfig(ortbConfig);
+        adConfiguration.setImpOrtbConfig(ortbConfig);
 
         BasicParameterBuilder builder = new BasicParameterBuilder(
                 adConfiguration,
@@ -365,10 +366,10 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
-    public void setOrtbConfig_illegalParametersPresentInRequest() {
+    public void setImpOrtbConfig_illegalParametersPresentInRequest() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        String ortbConfig = "{\"arbitraryparamkey1\":\"arbitraryparamvalue1\", \"regs\": \"no regs here\", \"ext\":{\"gdpr\":\"no GDPR here\", \"otherExtParam\":\"otherParam\"}}";
-        adConfiguration.setOrtbConfig(ortbConfig);
+        String ortbConfig = "{\"arbitraryparamkey1\":\"arbitraryparamvalue1\", \"ext\":{\"otherExtParam\":\"otherParam\"}}";
+        TargetingParams.setGlobalOrtbConfig(ortbConfig);
 
         BasicParameterBuilder builder = new BasicParameterBuilder(
                 adConfiguration,
@@ -382,8 +383,6 @@ public class BasicParameterBuilderTest {
         try {
             assertEquals("arbitraryparamvalue1", actualBidRequest.getJsonObject().getString("arbitraryparamkey1"));
             assertEquals("otherParam", actualBidRequest.getJsonObject().getJSONObject("ext").getString("otherExtParam"));
-            assertFalse(actualBidRequest.getJsonObject().getJSONObject("ext").has("gdpr"));
-            assertFalse(actualBidRequest.getJsonObject().has("regs"));
         } catch (Exception e) {
             fail();
         }

@@ -1,0 +1,9 @@
+{
+  "type_1": 1,
+  "type_2": 0.2,
+  "type_3": true,
+  "type_4": "str",
+  "type_5": {
+    "field": "test"
+  }
+}

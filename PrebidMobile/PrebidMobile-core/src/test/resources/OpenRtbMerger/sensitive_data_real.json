@@ -1,0 +1,56 @@
+{
+  "user": {
+    "ext": {
+      "consent": "real"
+    }
+  },
+  "regs": {
+    "gdpr": "real",
+    "us_privacy": "real",
+    "coppa": "real"
+  },
+  "geo": {
+    "lat": "real",
+    "lon": "real",
+    "type": "real",
+    "accuracy": "real",
+    "lastfix": "real",
+    "country": "real",
+    "region": "real",
+    "regionfips104": "real",
+    "metro": "real",
+    "city": "real",
+    "zip": "real",
+    "utcoffset": "real"
+  },
+  "device": {
+    "ua": "real",
+    "dnt": "real",
+    "lmt":  "real",
+    "ip": "real",
+    "ipv6":  "real",
+    "devicetype": "real",
+    "make":  "real",
+    "model": "real",
+    "os":  "real",
+    "osv": "real",
+    "hwv":  "real",
+    "flashver": "real",
+    "language":  "real",
+    "carrier": "real",
+    "mccmnc":  "real",
+    "ifa": "real",
+    "didsha1":  "real",
+    "didmd5": "real",
+    "dpidsha1":  "real",
+    "dpidmd5": "real",
+    "h":  "real",
+    "w": "real",
+    "ppi":  "real",
+    "js": "real",
+    "connectiontype":  "real",
+    "pxratio": "real",
+    "geo":  "real",
+    "ext": "real"
+  }
+}

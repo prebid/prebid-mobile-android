@@ -57,6 +57,8 @@ public class TargetingParams {
     private static String omidPartnerName;
     private static String omidPartnerVersion;
     private static String userCustomData;
+    @Nullable
+    private static String openRtbConfig;
     private static Pair<Float, Float> userLatLon;
     private static Ext userExt;
     private static JSONArray extendedUserIds;
@@ -793,6 +795,20 @@ public class TargetingParams {
     @Nullable
     public static Boolean getDeviceAccessConsent() {
         return UserConsentUtils.tryToGetDeviceAccessConsent();
+    }
+
+    @Nullable
+    public static String getGlobalOrtbConfig() {
+        return openRtbConfig;
+    }
+
+    /**
+     * Sets global OpenRTB JSON string for merging with the original request.
+     * Expected format: {@code "{"new_field": "value"}"}.
+     * @param config JSON OpenRTB string.
+     */
+    public static void setGlobalOrtbConfig(String config) {
+        openRtbConfig = config;
     }
 
 

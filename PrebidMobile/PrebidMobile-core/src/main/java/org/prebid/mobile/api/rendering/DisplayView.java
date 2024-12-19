@@ -92,11 +92,11 @@ public class DisplayView extends FrameLayout {
     }
 
     @Nullable
-    public String getOrtbConfig() {
-        return adUnitConfiguration.getOrtbConfig();
+    public String getImpOrtbConfig() {
+        return adUnitConfiguration.getImpOrtbConfig();
     }
 
-    public void setOrtbConfig(@Nullable String ortbConfig) {
-        adUnitConfiguration.setOrtbConfig(ortbConfig);
+    public void setImpOrtbConfig(@Nullable String ortbConfig) {
+        adUnitConfiguration.setImpOrtbConfig(ortbConfig);
     }
 }

@@ -70,13 +70,4 @@ public class InterstitialAdUnit extends BannerBaseAdUnit {
         configuration.setMinSizePercentage(new AdSize(width, height));
     }
 
-    @Nullable
-    public String getOrtbConfig() {
-        return configuration.getOrtbConfig();
-    }
-
-    public void setOrtbConfig(@Nullable String ortbConfig) {
-        configuration.setOrtbConfig(ortbConfig);
-    }
-
 }
