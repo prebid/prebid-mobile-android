@@ -8,8 +8,10 @@ import org.json.JSONObject;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.NativeAdUnitConfiguration;
+import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
+import org.prebid.mobile.rendering.networking.tracking.ServerConnection;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -49,6 +51,7 @@ public class NativeAdUnit extends AdUnit {
                 String cacheId = CacheManager.save(response.getWinningBidJson());
                 Util.saveCacheId(cacheId, adObject);
 
+                notifyWinEvent(response);
                 originalListener.onComplete(ResultCode.SUCCESS);
             }
 
@@ -234,5 +237,13 @@ public class NativeAdUnit extends AdUnit {
 
     public void setImpOrtbConfig(@Nullable String ortbConfig) {configuration.setImpOrtbConfig(ortbConfig);}
 
+    private void notifyWinEvent(BidResponse response) {
+        if (response == null) return;
+
+        Bid winningBid = response.getWinningBid();
+        if (winningBid == null) return;
+
+        ServerConnection.fireAndForget(winningBid.getNurl());
+    }
 
 }

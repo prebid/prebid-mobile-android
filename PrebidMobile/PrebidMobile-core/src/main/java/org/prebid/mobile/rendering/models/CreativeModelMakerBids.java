@@ -19,6 +19,8 @@ package org.prebid.mobile.rendering.models;
 import android.content.Context;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -38,6 +40,9 @@ import java.util.ArrayList;
 public class CreativeModelMakerBids {
 
     private static final String TAG = CreativeModelMakerBids.class.getSimpleName();
+
+    @Nullable
+    private String viewableUrl;
 
     @NonNull private final AdLoadListener listener;
     private final VastParserExtractor parserExtractor = new VastParserExtractor(this::handleExtractorResult);
@@ -81,6 +86,8 @@ public class CreativeModelMakerBids {
             adConfiguration.getRewardManager().setRewardedExt(winningBid.getRewardedExt());
         }
 
+        viewableUrl = winningBid.getBurl();
+
         if (bidResponse.isVideo()) {
             makeVideoModels(adConfiguration, winningBid.getAdm());
         } else {
@@ -117,6 +124,7 @@ public class CreativeModelMakerBids {
         model.setWidth(bid != null ? bid.getWidth() : 0);
         model.setHeight(bid != null ? bid.getHeight() : 0);
         model.setRequireImpressionUrl(false);
+        model.setViewableUrl(viewableUrl);
 
         adConfiguration.setInterstitialSize(model.getWidth(), model.getHeight());
         result.creativeModels.add(model);
@@ -146,7 +154,8 @@ public class CreativeModelMakerBids {
             return;
         }
 
-        CreativeModelsMaker modelsMaker = new CreativeModelsMakerVast(loadIdentifier, listener);
-        modelsMaker.makeModels(adConfiguration, result.getVastResponseParserArray());
+        CreativeModelsMakerVast vastModelMaker = new CreativeModelsMakerVast(loadIdentifier, listener);
+        vastModelMaker.setViewableUrl(viewableUrl);
+        vastModelMaker.makeModels(adConfiguration, result.getVastResponseParserArray());
     }
 }
