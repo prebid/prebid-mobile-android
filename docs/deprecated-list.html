@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="script.js"></script>
-<script type="text/javascript" src="script-dir/jquery-3.6.1.min.js"></script>
+<script type="text/javascript" src="script-dir/jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="deprecated-list-page">
@@ -51,6 +51,7 @@ loadScripts(document, 'script');</script>
 <h1 title="Deprecated API" class="title">Deprecated API</h1>
 <h2 title="Contents">Contents</h2>
 <ul>
+<li><a href="#for-removal">Terminally Deprecated</a></li>
 <li><a href="#class">Classes</a></li>
 <li><a href="#field">Fields</a></li>
 <li><a href="#method">Methods</a></li>
@@ -58,6 +59,37 @@ loadScripts(document, 'script');</script>
 <li><a href="#enum-constant">Enum Constants</a></li>
 </ul>
 </div>
+<ul class="block-list">
+<li>
+<div id="for-removal">
+<div class="caption"><span>Terminally Deprecated Elements</span></div>
+<div class="summary-table two-column-summary">
+<div class="table-header col-first">Element</div>
+<div class="table-header col-last">Description</div>
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/AdUnit.html#setOrtbConfig(java.lang.String)">org.prebid.mobile.AdUnit.setOrtbConfig<wbr>(String)</a></div>
+<div class="col-last even-row-color">
+<div class="deprecation-comment">use <a href="org/prebid/mobile/TargetingParams.html#setGlobalOrtbConfig(java.lang.String)"><code>TargetingParams.setGlobalOrtbConfig(String)</code></a>
+ or <a href="org/prebid/mobile/AdUnit.html#setImpOrtbConfig(java.lang.String)"><code>AdUnit.setImpOrtbConfig(String)</code></a>.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#setOrtbConfig(java.lang.String)">org.prebid.mobile.api.mediation.MediationBaseAdUnit.setOrtbConfig<wbr>(String)</a></div>
+<div class="col-last odd-row-color">
+<div class="deprecation-comment">use <a href="org/prebid/mobile/TargetingParams.html#setGlobalOrtbConfig(java.lang.String)"><code>TargetingParams.setGlobalOrtbConfig(String)</code></a>
+ or <a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#setImpOrtbConfig(java.lang.String)"><code>MediationBaseAdUnit.setImpOrtbConfig(String)</code></a>.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/rendering/BannerView.html#setOrtbConfig(java.lang.String)">org.prebid.mobile.api.rendering.BannerView.setOrtbConfig<wbr>(String)</a></div>
+<div class="col-last even-row-color">
+<div class="deprecation-comment">use <a href="org/prebid/mobile/TargetingParams.html#setGlobalOrtbConfig(java.lang.String)"><code>TargetingParams.setGlobalOrtbConfig(String)</code></a>
+ or <a href="org/prebid/mobile/api/rendering/BannerView.html#setImpOrtbConfig(java.lang.String)"><code>BannerView.setImpOrtbConfig(String)</code></a>.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#setOrtbConfig(java.lang.String)">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.setOrtbConfig<wbr>(String)</a></div>
+<div class="col-last odd-row-color">
+<div class="deprecation-comment">use <a href="org/prebid/mobile/TargetingParams.html#setGlobalOrtbConfig(java.lang.String)"><code>TargetingParams.setGlobalOrtbConfig(String)</code></a>
+ or <a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#setImpOrtbConfig(java.lang.String)"><code>BaseInterstitialAdUnit.setImpOrtbConfig(String)</code></a>.</div>
+</div>
+</div>
+</div>
+</li>
+</ul>
 <ul class="block-list">
 <li>
 <div id="class">
@@ -135,43 +167,53 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="deprecation-comment">Please use setAutoRefreshInterval() in seconds!</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/AdUnit.html#updateContextData(java.lang.String,java.util.Set)">org.prebid.mobile.AdUnit.updateContextData<wbr>(String, Set&lt;String&gt;)</a></div>
-<div class="col-last odd-row-color"></div>
-<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#addContextData(java.lang.String,java.lang.String)">org.prebid.mobile.api.mediation.MediationBaseAdUnit.addContextData<wbr>(String, String)</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/AdUnit.html#setOrtbConfig(java.lang.String)">org.prebid.mobile.AdUnit.setOrtbConfig<wbr>(String)</a></div>
+<div class="col-last odd-row-color">
+<div class="deprecation-comment">use <a href="org/prebid/mobile/TargetingParams.html#setGlobalOrtbConfig(java.lang.String)"><code>TargetingParams.setGlobalOrtbConfig(String)</code></a>
+ or <a href="org/prebid/mobile/AdUnit.html#setImpOrtbConfig(java.lang.String)"><code>AdUnit.setImpOrtbConfig(String)</code></a>.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/AdUnit.html#updateContextData(java.lang.String,java.util.Set)">org.prebid.mobile.AdUnit.updateContextData<wbr>(String, Set&lt;String&gt;)</a></div>
+<div class="col-last even-row-color"></div>
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#addContextData(java.lang.String,java.lang.String)">org.prebid.mobile.api.mediation.MediationBaseAdUnit.addContextData<wbr>(String, String)</a></div>
+<div class="col-last odd-row-color">
 <div class="deprecation-comment">use addExtData</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#addContextKeyword(java.lang.String)">org.prebid.mobile.api.mediation.MediationBaseAdUnit.addContextKeyword<wbr>(String)</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#addContextKeyword(java.lang.String)">org.prebid.mobile.api.mediation.MediationBaseAdUnit.addContextKeyword<wbr>(String)</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">use addExtKeyword</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#addContextKeywords(java.util.Set)">org.prebid.mobile.api.mediation.MediationBaseAdUnit.addContextKeywords<wbr>(Set&lt;String&gt;)</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#addContextKeywords(java.util.Set)">org.prebid.mobile.api.mediation.MediationBaseAdUnit.addContextKeywords<wbr>(Set&lt;String&gt;)</a></div>
+<div class="col-last odd-row-color">
 <div class="deprecation-comment">use addExtKeywords</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#clearContextData()">org.prebid.mobile.api.mediation.MediationBaseAdUnit.clearContextData()</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#clearContextData()">org.prebid.mobile.api.mediation.MediationBaseAdUnit.clearContextData()</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">use clearExtData</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#clearContextKeywords()">org.prebid.mobile.api.mediation.MediationBaseAdUnit.clearContextKeywords()</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#clearContextKeywords()">org.prebid.mobile.api.mediation.MediationBaseAdUnit.clearContextKeywords()</a></div>
+<div class="col-last odd-row-color">
 <div class="deprecation-comment">use clearExtKeywords</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#getContextDataDictionary()">org.prebid.mobile.api.mediation.MediationBaseAdUnit.getContextDataDictionary()</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#getContextDataDictionary()">org.prebid.mobile.api.mediation.MediationBaseAdUnit.getContextDataDictionary()</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">use getExtDataDictionary</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#getContextKeywordsSet()">org.prebid.mobile.api.mediation.MediationBaseAdUnit.getContextKeywordsSet()</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#getContextKeywordsSet()">org.prebid.mobile.api.mediation.MediationBaseAdUnit.getContextKeywordsSet()</a></div>
+<div class="col-last odd-row-color">
 <div class="deprecation-comment">use getExtKeywordsSet</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#removeContextData(java.lang.String)">org.prebid.mobile.api.mediation.MediationBaseAdUnit.removeContextData<wbr>(String)</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#removeContextData(java.lang.String)">org.prebid.mobile.api.mediation.MediationBaseAdUnit.removeContextData<wbr>(String)</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">use removeExtData</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#removeContextKeyword(java.lang.String)">org.prebid.mobile.api.mediation.MediationBaseAdUnit.removeContextKeyword<wbr>(String)</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#removeContextKeyword(java.lang.String)">org.prebid.mobile.api.mediation.MediationBaseAdUnit.removeContextKeyword<wbr>(String)</a></div>
+<div class="col-last odd-row-color">
 <div class="deprecation-comment">use removeExtKeyword</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#setOrtbConfig(java.lang.String)">org.prebid.mobile.api.mediation.MediationBaseAdUnit.setOrtbConfig<wbr>(String)</a></div>
+<div class="col-last even-row-color">
+<div class="deprecation-comment">use <a href="org/prebid/mobile/TargetingParams.html#setGlobalOrtbConfig(java.lang.String)"><code>TargetingParams.setGlobalOrtbConfig(String)</code></a>
+ or <a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#setImpOrtbConfig(java.lang.String)"><code>MediationBaseAdUnit.setImpOrtbConfig(String)</code></a>.</div>
 </div>
 <div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#updateContextData(java.lang.String,java.util.Set)">org.prebid.mobile.api.mediation.MediationBaseAdUnit.updateContextData<wbr>(String, Set&lt;String&gt;)</a></div>
 <div class="col-last odd-row-color">
@@ -215,45 +257,55 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="deprecation-comment">use removeExtKeyword</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/rendering/BannerView.html#updateContextData(java.lang.String,java.util.Set)">org.prebid.mobile.api.rendering.BannerView.updateContextData<wbr>(String, Set&lt;String&gt;)</a></div>
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/rendering/BannerView.html#setOrtbConfig(java.lang.String)">org.prebid.mobile.api.rendering.BannerView.setOrtbConfig<wbr>(String)</a></div>
 <div class="col-last even-row-color">
+<div class="deprecation-comment">use <a href="org/prebid/mobile/TargetingParams.html#setGlobalOrtbConfig(java.lang.String)"><code>TargetingParams.setGlobalOrtbConfig(String)</code></a>
+ or <a href="org/prebid/mobile/api/rendering/BannerView.html#setImpOrtbConfig(java.lang.String)"><code>BannerView.setImpOrtbConfig(String)</code></a>.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/rendering/BannerView.html#updateContextData(java.lang.String,java.util.Set)">org.prebid.mobile.api.rendering.BannerView.updateContextData<wbr>(String, Set&lt;String&gt;)</a></div>
+<div class="col-last odd-row-color">
 <div class="deprecation-comment">use updateExtData</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#addContextData(java.lang.String,java.lang.String)">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.addContextData<wbr>(String, String)</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#addContextData(java.lang.String,java.lang.String)">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.addContextData<wbr>(String, String)</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">use addExtData</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#addContextKeyword(java.lang.String)">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.addContextKeyword<wbr>(String)</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#addContextKeyword(java.lang.String)">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.addContextKeyword<wbr>(String)</a></div>
+<div class="col-last odd-row-color">
 <div class="deprecation-comment">use addExtKeyword</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#addContextKeywords(java.util.Set)">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.addContextKeywords<wbr>(Set&lt;String&gt;)</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#addContextKeywords(java.util.Set)">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.addContextKeywords<wbr>(Set&lt;String&gt;)</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">use addExtKeywords</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#clearContextData()">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.clearContextData()</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#clearContextData()">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.clearContextData()</a></div>
+<div class="col-last odd-row-color">
 <div class="deprecation-comment">use clearExtData</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#clearContextKeywords()">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.clearContextKeywords()</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#clearContextKeywords()">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.clearContextKeywords()</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">use clearExtKeywords</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#getContextDataDictionary()">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.getContextDataDictionary()</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#getContextDataDictionary()">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.getContextDataDictionary()</a></div>
+<div class="col-last odd-row-color">
 <div class="deprecation-comment">use getExtDataDictionary</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#getContextKeywordsSet()">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.getContextKeywordsSet()</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#getContextKeywordsSet()">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.getContextKeywordsSet()</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">use getExtKeywordsSet</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#removeContextData(java.lang.String)">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.removeContextData<wbr>(String)</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#removeContextData(java.lang.String)">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.removeContextData<wbr>(String)</a></div>
+<div class="col-last odd-row-color">
 <div class="deprecation-comment">use removeExtData</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#removeContextKeyword(java.lang.String)">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.removeContextKeyword<wbr>(String)</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#removeContextKeyword(java.lang.String)">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.removeContextKeyword<wbr>(String)</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">use removeExtKeyword</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#setOrtbConfig(java.lang.String)">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.setOrtbConfig<wbr>(String)</a></div>
+<div class="col-last odd-row-color">
+<div class="deprecation-comment">use <a href="org/prebid/mobile/TargetingParams.html#setGlobalOrtbConfig(java.lang.String)"><code>TargetingParams.setGlobalOrtbConfig(String)</code></a>
+ or <a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#setImpOrtbConfig(java.lang.String)"><code>BaseInterstitialAdUnit.setImpOrtbConfig(String)</code></a>.</div>
 </div>
 <div class="col-summary-item-name even-row-color"><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#updateContextData(java.lang.String,java.util.Set)">org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.updateContextData<wbr>(String, Set&lt;String&gt;)</a></div>
 <div class="col-last even-row-color">

@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="../../../../../../script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../../../../jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="../../../../../../script.js"></script>
-<script type="text/javascript" src="../../../../../../script-dir/jquery-3.6.1.min.js"></script>
+<script type="text/javascript" src="../../../../../../script-dir/jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="../../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
@@ -117,7 +117,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Executed when the ad is loaded and is ready for display.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onUserEarnedReward(org.prebid.mobile.api.rendering.RewardedAdUnit)" class="member-name-link">onUserEarnedReward</a><wbr>(<a href="../RewardedAdUnit.html" title="class in org.prebid.mobile.api.rendering">RewardedAdUnit</a>&nbsp;rewardedAdUnit)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onUserEarnedReward(org.prebid.mobile.api.rendering.RewardedAdUnit,Reward)" class="member-name-link">onUserEarnedReward</a><wbr>(<a href="../RewardedAdUnit.html" title="class in org.prebid.mobile.api.rendering">RewardedAdUnit</a>&nbsp;rewardedAdUnit,
+ Reward&nbsp;reward)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Executed when user receives reward.</div>
 </div>
@@ -193,13 +194,15 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="onUserEarnedReward(org.prebid.mobile.api.rendering.RewardedAdUnit)">
+<section class="detail" id="onUserEarnedReward(org.prebid.mobile.api.rendering.RewardedAdUnit,Reward)">
 <h3>onUserEarnedReward</h3>
-<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">onUserEarnedReward</span><wbr><span class="parameters">(<a href="../RewardedAdUnit.html" title="class in org.prebid.mobile.api.rendering">RewardedAdUnit</a>&nbsp;rewardedAdUnit)</span></div>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">onUserEarnedReward</span><wbr><span class="parameters">(<a href="../RewardedAdUnit.html" title="class in org.prebid.mobile.api.rendering">RewardedAdUnit</a>&nbsp;rewardedAdUnit,
+ Reward&nbsp;reward)</span></div>
 <div class="block">Executed when user receives reward.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>rewardedAdUnit</code> - view of the corresponding event. Contains reward instance inside. Prebid reward is always null.</dd>
+<dd><code>rewardedAdUnit</code> - the rewarded ad unit</dd>
+<dd><code>reward</code> - the reward object. It can be null if it is not set in the ad server.</dd>
 </dl>
 </section>
 </li>

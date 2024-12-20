@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="../../../../script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../../jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="../../../../script.js"></script>
-<script type="text/javascript" src="../../../../script-dir/jquery-3.6.1.min.js"></script>
+<script type="text/javascript" src="../../../../script-dir/jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
@@ -92,7 +92,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(android.app.Activity,java.lang.String)" class="member-name-link">GamRewardedEventHandler</a><wbr>(android.app.Activity&nbsp;activity,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;gamAdUnitId)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Default constructor.</div>
+</div>
 </div>
 </section>
 </li>
@@ -110,21 +112,24 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#destroy()" class="member-name-link">destroy</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onEvent(org.prebid.mobile.eventhandlers.AdEvent)" class="member-name-link">onEvent</a><wbr>(<a href="AdEvent.html" title="enum class in org.prebid.mobile.eventhandlers">AdEvent</a>&nbsp;adEvent)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>Reward</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getReward()" class="member-name-link">getReward</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#requestAdWithBid(Bid)" class="member-name-link">requestAdWithBid</a><wbr>(Bid&nbsp;bid)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onEvent(org.prebid.mobile.eventhandlers.AdEvent)" class="member-name-link">onEvent</a><wbr>(<a href="AdEvent.html" title="enum class in org.prebid.mobile.eventhandlers">AdEvent</a>&nbsp;adEvent)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRewardedEventListener(RewardedVideoEventListener)" class="member-name-link">setRewardedEventListener</a><wbr>(RewardedVideoEventListener&nbsp;listener)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#requestAdWithBid(Bid)" class="member-name-link">requestAdWithBid</a><wbr>(Bid&nbsp;bid)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#show()" class="member-name-link">show</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRewardedEventListener(RewardedVideoEventListener)" class="member-name-link">setRewardedEventListener</a><wbr>(RewardedVideoEventListener&nbsp;listener)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#trackImpression()" class="member-name-link">trackImpression</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#show()" class="member-name-link">show</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#trackImpression()" class="member-name-link">trackImpression</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -147,6 +152,12 @@ loadScripts(document, 'script');</script>
 <h3>GamRewardedEventHandler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GamRewardedEventHandler</span><wbr><span class="parameters">(android.app.Activity&nbsp;activity,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;gamAdUnitId)</span></div>
+<div class="block">Default constructor.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>activity</code> - Android activity</dd>
+<dd><code>gamAdUnitId</code> - the GAM ad unit id for the rewarded ad unit</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -191,6 +202,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="destroy()">
 <h3>destroy</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">destroy</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getReward()">
+<h3>getReward</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">Reward</span>&nbsp;<span class="element-name">getReward</span>()</div>
 </section>
 </li>
 </ul>
