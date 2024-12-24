@@ -21,6 +21,7 @@ import static java.lang.Math.max;
 import androidx.annotation.NonNull;
 
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.PrebidEventDelegate;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -68,6 +69,7 @@ public class BidLoader {
             } else {
                 cancelRefresh();
             }
+            callEventDelegate(response.responseString);
         }
 
         @Override
@@ -229,6 +231,14 @@ public class BidLoader {
         MobileSdkPassThrough combinedParameters = MobileSdkPassThrough.combine(serverParameters, adConfiguration);
         combinedParameters.modifyAdUnitConfiguration(adConfiguration);
         bidResponse.setMobileSdkPassThrough(combinedParameters);
+    }
+
+    private void callEventDelegate(String response) {
+        PrebidEventDelegate eventDelegate = PrebidMobile.getEventDelegate();
+        if (eventDelegate == null) return;
+
+        String request = bidRequester.getBuiltResponse();
+        eventDelegate.onBidResponse(request, response);
     }
 
     public interface BidRefreshListener {

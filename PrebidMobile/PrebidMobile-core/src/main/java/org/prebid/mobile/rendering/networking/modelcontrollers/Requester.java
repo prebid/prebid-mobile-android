@@ -19,7 +19,8 @@ package org.prebid.mobile.rendering.networking.modelcontrollers;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.os.Looper;
+
+import androidx.annotation.Nullable;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -48,7 +49,6 @@ import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +62,8 @@ public abstract class Requester {
     protected ResponseHandler adResponseCallBack;
     protected BaseNetworkTask networkTask;
     protected AdIdManager.FetchAdIdInfoTask fetchAdIdInfoTask;
+    @Nullable
+    protected String builtBody;
 
     Requester(
             AdUnitConfiguration config,
@@ -82,6 +84,11 @@ public abstract class Requester {
     }
 
     public abstract void startAdRequest();
+
+    @Nullable
+    public String getBuiltResponse() {
+        return builtBody;
+    }
 
     public void destroy() {
         if (networkTask != null) {
@@ -193,7 +200,9 @@ public abstract class Requester {
     protected void sendAdRequest(URLComponents jsonUrlComponents) {
         BaseNetworkTask.GetUrlParams params = new BaseNetworkTask.GetUrlParams();
         params.url = jsonUrlComponents.getBaseUrl();
-        params.queryParams = jsonUrlComponents.getQueryArgString();
+        String queryArgString = jsonUrlComponents.getQueryArgString();
+        params.queryParams = queryArgString;
+        builtBody = queryArgString;
         params.requestType = "POST";
         params.userAgent = AppInfoManager.getUserAgent();
         params.name = requestName;

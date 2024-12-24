@@ -37,6 +37,7 @@ import org.prebid.mobile.rendering.sdk.InitializationNotifier;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.SdkInitializer;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -141,6 +142,8 @@ public class PrebidMobile {
     private static PBSConfig pbsConfig;
     private static int creativeFactoryTimeout = DEFAULT_BANNER_TIMEOUT;
     private static int creativeFactoryTimeoutPreRenderContent = DEFAULT_PRERENDER_TIMEOUT;
+    @NonNull
+    private static WeakReference<PrebidEventDelegate> eventDelegateReference = new WeakReference<>(null);
 
     private PrebidMobile() {
     }
@@ -531,7 +534,27 @@ public class PrebidMobile {
     }
 
     /**
-     * LogLevel for logging control.
+     * {@link #setEventDelegate(PrebidEventDelegate)}
+     */
+    @Nullable
+    public static PrebidEventDelegate getEventDelegate() {
+        return eventDelegateReference.get();
+    }
+
+    /**
+     * Sets the {@link PrebidEventDelegate} instance to handle the auction request and response from the SDK.
+     * This allows the SDK to collect some statistical data.
+     * The provided delegate will be stored as a weak reference so you need to store reference to it.
+     *
+     * @param eventDelegate the instance of {@link PrebidEventDelegate} to handle events from the SDK. 
+     *                      Can be null to clear the existing delegate.
+     */
+    public static void setEventDelegate(@Nullable PrebidEventDelegate eventDelegate) {
+        eventDelegateReference = new WeakReference<>(eventDelegate);
+    }
+
+    /**
+     * LogLevel for logging control.c
      * NONE - no sdk logs.
      * ERROR - sdk logs with error level only.
      * WARN - sdk logs with warn level only.
