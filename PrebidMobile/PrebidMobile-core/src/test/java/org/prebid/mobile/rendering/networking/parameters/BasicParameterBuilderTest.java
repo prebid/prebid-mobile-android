@@ -408,8 +408,8 @@ public class BasicParameterBuilderTest {
         assertEquals(expectedBidRequest.getJsonObject().toString(), actualBidRequest.getJsonObject().toString());
         Imp actualImp = actualBidRequest.getImp().get(0);
         assertNotNull(actualImp.banner);
-        Format expectedFormat = new Format(1920, 1080);
-        assertTrue(actualImp.banner.getFormats().contains(expectedFormat));
+
+        assertTrue(actualImp.banner.getFormats().isEmpty());
         assertNull(actualImp.video);
         assertEquals(1, actualImp.secure.intValue());
         assertEquals(1, actualImp.instl.intValue());
@@ -437,8 +437,8 @@ public class BasicParameterBuilderTest {
         assertNotNull(actualImp.video);
         assertNull(actualImp.banner);
         assertNull(actualImp.secure);
-        assertEquals(1920, actualImp.video.w.intValue());
-        assertEquals(1080, actualImp.video.h.intValue());
+        assertNull(actualImp.video.w);
+        assertNull(actualImp.video.h);
         assertEquals(VIDEO_INTERSTITIAL_PLACEMENT, actualImp.video.placement.intValue());
         assertEquals(0, actualImp.instl.intValue());
     }
@@ -788,8 +788,8 @@ public class BasicParameterBuilderTest {
 
         Video video = imp.getVideo();
         assertNotNull(video);
-        assertNotNull(video.w);
-        assertNotNull(video.h);
+        assertNull(video.w);
+        assertNull(video.h);
         assertNotNull(video.delivery);
 
         assertNull(video.placement);
@@ -864,8 +864,8 @@ public class BasicParameterBuilderTest {
 
         Video video = imp.getVideo();
         assertNotNull(video);
-        assertNotNull(video.w);
-        assertNotNull(video.h);
+        assertNull(video.w);
+        assertNull(video.h);
         assertEquals(new Integer(5), video.placement);
         assertEquals(new Integer(1), video.linearity);
         assertEquals(new Integer(2), video.playbackend);
@@ -1217,10 +1217,6 @@ public class BasicParameterBuilderTest {
             for (AdSize size : adConfiguration.getSizes()) {
                 banner.addFormat(size.getWidth(), size.getHeight());
             }
-        } else if (adConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
-            Configuration deviceConfiguration = context.getResources().getConfiguration();
-            banner.addFormat(deviceConfiguration.screenWidthDp,
-                    deviceConfiguration.screenHeightDp);
         }
 
         if (adConfiguration.isAdPositionValid()) {
@@ -1244,8 +1240,6 @@ public class BasicParameterBuilderTest {
         if (!adConfiguration.isPlacementTypeValid()) {
             video.placement = VIDEO_INTERSTITIAL_PLACEMENT;
             Configuration deviceConfiguration = context.getResources().getConfiguration();
-            video.w = deviceConfiguration.screenWidthDp;
-            video.h = deviceConfiguration.screenHeightDp;
         }
         else {
             video.placement = adConfiguration.getPlacementTypeValue();

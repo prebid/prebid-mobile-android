@@ -312,10 +312,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
         if (adSize != null) {
             video.w = adSize.getWidth();
             video.h = adSize.getHeight();
-        } else if (resources != null) {
-            Configuration deviceConfiguration = resources.getConfiguration();
-            video.w = deviceConfiguration.screenWidthDp;
-            video.h = deviceConfiguration.screenHeightDp;
         }
     }
 
@@ -344,9 +340,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
             for (AdSize size : adConfiguration.getSizes()) {
                 banner.addFormat(size.getWidth(), size.getHeight());
             }
-        } else if (adConfiguration.isAdType(AdFormat.INTERSTITIAL) && resources != null) {
-            Configuration deviceConfiguration = resources.getConfiguration();
-            banner.addFormat(deviceConfiguration.screenWidthDp, deviceConfiguration.screenHeightDp);
         }
 
         if (adConfiguration.isAdPositionValid()) {
