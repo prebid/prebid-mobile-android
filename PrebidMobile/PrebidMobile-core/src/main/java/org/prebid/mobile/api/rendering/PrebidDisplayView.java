@@ -178,20 +178,17 @@ public class PrebidDisplayView extends FrameLayout {
         this.adUnitConfiguration = adUnitConfiguration;
         displayViewListener = listener;
         this.displayVideoListener = displayVideoListener;
-        WinNotifier winNotifier = new WinNotifier();
-        winNotifier.notifyWin(response, () -> {
-            try {
-                adUnitConfiguration.modifyUsingBidResponse(response);
-                if (response.isVideo()) {
-                    displayVideoAd(response);
-                } else {
-                    displayHtmlAd(response);
-                }
-                impressionEventUrl = response.getImpressionEventUrl();
-            } catch (AdException e) {
-                notifyListenerError(e);
+        try {
+            adUnitConfiguration.modifyUsingBidResponse(response);
+            if (response.isVideo()) {
+                displayVideoAd(response);
+            } else {
+                displayHtmlAd(response);
             }
-        });
+            impressionEventUrl = response.getImpressionEventUrl();
+        } catch (AdException e) {
+            notifyListenerError(e);
+        }
     }
 
     public PrebidDisplayView(
