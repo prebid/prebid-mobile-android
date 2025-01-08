@@ -1,7 +1,9 @@
 package org.prebid.mobile;
 
+import org.json.JSONObject;
+
 public interface PrebidEventDelegate {
 
-    void onBidResponse(String request, String response);
+    void onBidResponse(JSONObject request, JSONObject response);
 
 }

@@ -20,8 +20,10 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -63,7 +65,7 @@ public abstract class Requester {
     protected BaseNetworkTask networkTask;
     protected AdIdManager.FetchAdIdInfoTask fetchAdIdInfoTask;
     @Nullable
-    protected String builtBody;
+    protected JSONObject builtRequest;
 
     Requester(
             AdUnitConfiguration config,
@@ -85,9 +87,9 @@ public abstract class Requester {
 
     public abstract void startAdRequest();
 
-    @Nullable
-    public String getBuiltResponse() {
-        return builtBody;
+    @NonNull
+    public JSONObject getBuiltRequest() {
+        return builtRequest == null ? new JSONObject() : builtRequest;
     }
 
     public void destroy() {
@@ -202,10 +204,11 @@ public abstract class Requester {
         params.url = jsonUrlComponents.getBaseUrl();
         String queryArgString = jsonUrlComponents.getQueryArgString();
         params.queryParams = queryArgString;
-        builtBody = queryArgString;
         params.requestType = "POST";
         params.userAgent = AppInfoManager.getUserAgent();
         params.name = requestName;
+
+        builtRequest = jsonUrlComponents.getRequestJsonObject();
 
         networkTask = new BaseNetworkTask(adResponseCallBack);
         networkTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);

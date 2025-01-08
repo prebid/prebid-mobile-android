@@ -69,7 +69,7 @@ public class BidLoader {
             } else {
                 cancelRefresh();
             }
-            callEventDelegate(response.responseString);
+            callEventDelegate(bidResponse);
         }
 
         @Override
@@ -233,12 +233,11 @@ public class BidLoader {
         bidResponse.setMobileSdkPassThrough(combinedParameters);
     }
 
-    private void callEventDelegate(String response) {
+    private void callEventDelegate(BidResponse response) {
         PrebidEventDelegate eventDelegate = PrebidMobile.getEventDelegate();
         if (eventDelegate == null) return;
 
-        String request = bidRequester.getBuiltResponse();
-        eventDelegate.onBidResponse(request, response);
+        eventDelegate.onBidResponse(bidRequester.getBuiltRequest(), response.getResponseJson());
     }
 
     public interface BidRefreshListener {

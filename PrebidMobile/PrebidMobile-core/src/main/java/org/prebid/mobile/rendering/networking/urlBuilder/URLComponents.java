@@ -16,6 +16,8 @@
 
 package org.prebid.mobile.rendering.networking.urlBuilder;
 
+import androidx.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
@@ -50,6 +52,15 @@ public class URLComponents {
         }
 
         return (fullUrl);
+    }
+
+    @Nullable
+    public JSONObject getRequestJsonObject() {
+        try {
+            return adRequestInput.getBidRequest().getJsonObject();
+        } catch (JSONException exception) {
+            return null;
+        }
     }
 
     public String getQueryArgString() {

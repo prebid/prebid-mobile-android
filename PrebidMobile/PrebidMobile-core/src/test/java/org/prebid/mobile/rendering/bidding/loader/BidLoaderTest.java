@@ -16,17 +16,20 @@
 
 package org.prebid.mobile.rendering.bidding.loader;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.PrebidEventDelegate;
@@ -34,7 +37,6 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.reflection.Reflection;
-import org.prebid.mobile.reflection.ReflectionUtils;
 import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
@@ -139,25 +141,33 @@ public class BidLoaderTest {
     }
 
     @Test
-    public void responseHandler_callEventHandlerOnSuccess() {
+    public void responseHandler_callEventHandlerOnSuccess() throws JSONException {
         AdUnitConfiguration config = new AdUnitConfiguration();
         BidLoader bidLoader = new BidLoader(null, null);
         ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
         Reflection.setVariableTo(bidLoader, "adConfiguration", config);
         Reflection.setVariableTo(bidLoader, "bidRequester", mockRequester);
 
-        String testRequest = "{\"test\":\"test\"}";
-        String testResponse = ResourceUtils.convertResourceToString("PrebidServerOneBidFromRubiconResponse.json");
-        when(mockRequester.getBuiltResponse()).thenReturn(testRequest);
+        String responseString = ResourceUtils.convertResourceToString("PrebidServerOneBidFromRubiconResponse.json");
+        JSONObject testRequest = new JSONObject("{\"test\":\"test\"}");
+        JSONObject testResponse = new JSONObject(responseString);
+        when(mockRequester.getBuiltRequest()).thenReturn(testRequest);
 
         PrebidEventDelegate mockEventDelegate = mock(PrebidEventDelegate.class);
         PrebidMobile.setEventDelegate(mockEventDelegate);
 
         BaseNetworkTask.GetUrlResult responseResult = new BaseNetworkTask.GetUrlResult();
-        responseResult.responseString = testResponse;
+        responseResult.responseString = responseString;
         responseHandler.onResponse(responseResult);
 
-        verify(mockEventDelegate).onBidResponse(testRequest, testResponse);
+        ArgumentCaptor<JSONObject> requestCaptor = ArgumentCaptor.forClass(JSONObject.class);
+        ArgumentCaptor<JSONObject> responseCaptor = ArgumentCaptor.forClass(JSONObject.class);
+        verify(mockEventDelegate).onBidResponse(requestCaptor.capture(), responseCaptor.capture());
+
+        String request = requestCaptor.getValue().toString();
+        assertEquals(testRequest.toString(), request);
+        String response = responseCaptor.getValue().toString();
+        assertEquals(testResponse.toString(), response);
     }
 
     private BidLoader createBidLoader(AdUnitConfiguration adConfiguration, BidRequesterListener requestListener) {
