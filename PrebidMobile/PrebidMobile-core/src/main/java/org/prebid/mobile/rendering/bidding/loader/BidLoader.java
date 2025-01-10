@@ -237,7 +237,7 @@ public class BidLoader {
         PrebidEventDelegate eventDelegate = PrebidMobile.getEventDelegate();
         if (eventDelegate == null) return;
 
-        eventDelegate.onBidResponse(bidRequester.getBuiltRequest(), response.getResponseJson());
+        new Thread(() -> eventDelegate.onBidResponse(bidRequester.getBuiltRequest(), response.getResponseJson())).start();
     }
 
     public interface BidRefreshListener {
