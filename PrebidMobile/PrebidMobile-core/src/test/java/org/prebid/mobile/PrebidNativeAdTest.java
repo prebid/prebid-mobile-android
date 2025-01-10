@@ -75,6 +75,7 @@ public class PrebidNativeAdTest {
         assertEquals("Click here to visit our site!", nativeAd.getCallToAction());
         assertEquals("Learn all about this awesome story of someone using out OpenX SDK.", nativeAd.getDescription());
         assertEquals("OpenX (Brand)", nativeAd.getSponsoredBy());
+        assertEquals("https://www.openx.com/", nativeAd.getClickUrl());
 
         ArrayList<NativeData> dataList = nativeAd.getDataList();
         assertEquals(5, dataList.size());

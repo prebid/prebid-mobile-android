@@ -213,6 +213,10 @@ public class PrebidNativeAd {
         return dataList;
     }
 
+    public String getClickUrl() {
+        return clickUrl;
+    }
+
     private void setClickUrl(String clickUrl) {
         this.clickUrl = clickUrl;
     }
@@ -436,6 +440,7 @@ public class PrebidNativeAd {
     public String getImpEvent() {
         return impEvent;
     }
+
 
     private void notifyImpressionEvent() {
         if (impressionIsNotNotified) {
