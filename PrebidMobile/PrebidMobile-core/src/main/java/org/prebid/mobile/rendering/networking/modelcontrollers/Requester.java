@@ -19,8 +19,11 @@ package org.prebid.mobile.rendering.networking.modelcontrollers;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.os.Looper;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -48,7 +51,6 @@ import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +64,8 @@ public abstract class Requester {
     protected ResponseHandler adResponseCallBack;
     protected BaseNetworkTask networkTask;
     protected AdIdManager.FetchAdIdInfoTask fetchAdIdInfoTask;
+    @Nullable
+    protected JSONObject builtRequest;
 
     Requester(
             AdUnitConfiguration config,
@@ -82,6 +86,11 @@ public abstract class Requester {
     }
 
     public abstract void startAdRequest();
+
+    @NonNull
+    public JSONObject getBuiltRequest() {
+        return builtRequest == null ? new JSONObject() : builtRequest;
+    }
 
     public void destroy() {
         if (networkTask != null) {
@@ -193,10 +202,13 @@ public abstract class Requester {
     protected void sendAdRequest(URLComponents jsonUrlComponents) {
         BaseNetworkTask.GetUrlParams params = new BaseNetworkTask.GetUrlParams();
         params.url = jsonUrlComponents.getBaseUrl();
-        params.queryParams = jsonUrlComponents.getQueryArgString();
+        String queryArgString = jsonUrlComponents.getQueryArgString();
+        params.queryParams = queryArgString;
         params.requestType = "POST";
         params.userAgent = AppInfoManager.getUserAgent();
         params.name = requestName;
+
+        builtRequest = jsonUrlComponents.getRequestJsonObject();
 
         networkTask = new BaseNetworkTask(adResponseCallBack);
         networkTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
