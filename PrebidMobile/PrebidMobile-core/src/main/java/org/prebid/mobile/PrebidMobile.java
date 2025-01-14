@@ -98,7 +98,7 @@ public class PrebidMobile {
     /**
      * Tested Google SDK version.
      */
-    public static final String TESTED_GOOGLE_SDK_VERSION = "23.1.0";
+    public static final String TESTED_GOOGLE_SDK_VERSION = "23.6.0";
 
     /**
      * Please use {@link PrebidMobile#setLogLevel(LogLevel)}, this field will become private in next releases.

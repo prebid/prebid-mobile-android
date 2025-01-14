@@ -20,9 +20,8 @@ public class GoogleAdVersionTest {
         assertEquals(
                 "Google Ad SDK was updated to " + currentVersion + "! " +
                         "Please test Prebid SDK with the new version, resolve compilation problems, rewrite deprecated code. " +
-                        "After testing you must update PrebidMobile.TESTED_GOOGLE_SDK_VERSION," +
-                        "update google-play-services-ads version on the libs.versions.toml " +
-                        "and also must update version in publishing XML files (scripts/Maven/*.xml.",
+                        "After testing you must update PrebidMobile.TESTED_GOOGLE_SDK_VERSION " +
+                        "and also update version in publishing XML files (scripts/Maven/*.xml.)",
                 currentVersion,
                 PrebidMobile.TESTED_GOOGLE_SDK_VERSION
         );
