@@ -99,7 +99,7 @@ public class ExternalUserId {
         try {
             JSONObject uidObject = new JSONObject();
             uidObject.putOpt("id", getIdentifier());
-            uidObject.putOpt("adtype", getAtype());
+            uidObject.putOpt("atype", getAtype());
             if (getExt() != null) {
                 uidObject.putOpt("ext", new JSONObject(getExt()));
             }
