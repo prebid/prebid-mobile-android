@@ -215,7 +215,9 @@ public class PrebidMobile {
 
     /**
      * List containing objects that hold External User Id parameters for the current application user.
+     * @deprecated use {@link TargetingParams#setExternalUserIds(List)}
      */
+    @Deprecated(forRemoval = true)
     public static void setExternalUserIds(List<ExternalUserId> externalUserIds) {
         PrebidMobile.externalUserIds = externalUserIds;
     }
@@ -223,8 +225,10 @@ public class PrebidMobile {
     /**
      * Returns the List that hold External UserId parameters for the current application user
      *
-     * @@return externalUserIds as Array.
+     * @return externalUserIds as Array.
+     * @deprecated use {@link TargetingParams#getExternalUserIds()}
      */
+    @Deprecated(forRemoval = true)
     public static List<ExternalUserId> getExternalUserIds() {
         return PrebidMobile.externalUserIds;
     }
