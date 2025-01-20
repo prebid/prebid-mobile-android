@@ -131,7 +131,6 @@ public class PrebidMobile {
     private static Host host = Host.CUSTOM;
 
     private static final Map<String, String> storedBidResponses = new LinkedHashMap<>();
-    private static List<ExternalUserId> externalUserIds = new ArrayList<>();
     private static HashMap<String, String> customHeaders = new HashMap<>();
     private static boolean includeWinners = false;
     private static boolean includeBidderKeys = false;
@@ -214,12 +213,12 @@ public class PrebidMobile {
     }
 
     /**
-     * List containing objects that hold External User Id parameters for the current application user.
+     * List containing objects that hold External User UniqueId parameters for the current application user.
      * @deprecated use {@link TargetingParams#setExternalUserIds(List)}
      */
     @Deprecated(forRemoval = true)
     public static void setExternalUserIds(List<ExternalUserId> externalUserIds) {
-        PrebidMobile.externalUserIds = externalUserIds;
+        TargetingParams.setExternalUserIds(externalUserIds);
     }
 
     /**
@@ -230,7 +229,7 @@ public class PrebidMobile {
      */
     @Deprecated(forRemoval = true)
     public static List<ExternalUserId> getExternalUserIds() {
-        return PrebidMobile.externalUserIds;
+        return TargetingParams.getExternalUserIds();
     }
 
     /**

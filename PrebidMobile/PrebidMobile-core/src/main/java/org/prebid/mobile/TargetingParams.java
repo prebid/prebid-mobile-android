@@ -345,6 +345,7 @@ public class TargetingParams {
         if (userIds == null) return;
 
         for (ExternalUserId userId : userIds) {
+            if (userId == null) continue;
             externalUserIdMap.put(userId.getSource(), userId);
         }
     }
@@ -352,7 +353,7 @@ public class TargetingParams {
     /**
      * Returns external user ids.
      */
-    static List<ExternalUserId> getExternalUserIds() {
+    public static List<ExternalUserId> getExternalUserIds() {
         return new ArrayList<>(externalUserIdMap.values());
     }
 
@@ -370,7 +371,7 @@ public class TargetingParams {
     }
 
     /**
-     * Returns the stored (in the SharedPreference) ExternalUserId instance for a given source
+     * Returns the ExternalUserId instance for a given source
      * @deprecated use {@link #getExternalUserIds()}
      */
     @Deprecated(forRemoval = true)
@@ -379,7 +380,7 @@ public class TargetingParams {
     }
 
     /**
-     * Returns the stored (in the SharedPreferences) External User Id list
+     * Returns the External User UniqueId list
      * @deprecated use {@link #setExternalUserIds(List)}
      */
     @Deprecated(forRemoval = true)
@@ -388,7 +389,7 @@ public class TargetingParams {
     }
 
     /**
-     * Removes the stored (in the SharedPreference) ExternalUserId instance for a given source
+     * Removes the ExternalUserId instance for a given source
      * @deprecated use {@link #setExternalUserIds(List)}
      */
     @Deprecated(forRemoval = true)
@@ -399,7 +400,7 @@ public class TargetingParams {
     }
 
     /**
-     * Clear the Stored ExternalUserId list from the SharedPreference
+     * Clear the ExternalUserId list from the SharedPreference
      * @deprecated use {@link #setExternalUserIds(List)}
      */
     @Deprecated(forRemoval = true)

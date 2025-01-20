@@ -24,149 +24,158 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 /**
  * User id object from an external third-party source for additional targeting.
+ * <a href="https://github.com/InteractiveAdvertisingBureau/openrtb/blob/main/extensions/2.x_official_extensions/eids.md">OpenRTB extended identifiers</a>.
  */
 public class ExternalUserId {
 
-    private String source;
+    private static final String TAG = "ExternalUserId";
 
+    @NonNull
+    private String source;
+    @NonNull
+    private List<UniqueId> uniqueIds;
+    @Nullable
+    private Map<String, Object> ext;
+
+    /**
+     * Default constructor.
+     */
+    public ExternalUserId(@NonNull String source, @NonNull List<UniqueId> uniqueIds) {
+        this.source = source;
+        this.uniqueIds = uniqueIds;
+    }
+
+    /**
+     * @deprecated use {@link #ExternalUserId(String, List)}
+     */
+    @Deprecated
+    public ExternalUserId(@NonNull String source, @NonNull String identifier, Integer atype, Map<String, Object> ext) {
+        this.source = source;
+        this.uniqueIds = new ArrayList<>();
+        this.ext = ext;
+        UniqueId uniqueId = new UniqueId(identifier, atype);
+        uniqueIds.add(uniqueId);
+
+    }
+
+    @NonNull
     public String getSource() {
         return source;
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    @NonNull
+    public List<UniqueId> getUniqueIds() {
+        return uniqueIds;
     }
 
-    private String identifier;
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-    private Integer atype;
-
-    public Integer getAtype() {
-        return atype;
-    }
-
-    public void setAtype(Integer atype) {
-        this.atype = atype;
-    }
-
-    private Map<String, Object> ext;
-
+    @NonNull
     public Map<String, Object> getExt() {
         return ext;
     }
 
-    public void setExt(Map<String, Object> ext) {
+    public void setExt(@Nullable Map<String, Object> ext) {
         this.ext = ext;
     }
 
-    /**
-     * Initialize ExternalUserId Class
-     * - Parameter source: Source of the External User Id String.
-     * - Parameter identifier: String of the External User Id.
-     * - Parameter atype: (Optional) Integer of the External User Id.
-     * - Parameter ext: (Optional) Map of the External User Id.
-     */
-    public ExternalUserId(@NonNull String source, @NonNull String identifier, Integer atype, Map<String, Object> ext) {
-        this.source = source;
-        this.identifier = identifier;
-        this.atype = atype;
-        this.ext = ext;
+    @Deprecated
+    public String getIdentifier() {
+        if (!uniqueIds.isEmpty()) {
+            return uniqueIds.get(0).id;
+        }
+        return null;
     }
+
+    @Deprecated
+    public void setIdentifier(String identifier) {}
+
+    /**
+     * @deprecated {@link #getUniqueIds()}
+     */
+    @Deprecated
+    public Integer getAtype() {
+        if (!uniqueIds.isEmpty()) {
+            return uniqueIds.get(0).atype;
+        }
+        return null;
+    }
+
+    @Deprecated
+    public void setAtype(Integer atype) {}
+
 
     @Nullable
     public JSONObject getJson() {
-        JSONObject result = new JSONObject();
-
-        if (getSource() == null || getSource().isEmpty() || getIdentifier() == null || getIdentifier().isEmpty()) {
+        if (source == null || source.isEmpty()) {
+            LogUtil.warning(TAG, "Empty source");
             return null;
         }
 
         try {
-            JSONObject uidObject = new JSONObject();
-            uidObject.putOpt("id", getIdentifier());
-            uidObject.putOpt("atype", getAtype());
-            if (getExt() != null) {
-                uidObject.putOpt("ext", new JSONObject(getExt()));
+            JSONObject rootJson = new JSONObject();
+            JSONArray uniqueIdArray = new JSONArray();
+            for (UniqueId uniqueId : uniqueIds) {
+                JSONObject idJson = uniqueId.getJson();
+                if (idJson == null) continue;
+                uniqueIdArray.put(idJson);
+            }
+            if (uniqueIdArray.length() == 0) {
+                LogUtil.warning(TAG, "No unique ids");
+                return null;
             }
 
-            result.put("source", getSource());
-            result.put("uids", new JSONArray().put(uidObject));
+            rootJson.put("source", source);
+            rootJson.put("uids", uniqueIdArray);
+            if (ext != null) {
+                rootJson.putOpt("ext", new JSONObject(ext));
+            }
+            return rootJson;
         } catch (JSONException e) {
-            LogUtil.warning("ExternalUserId", "Can't create json object.");
+            LogUtil.warning(TAG, "Can't create external user id json");
             return null;
         }
-
-        return result;
     }
 
-    @Override
-    public String toString() {
-        JSONObject transformedUserIdObject = new JSONObject();
-        try {
-            transformedUserIdObject.put("source", getSource());
-            transformedUserIdObject.put("id", getIdentifier());
-            transformedUserIdObject.put("atype", getAtype());
-            if (getExt() != null && !getExt().isEmpty()) {
-                JSONObject extObject = new JSONObject(getExt());
-                transformedUserIdObject.put("ext", extObject);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+    public static class UniqueId {
+
+        @NonNull
+        private String id;
+        @NonNull
+        private Integer atype;
+        @Nullable
+        private Map<String, Object> ext;
+
+        public UniqueId(@NonNull String id, @NonNull Integer atype) {
+            this.id = id;
+            this.atype = atype;
         }
-        return transformedUserIdObject.toString();
 
-    }
+        public void setExt(@Nullable Map<String, Object> ext) {
+            this.ext = ext;
+        }
 
-    static List<ExternalUserId> getExternalUidListFromJson(String list) {
-        List<ExternalUserId> externalUserIdList = new ArrayList<>();
-        try {
-            JSONArray jsonArr = new JSONArray(list);
-            for (int i = 0; i < jsonArr.length(); i++) {
-                if (getExternalUidFromJson(jsonArr.getJSONObject(i).toString()) != null) {
-                    externalUserIdList.add(getExternalUidFromJson(jsonArr.getJSONObject(i).toString()));
+        @Nullable
+        public JSONObject getJson() {
+            if (id == null || id.isEmpty()) {
+                return null;
+            }
+            try {
+                JSONObject uniqueId = new JSONObject();
+                uniqueId.putOpt("id", id);
+                uniqueId.putOpt("atype", atype);
+                if (ext != null) {
+                    uniqueId.putOpt("ext", new JSONObject(ext));
                 }
+                return uniqueId;
+            } catch (JSONException e) {
+                return null;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-        return externalUserIdList;
+
     }
 
-    static ExternalUserId getExternalUidFromJson(String json) {
-        ExternalUserId extUId = null;
-        try {
-            JSONObject jsonObject = new JSONObject(json);
-            String source = jsonObject.has("source") ? jsonObject.optString("source") : null;
-            String id = jsonObject.has("id") ? jsonObject.optString("id") : null;
-            Integer aType = jsonObject.has("atype") ? jsonObject.optInt("atype") : null;
-            Map<String, Object> ext = null;
-            JSONObject extObj = jsonObject.optJSONObject("ext");
-            if (extObj != null) {
-                for (Iterator<String> it = extObj.keys(); it.hasNext(); ) {
-                    ext = new HashMap<>();
-                    String key = it.next();
-                    ext.put(key, extObj.getString(key));
-                }
-            }
-            extUId = new ExternalUserId(source, id, aType, ext);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return extUId;
-    }
 }
