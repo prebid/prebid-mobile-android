@@ -186,6 +186,9 @@ public class BasicParameterBuilder extends ParameterBuilder {
         }
 
         List<ExternalUserId> extendedIds = TargetingParams.fetchStoredExternalUserIds();
+        if (TargetingParams.getSendSharedId()) {
+            extendedIds.add(TargetingParams.fetchSharedId());
+        }
         if (extendedIds != null && extendedIds.size() > 0) {
             JSONArray idsJson = new JSONArray();
             for (ExternalUserId id : extendedIds) {

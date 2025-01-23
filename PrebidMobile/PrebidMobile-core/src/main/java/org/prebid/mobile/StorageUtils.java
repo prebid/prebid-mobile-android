@@ -33,6 +33,7 @@ final class StorageUtils {
     private static final String TAG = StorageUtils.class.getSimpleName();
 
     static final String PB_ExternalUserIdsKey = "PB_ExternalUserIdsKey";
+    static final String PB_SharedIdKey = "PB_SharedIdKey";
 
     private StorageUtils() {}
 
@@ -125,6 +126,26 @@ final class StorageUtils {
         }
     }
 
+    static String fetchSharedId() {
+        SharedPreferences pref = getSharedPreferences();
+        if (pref == null) return null;
+
+        return pref.getString(StorageUtils.PB_SharedIdKey, null);
+    }
+
+    static void storeSharedId(String sharedId) {
+        // Storing the SharedId
+        SharedPreferences pref = getSharedPreferences();
+        if (pref == null) return;
+
+        SharedPreferences.Editor editor = pref.edit();
+        if (sharedId != null) {
+            editor.putString(StorageUtils.PB_SharedIdKey, sharedId);
+        } else {
+            editor.remove(StorageUtils.PB_SharedIdKey);
+        }
+        editor.apply();
+    }
 
     @Nullable
     private static SharedPreferences getSharedPreferences() {

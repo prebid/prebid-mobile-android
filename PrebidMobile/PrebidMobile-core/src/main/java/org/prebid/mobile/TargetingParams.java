@@ -62,6 +62,7 @@ public class TargetingParams {
     private static Pair<Float, Float> userLatLon;
     private static Ext userExt;
     private static JSONArray extendedUserIds;
+    private static Boolean sendSharedId = false;
 
 
     private static final Map<String, Set<String>> userDataMap = new HashMap<>();
@@ -378,6 +379,42 @@ public class TargetingParams {
      */
     public static void clearStoredExternalUserIds() {
         StorageUtils.clearStoredExternalUserIds();
+    }
+
+    /**
+     * When true, the SharedID external user id is added to outgoing auction requests.
+     * App developers are encouraged to consult with their legal team before enabling this feature.
+     *
+     * See `TargetingParams.sharedId` for details.
+     *
+     * @param sendSharedId the Boolean flag to determine if the SharedID external user id
+     *                     is to be added to outgoing auction requests
+     */
+    public static void setSendSharedId(Boolean sendSharedId) {
+        TargetingParams.sendSharedId = sendSharedId;
+    }
+
+    public static Boolean getSendSharedId() { return sendSharedId; }
+
+    /**
+     * A randomly generated Prebid-owned first-party identifier
+     *
+     * Unless reset, SharedID remains consistent throughout the current app session. The same id may also persist
+     * indefinitely across multiple app sessions if local storage access is allowed. SharedID values are NOT consistent
+     * across different apps on the same device.
+     *
+     * Note: SharedId is only sent with auction requests if `TargetingParams.sendSharedId` is set to true.
+     */
+    public static ExternalUserId fetchSharedId() {
+        return SharedId.getIdentifier();
+    }
+
+    /**
+     * Resets and clears out of local storage the existing SharedID value, after which `TargetingParams.sharedId` will
+     * return a new randomized value.
+     */
+    public static void resetSharedId() {
+        SharedId.resetIdentifier();
     }
 
     /* -------------------- Context and application data -------------------- */
