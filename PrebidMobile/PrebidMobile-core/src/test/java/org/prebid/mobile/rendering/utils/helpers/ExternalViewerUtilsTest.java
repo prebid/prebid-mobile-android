@@ -54,6 +54,11 @@ public class ExternalViewerUtilsTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    @After
+    public void tearDown() throws Exception {
+        PrebidMobile.useExternalBrowser = false;
+    }
+
     @Test
     public void whenIsActivityCallableAndContextOrIntentNull_ReturnFalse() {
         assertFalse(ExternalViewerUtils.isActivityCallable(null, null));
@@ -102,6 +107,7 @@ public class ExternalViewerUtilsTest {
 
     @Test
     public void whenStartBrowserAndUseExternalBrowserFalseAndActivityCallable_NotifyInternalBrowserSuccess() {
+        PrebidMobile.useExternalBrowser = false;
         PackageManager mockManager = mock(PackageManager.class);
         List<ResolveInfo> mockList = Collections.singletonList(mock(ResolveInfo.class));
         when(mockManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(mockList);
@@ -114,6 +120,7 @@ public class ExternalViewerUtilsTest {
 
     @Test
     public void whenStartBrowserAndUseExternalBrowserFalseAndActivityNotCallable_NotifyExternalBrowserSuccess() {
+        PrebidMobile.useExternalBrowser = false;
         PackageManager mockManager = mock(PackageManager.class);
         List<ResolveInfo> mockList = Collections.singletonList(mock(ResolveInfo.class));
         when(mockManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(mockList);
@@ -126,6 +133,8 @@ public class ExternalViewerUtilsTest {
 
     @Test
     public void whenStartBrowserAndUseExternalBrowserTrue_NotifyExternalBrowserSuccess() {
+        PrebidMobile.useExternalBrowser = true;
+
         ExternalViewerUtils.startBrowser(mockContext, "https://url.com", true, mockResultListener);
         verify(mockContext).startActivity(any(Intent.class));
         verify(mockResultListener).onSuccess(OnBrowserActionResultListener.BrowserActionResult.EXTERNAL_BROWSER);
