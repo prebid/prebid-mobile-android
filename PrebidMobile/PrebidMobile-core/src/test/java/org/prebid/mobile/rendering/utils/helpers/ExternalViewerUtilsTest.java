@@ -123,4 +123,11 @@ public class ExternalViewerUtilsTest {
         verify(mockContext).startActivity(any(Intent.class));
         verify(mockResultListener).onSuccess(OnBrowserActionResultListener.BrowserActionResult.INTERNAL_BROWSER);
     }
+
+    @Test
+    public void whenStartBrowserAndUseExternalBrowserTrue_NotifyExternalBrowserSuccess() {
+        ExternalViewerUtils.startBrowser(mockContext, "https://url.com", true, mockResultListener);
+        verify(mockContext).startActivity(any(Intent.class));
+        verify(mockResultListener).onSuccess(OnBrowserActionResultListener.BrowserActionResult.EXTERNAL_BROWSER);
+    }
 }

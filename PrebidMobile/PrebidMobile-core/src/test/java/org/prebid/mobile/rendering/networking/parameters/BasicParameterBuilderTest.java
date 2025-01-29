@@ -616,6 +616,23 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
+    public void whenAppendParametersAndUseExternalBrowserTrueAndBrowserActivityAvailable_ClickBrowserEqualsOne() {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdFormat(AdFormat.BANNER);
+        adConfiguration.addSize(new AdSize(320, 50));
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        Imp actualImp = adRequestInput.getBidRequest().getImp().get(0);
+        assertEquals(1, actualImp.clickBrowser.intValue());
+    }
+
+    @Test
     public void whenAppendParametersAndUseExternalBrowserFalseAndBrowserActivityNotAvailable_ClickBrowserEqualsOne() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.setAdFormat(AdFormat.BANNER);
