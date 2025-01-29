@@ -36,6 +36,7 @@ public class MraidEnv {
                 + getStringPropertyWithSeparator("appId", AppInfoManager.getPackageName())
                 + getStringPropertyWithSeparator("ifa", AdIdManager.getAdId())
                 + getBooleanPropertyWithSeparator("limitAdTracking", AdIdManager.isLimitAdTrackingEnabled(), ",")
+                + getBooleanPropertyWithSeparator("coppa", PrebidMobile.isCoppaEnabled, "")
                 + "};";
     }
 
