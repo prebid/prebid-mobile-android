@@ -22,18 +22,18 @@ public class SharedId {
     private static ExternalUserId sessionId = null;
 
     static ExternalUserId getIdentifier() {
-        boolean persistentStorageAllowed = TargetingParams.getDeviceAccessConsent();
+        Boolean persistentStorageAllowed = TargetingParams.getDeviceAccessConsent();
 
         // If sharedId was used previously in this session, then use that id
         if (sessionId != null) {
-            if (persistentStorageAllowed) {
+            if (persistentStorageAllowed != null && persistentStorageAllowed) {
                 StorageUtils.storeSharedId(sessionId.getIdentifier());
             }
             return sessionId;
         }
 
         // Otherwise if an id is available in persistent storage, then use that id
-        if (persistentStorageAllowed) {
+        if (persistentStorageAllowed != null && persistentStorageAllowed) {
             String storedSharededId = StorageUtils.fetchSharedId();
             if (storedSharededId != null) {
                 ExternalUserId eid = externalUserIdFrom(storedSharededId);
@@ -45,7 +45,7 @@ public class SharedId {
         // Otherwise generate a new id
         ExternalUserId eid = externalUserIdFrom(UUID.randomUUID().toString());
         sessionId = eid;
-        if (persistentStorageAllowed) {
+        if (persistentStorageAllowed != null && persistentStorageAllowed) {
             StorageUtils.storeSharedId(eid.getIdentifier());
         }
         return eid;

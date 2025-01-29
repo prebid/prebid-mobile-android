@@ -405,7 +405,7 @@ public class TargetingParams {
      *
      * Note: SharedId is only sent with auction requests if `TargetingParams.sendSharedId` is set to true.
      */
-    public static ExternalUserId fetchSharedId() {
+    public static ExternalUserId getSharedId() {
         return SharedId.getIdentifier();
     }
 
