@@ -108,6 +108,15 @@ public class TargetingParamsTest {
     }
 
     @Test
+    public void setBuyerUid_EqualToGetBuyerUid() {
+        final String expected = "12345";
+
+        TargetingParams.setBuyerId(expected);
+
+        assertEquals(expected, TargetingParams.getBuyerId());
+    }
+
+    @Test
     public void setPublisherName_EqualToGetPublisherName() {
         final String expected = "prebid";
 
@@ -119,6 +128,7 @@ public class TargetingParamsTest {
     @After
     public void cleanup() {
         TargetingParams.setStoreUrl(null);
+        TargetingParams.setBuyerId(null);
         TargetingParams.setPublisherName(null);
         TargetingParams.setUserAge(null);
         TargetingParams.setUserCustomData(null);
@@ -128,6 +138,7 @@ public class TargetingParamsTest {
         TargetingParams.setUserLatLng(null, null);
 
         assertNull(TargetingParams.getStoreUrl());
+        assertNull(TargetingParams.getBuyerId());
         assertNull(TargetingParams.getPublisherName());
         assertNull(TargetingParams.getUserAge());
         assertNull(TargetingParams.getUserCustomData());

@@ -38,6 +38,9 @@ object OpenRtbConfigs {
         if (openRtbExtra.gender != null) {
             TargetingParams.setGender(TargetingParams.GENDER.genderByKey(openRtbExtra.gender))
         }
+        if (openRtbExtra.buyerId != null) {
+            TargetingParams.setBuyerId(openRtbExtra.buyerId)
+        }
         if (openRtbExtra.customData != null) {
             TargetingParams.setUserCustomData(openRtbExtra.customData)
         }
