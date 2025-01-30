@@ -51,6 +51,10 @@ import java.util.Map;
 public class PrebidMobile {
 
     public static boolean isCoppaEnabled = false;
+    /**
+     * In the upcoming major release, the property will be removed.
+     */
+    @Deprecated
     public static boolean useExternalBrowser = false;
 
     /**
