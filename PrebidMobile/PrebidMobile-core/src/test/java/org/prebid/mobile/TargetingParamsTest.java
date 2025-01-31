@@ -26,7 +26,12 @@ import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import androidx.annotation.NonNull;
+
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,6 +77,7 @@ public class TargetingParamsTest extends BaseSetup {
 
         TargetingParams.clearStoredExternalUserIds();
         TargetingParams.clearAccessControlList();
+        TargetingParams.setExternalUserIds(null);
         TargetingParams.clearUserData();
         TargetingParams.clearContextData();
         TargetingParams.clearContextKeywords();
@@ -400,19 +406,14 @@ public class TargetingParamsTest extends BaseSetup {
 
     @Test
     public void testStoreAndFetchExternalUserIds() {
-        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
-        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
-
+        TargetingParams.setExternalUserIds(createTestExternalUserIds());
 
         ArrayList<String> arrSource = new ArrayList<>(Arrays.asList("adserver.org", "netid.de", "criteo.com", "liveramp.com", "sharedid.org"));
 
-        List<ExternalUserId> externalUserIdList = TargetingParams.fetchStoredExternalUserIds();
+        List<ExternalUserId> externalUserIdList = TargetingParams.getExternalUserIds();
         assertTrue(externalUserIdList.size() == arrSource.size());
 
-        for (ExternalUserId externalUserId: externalUserIdList) {
+        for (ExternalUserId externalUserId : externalUserIdList) {
             assertTrue(arrSource.contains(externalUserId.getSource()));
             arrSource.remove(externalUserId.getSource());
         }
@@ -422,19 +423,14 @@ public class TargetingParamsTest extends BaseSetup {
 
     @Test
     public void testStoreDuplicateAndFetchExternalUserIds() {
-        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
-        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
-        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "2222222", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        TargetingParams.setExternalUserIds(createTestExternalUserIds());
 
         ArrayList<String> arrSource = new ArrayList<>(Arrays.asList("adserver.org", "netid.de", "criteo.com", "liveramp.com", "sharedid.org"));
 
-        List<ExternalUserId> externalUserIdList = TargetingParams.fetchStoredExternalUserIds();
+        List<ExternalUserId> externalUserIdList = TargetingParams.getExternalUserIds();
         assertTrue(externalUserIdList.size() == arrSource.size());
 
-        for (ExternalUserId externalUserId: externalUserIdList) {
+        for (ExternalUserId externalUserId : externalUserIdList) {
             assertTrue(arrSource.contains(externalUserId.getSource()));
             arrSource.remove(externalUserId.getSource());
         }
@@ -444,24 +440,19 @@ public class TargetingParamsTest extends BaseSetup {
 
     @Test
     public void testStoreDuplicateAndOverwriteFetchExternalUserIds() {
-        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
-        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
-        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "2222222", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        TargetingParams.setExternalUserIds(createTestExternalUserIds());
 
         ArrayList<String> arrSource = new ArrayList<>(Arrays.asList("adserver.org", "netid.de", "criteo.com", "liveramp.com", "sharedid.org"));
 
-        List<ExternalUserId> externalUserIdList = TargetingParams.fetchStoredExternalUserIds();
+        List<ExternalUserId> externalUserIdList = TargetingParams.getExternalUserIds();
         assertTrue(externalUserIdList.size() == arrSource.size());
 
-        for (ExternalUserId externalUserId: externalUserIdList) {
+        for (ExternalUserId externalUserId : externalUserIdList) {
             assertTrue(arrSource.contains(externalUserId.getSource()));
             arrSource.remove(externalUserId.getSource());
 
             if (externalUserId.getSource().equals("adserver.org")) {
-                assertTrue(externalUserId.getIdentifier().equals("2222222"));
+                assertTrue(externalUserId.getIdentifier().equals("111111111111"));
             }
         }
 
@@ -470,21 +461,18 @@ public class TargetingParamsTest extends BaseSetup {
 
     @Test
     public void testStoreRemoveAndFetchExternalUserIds() {
-        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
-        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+        TargetingParams.setExternalUserIds(createTestExternalUserIds());
+
         // removing two externalUserId
         TargetingParams.removeStoredExternalUserId("adserver.org");
         TargetingParams.removeStoredExternalUserId("criteo.com");
 
         ArrayList<String> arrSource = new ArrayList<>(Arrays.asList("adserver.org", "netid.de", "criteo.com", "liveramp.com", "sharedid.org"));
 
-        List<ExternalUserId> externalUserIdList = TargetingParams.fetchStoredExternalUserIds();
+        List<ExternalUserId> externalUserIdList = TargetingParams.getExternalUserIds();
         assertTrue(externalUserIdList.size() == arrSource.size() - 2); // removed 2 externaUserId
 
-        for (ExternalUserId externalUserId: externalUserIdList) {
+        for (ExternalUserId externalUserId : externalUserIdList) {
             assertTrue(arrSource.contains(externalUserId.getSource()));
             arrSource.remove(externalUserId.getSource());
         }
@@ -494,25 +482,27 @@ public class TargetingParamsTest extends BaseSetup {
 
     @Test
     public void testStoreClearAndFetchExternalUserIds() {
-        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
-        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+        TargetingParams.setExternalUserIds(createTestExternalUserIds());
         // clearing externalUserId
-        TargetingParams.clearStoredExternalUserIds();
+        TargetingParams.setExternalUserIds(new ArrayList<>());
 
-        List<ExternalUserId> externalUserIdList = TargetingParams.fetchStoredExternalUserIds();
-        assertNull(externalUserIdList);
+        List<ExternalUserId> externalUserIdList = TargetingParams.getExternalUserIds();
+        assertTrue(externalUserIdList.isEmpty());
+    }
+
+    @Test
+    public void testStoreClearNullAndFetchExternalUserIds() {
+        TargetingParams.setExternalUserIds(createTestExternalUserIds());
+        // clearing externalUserId
+        TargetingParams.setExternalUserIds(null);
+
+        List<ExternalUserId> externalUserIdList = TargetingParams.getExternalUserIds();
+        assertTrue(externalUserIdList.isEmpty());
     }
 
     @Test
     public void testStoreAndFetchExternalUserId() {
-        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
-        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+        TargetingParams.setExternalUserIds(createTestExternalUserIds());
 
         ExternalUserId externalUserId = TargetingParams.fetchStoredExternalUserId("sharedid.org");
         assertTrue(externalUserId.getSource().equals("sharedid.org"));
@@ -520,4 +510,59 @@ public class TargetingParamsTest extends BaseSetup {
         assertTrue(externalUserId.getAtype() == 1);
         assertTrue(externalUserId.getExt().get("third").equals("01ERJWE5FS4RAZKG6SKQ3ZYSKV"));
     }
+
+    @Test
+    public void testNewConstructor() {
+        TargetingParams.setExternalUserIds(createNewExternalUserIds());
+
+        List<ExternalUserId> externalUserIds = TargetingParams.getExternalUserIds();
+        JSONArray jsonArray = new JSONArray();
+        for (ExternalUserId id : externalUserIds) {
+            JSONObject idJson = id.getJson();
+            if (idJson != null) {
+                jsonArray.put(idJson);
+            }
+        }
+
+        assertEquals("[{\"source\":\"adserver1.com\",\"uids\":[{\"id\":\"11\",\"atype\":111,\"ext\":{\"category\":\"shopping\"}},{\"id\":\"12\",\"atype\":222}],\"ext\":{\"user\":\"1000\"}},{\"source\":\"adserver2.com\",\"uids\":[{\"id\":\"22\",\"atype\":333}]}]", jsonArray.toString());
+    }
+
+
+    @NonNull
+    private ArrayList<ExternalUserId> createNewExternalUserIds() {
+        ExternalUserId.UniqueId uid1 = new ExternalUserId.UniqueId("11", 111);
+        uid1.setExt(new HashMap() {{
+            put("category", "shopping");
+        }});
+        ExternalUserId.UniqueId uid2 = new ExternalUserId.UniqueId("12", 222);
+        ExternalUserId id1 = new ExternalUserId("adserver1.com", Arrays.asList(uid1, uid2));
+        id1.setExt(new HashMap() {{
+            put("user", "1000");
+        }});
+
+        ExternalUserId.UniqueId uid3 = new ExternalUserId.UniqueId("22", 333);
+        ExternalUserId id2 = new ExternalUserId("adserver2.com", List.of(uid3));
+
+        // With empty unique ids, must be ignored
+        ExternalUserId id3 = new ExternalUserId("adserver3.com", List.of());
+
+        return new ArrayList<>(Arrays.asList(id1, id2, id3));
+    }
+
+
+    @NotNull
+    private static ArrayList<ExternalUserId> createTestExternalUserIds() {
+        return new ArrayList<>(Arrays.asList(
+                new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{
+                    put("rtiPartner", "TDID");
+                }}),
+                new ExternalUserId("netid.de", "999888777", null, null),
+                new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null),
+                new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null),
+                new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{
+                    put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
+                }})
+        ));
+    }
+
 }

@@ -28,6 +28,7 @@ import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.sdk.UserConsentUtils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,6 +65,7 @@ public class TargetingParams {
     private static JSONArray extendedUserIds;
 
 
+    private static final Map<String, ExternalUserId> externalUserIdMap = new HashMap<>();
     private static final Map<String, Set<String>> userDataMap = new HashMap<>();
     private static final Set<String> accessControlList = new HashSet<>();
     private static final Set<String> userKeywordsSet = new HashSet<>();
@@ -365,50 +367,76 @@ public class TargetingParams {
     }
 
     /**
-     * Use this API for storing the externalUserId in the SharedPreference.
+     * Sets external user ids. Set null for clearing.
+     * See: {@link ExternalUserId}.
+     */
+    public static void setExternalUserIds(@Nullable List<ExternalUserId> userIds) {
+        externalUserIdMap.clear();
+
+        if (userIds == null) return;
+
+        for (ExternalUserId userId : userIds) {
+            if (userId == null) continue;
+            externalUserIdMap.put(userId.getSource(), userId);
+        }
+    }
+
+    /**
+     * Returns external user ids.
+     */
+    public static List<ExternalUserId> getExternalUserIds() {
+        return new ArrayList<>(externalUserIdMap.values());
+    }
+
+    /**
      * Prebid server provide them participating server-side bid adapters.
      *
      * @param externalUserId the externalUserId instance to be stored in the SharedPreference
+     * @deprecated use {@link #setExternalUserIds(List)}
      */
+    @Deprecated(forRemoval = true)
     public static void storeExternalUserId(ExternalUserId externalUserId) {
-        if (externalUserId != null) {
-            StorageUtils.storeExternalUserId(externalUserId);
-        } else {
-            LogUtil.error("Targeting", "External User ID can't be set as null");
-        }
+        if (externalUserId == null) return;
+
+        externalUserIdMap.put(externalUserId.getSource(), externalUserId);
     }
 
     /**
-     * Returns the stored (in the SharedPreference) ExternalUserId instance for a given source
+     * Returns the ExternalUserId instance for a given source
+     * @deprecated use {@link #getExternalUserIds()}
      */
+    @Deprecated(forRemoval = true)
     public static ExternalUserId fetchStoredExternalUserId(@NonNull String source) {
-        if (!TextUtils.isEmpty(source)) {
-            return StorageUtils.fetchStoredExternalUserId(source);
-        }
-        return null;
+        return externalUserIdMap.get(source);
     }
 
     /**
-     * Returns the stored (in the SharedPreferences) External User Id list
+     * Returns the External User UniqueId list
+     * @deprecated use {@link #setExternalUserIds(List)}
      */
+    @Deprecated(forRemoval = true)
     public static List<ExternalUserId> fetchStoredExternalUserIds() {
-        return StorageUtils.fetchStoredExternalUserIds();
+        return getExternalUserIds();
     }
 
     /**
-     * Removes the stored (in the SharedPreference) ExternalUserId instance for a given source
+     * Removes the ExternalUserId instance for a given source
+     * @deprecated use {@link #setExternalUserIds(List)}
      */
+    @Deprecated(forRemoval = true)
     public static void removeStoredExternalUserId(@NonNull String source) {
         if (!TextUtils.isEmpty(source)) {
-            StorageUtils.removeStoredExternalUserId(source);
+            externalUserIdMap.remove(source);
         }
     }
 
     /**
-     * Clear the Stored ExternalUserId list from the SharedPreference
+     * Clear the ExternalUserId list from the SharedPreference
+     * @deprecated use {@link #setExternalUserIds(List)}
      */
+    @Deprecated(forRemoval = true)
     public static void clearStoredExternalUserIds() {
-        StorageUtils.clearStoredExternalUserIds();
+        externalUserIdMap.clear();
     }
 
     /* -------------------- Context and application data -------------------- */
