@@ -52,6 +52,7 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
     private fun configureVideoParameters(): VideoParameters {
         return VideoParameters(listOf("video/x-flv", "video/mp4")).apply {
             placement = Signals.Placement.Interstitial
+            plcmt = Signals.Plcmt.Interstitial
 
             api = listOf(
                 Signals.Api.VPAID_1,

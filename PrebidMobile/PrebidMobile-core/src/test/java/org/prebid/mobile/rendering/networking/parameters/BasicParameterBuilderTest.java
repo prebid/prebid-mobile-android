@@ -1101,6 +1101,7 @@ public class BasicParameterBuilderTest {
         parameters.setMinBitrate(201);
         parameters.setMaxBitrate(202);
         parameters.setPlacement(Signals.Placement.InBanner);
+        parameters.setPlcmt(Signals.Plcmt.Standalone);
         parameters.setLinearity(1);
         parameters.setStartDelay(Signals.StartDelay.PreRoll);
 
