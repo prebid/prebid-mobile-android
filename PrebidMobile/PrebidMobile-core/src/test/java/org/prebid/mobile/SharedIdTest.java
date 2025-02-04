@@ -49,7 +49,7 @@ public class SharedIdTest extends BaseSetup {
     @Test
     public void sharedIdUsesStoredIdentifierIfAvailable() throws Exception {
         String storedId = "stored-identifier";
-        when(StorageUtils.fetchSharedId()).thenReturn(storedId);
+        when(SharedId.fetchSharedId()).thenReturn(storedId);
         when(TargetingParams.getDeviceAccessConsent()).thenReturn(true);
         ExternalUserId id = SharedId.getIdentifier();
         assertEquals(storedId, id.getIdentifier());
@@ -57,7 +57,7 @@ public class SharedIdTest extends BaseSetup {
 
     @Test
     public void sharedIdGeneratesNewIdentifierIfNoStoredId() throws Exception {
-        when(StorageUtils.fetchSharedId()).thenReturn(null);
+        when(SharedId.fetchSharedId()).thenReturn(null);
         when(TargetingParams.getDeviceAccessConsent()).thenReturn(true);
         ExternalUserId id = SharedId.getIdentifier();
         assertNotNull(id.getIdentifier());

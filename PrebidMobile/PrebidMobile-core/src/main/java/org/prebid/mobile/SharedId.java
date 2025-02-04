@@ -16,9 +16,18 @@
 
 package org.prebid.mobile;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import androidx.annotation.Nullable;
+
 import java.util.UUID;
 
 public class SharedId {
+    static final String TAG = SharedId.class.getSimpleName();
+
+    static final String PB_SharedIdKey = "PB_SharedIdKey";
     private static ExternalUserId sessionId = null;
 
     static ExternalUserId getIdentifier() {
@@ -27,14 +36,14 @@ public class SharedId {
         // If sharedId was used previously in this session, then use that id
         if (sessionId != null) {
             if (persistentStorageAllowed != null && persistentStorageAllowed) {
-                StorageUtils.storeSharedId(sessionId.getIdentifier());
+                storeSharedId(sessionId.getIdentifier());
             }
             return sessionId;
         }
 
         // Otherwise if an id is available in persistent storage, then use that id
         if (persistentStorageAllowed != null && persistentStorageAllowed) {
-            String storedSharededId = StorageUtils.fetchSharedId();
+            String storedSharededId = fetchSharedId();
             if (storedSharededId != null) {
                 ExternalUserId eid = externalUserIdFrom(storedSharededId);
                 sessionId = eid;
@@ -46,17 +55,50 @@ public class SharedId {
         ExternalUserId eid = externalUserIdFrom(UUID.randomUUID().toString());
         sessionId = eid;
         if (persistentStorageAllowed != null && persistentStorageAllowed) {
-            StorageUtils.storeSharedId(eid.getIdentifier());
+            storeSharedId(eid.getIdentifier());
         }
         return eid;
     }
 
     static void resetIdentifier() {
         sessionId = null;
-        StorageUtils.storeSharedId(null);
+        storeSharedId(null);
+    }
+
+    static String fetchSharedId() {
+        SharedPreferences pref = getSharedPreferences();
+        if (pref == null) return null;
+
+        return pref.getString(PB_SharedIdKey, null);
+    }
+
+    static void storeSharedId(String sharedId) {
+        // Storing the SharedId
+        SharedPreferences pref = getSharedPreferences();
+        if (pref == null) return;
+
+        SharedPreferences.Editor editor = pref.edit();
+        if (sharedId != null) {
+            editor.putString(PB_SharedIdKey, sharedId);
+        } else {
+            editor.remove(PB_SharedIdKey);
+        }
+        editor.apply();
     }
 
     private static ExternalUserId externalUserIdFrom(String identifier) {
         return new ExternalUserId("pubcid.org", identifier, 1, null);
+    }
+
+    @Nullable
+    private static SharedPreferences getSharedPreferences() {
+        Context context = PrebidMobile.getApplicationContext();
+
+        if (context == null) {
+            LogUtil.error(TAG, "You can't manage external user ids before calling PrebidMobile.initializeSdk().");
+            return null;
+        }
+
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 }
