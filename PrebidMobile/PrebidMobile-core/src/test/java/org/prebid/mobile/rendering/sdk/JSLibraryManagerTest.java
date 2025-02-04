@@ -39,12 +39,13 @@ public class JSLibraryManagerTest {
 
     @Before
     public void setup() throws Exception {
-        Context mock = mock(Context.class);
-        when(mock.getApplicationContext()).thenReturn(mock);
-        when(mock.getResources()).thenReturn(mock(Resources.class));
-
-        manager = Mockito.spy(JSLibraryManager.getInstance(mock));
         Reflection.setStaticVariableTo(JSLibraryManager.class, "sInstance", null);
+
+        Context contextMock = mock(Context.class);
+        when(contextMock.getApplicationContext()).thenReturn(contextMock);
+        when(contextMock.getResources()).thenReturn(mock(Resources.class));
+
+        manager = Mockito.spy(JSLibraryManager.getInstance(contextMock));
     }
 
     @Test
