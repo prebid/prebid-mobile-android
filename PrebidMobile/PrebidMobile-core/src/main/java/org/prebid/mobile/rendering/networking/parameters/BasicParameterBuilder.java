@@ -16,7 +16,6 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -186,6 +185,9 @@ public class BasicParameterBuilder extends ParameterBuilder {
         }
 
         List<ExternalUserId> extendedIds = TargetingParams.getExternalUserIds();
+        if (TargetingParams.getSendSharedId()) {
+            extendedIds.add(TargetingParams.getSharedId());
+        }
         if (extendedIds != null && extendedIds.size() > 0) {
             JSONArray idsJson = new JSONArray();
             for (ExternalUserId id : extendedIds) {
