@@ -28,6 +28,7 @@ import org.prebid.mobile.DataObject;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
@@ -96,6 +97,11 @@ public abstract class MediationBaseAdUnit {
         if (TextUtils.isEmpty(adUnitConfig.getConfigId())) {
             LogUtil.error(TAG, "Empty config id");
             listener.onComplete(FetchDemandResult.INVALID_CONFIG_ID);
+            return;
+        }
+        if (PrebidMobile.getAuctionSettingsId() != null && TextUtils.isEmpty(PrebidMobile.getAuctionSettingsId())) {
+            LogUtil.error("Empty auction settings id.");
+            listener.onComplete(FetchDemandResult.INVALID_ACCOUNT_ID);
             return;
         }
 

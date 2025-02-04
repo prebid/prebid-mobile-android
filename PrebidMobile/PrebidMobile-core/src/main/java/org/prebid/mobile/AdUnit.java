@@ -164,6 +164,11 @@ public abstract class AdUnit {
                 return;
             }
         }
+        if (PrebidMobile.getAuctionSettingsId() != null && TextUtils.isEmpty(PrebidMobile.getAuctionSettingsId())) {
+            LogUtil.error("Empty auction settings id.");
+            listener.onComplete(ResultCode.INVALID_AUCTION_SETTINGS_ID);
+            return;
+        }
 
         HashSet<AdSize> sizes = configuration.getSizes();
         for (AdSize size : sizes) {

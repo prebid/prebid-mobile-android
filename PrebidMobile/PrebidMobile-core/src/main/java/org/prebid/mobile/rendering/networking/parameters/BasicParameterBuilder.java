@@ -127,7 +127,11 @@ public class BasicParameterBuilder extends ParameterBuilder {
         bidRequest.setImpOrtbConfig(adConfiguration.getImpOrtbConfig());
         bidRequest.setOpenRtb(adConfiguration.getOrtbConfig());
         boolean isVideo = adConfiguration.isAdType(AdFormat.VAST);
-        bidRequest.getExt().put("prebid", Prebid.getJsonObjectForBidRequest(PrebidMobile.getPrebidServerAccountId(), isVideo, adConfiguration));
+        String storedRequestId = PrebidMobile.getAuctionSettingsId();
+        if (storedRequestId == null) {
+            storedRequestId = PrebidMobile.getPrebidServerAccountId();
+        }
+        bidRequest.getExt().put("prebid", Prebid.getJsonObjectForBidRequest(storedRequestId, isVideo, adConfiguration));
         //if coppaEnabled - set 1, else No coppa is sent
         if (PrebidMobile.isCoppaEnabled) {
             bidRequest.getRegs().coppa = 1;
