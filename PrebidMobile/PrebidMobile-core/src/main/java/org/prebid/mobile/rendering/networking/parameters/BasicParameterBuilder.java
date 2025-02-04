@@ -184,7 +184,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
             user.getExt().put("data", Utils.toJson(userDataDictionary));
         }
 
-        List<ExternalUserId> extendedIds = TargetingParams.fetchStoredExternalUserIds();
+        List<ExternalUserId> extendedIds = TargetingParams.getExternalUserIds();
         if (TargetingParams.getSendSharedId()) {
             extendedIds.add(TargetingParams.getSharedId());
         }
@@ -192,7 +192,10 @@ public class BasicParameterBuilder extends ParameterBuilder {
             JSONArray idsJson = new JSONArray();
             for (ExternalUserId id : extendedIds) {
                 if (id != null) {
-                    idsJson.put(id.getJson());
+                    JSONObject idJson = id.getJson();
+                    if (idJson != null) {
+                        idsJson.put(idJson);
+                    }
                 }
             }
             user.getExt().put("eids", idsJson);

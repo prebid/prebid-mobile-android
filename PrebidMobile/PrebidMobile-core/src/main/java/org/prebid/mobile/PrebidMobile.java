@@ -50,7 +50,15 @@ import java.util.Map;
  */
 public class PrebidMobile {
 
+    /**
+     * In the upcoming major release, the property will be removed.
+     */
+    @Deprecated
     public static boolean isCoppaEnabled = false;
+    /**
+     * In the upcoming major release, the property will be removed.
+     */
+    @Deprecated
     public static boolean useExternalBrowser = false;
 
     /**
@@ -98,7 +106,7 @@ public class PrebidMobile {
     /**
      * Tested Google SDK version.
      */
-    public static final String TESTED_GOOGLE_SDK_VERSION = "23.1.0";
+    public static final String TESTED_GOOGLE_SDK_VERSION = "23.6.0";
 
     /**
      * Please use {@link PrebidMobile#setLogLevel(LogLevel)}, this field will become private in next releases.
@@ -131,7 +139,6 @@ public class PrebidMobile {
     private static Host host = Host.CUSTOM;
 
     private static final Map<String, String> storedBidResponses = new LinkedHashMap<>();
-    private static List<ExternalUserId> externalUserIds = new ArrayList<>();
     private static HashMap<String, String> customHeaders = new HashMap<>();
     private static boolean includeWinners = false;
     private static boolean includeBidderKeys = false;
@@ -214,19 +221,23 @@ public class PrebidMobile {
     }
 
     /**
-     * List containing objects that hold External User Id parameters for the current application user.
+     * List containing objects that hold External User UniqueId parameters for the current application user.
+     * @deprecated use {@link TargetingParams#setExternalUserIds(List)}
      */
+    @Deprecated(forRemoval = true)
     public static void setExternalUserIds(List<ExternalUserId> externalUserIds) {
-        PrebidMobile.externalUserIds = externalUserIds;
+        TargetingParams.setExternalUserIds(externalUserIds);
     }
 
     /**
      * Returns the List that hold External UserId parameters for the current application user
      *
-     * @@return externalUserIds as Array.
+     * @return externalUserIds as Array.
+     * @deprecated use {@link TargetingParams#getExternalUserIds()}
      */
+    @Deprecated(forRemoval = true)
     public static List<ExternalUserId> getExternalUserIds() {
-        return PrebidMobile.externalUserIds;
+        return TargetingParams.getExternalUserIds();
     }
 
     /**

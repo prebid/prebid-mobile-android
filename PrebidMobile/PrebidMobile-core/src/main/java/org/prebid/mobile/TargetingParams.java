@@ -28,6 +28,7 @@ import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.sdk.UserConsentUtils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -65,6 +66,7 @@ public class TargetingParams {
     private static Boolean sendSharedId = false;
 
 
+    private static final Map<String, ExternalUserId> externalUserIdMap = new HashMap<>();
     private static final Map<String, Set<String>> userDataMap = new HashMap<>();
     private static final Set<String> accessControlList = new HashSet<>();
     private static final Set<String> userKeywordsSet = new HashSet<>();
@@ -76,7 +78,10 @@ public class TargetingParams {
 
 
     /* -------------------- User data -------------------- */
-
+     /**
+        * @deprecated by ORTB
+     */
+    @Deprecated
     public static void setUserAge(@Nullable Integer age) {
         if (age == null) {
             yearOfBirth = 0;
@@ -96,6 +101,10 @@ public class TargetingParams {
         TargetingParams.yearOfBirth = yearOfBirth;
     }
 
+    /**
+        * @deprecated by ORTB
+    */
+    @Deprecated
     @Nullable
     public static Integer getUserAge() {
         return userAge;
@@ -105,7 +114,10 @@ public class TargetingParams {
      * Get the year of birth for targeting
      *
      * @return yob
+     *
+     * @deprecated by ORTB
      */
+    @Deprecated
     public static int getYearOfBirth() {
         return yearOfBirth;
     }
@@ -114,7 +126,10 @@ public class TargetingParams {
      * Set the year of birth and user age for targeting
      *
      * @param yob yob of the user
+     *
+     * @deprecated by ORTB
      */
+    @Deprecated
     public static void setYearOfBirth(int yob) throws Exception {
         if (yob == 0) {
             TargetingParams.yearOfBirth = 0;
@@ -133,7 +148,10 @@ public class TargetingParams {
 
     /**
      * Gender.
+     * 
+     * @deprecated by ORTB
      */
+    @Deprecated
     public enum GENDER {
         FEMALE,
         MALE,
@@ -166,7 +184,10 @@ public class TargetingParams {
      * Get the current user's gender, if it's available.  The default value is UNKNOWN.
      *
      * @return The user's gender.
+     *
+     * @deprecated by ORTB
      */
+    @Deprecated
     @NonNull
     public static GENDER getGender() {
         return gender;
@@ -178,7 +199,10 @@ public class TargetingParams {
      * value is UNKNOWN.
      *
      * @param gender The user's gender.
+     *
+     * @deprecated by ORTB
      */
+    @Deprecated
     public static void setGender(@Nullable GENDER gender) {
         if (gender != null) {
             TargetingParams.gender = gender;
@@ -293,7 +317,10 @@ public class TargetingParams {
      * be used to include “escaped” quotation marks.
      *
      * @param data Custom data to be passed
+     *
+     * @deprecated this is exchange-specific information
      */
+    @Deprecated
     public static void setUserCustomData(@Nullable String data) {
         userCustomData = data;
     }
@@ -320,65 +347,97 @@ public class TargetingParams {
     }
 
     /**
+     * In the upcoming major release, the method will be removed.
      * Sets buyerId
      *
      * @param buyerId Buyer-specific ID for the user as mapped by the exchange for
      *                the buyer. At least one of buyeruid or id is recommended.
      */
+    @Deprecated
     public static void setBuyerId(@Nullable String buyerId) {
         buyerUserId = buyerId;
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     @Nullable
     public static String getBuyerId() {
         return buyerUserId;
     }
 
     /**
-     * Use this API for storing the externalUserId in the SharedPreference.
+     * Sets external user ids. Set null for clearing.
+     * See: {@link ExternalUserId}.
+     */
+    public static void setExternalUserIds(@Nullable List<ExternalUserId> userIds) {
+        externalUserIdMap.clear();
+
+        if (userIds == null) return;
+
+        for (ExternalUserId userId : userIds) {
+            if (userId == null) continue;
+            externalUserIdMap.put(userId.getSource(), userId);
+        }
+    }
+
+    /**
+     * Returns external user ids.
+     */
+    public static List<ExternalUserId> getExternalUserIds() {
+        return new ArrayList<>(externalUserIdMap.values());
+    }
+
+    /**
      * Prebid server provide them participating server-side bid adapters.
      *
      * @param externalUserId the externalUserId instance to be stored in the SharedPreference
+     * @deprecated use {@link #setExternalUserIds(List)}
      */
+    @Deprecated(forRemoval = true)
     public static void storeExternalUserId(ExternalUserId externalUserId) {
-        if (externalUserId != null) {
-            StorageUtils.storeExternalUserId(externalUserId);
-        } else {
-            LogUtil.error("Targeting", "External User ID can't be set as null");
-        }
+        if (externalUserId == null) return;
+
+        externalUserIdMap.put(externalUserId.getSource(), externalUserId);
     }
 
     /**
-     * Returns the stored (in the SharedPreference) ExternalUserId instance for a given source
+     * Returns the ExternalUserId instance for a given source
+     * @deprecated use {@link #getExternalUserIds()}
      */
+    @Deprecated(forRemoval = true)
     public static ExternalUserId fetchStoredExternalUserId(@NonNull String source) {
-        if (!TextUtils.isEmpty(source)) {
-            return StorageUtils.fetchStoredExternalUserId(source);
-        }
-        return null;
+        return externalUserIdMap.get(source);
     }
 
     /**
-     * Returns the stored (in the SharedPreferences) External User Id list
+     * Returns the External User UniqueId list
+     * @deprecated use {@link #setExternalUserIds(List)}
      */
+    @Deprecated(forRemoval = true)
     public static List<ExternalUserId> fetchStoredExternalUserIds() {
-        return StorageUtils.fetchStoredExternalUserIds();
+        return getExternalUserIds();
     }
 
     /**
-     * Removes the stored (in the SharedPreference) ExternalUserId instance for a given source
+     * Removes the ExternalUserId instance for a given source
+     * @deprecated use {@link #setExternalUserIds(List)}
      */
+    @Deprecated(forRemoval = true)
     public static void removeStoredExternalUserId(@NonNull String source) {
         if (!TextUtils.isEmpty(source)) {
-            StorageUtils.removeStoredExternalUserId(source);
+            externalUserIdMap.remove(source);
         }
     }
 
     /**
-     * Clear the Stored ExternalUserId list from the SharedPreference
+     * Clear the ExternalUserId list from the SharedPreference
+     * @deprecated use {@link #setExternalUserIds(List)}
      */
+    @Deprecated(forRemoval = true)
     public static void clearStoredExternalUserIds() {
-        StorageUtils.clearStoredExternalUserIds();
+        externalUserIdMap.clear();
     }
 
     /**

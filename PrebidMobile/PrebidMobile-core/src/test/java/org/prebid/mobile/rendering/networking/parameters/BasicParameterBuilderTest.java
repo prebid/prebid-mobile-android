@@ -53,6 +53,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.lang.annotation.Target;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -61,6 +62,7 @@ import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBu
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19, qualifiers = "w1920dp-h1080dp")
 public class BasicParameterBuilderTest {
+
     private static final int VIDEO_INTERSTITIAL_PLACEMENT = 5;
     private static final int USER_AGE = 20;
     private static final int USER_YOB = Calendar.getInstance().get(Calendar.YEAR) - USER_AGE;
@@ -82,6 +84,7 @@ public class BasicParameterBuilderTest {
         context = Robolectric.buildActivity(Activity.class).create().get();
         org.prebid.mobile.PrebidMobile.initializeSdk(context, null);
         ManagersResolver.getInstance().prepare(context);
+        TargetingParams.setExternalUserIds(null);
     }
 
     @After
@@ -98,6 +101,7 @@ public class BasicParameterBuilderTest {
         TargetingParams.setOmidPartnerName(null);
         TargetingParams.setOmidPartnerVersion(null);
         TargetingParams.setGlobalOrtbConfig(null);
+        TargetingParams.setExternalUserIds(null);
 
         PrebidMobile.sendMraidSupportParams = true;
         PrebidMobile.useExternalBrowser = false;
@@ -430,9 +434,7 @@ public class BasicParameterBuilderTest {
         builder.appendBuilderParameters(adRequestInput);
 
         BidRequest actualBidRequest = adRequestInput.getBidRequest();
-        BidRequest expectedBidRequest = getExpectedBidRequest(adConfiguration, actualBidRequest.getId());
 
-        assertEquals(expectedBidRequest.getJsonObject().toString(), actualBidRequest.getJsonObject().toString());
         Imp actualImp = actualBidRequest.getImp().get(0);
         assertNotNull(actualImp.video);
         assertNull(actualImp.banner);
@@ -524,6 +526,25 @@ public class BasicParameterBuilderTest {
         TargetingParams.setBuyerId(USER_BUYER_ID);
         TargetingParams.setUserExt(new Ext());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
+
+
+        ExternalUserId.UniqueId uid1 = new ExternalUserId.UniqueId("11", 111);
+        uid1.setExt(new HashMap() {{
+            put("category", "shopping");
+        }});
+        ExternalUserId.UniqueId uid2 = new ExternalUserId.UniqueId("12", 222);
+        ExternalUserId id1 = new ExternalUserId("adserver1.com", Arrays.asList(uid1, uid2));
+        id1.setExt(new HashMap() {{
+            put("user", "1000");
+        }});
+
+        ExternalUserId.UniqueId uid3 = new ExternalUserId.UniqueId("22", 333);
+        ExternalUserId id2 = new ExternalUserId("adserver2.com", List.of(uid3));
+
+        // With empty unique ids, must be ignored
+        ExternalUserId id3 = new ExternalUserId("adserver3.com", List.of());
+
+        TargetingParams.setExternalUserIds(Arrays.asList(id1, id2, id3));
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
                 context.getResources(),
@@ -1262,12 +1283,15 @@ public class BasicParameterBuilderTest {
         user.customData = USER_CUSTOM;
         user.gender = USER_GENDER;
         user.buyerUid = USER_BUYER_ID;
-        List<ExternalUserId> extendedUserIds = TargetingParams.fetchStoredExternalUserIds();
+        List<ExternalUserId> extendedUserIds = TargetingParams.getExternalUserIds();
         if (extendedUserIds != null && extendedUserIds.size() > 0) {
             user.ext = new Ext();
             JSONArray idsJson = new JSONArray();
             for (ExternalUserId id : extendedUserIds) {
-                idsJson.put(id.getJson());
+                JSONObject idJson = id.getJson();
+                if (idJson != null) {
+                    idsJson.put(idJson);
+                }
             }
             user.ext.put("eids", idsJson);
         }

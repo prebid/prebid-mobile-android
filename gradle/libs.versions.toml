@@ -1,5 +1,5 @@
 [versions]
-google-play-services-ads = "23.1.0"
+google-play-services-ads = "+"
 robolectric = "4.12.2"
 
 [libraries]
