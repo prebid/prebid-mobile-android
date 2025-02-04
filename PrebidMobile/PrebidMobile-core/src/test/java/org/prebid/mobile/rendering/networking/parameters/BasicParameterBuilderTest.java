@@ -1101,6 +1101,7 @@ public class BasicParameterBuilderTest {
         parameters.setMinBitrate(201);
         parameters.setMaxBitrate(202);
         parameters.setPlacement(Signals.Placement.InBanner);
+        parameters.setPlcmt(Signals.Plcmt.Standalone);
         parameters.setLinearity(1);
         parameters.setStartDelay(Signals.StartDelay.PreRoll);
 
@@ -1258,6 +1259,11 @@ public class BasicParameterBuilderTest {
         video.delivery = new int[]{BasicParameterBuilder.VIDEO_DELIVERY_DOWNLOAD};
         video.pos = AdPosition.FULLSCREEN.getValue();
 
+        if (adConfiguration.getVideoParameters() != null) {
+            if (adConfiguration.getVideoParameters().getPlacement() != null) {
+                video.plcmt = adConfiguration.getVideoParameters().getPlacement().getValue();
+            }
+        }
         if (!adConfiguration.isPlacementTypeValid()) {
             video.placement = VIDEO_INTERSTITIAL_PLACEMENT;
             Configuration deviceConfiguration = context.getResources().getConfiguration();

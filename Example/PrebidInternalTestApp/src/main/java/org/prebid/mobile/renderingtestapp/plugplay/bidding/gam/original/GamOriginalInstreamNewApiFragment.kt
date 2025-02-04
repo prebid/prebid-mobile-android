@@ -70,6 +70,7 @@ class GamOriginalInstreamNewApiFragment : AdFragment() {
         parameters.protocols = listOf(Signals.Protocols.VAST_2_0)
         parameters.playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOff)
         parameters.placement = Signals.Placement.InStream
+        parameters.plcmt = Signals.Plcmt.InStream
 
         adUnit = InStreamVideoAdUnit(configId, width, height)
         adUnit?.videoParameters = parameters

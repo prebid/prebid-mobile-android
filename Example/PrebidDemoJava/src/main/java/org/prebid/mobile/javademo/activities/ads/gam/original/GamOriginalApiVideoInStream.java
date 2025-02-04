@@ -61,6 +61,7 @@ public class GamOriginalApiVideoInStream extends BaseAdActivity {
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
         parameters.setPlacement(Signals.Placement.InStream);
+        parameters.setPlcmt(Signals.Plcmt.InStream);
         adUnit.setVideoParameters(parameters);
 
         adUnit.fetchDemand((resultCode, keysMap) -> {

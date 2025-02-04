@@ -84,6 +84,12 @@ public class VideoParameters {
     private Signals.Placement placement;
 
     /**
+     * Placement type for video content.
+     */
+    @Nullable
+    private Signals.Plcmt plcmt;
+
+    /**
      * Placement type for the impression.
      */
     @Nullable
@@ -196,6 +202,18 @@ public class VideoParameters {
 
     public void setAdSize(@Nullable AdSize adSize) {
         this.adSize = adSize;
+    }
+
+    @Nullable
+    public Signals.Plcmt getPlcmt() {
+        return plcmt;
+    }
+
+    /**
+     * Sets {@link org.prebid.mobile.Signals.Plcmt}.
+     */
+    public void setPlcmt(@Nullable Signals.Plcmt plcmt) {
+        this.plcmt = plcmt;
     }
 
 }
