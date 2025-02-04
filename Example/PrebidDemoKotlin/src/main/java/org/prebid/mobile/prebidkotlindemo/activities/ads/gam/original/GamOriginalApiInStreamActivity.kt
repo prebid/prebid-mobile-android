@@ -91,6 +91,7 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
     private fun configureVideoParameters(): VideoParameters {
         return VideoParameters(listOf("video/x-flv", "video/mp4")).apply {
             placement = Signals.Placement.InStream
+            plcmt = Signals.Plcmt.InStream
 
             api = listOf(
                 Signals.Api.VPAID_1,

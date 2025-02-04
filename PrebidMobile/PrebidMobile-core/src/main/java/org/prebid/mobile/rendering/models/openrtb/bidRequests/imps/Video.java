@@ -48,6 +48,8 @@ public class Video extends BaseBid {
 
     public Integer placement = null;
 
+    public Integer plcmt = null;
+
     public Integer playbackend;
 
     public Integer startDelay;
@@ -93,6 +95,7 @@ public class Video extends BaseBid {
         toJSON(jsonObject, "maxbitrate", maxbitrate);
 
         toJSON(jsonObject, "placement", placement);
+        toJSON(jsonObject, "plcmt", plcmt);
 
         if (playbackmethod != null) {
 

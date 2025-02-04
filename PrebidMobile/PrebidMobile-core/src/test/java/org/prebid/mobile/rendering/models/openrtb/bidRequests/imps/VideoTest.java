@@ -49,10 +49,11 @@ public class VideoTest {
         video.delivery = new int[]{3};
         video.pos = 7;
         video.placement = 5;
+        video.plcmt = 3;
         video.playbackend = 2;
 
         JSONObject actualObj = video.getJsonObject();
-        String expectedString = "{\"delivery\":[3],\"linearity\":1,\"minbitrate\":1,\"h\":250,\"playbackmethod\":[1,2],\"minduration\":1,\"mimes\":[\"video/mp4\",\"video/3gpp\",\"video/webm\",\"video/mkv\"],\"maxbitrate\":20,\"maxduration\":100,\"playbackend\":2,\"pos\":7,\"w\":300,\"placement\":5,\"protocols\":[2,5]}";
+        String expectedString = "{\"delivery\":[3],\"linearity\":1,\"minbitrate\":1,\"h\":250,\"playbackmethod\":[1,2],\"minduration\":1,\"mimes\":[\"video/mp4\",\"video/3gpp\",\"video/webm\",\"video/mkv\"],\"maxbitrate\":20,\"plcmt\":3,\"maxduration\":100,\"playbackend\":2,\"pos\":7,\"w\":300,\"placement\":5,\"protocols\":[2,5]}";
         assertEquals("got: " + actualObj.toString(), expectedString, actualObj.toString());
         video.getJsonObject();
     }

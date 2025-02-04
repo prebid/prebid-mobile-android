@@ -230,6 +230,9 @@ public class BasicParameterBuilder extends ParameterBuilder {
                 } else if (adConfiguration.isPlacementTypeValid()){
                     video.placement = adConfiguration.getPlacementTypeValue();
                 }
+                if (videoParameters.getPlcmt() != null) {
+                    video.plcmt = videoParameters.getPlcmt().getValue();
+                }
 
                 if (videoParameters.getStartDelay() != null) {
                     video.startDelay = videoParameters.getStartDelay().getValue();
@@ -289,6 +292,9 @@ public class BasicParameterBuilder extends ParameterBuilder {
             //Interstitial video specific values
             video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Leaving Viewport or when Terminated by User
 
+            if (adConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
+                video.plcmt = Signals.Plcmt.Interstitial.getValue();
+            }
             if (!adConfiguration.isPlacementTypeValid()) {
                 video.placement = PlacementType.INTERSTITIAL.getValue();
             } else {
