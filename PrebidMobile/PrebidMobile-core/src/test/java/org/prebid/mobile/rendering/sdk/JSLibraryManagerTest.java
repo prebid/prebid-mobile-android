@@ -23,6 +23,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.prebid.mobile.reflection.Reflection;
+import org.prebid.mobile.reflection.ReflectionUtils;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.LooperMode;
 
@@ -42,6 +44,7 @@ public class JSLibraryManagerTest {
         when(mock.getResources()).thenReturn(mock(Resources.class));
 
         manager = Mockito.spy(JSLibraryManager.getInstance(mock));
+        Reflection.setStaticVariableTo(JSLibraryManager.class, "sInstance", null);
     }
 
     @Test
