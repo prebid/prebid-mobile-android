@@ -19,8 +19,11 @@ package org.prebid.mobile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
+
+import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 
 import java.util.UUID;
 
@@ -92,7 +95,7 @@ public class SharedId {
 
     @Nullable
     private static SharedPreferences getSharedPreferences() {
-        Context context = PrebidMobile.getApplicationContext();
+        Context context = PrebidContextHolder.getContext();
 
         if (context == null) {
             LogUtil.error(TAG, "You can't manage external user ids before calling PrebidMobile.initializeSdk().");
