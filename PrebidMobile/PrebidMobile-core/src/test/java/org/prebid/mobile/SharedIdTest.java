@@ -3,9 +3,14 @@ package org.prebid.mobile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.clearAllCaches;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
+
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,10 +23,11 @@ import org.robolectric.annotation.Config;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
 public class SharedIdTest extends BaseSetup {
+
     @Before
     public void setup() {
         super.setup();
-        mockStatic(SharedId.class);
+        PrebidMobile.initializeSdk(activity, null);
         mockStatic(TargetingParams.class);
     }
 
@@ -48,8 +54,11 @@ public class SharedIdTest extends BaseSetup {
 
     @Test
     public void sharedIdUsesStoredIdentifierIfAvailable() throws Exception {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = pref.edit();
+
         String storedId = "stored-identifier";
-        when(SharedId.fetchSharedId()).thenReturn(storedId);
+        editor.putString(SharedId.PB_SharedIdKey, storedId).apply();
         when(TargetingParams.getDeviceAccessConsent()).thenReturn(true);
         ExternalUserId id = SharedId.getIdentifier();
         assertEquals(storedId, id.getIdentifier());
@@ -57,7 +66,10 @@ public class SharedIdTest extends BaseSetup {
 
     @Test
     public void sharedIdGeneratesNewIdentifierIfNoStoredId() throws Exception {
-        when(SharedId.fetchSharedId()).thenReturn(null);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.remove(SharedId.PB_SharedIdKey).apply();
         when(TargetingParams.getDeviceAccessConsent()).thenReturn(true);
         ExternalUserId id = SharedId.getIdentifier();
         assertNotNull(id.getIdentifier());
