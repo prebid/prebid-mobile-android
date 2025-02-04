@@ -21,7 +21,7 @@ public class SharedIdTest extends BaseSetup {
     @Before
     public void setup() {
         super.setup();
-        mockStatic(StorageUtils.class);
+        mockStatic(SharedId.class);
         mockStatic(TargetingParams.class);
     }
 
