@@ -95,7 +95,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="PrebidMobile.LogLevel.html" class="type-name-link" title="enum class in org.prebid.mobile">PrebidMobile.LogLevel</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">LogLevel for logging control.</div>
+<div class="block">LogLevel for logging control.c
+ NONE - no sdk logs.</div>
 </div>
 </div>
 </section>
@@ -121,7 +122,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
 <div class="col-second even-row-color"><code><a href="#isCoppaEnabled" class="member-name-link">isCoppaEnabled</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+</div>
 <div class="col-first odd-row-color"><code>static <a href="PrebidMobile.LogLevel.html" title="enum class in org.prebid.mobile">PrebidMobile.LogLevel</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#logLevel" class="member-name-link">logLevel</a></code></div>
 <div class="col-last odd-row-color">
@@ -170,7 +173,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
 <div class="col-second odd-row-color"><code><a href="#useExternalBrowser" class="member-name-link">useExternalBrowser</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+</div>
 </div>
 </section>
 </li>
@@ -237,106 +242,120 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block"><a href="#setCustomStatusEndpoint(java.lang.String)"><code>setCustomStatusEndpoint(String)</code></a></div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ExternalUserId.html" title="class in org.prebid.mobile">ExternalUserId</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getExternalUserIds()" class="member-name-link">getExternalUserIds</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="PrebidEventDelegate.html" title="interface in org.prebid.mobile">PrebidEventDelegate</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEventDelegate()" class="member-name-link">getEventDelegate</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the List that hold External UserId parameters for the current application user</div>
+<div class="block"><a href="#setEventDelegate(org.prebid.mobile.PrebidEventDelegate)"><code>setEventDelegate(PrebidEventDelegate)</code></a></div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getIncludeBidderKeysFlag()" class="member-name-link">getIncludeBidderKeysFlag</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ExternalUserId.html" title="class in org.prebid.mobile">ExternalUserId</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#getExternalUserIds()" class="member-name-link">getExternalUserIds</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">use <a href="TargetingParams.html#getExternalUserIds()"><code>TargetingParams.getExternalUserIds()</code></a></div>
+</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getIncludeBidderKeysFlag()" class="member-name-link">getIncludeBidderKeysFlag</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block"><a href="#setIncludeBidderKeysFlag(boolean)"><code>setIncludeBidderKeysFlag(boolean)</code></a></div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getIncludeWinnersFlag()" class="member-name-link">getIncludeWinnersFlag</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getIncludeWinnersFlag()" class="member-name-link">getIncludeWinnersFlag</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block"><a href="#setIncludeWinnersFlag(boolean)"><code>setIncludeWinnersFlag(boolean)</code></a></div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="PrebidMobile.LogLevel.html" title="enum class in org.prebid.mobile">PrebidMobile.LogLevel</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getLogLevel()" class="member-name-link">getLogLevel</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="PrebidMobile.LogLevel.html" title="enum class in org.prebid.mobile">PrebidMobile.LogLevel</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getLogLevel()" class="member-name-link">getLogLevel</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block"><a href="#setLogLevel(org.prebid.mobile.PrebidMobile.LogLevel)"><code>setLogLevel(LogLevel)</code></a></div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static PBSConfig</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPbsConfig()" class="member-name-link">getPbsConfig</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPbsDebug()" class="member-name-link">getPbsDebug</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static PBSConfig</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPbsConfig()" class="member-name-link">getPbsConfig</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPrebidServerAccountId()" class="member-name-link">getPrebidServerAccountId</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPbsDebug()" class="member-name-link">getPbsDebug</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Host.html" title="enum class in org.prebid.mobile">Host</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPrebidServerHost()" class="member-name-link">getPrebidServerHost</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPrebidServerAccountId()" class="member-name-link">getPrebidServerAccountId</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStoredAuctionResponse()" class="member-name-link">getStoredAuctionResponse</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Host.html" title="enum class in org.prebid.mobile">Host</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPrebidServerHost()" class="member-name-link">getPrebidServerHost</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStoredAuctionResponse()" class="member-name-link">getStoredAuctionResponse</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block"><a href="#setStoredAuctionResponse(java.lang.String)"><code>setStoredAuctionResponse(String)</code></a></div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStoredBidResponses()" class="member-name-link">getStoredBidResponses</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTimeoutMillis()" class="member-name-link">getTimeoutMillis</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStoredBidResponses()" class="member-name-link">getStoredBidResponses</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTimeoutMillis()" class="member-name-link">getTimeoutMillis</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block"><a href="#setTimeoutMillis(int)"><code>setTimeoutMillis(int)</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#initializeSdk(android.content.Context,SdkInitializationListener)" class="member-name-link">initializeSdk</a><wbr>(android.content.Context&nbsp;context,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#initializeSdk(android.content.Context,SdkInitializationListener)" class="member-name-link">initializeSdk</a><wbr>(android.content.Context&nbsp;context,
  SdkInitializationListener&nbsp;listener)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Initializes the main SDK classes and makes request to Prebid server to check its status.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isSdkInitialized()" class="member-name-link">isSdkInitialized</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isSdkInitialized()" class="member-name-link">isSdkInitialized</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Return 'true' if Prebid Rendering SDK is initialized completely</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isShareGeoLocation()" class="member-name-link">isShareGeoLocation</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isShareGeoLocation()" class="member-name-link">isShareGeoLocation</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block"><a href="#setShareGeoLocation(boolean)"><code>setShareGeoLocation(boolean)</code></a></div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isUseCacheForReportingWithRenderingApi()" class="member-name-link">isUseCacheForReportingWithRenderingApi</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isUseCacheForReportingWithRenderingApi()" class="member-name-link">isUseCacheForReportingWithRenderingApi</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block"><code>useCacheForReportingWithRenderingApi</code></div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerPluginRenderer(org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer)" class="member-name-link">registerPluginRenderer</a><wbr>(<a href="api/rendering/pluginrenderer/PrebidMobilePluginRenderer.html" title="interface in org.prebid.mobile.api.rendering.pluginrenderer">PrebidMobilePluginRenderer</a>&nbsp;prebidMobilePluginRenderer)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerPluginRenderer(org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer)" class="member-name-link">registerPluginRenderer</a><wbr>(<a href="api/rendering/pluginrenderer/PrebidMobilePluginRenderer.html" title="interface in org.prebid.mobile.api.rendering.pluginrenderer">PrebidMobilePluginRenderer</a>&nbsp;prebidMobilePluginRenderer)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers plugin renderer for displaying ad in custom wrapper.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCreativeFactoryTimeout(int)" class="member-name-link">setCreativeFactoryTimeout</a><wbr>(int&nbsp;creativeFactoryTimeout)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCreativeFactoryTimeout(int)" class="member-name-link">setCreativeFactoryTimeout</a><wbr>(int&nbsp;creativeFactoryTimeout)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Sets creative factory timeout.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCreativeFactoryTimeoutPreRenderContent(int)" class="member-name-link">setCreativeFactoryTimeoutPreRenderContent</a><wbr>(int&nbsp;creativeFactoryTimeoutPreRenderContent)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCreativeFactoryTimeoutPreRenderContent(int)" class="member-name-link">setCreativeFactoryTimeoutPreRenderContent</a><wbr>(int&nbsp;creativeFactoryTimeoutPreRenderContent)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Sets creative factory timeout for prerender content.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCustomHeaders(java.util.HashMap)" class="member-name-link">setCustomHeaders</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;customHeaders)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCustomHeaders(java.util.HashMap)" class="member-name-link">setCustomHeaders</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;customHeaders)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">HashMap containing a list of custom headers to add to requests</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCustomLogger(org.prebid.mobile.LogUtil.PrebidLogger)" class="member-name-link">setCustomLogger</a><wbr>(<a href="LogUtil.PrebidLogger.html" title="interface in org.prebid.mobile">LogUtil.PrebidLogger</a>&nbsp;logger)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCustomLogger(org.prebid.mobile.LogUtil.PrebidLogger)" class="member-name-link">setCustomLogger</a><wbr>(<a href="LogUtil.PrebidLogger.html" title="interface in org.prebid.mobile">LogUtil.PrebidLogger</a>&nbsp;logger)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Sets custom logger for the SDK.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCustomStatusEndpoint(java.lang.String)" class="member-name-link">setCustomStatusEndpoint</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCustomStatusEndpoint(java.lang.String)" class="member-name-link">setCustomStatusEndpoint</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Sets full valid URL for the /status endpoint of the PBS.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setExternalUserIds(java.util.List)" class="member-name-link">setExternalUserIds</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ExternalUserId.html" title="class in org.prebid.mobile">ExternalUserId</a>&gt;&nbsp;externalUserIds)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">List containing objects that hold External User Id parameters for the current application user.</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setEventDelegate(org.prebid.mobile.PrebidEventDelegate)" class="member-name-link">setEventDelegate</a><wbr>(<a href="PrebidEventDelegate.html" title="interface in org.prebid.mobile">PrebidEventDelegate</a>&nbsp;eventDelegate)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sets the <a href="PrebidEventDelegate.html" title="interface in org.prebid.mobile"><code>PrebidEventDelegate</code></a> instance to handle the auction request and response from the SDK.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#setExternalUserIds(java.util.List)" class="member-name-link">setExternalUserIds</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ExternalUserId.html" title="class in org.prebid.mobile">ExternalUserId</a>&gt;&nbsp;externalUserIds)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">use <a href="TargetingParams.html#setExternalUserIds(java.util.List)"><code>TargetingParams.setExternalUserIds(List)</code></a></div>
+</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setIncludeBidderKeysFlag(boolean)" class="member-name-link">setIncludeBidderKeysFlag</a><wbr>(boolean&nbsp;includeBidderKeys)</code></div>
@@ -413,13 +432,19 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="isCoppaEnabled">
 <h3>isCoppaEnabled</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isCoppaEnabled</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isCoppaEnabled</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">In the upcoming major release, the property will be removed.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="useExternalBrowser">
 <h3>useExternalBrowser</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">useExternalBrowser</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">useExternalBrowser</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">In the upcoming major release, the property will be removed.</div>
 </section>
 </li>
 <li>
@@ -651,14 +676,22 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="setExternalUserIds(java.util.List)">
 <h3>setExternalUserIds</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setExternalUserIds</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ExternalUserId.html" title="class in org.prebid.mobile">ExternalUserId</a>&gt;&nbsp;externalUserIds)</span></div>
-<div class="block">List containing objects that hold External User Id parameters for the current application user.</div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true)
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setExternalUserIds</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ExternalUserId.html" title="class in org.prebid.mobile">ExternalUserId</a>&gt;&nbsp;externalUserIds)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">use <a href="TargetingParams.html#setExternalUserIds(java.util.List)"><code>TargetingParams.setExternalUserIds(List)</code></a></div>
+</div>
+<div class="block">List containing objects that hold External User UniqueId parameters for the current application user.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="getExternalUserIds()">
 <h3>getExternalUserIds</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ExternalUserId.html" title="class in org.prebid.mobile">ExternalUserId</a>&gt;</span>&nbsp;<span class="element-name">getExternalUserIds</span>()</div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html#forRemoval()" title="class or interface in java.lang" class="external-link">forRemoval</a>=true)
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ExternalUserId.html" title="class in org.prebid.mobile">ExternalUserId</a>&gt;</span>&nbsp;<span class="element-name">getExternalUserIds</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">use <a href="TargetingParams.html#getExternalUserIds()"><code>TargetingParams.getExternalUserIds()</code></a></div>
+</div>
 <div class="block">Returns the List that hold External UserId parameters for the current application user</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -951,6 +984,27 @@ loadScripts(document, 'script');</script>
 <h3>containsPluginRenderer</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">containsPluginRenderer</span><wbr><span class="parameters">(<a href="api/rendering/pluginrenderer/PrebidMobilePluginRenderer.html" title="interface in org.prebid.mobile.api.rendering.pluginrenderer">PrebidMobilePluginRenderer</a>&nbsp;prebidMobilePluginRenderer)</span></div>
 <div class="block">Return whether SDK already registered this renderer.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getEventDelegate()">
+<h3>getEventDelegate</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="PrebidEventDelegate.html" title="interface in org.prebid.mobile">PrebidEventDelegate</a></span>&nbsp;<span class="element-name">getEventDelegate</span>()</div>
+<div class="block"><a href="#setEventDelegate(org.prebid.mobile.PrebidEventDelegate)"><code>setEventDelegate(PrebidEventDelegate)</code></a></div>
+</section>
+</li>
+<li>
+<section class="detail" id="setEventDelegate(org.prebid.mobile.PrebidEventDelegate)">
+<h3>setEventDelegate</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEventDelegate</span><wbr><span class="parameters">(<a href="PrebidEventDelegate.html" title="interface in org.prebid.mobile">PrebidEventDelegate</a>&nbsp;eventDelegate)</span></div>
+<div class="block">Sets the <a href="PrebidEventDelegate.html" title="interface in org.prebid.mobile"><code>PrebidEventDelegate</code></a> instance to handle the auction request and response from the SDK.
+ This allows the SDK to collect some statistical data.
+ The provided delegate will be stored as a weak reference so you need to store reference to it.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventDelegate</code> - the instance of <a href="PrebidEventDelegate.html" title="interface in org.prebid.mobile"><code>PrebidEventDelegate</code></a> to handle events from the SDK. 
+                      Can be null to clear the existing delegate.</dd>
+</dl>
 </section>
 </li>
 </ul>
