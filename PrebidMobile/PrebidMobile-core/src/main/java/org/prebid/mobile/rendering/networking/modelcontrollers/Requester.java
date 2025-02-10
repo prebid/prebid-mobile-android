@@ -27,7 +27,6 @@ import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
-import org.prebid.mobile.rendering.listeners.AdIdFetchListener;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
@@ -47,7 +46,7 @@ import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.ConnectionInfoManager;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
-import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
+import org.prebid.mobile.rendering.utils.helpers.AdvertisingIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 
@@ -63,7 +62,6 @@ public abstract class Requester {
     protected URLBuilder urlBuilder;
     protected ResponseHandler adResponseCallBack;
     protected BaseNetworkTask networkTask;
-    protected AdIdManager.FetchAdIdInfoTask fetchAdIdInfoTask;
     @Nullable
     protected JSONObject builtRequest;
 
@@ -97,11 +95,7 @@ public abstract class Requester {
             networkTask.cancel(true);
         }
         networkTask = null;
-        if (fetchAdIdInfoTask != null) {
-            fetchAdIdInfoTask.cancel(true);
-        }
         adResponseCallBack = null;
-        fetchAdIdInfoTask = null;
     }
 
     protected List<ParameterBuilder> getParameterBuilders() {
@@ -137,26 +131,8 @@ public abstract class Requester {
             );
             return;
         }
-
-        UserConsentManager userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
-        if (userConsentManager.canAccessDeviceData()) {
-            fetchAdIdInfoTask = AdIdManager.initAdId(context, new AdIdFetchListener() {
-                @Override
-                public void adIdFetchCompletion() {
-                    LogUtil.info(TAG, "Advertising id was received");
-                    makeAdRequest();
-                }
-
-                @Override
-                public void adIdFetchFailure() {
-                    LogUtil.warning(TAG, "Can't get advertising id");
-                    makeAdRequest();
-                }
-            });
-        } else {
-            AdIdManager.setAdId(null);
-            makeAdRequest();
-        }
+        makeAdRequest();
+        AdvertisingIdManager.initAdvertisingId(null);
     }
 
     protected abstract PathBuilderBase getPathBuilder();
