@@ -29,7 +29,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 
@@ -46,17 +45,32 @@ public class AdvertisingIdManager {
 
     private AdvertisingIdManager() {}
 
-    public static void initAdvertisingId(@Nullable final FetchListener listener) {
-        long timeSinceLastLaunch = System.currentTimeMillis() - lastStartTime;
-        if (timeSinceLastLaunch < RESTART_TIMEOUT_MS) {
-            return;
-        }
+    /**
+     * Run in the current thread.
+     */
+    public static void initAdvertisingId() {
+        if (didFetchingRecently()) return;
 
         try {
             lastStartTime = System.currentTimeMillis();
-            final FetchTask fetchTask = new FetchTask(listener);
+            final FetchTask fetchTask = new FetchTask();
+            fetchTask.fetch();
+        } catch (Throwable throwable) {
+            LogUtil.error(TAG, "Failed to init Google advertising id: " + Log.getStackTraceString(throwable) + "\nDid you add necessary dependencies?");
+        }
+    }
+
+    /**
+     * Run in the new background thread.
+     */
+    public static void updateAdvertisingId() {
+        if (didFetchingRecently()) return;
+
+        try {
+            lastStartTime = System.currentTimeMillis();
+            final FetchTask fetchTask = new FetchTask();
             fetchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            runCancelAfterTimeoutTask(fetchTask, listener);
+            runCancelAfterTimeoutTask(fetchTask);
         } catch (Throwable throwable) {
             LogUtil.error(TAG, "Failed to init Google advertising id: " + Log.getStackTraceString(throwable) + "\nDid you add necessary dependencies?");
         }
@@ -79,13 +93,21 @@ public class AdvertisingIdManager {
         return advertisingId != null && advertisingId.isLimitAdTrackingEnabled();
     }
 
-    private static void runCancelAfterTimeoutTask(FetchTask fetchTask, FetchListener listener) {
+    private static boolean didFetchingRecently() {
+        long timeSinceLastLaunch = System.currentTimeMillis() - lastStartTime;
+        if (timeSinceLastLaunch < RESTART_TIMEOUT_MS) {
+            LogUtil.debug(TAG, "Skipping advertising id fetching.");
+            return true;
+        }
+        return false;
+    }
+
+    private static void runCancelAfterTimeoutTask(FetchTask fetchTask) {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> {
             if (fetchTask.getStatus() != AsyncTask.Status.FINISHED) {
                 LogUtil.debug(TAG, "Canceling advertising id fetching due to timeout.");
                 fetchTask.cancel(true);
-                listener.onComplete();
                 advertisingId = null;
             }
         }, FETCH_TIMEOUT_MS);
@@ -94,12 +116,9 @@ public class AdvertisingIdManager {
     public static class FetchTask extends AsyncTask<Void, Void, AdvertisingId> {
 
         private final WeakReference<Context> contextWeakReference;
-        @Nullable
-        private final FetchListener fetchListener;
 
-        public FetchTask(@Nullable FetchListener listener) {
+        public FetchTask() {
             contextWeakReference = new WeakReference<>(PrebidContextHolder.getContext());
-            fetchListener = listener;
         }
 
         @Override
@@ -127,10 +146,16 @@ public class AdvertisingIdManager {
         @Override
         protected void onPostExecute(@Nullable AdvertisingId id) {
             advertisingId = id;
-            if (fetchListener != null) {
-                fetchListener.onComplete();
-            }
         }
+
+        /**
+         * Additional method executing this task without seperated thread.
+         */
+        public void fetch() {
+            AdvertisingId id = doInBackground();
+            onPostExecute(id);
+        }
+
     }
 
     public static class AdvertisingId {
@@ -152,7 +177,4 @@ public class AdvertisingIdManager {
         }
     }
 
-    public interface FetchListener {
-        void onComplete();
-    }
 }

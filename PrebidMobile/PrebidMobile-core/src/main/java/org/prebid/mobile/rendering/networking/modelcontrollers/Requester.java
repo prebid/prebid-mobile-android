@@ -45,7 +45,6 @@ import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.ConnectionInfoManager;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
-import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.prebid.mobile.rendering.utils.helpers.AdvertisingIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
@@ -132,7 +131,7 @@ public abstract class Requester {
             return;
         }
         makeAdRequest();
-        AdvertisingIdManager.initAdvertisingId(null);
+        AdvertisingIdManager.updateAdvertisingId();
     }
 
     protected abstract PathBuilderBase getPathBuilder();
