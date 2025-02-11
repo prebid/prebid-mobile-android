@@ -19,13 +19,10 @@ package org.prebid.mobile;
 import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
 import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -159,8 +156,6 @@ public abstract class AdUnit {
      * @param listener callback when operation is completed (success or fail)
      */
     public void fetchDemand(Object adObject, @NonNull OnCompleteListener listener) {
-        visibilityMonitor.stopTracking();
-
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
             LogUtil.error("Empty account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
@@ -543,8 +538,6 @@ public abstract class AdUnit {
     }
 
     private void registerVisibilityTrackerIfNeeded(BidResponse response) {
-        visibilityMonitor.stopTracking();
-
         if (response == null || response.getWinningBid() == null || response.getWinningBid().getBurl() == null) {
             return;
         }

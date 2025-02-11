@@ -3,7 +3,6 @@ package org.prebid.mobile;
 import android.app.Application;
 import android.content.Context;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -109,10 +108,9 @@ public class VisibilityMonitor {
                 destroy();
             }
 
-            AdViewUtils.findCacheId(
-                    webView,
-                    attachVisibilityTrackerTask(new WeakReference<>(webView), this, responseCacheId, lastWebViewHash)
-            );
+
+            AdViewUtils.CacheIdResult onCacheIdFound = createCacheIdFoundTask(new WeakReference<>(webView), this, responseCacheId, lastWebViewHash);
+            AdViewUtils.findCacheId(webView, onCacheIdFound);
         }
 
         private void attachVisibilityTracker(WebView webView) {
@@ -174,7 +172,7 @@ public class VisibilityMonitor {
             return null;
         }
 
-        private static AdViewUtils.CacheIdResult attachVisibilityTrackerTask(WeakReference<WebView> webViewReference, VisibilityTimer visibilityTimer, String responseCacheId, int lastWebViewHash) {
+        private static AdViewUtils.CacheIdResult createCacheIdFoundTask(WeakReference<WebView> webViewReference, VisibilityTimer visibilityTimer, String responseCacheId, int lastWebViewHash) {
             return cacheId -> {
                 if (cacheId == null || cacheId.isEmpty()) {
                     return;
