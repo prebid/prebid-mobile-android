@@ -18,7 +18,6 @@ package org.prebid.mobile;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
@@ -68,10 +67,6 @@ public class InterstitialAdUnit extends BannerBaseAdUnit {
             @IntRange(from = 0, to = 100) int height
     ) {
         configuration.setMinSizePercentage(new AdSize(width, height));
-    }
-
-    public void useInterstitialVisibilityTracker(boolean enable) {
-        this.useInterstitialVisibilityTracker = enable;
     }
 
     public void activatePrebidImpressionTracker(boolean activate) {
