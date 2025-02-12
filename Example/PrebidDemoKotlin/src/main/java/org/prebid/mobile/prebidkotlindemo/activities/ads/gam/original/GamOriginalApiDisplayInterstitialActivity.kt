@@ -45,7 +45,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
         adUnit = InterstitialAdUnit(CONFIG_ID, 80, 60)
 
         // Activate additional impression tracker (for burl)
-        adUnit?.activateInterstitialPrebidImpressionTracker(true)
+        adUnit?.activateInterstitialPrebidImpressionTracker()
 
         // 2. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
