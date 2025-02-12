@@ -73,7 +73,7 @@ public abstract class AdUnit {
     protected WeakReference<View> adViewReference = new WeakReference<>(null);
 
     protected boolean allowNullableAdObject = false;
-    protected boolean activatePrebidImpressionTracker = false;
+    protected boolean activateInterstitialPrebidImpressionTracker = false;
 
     public AdUnit(@NotNull String configId) {
         configuration.setConfigId(configId);
@@ -557,7 +557,7 @@ public abstract class AdUnit {
         boolean isBannerTracker = !(this instanceof InterstitialAdUnit);
         if (isBannerTracker) {
             bannerVisibilityTracker(burl, cacheId);
-        } else if (activatePrebidImpressionTracker) {
+        } else if (activateInterstitialPrebidImpressionTracker) {
             interstitialVisibilityTracker(burl, cacheId);
         }
     }

@@ -26,6 +26,7 @@ public class PrebidAdUnit {
     @Nullable
     private MultiformatAdUnitFacade adUnit;
 
+    protected boolean activateInterstitialPrebidImpressionTracker = false;
     protected WeakReference<View> adViewReference = new WeakReference<>(null);
 
     /**
@@ -84,6 +85,13 @@ public class PrebidAdUnit {
     }
 
     /**
+     * Applies the interstitial native visibility tracker for tracking `burl` url.
+     */
+    public void activateInterstitialPrebidImpressionTracker(boolean activate) {
+        this.activateInterstitialPrebidImpressionTracker = activate;
+    }
+
+    /**
      * Resumes auto refresh interval after stopping.
      */
     public void resumeAutoRefresh() {
@@ -132,6 +140,9 @@ public class PrebidAdUnit {
 
         adUnit = new MultiformatAdUnitFacade(configId, request);
         adUnit.activatePrebidImpressionTracker(adViewReference.get());
+        if (activateInterstitialPrebidImpressionTracker) {
+            adUnit.activateInterstitialPrebidImpressionTracker();
+        }
 
         OnCompleteListenerImpl innerListener = new OnCompleteListenerImpl(adUnit, adObject, userListener);
         if (adObject != null) {

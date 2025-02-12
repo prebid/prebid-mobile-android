@@ -72,8 +72,8 @@ public class InterstitialAdUnit extends BannerBaseAdUnit {
     /**
      * Applies the interstitial native visibility tracker for tracking `burl` url.
      */
-    public void activateInterstitialPrebidImpressionTracker(boolean activate) {
-        this.activatePrebidImpressionTracker = activate;
+    public void activateInterstitialPrebidImpressionTracker() {
+        this.activateInterstitialPrebidImpressionTracker = true;
     }
 
 }
