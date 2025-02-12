@@ -45,6 +45,13 @@ class MultiformatAdUnitFacade extends AdUnit {
         setConfigurationBasedOnRequest(request);
     }
 
+    /**
+     * Applies the interstitial native visibility tracker for tracking `burl` url.
+     */
+    public void activateInterstitialPrebidImpressionTracker() {
+        this.activateInterstitialPrebidImpressionTracker = true;
+    }
+
     @Override
     protected BidRequesterListener createBidListener(OnCompleteListener originalListener) {
         return new BidRequesterListener() {
