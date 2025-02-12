@@ -69,7 +69,10 @@ public class InterstitialAdUnit extends BannerBaseAdUnit {
         configuration.setMinSizePercentage(new AdSize(width, height));
     }
 
-    public void activatePrebidImpressionTracker(boolean activate) {
+    /**
+     * Applies the interstitial native visibility tracker for tracking `burl` url.
+     */
+    public void activateInterstitialPrebidImpressionTracker(boolean activate) {
         this.activatePrebidImpressionTracker = activate;
     }
 

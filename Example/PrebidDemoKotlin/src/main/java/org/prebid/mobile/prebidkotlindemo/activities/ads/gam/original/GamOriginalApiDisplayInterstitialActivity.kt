@@ -21,7 +21,6 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
-import org.prebid.mobile.AdUnit
 import org.prebid.mobile.InterstitialAdUnit
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
@@ -46,7 +45,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
         adUnit = InterstitialAdUnit(CONFIG_ID, 80, 60)
 
         // Activate additional impression tracker (for burl)
-        adUnit?.activatePrebidImpressionTracker(true)
+        adUnit?.activateInterstitialPrebidImpressionTracker(true)
 
         // 2. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
