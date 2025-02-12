@@ -72,9 +72,5 @@ public enum ResultCode {
     /**
      * Check @{@link org.prebid.mobile.api.original.PrebidRequest} object that you put into fetchDemand().
      */
-    INVALID_PREBID_REQUEST_OBJECT,
-    /**
-     * The ad request failed due to empty auction settings id
-     */
-    INVALID_AUCTION_SETTINGS_ID
+    INVALID_PREBID_REQUEST_OBJECT
 }

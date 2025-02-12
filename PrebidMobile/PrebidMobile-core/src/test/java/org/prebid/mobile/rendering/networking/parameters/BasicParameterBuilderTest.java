@@ -1073,6 +1073,35 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
+    public void whenSetInvalidAuctionSettingsId_storedRequestIdEqualsToTheServerAccountId() throws JSONException {
+        // Given
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(false);
+        configuration.setAdFormat(AdFormat.BANNER);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
+        AdRequestInput adRequestInput = new AdRequestInput();
+
+        String settingsId = "";
+        String serverAccountId = "test-prebid-server-account-id";
+
+        PrebidMobile.setAuctionSettingsId(settingsId);
+        PrebidMobile.setPrebidServerAccountId(serverAccountId);
+
+        // When
+
+        builder.appendBuilderParameters(adRequestInput);
+
+        // Then
+
+        JSONObject prebidObj = (JSONObject) adRequestInput.getBidRequest().getExt().getMap().get("prebid");
+        String id = prebidObj.getJSONObject("storedrequest").getString("id");
+
+        assertNotNull(PrebidMobile.getAuctionSettingsId());
+        assertEquals(serverAccountId, id);
+    }
+
+    @Test
     public void instlParameter_notInterstitial() {
         List<EnumSet<AdFormat>> formatsList = Arrays.asList(
                 EnumSet.of(AdFormat.BANNER),

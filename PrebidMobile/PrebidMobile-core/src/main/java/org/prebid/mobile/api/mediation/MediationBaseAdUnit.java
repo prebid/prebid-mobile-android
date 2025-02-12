@@ -99,11 +99,6 @@ public abstract class MediationBaseAdUnit {
             listener.onComplete(FetchDemandResult.INVALID_CONFIG_ID);
             return;
         }
-        if (PrebidMobile.getAuctionSettingsId() != null && TextUtils.isEmpty(PrebidMobile.getAuctionSettingsId())) {
-            LogUtil.error("Empty auction settings id.");
-            listener.onComplete(FetchDemandResult.INVALID_ACCOUNT_ID);
-            return;
-        }
 
         final Host bidServerHost = PrebidMobile.getPrebidServerHost();
         if (bidServerHost.equals(Host.CUSTOM) && bidServerHost.getHostUrl().isEmpty()) {
