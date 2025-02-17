@@ -37,9 +37,11 @@ import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
+import org.prebid.mobile.rendering.networking.tracking.ServerConnection;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.tasksmanager.TasksManager;
 

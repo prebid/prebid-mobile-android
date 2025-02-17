@@ -32,6 +32,7 @@ import org.prebid.mobile.rendering.listeners.CreativeViewListener;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
 import org.prebid.mobile.rendering.loading.FileDownloadListener;
 import org.prebid.mobile.rendering.models.CreativeVisibilityTracker;
+import org.prebid.mobile.rendering.models.TrackingEvent;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
@@ -407,6 +408,7 @@ public class VideoCreative extends VideoCreativeProtocol
         switch (trackingEvent) {
             case AD_START:
                 trackVideoAdStart();
+                model.trackEventNamed(TrackingEvent.Events.IMPRESSION);
                 break;
             case AD_CLICK:
                 creativeViewListener.creativeWasClicked(this, videoCreativeView.getCallToActionUrl());

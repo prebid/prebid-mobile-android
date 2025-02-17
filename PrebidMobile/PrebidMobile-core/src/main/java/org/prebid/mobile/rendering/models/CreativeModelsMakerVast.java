@@ -52,6 +52,7 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
     private AdResponseParserVast latestVastWrapperParser;
 
     private String adLoaderIdentifier;
+    private String viewableUrl;
 
     public CreativeModelsMakerVast(
             String adLoaderIdentifier,
@@ -89,6 +90,10 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
         }
 
         makeModelsContinued();
+    }
+
+    public void setViewableUrl(String url) {
+        this.viewableUrl = url;
     }
 
     private void makeModelsContinued() {
@@ -129,6 +134,7 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
             videoModel.setAuid(rootVastParser.getVast().getAds().get(0).getId());
             videoModel.setWidth(latestVastWrapperParser.getWidth());
             videoModel.setHeight(latestVastWrapperParser.getHeight());
+            videoModel.setViewableUrl(viewableUrl);
             //put tracking urls into element.
             for (VideoAdEvent.Event videoEvent : VideoAdEvent.Event.values()) {
                 videoModel.getVideoEventUrls().put(videoEvent, rootVastParser.getTrackingByType(videoEvent));
