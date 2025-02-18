@@ -24,6 +24,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
+import android.view.View;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -45,6 +46,7 @@ import org.prebid.mobile.rendering.networking.tracking.ServerConnection;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.tasksmanager.TasksManager;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -58,6 +60,8 @@ import java.util.Set;
  */
 public abstract class AdUnit {
 
+    private static final String TAG = "AdUnit";
+
     protected AdUnitConfiguration configuration = new AdUnitConfiguration();
 
     @Nullable
@@ -67,7 +71,11 @@ public abstract class AdUnit {
     @Nullable
     protected BidResponse bidResponse;
 
+    protected final VisibilityMonitor visibilityMonitor = new VisibilityMonitor();
+    protected WeakReference<View> adViewReference = new WeakReference<>(null);
+
     protected boolean allowNullableAdObject = false;
+    protected boolean activateInterstitialPrebidImpressionTracker = false;
 
     public AdUnit(@NotNull String configId) {
         configuration.setConfigId(configId);
@@ -125,6 +133,7 @@ public abstract class AdUnit {
         if (bidLoader != null) {
             bidLoader.destroy();
         }
+        visibilityMonitor.stopTracking();
     }
 
     /**
@@ -233,6 +242,15 @@ public abstract class AdUnit {
             Util.saveCacheId(bidInfo.getNativeCacheId(), adObject);
             listener.onComplete(bidInfo);
         });
+    }
+
+    /**
+     * Applies the native visibility tracker for tracking `burl` url.
+     *
+     * @param adView the ad view object (f.e. {@code AdManagerAdView})
+     */
+    public void activatePrebidImpressionTracker(View adView) {
+        adViewReference = new WeakReference<>(adView);
     }
 
     // MARK: - adunit context data aka inventory data (imp[].ext.data)
@@ -474,6 +492,8 @@ public abstract class AdUnit {
                 HashMap<String, String> keywords = response.getTargeting();
                 Util.apply(keywords, adObject);
                 originalListener.onComplete(ResultCode.SUCCESS);
+
+                registerVisibilityTrackerIfNeeded(bidResponse);
             }
 
             @Override
@@ -517,6 +537,44 @@ public abstract class AdUnit {
     @VisibleForTesting
     public AdUnitConfiguration getConfiguration() {
         return configuration;
+    }
+
+    private void registerVisibilityTrackerIfNeeded(BidResponse response) {
+        if (response == null || response.getWinningBid() == null || response.getWinningBid().getBurl() == null) {
+            return;
+        }
+        if (response.isVideo()) {
+            LogUtil.debug(TAG, "VisibilityTracker ignored due to the video ad");
+            return;
+        }
+
+        String burl = response.getWinningBid().getBurl();
+
+        String cacheId = response.getTargeting().get("hb_cache_id");
+        if (cacheId == null) {
+            LogUtil.warning(TAG, "Can't register visibility tracker. There is no hb_cache_id keyword.");
+            return;
+        }
+
+        boolean isBannerTracker = !(this instanceof InterstitialAdUnit);
+        if (isBannerTracker) {
+            bannerVisibilityTracker(burl, cacheId);
+        } else if (activateInterstitialPrebidImpressionTracker) {
+            interstitialVisibilityTracker(burl, cacheId);
+        }
+    }
+
+    private void bannerVisibilityTracker(String burl, String cacheId) {
+        View adViewContainer = adViewReference != null ? adViewReference.get() : null;
+        if (adViewContainer == null) {
+            return;
+        }
+
+        visibilityMonitor.trackView(adViewContainer, burl, cacheId);
+    }
+
+    private void interstitialVisibilityTracker(String burl, String cacheId) {
+        visibilityMonitor.trackInterstitial(burl, cacheId);
     }
 
 }

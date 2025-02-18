@@ -66,7 +66,7 @@ public class GamOriginalApiVideoRewarded extends BaseAdActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (adUnit != null) {
-            adUnit.stopAutoRefresh();
+            adUnit.destroy();
         }
     }
 }

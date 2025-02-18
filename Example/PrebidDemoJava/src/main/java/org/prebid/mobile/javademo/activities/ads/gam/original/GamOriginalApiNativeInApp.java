@@ -188,7 +188,7 @@ public class GamOriginalApiNativeInApp extends BaseAdActivity {
             adView.destroy();
         }
         if (adUnit != null) {
-            adUnit.stopAutoRefresh();
+            adUnit.destroy();
         }
         if (unifiedNativeAd != null) {
             unifiedNativeAd.destroy();

@@ -3,6 +3,8 @@ package org.prebid.mobile.api.original;
 import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
 import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
 
+import android.view.View;
+
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,6 +12,8 @@ import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.api.data.BidInfo;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Universal ad unit for original API. It allows to make multi-format request.
@@ -21,6 +25,9 @@ public class PrebidAdUnit {
     private final String configId;
     @Nullable
     private MultiformatAdUnitFacade adUnit;
+
+    protected boolean activateInterstitialPrebidImpressionTracker = false;
+    protected WeakReference<View> adViewReference = new WeakReference<>(null);
 
     /**
      * Default constructor.
@@ -66,6 +73,22 @@ public class PrebidAdUnit {
         if (adUnit != null) {
             adUnit.setAutoRefreshInterval(seconds);
         }
+    }
+
+    /**
+     * Applies the banner native visibility tracker for tracking `burl` url.
+     *
+     * @param adView the ad view object (f.e. {@code AdManagerAdView})
+     */
+    public void activatePrebidImpressionTracker(View adView) {
+        adViewReference = new WeakReference<>(adView);
+    }
+
+    /**
+     * Applies the interstitial native visibility tracker for tracking `burl` url.
+     */
+    public void activateInterstitialPrebidImpressionTracker(boolean activate) {
+        this.activateInterstitialPrebidImpressionTracker = activate;
     }
 
     /**
@@ -116,6 +139,10 @@ public class PrebidAdUnit {
         }
 
         adUnit = new MultiformatAdUnitFacade(configId, request);
+        adUnit.activatePrebidImpressionTracker(adViewReference.get());
+        if (activateInterstitialPrebidImpressionTracker) {
+            adUnit.activateInterstitialPrebidImpressionTracker();
+        }
 
         OnCompleteListenerImpl innerListener = new OnCompleteListenerImpl(adUnit, adObject, userListener);
         if (adObject != null) {

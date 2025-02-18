@@ -21,7 +21,6 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
-import org.prebid.mobile.AdUnit
 import org.prebid.mobile.InterstitialAdUnit
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
@@ -32,7 +31,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
         const val CONFIG_ID = "prebid-demo-display-interstitial-320-480"
     }
 
-    private var adUnit: AdUnit? = null
+    private var adUnit: InterstitialAdUnit? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +43,9 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
     private fun createAd() {
         // 1. Create InterstitialAdUnit
         adUnit = InterstitialAdUnit(CONFIG_ID, 80, 60)
+
+        // Activate additional impression tracker (for burl)
+        adUnit?.activateInterstitialPrebidImpressionTracker()
 
         // 2. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
@@ -78,6 +80,6 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        adUnit?.stopAutoRefresh()
+        adUnit?.destroy()
     }
 }

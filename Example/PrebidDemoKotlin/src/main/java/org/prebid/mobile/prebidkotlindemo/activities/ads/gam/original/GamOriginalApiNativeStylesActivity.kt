@@ -93,7 +93,7 @@ class GamOriginalApiNativeStylesActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        nativeAdUnit?.stopAutoRefresh()
+        nativeAdUnit?.destroy()
     }
 
 }

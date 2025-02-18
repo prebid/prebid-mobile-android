@@ -137,7 +137,7 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        adUnit?.stopAutoRefresh()
+        adUnit?.destroy()
         adsLoader?.setPlayer(null)
         adsLoader?.release()
         player?.release()
