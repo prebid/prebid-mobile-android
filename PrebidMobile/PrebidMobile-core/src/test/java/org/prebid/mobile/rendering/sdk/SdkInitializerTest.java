@@ -211,7 +211,7 @@ public class SdkInitializerTest {
         MatcherAssert.assertThat(requesterClassName, is(startsWith("class org.prebid.mobile.rendering.sdk.StatusRequester")));
 
         ArgumentCaptor<Runnable> tasksCaptor = ArgumentCaptor.forClass(Runnable.class);
-        verify(executorMock, times(2)).execute(tasksCaptor.capture());
+        verify(executorMock, times(3)).execute(tasksCaptor.capture());
 
         List<Runnable> allTasks = tasksCaptor.getAllValues();
         String firstTaskName = allTasks.get(0).getClass().toString();

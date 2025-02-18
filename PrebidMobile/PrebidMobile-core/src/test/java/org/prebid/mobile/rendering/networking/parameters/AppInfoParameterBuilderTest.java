@@ -32,7 +32,8 @@ import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.App;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
-import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
+import org.prebid.mobile.rendering.utils.helpers.AdvertisingIdManager;
+import org.prebid.mobile.rendering.utils.helpers.AdvertisingIdManagerTest;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.robolectric.RobolectricTestRunner;
 
@@ -48,8 +49,9 @@ public class AppInfoParameterBuilderTest {
     public void setUp() throws Exception {
         AppInfoManager.setAppName(APP_NAME);
         AppInfoManager.setPackageName(APP_BUNDLE);
-        AdIdManager.setAdId(ADVERTISING_ID);
-        AdIdManager.setLimitAdTrackingEnabled(!ADVERTISING_ID_ENABLED);
+
+        AdvertisingIdManager.AdvertisingId id = new AdvertisingIdManager.AdvertisingId(ADVERTISING_ID, !ADVERTISING_ID_ENABLED);
+        AdvertisingIdManagerTest.AdvertisingIdManagerReflections.setAdvertisingId(id);
     }
 
     @Test

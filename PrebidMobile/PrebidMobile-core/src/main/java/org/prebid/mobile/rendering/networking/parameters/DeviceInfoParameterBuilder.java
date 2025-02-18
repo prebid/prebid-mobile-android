@@ -23,7 +23,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Device;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
-import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
+import org.prebid.mobile.rendering.utils.helpers.AdvertisingIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
@@ -55,7 +55,7 @@ public class DeviceInfoParameterBuilder extends ParameterBuilder {
                 device.h = screenHeight;
             }
 
-            String advertisingId = AdIdManager.getAdId();
+            String advertisingId = AdvertisingIdManager.getAdvertisingId(ManagersResolver.getInstance().getUserConsentManager());
             if (Utils.isNotBlank(advertisingId)) {
                 device.ifa = advertisingId;
             }
@@ -75,7 +75,7 @@ public class DeviceInfoParameterBuilder extends ParameterBuilder {
             device.ua = AppInfoManager.getUserAgent();
 
             // lmt and APP_ADVERTISING_ID_ENABLED are opposites
-            boolean lmt = AdIdManager.isLimitAdTrackingEnabled();
+            boolean lmt = AdvertisingIdManager.isLimitedAdTrackingEnabled();
             device.lmt = lmt ? 1 : 0;
 
             final AdSize minSizePercentage = adConfiguration.getMinSizePercentage();
