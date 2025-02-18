@@ -134,6 +134,8 @@ public class PrebidMobile {
     private static String accountId = "";
     private static String storedAuctionResponse = "";
     @Nullable
+    private static String auctionSettingsId;
+    @Nullable
     private static String customStatusEndpoint;
 
     private static Host host = Host.CUSTOM;
@@ -204,6 +206,15 @@ public class PrebidMobile {
 
     public static Host getPrebidServerHost() {
         return host;
+    }
+
+    public static void setAuctionSettingsId(String settingsId) {
+        PrebidMobile.auctionSettingsId = settingsId;
+    }
+
+    @Nullable
+    public static String getAuctionSettingsId() {
+        return auctionSettingsId;
     }
 
     /**

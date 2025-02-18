@@ -28,6 +28,7 @@ import org.prebid.mobile.DataObject;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;

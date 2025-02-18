@@ -44,6 +44,7 @@ public class PrebidMobileTest extends BaseSetup {
     @Before
     public void clean() {
         Reflection.setStaticVariableTo(PrebidMobile.class, "customStatusEndpoint", null);
+        Reflection.setStaticVariableTo(PrebidMobile.class, "auctionSettingsId", null);
     }
 
 
@@ -72,6 +73,8 @@ public class PrebidMobileTest extends BaseSetup {
         assertEquals(7000, PrebidMobile.getCreativeFactoryTimeout());
         PrebidMobile.setCreativeFactoryTimeoutPreRenderContent(25000);
         assertEquals(25000, PrebidMobile.getCreativeFactoryTimeoutPreRenderContent());
+        PrebidMobile.setAuctionSettingsId("987654");
+        assertEquals("987654", PrebidMobile.getAuctionSettingsId());
     }
 
     @Test
