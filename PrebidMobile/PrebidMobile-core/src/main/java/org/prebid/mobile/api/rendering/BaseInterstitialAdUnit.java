@@ -213,7 +213,10 @@ public abstract class BaseInterstitialAdUnit {
         config.clearExtKeywords();
     }
 
-
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void addExtData(
         String key,
         String value
@@ -221,6 +224,10 @@ public abstract class BaseInterstitialAdUnit {
         config.addExtData(key, value);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void updateExtData(
         String key,
         Set<String> value
@@ -228,14 +235,26 @@ public abstract class BaseInterstitialAdUnit {
         config.addExtData(key, value);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void removeExtData(String key) {
         config.removeExtData(key);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void clearExtData() {
         config.clearExtData();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public Map<String, Set<String>> getExtDataDictionary() {
         return config.getExtDataDictionary();
     }
@@ -264,22 +283,42 @@ public abstract class BaseInterstitialAdUnit {
         config.clearExtKeywords();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void setAppContent(ContentObject content) {
         config.setAppContent(content);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public ContentObject getAppContent() {
         return config.getAppContent();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void addUserData(DataObject dataObject) {
         config.addUserData(dataObject);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public ArrayList<DataObject> getUserData() {
         return config.getUserData();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void clearUserData() {
         config.clearUserData();
     }

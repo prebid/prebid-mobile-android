@@ -197,6 +197,10 @@ public abstract class MediationBaseAdUnit {
     }
 
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void addExtData(
         String key,
         String value
@@ -204,6 +208,10 @@ public abstract class MediationBaseAdUnit {
         adUnitConfig.addExtData(key, value);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void updateExtData(
         String key,
         Set<String> value
@@ -211,10 +219,18 @@ public abstract class MediationBaseAdUnit {
         adUnitConfig.addExtData(key, value);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void removeExtData(String key) {
         adUnitConfig.removeExtData(key);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void clearExtData() {
         adUnitConfig.clearExtData();
     }
@@ -253,14 +269,26 @@ public abstract class MediationBaseAdUnit {
         return adUnitConfig.getPbAdSlot();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void setAppContent(ContentObject content) {
         adUnitConfig.setAppContent(content);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public ContentObject getAppContent() {
         return adUnitConfig.getAppContent();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void addUserData(DataObject dataObject) {
         adUnitConfig.addUserData(dataObject);
     }

@@ -295,31 +295,39 @@ public abstract class AdUnit {
     }
 
     /**
+     * In the upcoming major release, the method will be removed.
      * This method obtains the context data keyword & value for adunit context targeting
      * if the key already exists the value will be appended to the list. No duplicates will be added
      */
+    @Deprecated
     public void addExtData(String key, String value) {
         configuration.addExtData(key, value);
     }
 
     /**
+     * In the upcoming major release, the method will be removed.
      * This method obtains the context data keyword & values for adunit context targeting
      * the values if the key already exist will be replaced with the new set of values
      */
+    @Deprecated
     public void updateExtData(String key, Set<String> value) {
         configuration.addExtData(key, value);
     }
 
     /**
+     * In the upcoming major release, the method will be removed.
      * This method allows to remove specific context data keyword & values set from adunit context targeting
      */
+    @Deprecated
     public void removeExtData(String key) {
         configuration.removeExtData(key);
     }
 
     /**
+     * In the upcoming major release, the method will be removed.
      * This method allows to remove all context data set from adunit context targeting
      */
+    @Deprecated
     public void clearExtData() {
         configuration.clearExtData();
     }
@@ -421,24 +429,42 @@ public abstract class AdUnit {
     }
 
     /**
+     * In the upcoming major release, the method will be removed.
      * This method obtains the content for adunit, content, in which impression will appear
      */
+    @Deprecated
     public void setAppContent(ContentObject content) {
         configuration.setAppContent(content);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public ContentObject getAppContent() {
         return configuration.getAppContent();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void addUserData(DataObject dataObject) {
         configuration.addUserData(dataObject);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public ArrayList<DataObject> getUserData() {
         return configuration.getUserData();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void clearUserData() {
         configuration.clearUserData();
     }

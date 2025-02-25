@@ -101,26 +101,50 @@ public class MediationNativeAdUnit {
         nativeAdUnit.setDUrlSupport(support);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void setAppContent(ContentObject content) {
         nativeAdUnit.setAppContent(content);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public ContentObject getAppContent() {
         return nativeAdUnit.getAppContent();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void addUserData(DataObject dataObject) {
         nativeAdUnit.addUserData(dataObject);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void clearUserData() {
         nativeAdUnit.clearUserData();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public ArrayList<DataObject> getUserData() {
         return nativeAdUnit.getUserData();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void addExtData(
             String key,
             String value
@@ -128,6 +152,10 @@ public class MediationNativeAdUnit {
         nativeAdUnit.addExtData(key, value);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void updateExtData(
             String key,
             Set<String> value
@@ -135,10 +163,18 @@ public class MediationNativeAdUnit {
         nativeAdUnit.updateExtData(key, value);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void removeExtData(String key) {
         nativeAdUnit.removeExtData(key);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void clearExtData() {
         nativeAdUnit.clearExtData();
     }

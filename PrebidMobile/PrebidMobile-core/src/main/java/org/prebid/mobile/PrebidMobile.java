@@ -62,8 +62,10 @@ public class PrebidMobile {
     public static boolean useExternalBrowser = false;
 
     /**
-     * If true, the SDK sends "af=3,5", indicating support for MRAID
+     * In the upcoming major release, the property will be replaced with the method to setup supported MRAID versions.
+     * If true, the SDK sends "af=3,5,6", indicating support for MRAID
      */
+    @Deprecated
     public static boolean sendMraidSupportParams = true;
 
     /**

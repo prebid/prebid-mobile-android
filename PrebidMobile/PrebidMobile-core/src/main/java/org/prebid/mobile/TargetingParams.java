@@ -231,9 +231,11 @@ public class TargetingParams {
     }
 
     /**
+     * In the upcoming major release, the method will be removed.
      * This method obtains the user data keyword & value for global user targeting
      * if the key already exists the value will be appended to the list. No duplicates will be added
      */
+    @Deprecated
     public static void addUserData(
         String key,
         String value
@@ -245,6 +247,7 @@ public class TargetingParams {
      * This method obtains the user data keyword & values set for global user targeting
      * the values if the key already exist will be replaced with the new set of values
      */
+    @Deprecated
     public static void updateUserData(
         String key,
         Set<String> value
@@ -253,19 +256,27 @@ public class TargetingParams {
     }
 
     /**
+     * In the upcoming major release, the method will be removed.
      * This method allows to remove specific user data keyword & value set from global user targeting
      */
+    @Deprecated
     public static void removeUserData(String key) {
         userDataMap.remove(key);
     }
 
     /**
+     * In the upcoming major release, the method will be removed.
      * This method allows to remove all user data set from global user targeting
      */
+    @Deprecated
     public static void clearUserData() {
         userDataMap.clear();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public static Map<String, Set<String>> getUserDataDictionary() {
         return userDataMap;
     }

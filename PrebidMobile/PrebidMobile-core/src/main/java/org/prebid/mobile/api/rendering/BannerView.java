@@ -480,7 +480,10 @@ public class BannerView extends FrameLayout {
         adUnitConfig.clearExtKeywords();
     }
 
-
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void addExtData(
         String key,
         String value
@@ -488,6 +491,10 @@ public class BannerView extends FrameLayout {
         adUnitConfig.addExtData(key, value);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void updateExtData(
         String key,
         Set<String> value
@@ -550,18 +557,34 @@ public class BannerView extends FrameLayout {
         adUnitConfig.setAppContent(content);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void setAppContent(ContentObject content) {
         adUnitConfig.setAppContent(content);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void addUserData(DataObject dataObject) {
         adUnitConfig.addUserData(dataObject);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public ArrayList<DataObject> getUserData() {
         return adUnitConfig.getUserData();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.
+     */
+    @Deprecated
     public void clearUserData() {
         adUnitConfig.clearUserData();
     }
