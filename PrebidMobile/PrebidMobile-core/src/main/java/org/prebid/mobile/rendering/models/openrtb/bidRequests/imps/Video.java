@@ -54,6 +54,8 @@ public class Video extends BaseBid {
 
     public Integer startDelay;
 
+    public int[] battr;
+
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
@@ -130,6 +132,14 @@ public class Video extends BaseBid {
         }
 
         toJSON(jsonObject, "pos", pos);
+
+        if (battr != null) {
+            JSONArray jsonArray = new JSONArray();
+            for (int number : battr) {
+                jsonArray.put(number);
+            }
+            toJSON(jsonObject, "battr", jsonArray);
+        }
 
         return jsonObject;
     }

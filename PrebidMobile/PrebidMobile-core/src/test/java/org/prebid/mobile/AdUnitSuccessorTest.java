@@ -18,6 +18,7 @@
 package org.prebid.mobile;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 
@@ -220,6 +221,7 @@ public class AdUnitSuccessorTest {
         parameters.setPlacement(Signals.Placement.InBanner);
         parameters.setPlcmt(Signals.Plcmt.Standalone);
         parameters.setLinearity(1);
+        parameters.setBattr(Arrays.asList(Signals.CreativeAttribute.AudioButton, Signals.CreativeAttribute.TextOnly));
 
         videoBaseAdUnit.setVideoParameters(parameters);
 
@@ -237,6 +239,7 @@ public class AdUnitSuccessorTest {
         Signals.StartDelay startDelay = testedVideoParameters.getStartDelay();
         Signals.Placement placement = testedVideoParameters.getPlacement();
         Integer linearity = testedVideoParameters.getLinearity();
+        List<Signals.CreativeAttribute> battr = testedVideoParameters.getBattr();
 
         //then
         assertEquals(2, api.size());
@@ -255,6 +258,7 @@ public class AdUnitSuccessorTest {
         assertEquals(new Signals.Placement(2), placement);
         assertEquals(new Signals.Plcmt(4), testedVideoParameters.getPlcmt());
         assertEquals(new Integer(1), linearity);
+        assertTrue(battr.contains(new Signals.CreativeAttribute(12)) && battr.contains(new Signals.CreativeAttribute(15)));
     }
 
     private void setupAndCheckVideoParametersHelper(BannerBaseAdUnit videoBaseAdUnit) {
@@ -289,6 +293,7 @@ public class AdUnitSuccessorTest {
         Signals.StartDelay startDelay = testedVideoParameters.getStartDelay();
         Signals.Placement placement = testedVideoParameters.getPlacement();
         Integer linearity = testedVideoParameters.getLinearity();
+        List<Signals.CreativeAttribute> battr = testedVideoParameters.getBattr();
 
         //then
         assertEquals(2, api.size());
@@ -307,5 +312,6 @@ public class AdUnitSuccessorTest {
         assertEquals(new Signals.Placement(2), placement);
         assertEquals(new Integer(1), linearity);
         assertEquals(new Signals.Plcmt(4), testedVideoParameters.getPlcmt());
+        assertNull(battr);
     }
 }

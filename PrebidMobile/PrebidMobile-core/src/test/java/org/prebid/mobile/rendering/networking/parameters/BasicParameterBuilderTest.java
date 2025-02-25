@@ -151,6 +151,8 @@ public class BasicParameterBuilderTest {
         VideoParameters videoParameters = new VideoParameters(Lists.newArrayList("video/mp4"));
         videoParameters.setAdSize(new AdSize(320, 480));
         videoParameters.setApi(Lists.newArrayList(Signals.Api.OMID_1, Signals.Api.VPAID_1));
+        videoParameters.setBattr(Lists.newArrayList(Signals.CreativeAttribute.Flashing, Signals.CreativeAttribute.Flickering));
+
         config.setVideoParameters(videoParameters);
 
         NativeAdUnitConfiguration nativeConfiguration = new NativeAdUnitConfiguration();
@@ -173,7 +175,7 @@ public class BasicParameterBuilderTest {
 
         Video video = imp.video;
         assertNotNull(video);
-        assertEquals("{\"delivery\":[3],\"w\":320,\"h\":480,\"api\":[7,1],\"mimes\":[\"video\\/mp4\"]}", video.getJsonObject().toString());
+        assertEquals("{\"delivery\":[3],\"battr\":[10],\"w\":320,\"h\":480,\"api\":[7,1],\"mimes\":[\"video\\/mp4\"]}", video.getJsonObject().toString());
 
         Native nativeObj = imp.nativeObj;
         assertNotNull(nativeObj);

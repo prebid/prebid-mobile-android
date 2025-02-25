@@ -294,4 +294,150 @@ public class Signals {
         }
     }
 
+    /**
+     * <a href="https://github.com/InteractiveAdvertisingBureau/AdCOM/blob/main/AdCOM%20v1.0%20FINAL.md#list--creative-attributes-">OpenRTB config</a>.
+     * <pre>
+     | Value | Description                                                                |
+     |-------|----------------------------------------------------------------------------|
+     | 1     | Audio Ad (Autoplay)                                                        |
+     | 2     | Audio Ad (User Initiated)                                                  |
+     | 3     | Expandable (Automatic)                                                     |
+     | 4     | Expandable (User Initiated - Click)                                        |
+     | 5     | Expandable (User Initiated - Rollover)                                     |
+     | 6     | In-Banner Video Ad (Autoplay)                                              |
+     | 7     | In-Banner Video Ad (User Initiated)                                        |
+     | 8     | Pop (e.g., Over, Under, or Upon Exit)                                      |
+     | 9     | Provocative or Suggestive Imagery                                          |
+     | 10    | Shaky, Flashing, Flickering, Extreme Animation, Smileys                    |
+     | 11    | Surveys                                                                    |
+     | 12    | Text Only                                                                  |
+     | 13    | User Interactive (e.g., Embedded Games)                                    |
+     | 14    | Windows Dialog or Alert Style                                              |
+     | 15    | Has Audio On/Off Button                                                    |
+     | 16    | Ad Provides Skip Button (e.g. VPAID-rendered skip button on pre-roll video)|
+     | 17    | Adobe Flash
+     * </pre>
+     */
+    public static class CreativeAttribute extends SingleContainerInt {
+
+        /**
+         * Audio Ad (Autoplay)
+         */
+        public static CreativeAttribute AudioAd_Autoplay = new CreativeAttribute(1);
+
+        /**
+         * Audio Ad (User Initiated)
+         */
+        public static CreativeAttribute AudioAd_UserInitiated = new CreativeAttribute(2);
+
+        /**
+         * Expandable (Automatic)
+         */
+        public static CreativeAttribute Expandable_Automatic = new CreativeAttribute(3);
+
+        /**
+         * Expandable (User Initiated - Click)
+         */
+        public static CreativeAttribute Expandable_Click = new CreativeAttribute(4);
+
+        /**
+         * Expandable (User Initiated - Rollover)
+         */
+        public static CreativeAttribute Expandable_Rollover = new CreativeAttribute(5);
+
+        /**
+         * In-Banner Video Ad (Autoplay)
+         */
+        public static CreativeAttribute InBanner_Autoplay = new CreativeAttribute(6);
+
+        /**
+         * In-Banner Video Ad (User Initiated)
+         */
+        public static CreativeAttribute InBanner_UserInitiated = new CreativeAttribute(7);
+
+        /**
+         * Pop (e.g., Over, Under, or Upon Exit)
+         */
+        public static CreativeAttribute Pop = new CreativeAttribute(8);
+
+        /// Provocative
+        /**
+         * Provocative
+         */
+        public static CreativeAttribute Provocative = new CreativeAttribute(9);
+
+        /**
+         * Suggestive Imagery
+         */
+        public static CreativeAttribute SuggestiveImagery = new CreativeAttribute(9);
+
+        /**
+         * Shaky
+         */
+        public static CreativeAttribute Shaky = new CreativeAttribute(10);
+
+        /**
+         * Flashing
+         */
+        public static CreativeAttribute Flashing = new CreativeAttribute(10);
+
+        /**
+         * Flickering
+         */
+        public static CreativeAttribute Flickering = new CreativeAttribute(10);
+
+        /**
+         * Extreme Animation
+         */
+        public static CreativeAttribute ExtremeAnimation = new CreativeAttribute(10);
+
+        /**
+         * Smileys
+         */
+        public static CreativeAttribute Smileys = new CreativeAttribute(10);
+
+        /**
+         * Surveys
+         */
+        public static CreativeAttribute Surveys = new CreativeAttribute(11);
+
+        /**
+         * Text Only
+         */
+        public static CreativeAttribute TextOnly = new CreativeAttribute(12);
+
+        /**
+         * User Interactive (e.g., Embedded Games)
+         */
+        public static CreativeAttribute UserInteractive = new CreativeAttribute(13);
+
+        /**
+         * Windows Dialog
+         */
+        public static CreativeAttribute WindowsDialog = new CreativeAttribute(14);
+
+        /**
+         * Alert Style
+         */
+        public static CreativeAttribute AlertStyle = new CreativeAttribute(14);
+
+        /**
+         * Has Audio On/Off Button
+         */
+        public static CreativeAttribute AudioButton = new CreativeAttribute(15);
+
+        /**
+         * Ad Provides Skip Button (e.g. VPAID-rendered skip button on pre-roll video)
+         */
+        public static CreativeAttribute SkipButton = new CreativeAttribute(16);
+
+        /**
+         * Adobe Flash.
+         */
+        public static CreativeAttribute AdobeFlash = new CreativeAttribute(17);
+
+        public CreativeAttribute(int value) {
+            super(value);
+        }
+    }
 }
