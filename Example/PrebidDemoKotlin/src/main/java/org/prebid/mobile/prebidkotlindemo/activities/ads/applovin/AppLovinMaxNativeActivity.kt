@@ -47,16 +47,16 @@ class AppLovinMaxNativeActivity : BaseAdActivity() {
         nativeAdLoader = MaxNativeAdLoader(AD_UNIT_ID, this)
         nativeAdLoader?.setRevenueListener {}
         nativeAdLoader?.setNativeAdListener(object : MaxNativeAdListener() {
-            override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, nativeAd: MaxAd?) {
+            override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, nativeAd: MaxAd) {
                 adWrapperView.removeAllViews()
                 adWrapperView.addView(nativeAdView)
             }
 
-            override fun onNativeAdLoadFailed(p0: String?, p1: MaxError?) {
+            override fun onNativeAdLoadFailed(p0: String, p1: MaxError) {
                 Log.e("AppLovinMaxNative", "Failed to load: $p0")
             }
 
-            override fun onNativeAdClicked(p0: MaxAd?) {}
+            override fun onNativeAdClicked(p0: MaxAd) {}
         })
 
         val nativeAdUnit = configureNativeAdUnit()

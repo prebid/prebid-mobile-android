@@ -51,17 +51,17 @@ class AppLovinMaxDisplayBanner320x50Activity : BaseAdActivity() {
     private fun createAd() {
         adView = MaxAdView(AD_UNIT_ID, this)
         adView?.setListener(object : MaxAdViewAdListener {
-            override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
-                Log.d("AppLovinMaxBanner", "onAdLoadFailed(): ${error?.message}")
+            override fun onAdLoadFailed(adUnitId: String, error: MaxError) {
+                Log.d("AppLovinMaxBanner", "onAdLoadFailed(): ${error.message}")
             }
 
-            override fun onAdLoaded(ad: MaxAd?) {}
-            override fun onAdHidden(ad: MaxAd?) {}
-            override fun onAdClicked(ad: MaxAd?) {}
-            override fun onAdExpanded(ad: MaxAd?) {}
-            override fun onAdCollapsed(ad: MaxAd?) {}
-            override fun onAdDisplayed(ad: MaxAd?) {}
-            override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {}
+            override fun onAdLoaded(ad: MaxAd) {}
+            override fun onAdHidden(ad: MaxAd) {}
+            override fun onAdClicked(ad: MaxAd) {}
+            override fun onAdExpanded(ad: MaxAd) {}
+            override fun onAdCollapsed(ad: MaxAd) {}
+            override fun onAdDisplayed(ad: MaxAd) {}
+            override fun onAdDisplayFailed(ad: MaxAd, error: MaxError) {}
         })
         adView?.layoutParams = FrameLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
