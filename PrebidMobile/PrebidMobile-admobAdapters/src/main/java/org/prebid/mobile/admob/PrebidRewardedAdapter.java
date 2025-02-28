@@ -98,25 +98,7 @@ public class PrebidRewardedAdapter extends PrebidBaseAdapter {
             @Override
             public void onUserEarnedReward() {
                 if (rewardedAdCallback != null && interstitialController != null) {
-                    Reward reward = interstitialController.getReward();
-                    rewardedAdCallback.onUserEarnedReward(new RewardItem() {
-                        @Override
-                        public int getAmount() {
-                            if (reward != null) {
-                                return reward.getCount();
-                            }
-                            return 0;
-                        }
-
-                        @NonNull
-                        @Override
-                        public @NotNull String getType() {
-                            if (reward != null) {
-                                return reward.getType();
-                            }
-                            return "";
-                        }
-                    });
+                    rewardedAdCallback.onUserEarnedReward();
                 }
             }
         };
