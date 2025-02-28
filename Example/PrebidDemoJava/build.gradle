@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     namespace "org.prebid.mobile.javademo"
     setCompileSdkVersion(34)
-    setBuildToolsVersion("30.0.3")
+    setBuildToolsVersion("35.0.1")
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 34

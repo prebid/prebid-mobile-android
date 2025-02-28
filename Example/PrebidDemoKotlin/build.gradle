@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 android {
     namespace "org.prebid.mobile.prebidkotlindemo"
     setCompileSdkVersion(34)
-    setBuildToolsVersion("30.0.3")
+    setBuildToolsVersion("35.0.1")
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 34

@@ -21,7 +21,7 @@ apply plugin: 'kotlin-kapt'
 android {
     namespace "org.prebid.mobile.renderingtestapp"
     setCompileSdkVersion(34)
-    setBuildToolsVersion("30.0.3")
+    setBuildToolsVersion("35.0.1")
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 34

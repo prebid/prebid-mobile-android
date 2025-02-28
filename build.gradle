@@ -3,7 +3,7 @@ ext {
     prebidSdkMinVersion = 16
     prebidSdkTargetVersion = 34
     prebidSdkCompileVersion = 34
-    prebidSdkBuildToolsVersion = "30.0.3"
+    prebidSdkBuildToolsVersion = "35.0.1"
 
     artifactGroupId = "org.prebid"
     artifactFolder = "${buildDir}/generated-artifacts"
@@ -19,7 +19,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.5.2'
+        classpath 'com.android.tools.build:gradle:8.7.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
