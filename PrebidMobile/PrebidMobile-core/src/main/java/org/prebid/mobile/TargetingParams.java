@@ -231,7 +231,7 @@ public class TargetingParams {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      * This method obtains the user data keyword & value for global user targeting
      * if the key already exists the value will be appended to the list. No duplicates will be added
      */
@@ -244,6 +244,7 @@ public class TargetingParams {
     }
 
     /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      * This method obtains the user data keyword & values set for global user targeting
      * the values if the key already exist will be replaced with the new set of values
      */
@@ -256,7 +257,7 @@ public class TargetingParams {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      * This method allows to remove specific user data keyword & value set from global user targeting
      */
     @Deprecated
@@ -265,7 +266,7 @@ public class TargetingParams {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      * This method allows to remove all user data set from global user targeting
      */
     @Deprecated
@@ -274,7 +275,7 @@ public class TargetingParams {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
      */
     @Deprecated
     public static Map<String, Set<String>> getUserDataDictionary() {

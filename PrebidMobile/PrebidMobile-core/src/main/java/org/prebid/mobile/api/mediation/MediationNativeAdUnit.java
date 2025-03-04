@@ -102,7 +102,7 @@ public class MediationNativeAdUnit {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      */
     @Deprecated
     public void setAppContent(ContentObject content) {
@@ -110,7 +110,7 @@ public class MediationNativeAdUnit {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
      */
     @Deprecated
     public ContentObject getAppContent() {
@@ -118,7 +118,7 @@ public class MediationNativeAdUnit {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      */
     @Deprecated
     public void addUserData(DataObject dataObject) {
@@ -126,7 +126,7 @@ public class MediationNativeAdUnit {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      */
     @Deprecated
     public void clearUserData() {
@@ -134,17 +134,13 @@ public class MediationNativeAdUnit {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
      */
     @Deprecated
     public ArrayList<DataObject> getUserData() {
         return nativeAdUnit.getUserData();
     }
 
-    /**
-     * In the upcoming major release, the method will be removed.
-     */
-    @Deprecated
     public void addExtData(
             String key,
             String value
@@ -152,10 +148,6 @@ public class MediationNativeAdUnit {
         nativeAdUnit.addExtData(key, value);
     }
 
-    /**
-     * In the upcoming major release, the method will be removed.
-     */
-    @Deprecated
     public void updateExtData(
             String key,
             Set<String> value
@@ -163,18 +155,10 @@ public class MediationNativeAdUnit {
         nativeAdUnit.updateExtData(key, value);
     }
 
-    /**
-     * In the upcoming major release, the method will be removed.
-     */
-    @Deprecated
     public void removeExtData(String key) {
         nativeAdUnit.removeExtData(key);
     }
 
-    /**
-     * In the upcoming major release, the method will be removed.
-     */
-    @Deprecated
     public void clearExtData() {
         nativeAdUnit.clearExtData();
     }

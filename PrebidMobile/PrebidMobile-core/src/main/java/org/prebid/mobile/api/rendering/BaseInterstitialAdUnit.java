@@ -213,9 +213,6 @@ public abstract class BaseInterstitialAdUnit {
         config.clearExtKeywords();
     }
 
-    /**
-     * In the upcoming major release, the method will be removed.
-     */
     @Deprecated
     public void addExtData(
         String key,
@@ -224,10 +221,6 @@ public abstract class BaseInterstitialAdUnit {
         config.addExtData(key, value);
     }
 
-    /**
-     * In the upcoming major release, the method will be removed.
-     */
-    @Deprecated
     public void updateExtData(
         String key,
         Set<String> value
@@ -235,26 +228,14 @@ public abstract class BaseInterstitialAdUnit {
         config.addExtData(key, value);
     }
 
-    /**
-     * In the upcoming major release, the method will be removed.
-     */
-    @Deprecated
     public void removeExtData(String key) {
         config.removeExtData(key);
     }
 
-    /**
-     * In the upcoming major release, the method will be removed.
-     */
-    @Deprecated
     public void clearExtData() {
         config.clearExtData();
     }
 
-    /**
-     * In the upcoming major release, the method will be removed.
-     */
-    @Deprecated
     public Map<String, Set<String>> getExtDataDictionary() {
         return config.getExtDataDictionary();
     }
@@ -284,7 +265,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      */
     @Deprecated
     public void setAppContent(ContentObject content) {
@@ -292,7 +273,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
      */
     @Deprecated
     public ContentObject getAppContent() {
@@ -300,7 +281,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      */
     @Deprecated
     public void addUserData(DataObject dataObject) {
@@ -308,7 +289,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
      */
     @Deprecated
     public ArrayList<DataObject> getUserData() {
@@ -316,7 +297,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      */
     @Deprecated
     public void clearUserData() {

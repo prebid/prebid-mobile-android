@@ -480,10 +480,6 @@ public class BannerView extends FrameLayout {
         adUnitConfig.clearExtKeywords();
     }
 
-    /**
-     * In the upcoming major release, the method will be removed.
-     */
-    @Deprecated
     public void addExtData(
         String key,
         String value
@@ -491,10 +487,6 @@ public class BannerView extends FrameLayout {
         adUnitConfig.addExtData(key, value);
     }
 
-    /**
-     * In the upcoming major release, the method will be removed.
-     */
-    @Deprecated
     public void updateExtData(
         String key,
         Set<String> value
@@ -552,13 +544,16 @@ public class BannerView extends FrameLayout {
         return adUnitConfig.getPbAdSlot();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
+     */
     @Deprecated
     public void addContent(ContentObject content) {
         adUnitConfig.setAppContent(content);
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      */
     @Deprecated
     public void setAppContent(ContentObject content) {
@@ -566,7 +561,7 @@ public class BannerView extends FrameLayout {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      */
     @Deprecated
     public void addUserData(DataObject dataObject) {
@@ -574,7 +569,7 @@ public class BannerView extends FrameLayout {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
      */
     @Deprecated
     public ArrayList<DataObject> getUserData() {
@@ -582,7 +577,7 @@ public class BannerView extends FrameLayout {
     }
 
     /**
-     * In the upcoming major release, the method will be removed.
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      */
     @Deprecated
     public void clearUserData() {
