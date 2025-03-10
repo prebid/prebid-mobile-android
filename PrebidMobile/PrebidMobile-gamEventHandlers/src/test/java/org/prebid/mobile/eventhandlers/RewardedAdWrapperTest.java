@@ -16,12 +16,24 @@
 
 package org.prebid.mobile.eventhandlers;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.prebid.mobile.eventhandlers.global.Constants.APP_EVENT;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,12 +47,8 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.prebid.mobile.eventhandlers.global.Constants.APP_EVENT;
-
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21)
+@Config(sdk = 23)
 public class RewardedAdWrapperTest {
     private RewardedAdWrapper rewardedAdWrapper;
 
