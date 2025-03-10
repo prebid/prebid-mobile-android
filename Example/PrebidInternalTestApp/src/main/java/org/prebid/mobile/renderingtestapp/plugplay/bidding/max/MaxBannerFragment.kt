@@ -3,10 +3,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.max
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdFormat
 import com.applovin.mediation.MaxAdViewAdListener
@@ -21,7 +18,6 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerApplovinMaxBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class MaxBannerFragment : AdFragment() {
 
@@ -106,40 +102,40 @@ open class MaxBannerFragment : AdFragment() {
 
     protected fun createListener(): MaxAdViewAdListener {
         return object : MaxAdViewAdListener {
-            override fun onAdLoaded(ad: MaxAd?) {
+            override fun onAdLoaded(ad: MaxAd) {
 
                 binding.btnLoad.isEnabled = true
                 events.loaded(true)
             }
 
-            override fun onAdClicked(ad: MaxAd?) {
+            override fun onAdClicked(ad: MaxAd) {
                 events.clicked(true)
             }
 
-            override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
+            override fun onAdLoadFailed(adUnitId: String, error: MaxError) {
                 events.loadFailed(true)
 
                 binding.btnLoad.isEnabled = true
-                Log.d(TAG, "onAdLoadFailed(): ${error?.message}")
+                Log.d(TAG, "onAdLoadFailed(): ${error.message}")
             }
 
-            override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {
+            override fun onAdDisplayFailed(ad: MaxAd, error: MaxError) {
                 events.displayFailed(true)
 
-                Log.d(TAG, "onAdDisplayFailed(): ${error?.message}")
+                Log.d(TAG, "onAdDisplayFailed(): ${error.message}")
             }
 
-            override fun onAdExpanded(ad: MaxAd?) {
+            override fun onAdExpanded(ad: MaxAd) {
                 events.expanded(true)
             }
 
-            override fun onAdCollapsed(ad: MaxAd?) {
+            override fun onAdCollapsed(ad: MaxAd) {
                 events.collapsed(true)
             }
 
             // Deprecated according to documentation
-            override fun onAdDisplayed(ad: MaxAd?) {}
-            override fun onAdHidden(ad: MaxAd?) {}
+            override fun onAdDisplayed(ad: MaxAd) {}
+            override fun onAdHidden(ad: MaxAd) {}
         }
     }
 
