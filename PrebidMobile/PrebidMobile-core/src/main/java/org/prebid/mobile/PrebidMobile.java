@@ -196,6 +196,11 @@ public class PrebidMobile {
         return accountId;
     }
 
+    /**
+     * @deprecated In the upcoming major release, the method will be removed.
+     * Please, use {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}}
+     */
+    @Deprecated
     public static void setPrebidServerHost(Host host) {
         if (host == null) {
             LogUtil.error(TAG, "setPrebidServerHost: Can't set null.");
@@ -279,13 +284,48 @@ public class PrebidMobile {
      *
      * @param context  any context (must be not null)
      * @param listener initialization listener (can be null).
-     *                 <p>
+     * <p>
+     * @deprecated Please, use {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}} instead.
      */
+    @Deprecated
     @MainThread
     public static void initializeSdk(
         @Nullable Context context,
         @Nullable SdkInitializationListener listener
     ) {
+        SdkInitializer.init(context, listener);
+    }
+
+    /**
+     * Initializes the main SDK classes and makes request to Prebid server to check its status.
+     * If you use custom /status endpoint set it with ({@link PrebidMobile#setCustomStatusEndpoint(String)}) before starting initialization.
+     * <p>
+     * Calls SdkInitializationListener callback with enum initialization status parameter:
+     * <p>
+     * SUCCEEDED - Prebid SDK is initialized successfully and ready to work.
+     * <p>
+     * FAILED - Prebid SDK is failed to initialize and is not able to work.
+     * <p>
+     * SERVER_STATUS_WARNING - Prebid SDK failed to check the PBS status. The SDK is initialized and able to work, though.
+     * <p>
+     * To get the description of the problem you can call {@link InitializationStatus#getDescription()}
+     *
+     * @param context  any context (must be not null)
+     * @param serverURL the Prebid Server URL
+     * @param listener initialization listener (can be null).
+     * <p>
+     */
+    @MainThread
+    public static void initializeSdk(
+            @Nullable Context context,
+            String serverURL,
+            @Nullable SdkInitializationListener listener
+    ) {
+        if (serverURL == null) {
+            LogUtil.error(TAG, "initializeSdk: serverURL is null.");
+            return;
+        }
+        PrebidMobile.host = Host.createCustomHost(serverURL);
         SdkInitializer.init(context, listener);
     }
 

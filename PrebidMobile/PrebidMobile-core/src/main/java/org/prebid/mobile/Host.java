@@ -35,6 +35,10 @@ public enum Host {
     @Deprecated
     RUBICON("https://prebid-server.rubiconproject.com/openrtb2/auction"),
 
+    /**
+     * In the upcoming major release, the property will be removed.
+     */
+    @Deprecated
     CUSTOM("");
 
     private String url;
