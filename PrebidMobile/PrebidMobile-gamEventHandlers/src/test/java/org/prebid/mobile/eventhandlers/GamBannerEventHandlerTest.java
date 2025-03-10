@@ -16,10 +16,22 @@
 
 package org.prebid.mobile.eventhandlers;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.view.View;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,11 +49,8 @@ import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21)
+@Config(sdk = 23)
 public class GamBannerEventHandlerTest {
 
     private static final String GAM_AD_UNIT_ID = "12345678";
