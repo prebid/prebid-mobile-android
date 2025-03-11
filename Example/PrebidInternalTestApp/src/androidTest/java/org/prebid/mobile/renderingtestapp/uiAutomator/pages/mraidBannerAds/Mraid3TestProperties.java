@@ -16,18 +16,22 @@
 
 package org.prebid.mobile.renderingtestapp.uiAutomator.pages.mraidBannerAds;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import android.view.KeyEvent;
+
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.Until;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
+import org.prebid.mobile.rendering.utils.helpers.AdvertisingIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
-
-import static org.junit.Assert.*;
 
 public class Mraid3TestProperties extends MraidBasicPage {
 
@@ -52,8 +56,8 @@ public class Mraid3TestProperties extends MraidBasicPage {
         envJson.put("sdk", PrebidMobile.SDK_NAME);
         envJson.put("sdkVersion", PrebidMobile.SDK_VERSION);
         envJson.put("appId", AppInfoManager.getPackageName());
-        envJson.put("ifa", AdIdManager.getAdId());
-        envJson.put("limitAdTracking", AdIdManager.isLimitAdTrackingEnabled());
+        envJson.put("ifa", AdvertisingIdManager.getAdId());
+        envJson.put("limitAdTracking", AdvertisingIdManager.isLimitAdTrackingEnabled());
         envJson.put("coppa", PrebidMobile.isCoppaEnabled);
 
         String viewText = clearStringFromWhitespace(device.wait(Until.findObject(Locators.envContainer), TIMEOUT).getText());

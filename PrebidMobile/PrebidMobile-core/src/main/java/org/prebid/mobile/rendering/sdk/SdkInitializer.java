@@ -13,6 +13,7 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.rendering.PrebidRenderer;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
+import org.prebid.mobile.rendering.utils.helpers.AdvertisingIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 
 import java.util.concurrent.ExecutorService;
@@ -82,6 +83,7 @@ public class SdkInitializer {
             Future<String> statusRequesterResult = executor.submit(new StatusRequester());
             executor.execute(new UserConsentFetcherTask());
             executor.execute(new UserAgentFetcherTask());
+            executor.execute(AdvertisingIdManager::initAdvertisingId);
             executor.shutdown();
 
             boolean terminatedByTimeout = !executor.awaitTermination(10, TimeUnit.SECONDS);

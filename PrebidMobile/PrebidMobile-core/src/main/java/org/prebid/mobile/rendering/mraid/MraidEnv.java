@@ -18,7 +18,8 @@ package org.prebid.mobile.rendering.mraid;
 
 import androidx.annotation.NonNull;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
+import org.prebid.mobile.rendering.sdk.ManagersResolver;
+import org.prebid.mobile.rendering.utils.helpers.AdvertisingIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 
 public class MraidEnv {
@@ -34,8 +35,8 @@ public class MraidEnv {
                 + getStringPropertyWithSeparator("sdk", PrebidMobile.SDK_NAME)
                 + getStringPropertyWithSeparator("sdkVersion", PrebidMobile.SDK_VERSION)
                 + getStringPropertyWithSeparator("appId", AppInfoManager.getPackageName())
-                + getStringPropertyWithSeparator("ifa", AdIdManager.getAdId())
-                + getBooleanPropertyWithSeparator("limitAdTracking", AdIdManager.isLimitAdTrackingEnabled(), ",")
+                + getStringPropertyWithSeparator("ifa", AdvertisingIdManager.getAdvertisingId(ManagersResolver.getInstance().getUserConsentManager()))
+                + getBooleanPropertyWithSeparator("limitAdTracking", AdvertisingIdManager.isLimitedAdTrackingEnabled(), ",")
                 + getBooleanPropertyWithSeparator("coppa", PrebidMobile.isCoppaEnabled, "")
                 + "};";
     }
