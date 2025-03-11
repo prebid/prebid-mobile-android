@@ -5,9 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.RelativeLayout
-import android.widget.TextView
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdRevenueListener
 import com.applovin.mediation.MaxError
@@ -21,7 +18,6 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingNativeApplovinMaxBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class MaxNativeFragment : AdFragment() {
 
@@ -147,7 +143,7 @@ open class MaxNativeFragment : AdFragment() {
 
     private fun createNativeAdListener(wrapper: ViewGroup): MaxNativeAdListener {
         return object : MaxNativeAdListener() {
-            override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, nativeAd: MaxAd?) {
+            override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, nativeAd: MaxAd) {
                 wrapper.removeAllViews()
                 wrapper.addView(nativeAdView)
 
@@ -155,11 +151,11 @@ open class MaxNativeFragment : AdFragment() {
                 binding.btnLoad.isEnabled = true
             }
 
-            override fun onNativeAdClicked(p0: MaxAd?) {
+            override fun onNativeAdClicked(p0: MaxAd) {
                 events.nativeAdClicked(true)
             }
 
-            override fun onNativeAdLoadFailed(p0: String?, p1: MaxError?) {
+            override fun onNativeAdLoadFailed(p0: String, p1: MaxError) {
                 events.nativeAdLoadFailed(true)
                 binding.btnLoad.isEnabled = true
 

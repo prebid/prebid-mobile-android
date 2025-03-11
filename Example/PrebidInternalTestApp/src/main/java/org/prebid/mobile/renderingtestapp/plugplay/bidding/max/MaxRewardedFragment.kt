@@ -96,47 +96,39 @@ open class MaxRewardedFragment : AdFragment() {
 
     private fun createListener(): MaxRewardedAdListener {
         return object : MaxRewardedAdListener {
-            override fun onAdLoaded(ad: MaxAd?) {
+            override fun onAdLoaded(ad: MaxAd) {
                 events.loaded(true)
                 binding.btnLoad.isEnabled = true
                 binding.btnLoad.text = getString(R.string.text_show)
             }
 
-            override fun onAdClicked(ad: MaxAd?) {
+            override fun onAdClicked(ad: MaxAd) {
                 events.clicked(true)
             }
 
-            override fun onAdDisplayed(ad: MaxAd?) {
+            override fun onAdDisplayed(ad: MaxAd) {
                 events.displayed(true)
             }
 
-            override fun onAdHidden(ad: MaxAd?) {
+            override fun onAdHidden(ad: MaxAd) {
                 events.hidden(true)
             }
 
-            override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
+            override fun onAdLoadFailed(adUnitId: String, error: MaxError) {
                 events.loadFailed(true)
 
                 binding.btnLoad.isEnabled = true
-                Log.d(TAG, "onAdLoadFailed(): ${error?.message}")
+                Log.d(TAG, "onAdLoadFailed(): ${error.message}")
             }
 
-            override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {
+            override fun onAdDisplayFailed(ad: MaxAd, error: MaxError) {
                 events.displayFailed(true)
 
-                Log.d(TAG, "onAdDisplayFailed(): ${error?.message}")
+                Log.d(TAG, "onAdDisplayFailed(): ${error.message}")
             }
 
-            override fun onRewardedVideoStarted(ad: MaxAd?) {
-                events.rewardedVideoStarted(true)
-            }
-
-            override fun onRewardedVideoCompleted(ad: MaxAd?) {
-                events.rewardedVideoCompleted(true)
-            }
-
-            override fun onUserRewarded(ad: MaxAd?, reward: MaxReward?) {
-                Log.d(TAG, "User earned reward: ${reward?.label} ${reward?.amount}")
+            override fun onUserRewarded(ad: MaxAd, reward: MaxReward) {
+                Log.d(TAG, "User earned reward: ${reward.label} ${reward.amount}")
                 events.userRewarded(true)
             }
         }

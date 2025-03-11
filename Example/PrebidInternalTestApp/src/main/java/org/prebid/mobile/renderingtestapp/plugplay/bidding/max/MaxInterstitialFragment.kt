@@ -3,8 +3,6 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.max
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdListener
 import com.applovin.mediation.MaxError
@@ -17,7 +15,6 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingInterstitialApplovinMaxBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 import java.util.*
 
 open class MaxInterstitialFragment : AdFragment() {
@@ -106,35 +103,35 @@ open class MaxInterstitialFragment : AdFragment() {
 
     protected fun createListener(): MaxAdListener {
         return object : MaxAdListener {
-            override fun onAdLoaded(ad: MaxAd?) {
+            override fun onAdLoaded(ad: MaxAd) {
                 events.loaded(true)
                 binding.btnLoad.isEnabled = true
                 binding.btnLoad.text = getString(R.string.text_show)
             }
 
-            override fun onAdClicked(ad: MaxAd?) {
+            override fun onAdClicked(ad: MaxAd) {
                 events.clicked(true)
             }
 
-            override fun onAdDisplayed(ad: MaxAd?) {
+            override fun onAdDisplayed(ad: MaxAd) {
                 events.displayed(true)
             }
 
-            override fun onAdHidden(ad: MaxAd?) {
+            override fun onAdHidden(ad: MaxAd) {
                 events.hidden(true)
             }
 
-            override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
+            override fun onAdLoadFailed(adUnitId: String, error: MaxError) {
                 events.loadFailed(true)
 
                 binding.btnLoad.isEnabled = true
-                Log.d(TAG, "onAdLoadFailed(): ${error?.message}")
+                Log.d(TAG, "onAdLoadFailed(): ${error.message}")
             }
 
-            override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {
+            override fun onAdDisplayFailed(ad: MaxAd, error: MaxError) {
                 events.displayFailed(true)
 
-                Log.d(TAG, "onAdDisplayFailed(): ${error?.message}")
+                Log.d(TAG, "onAdDisplayFailed(): ${error.message}")
             }
         }
     }
