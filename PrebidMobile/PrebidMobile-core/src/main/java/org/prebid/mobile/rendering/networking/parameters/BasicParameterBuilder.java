@@ -288,6 +288,16 @@ public class BasicParameterBuilder extends ParameterBuilder {
                     }
                     video.protocols = protocolsArray;
                 }
+
+                List<Signals.CreativeAttribute> battrObjects = videoParameters.getBattr();
+                if (battrObjects != null && battrObjects.size() > 0) {
+                    int size = battrObjects.size();
+                    int[] battrsArray = new int[size];
+                    for (int i = 0; i < size; i++) {
+                        battrsArray[i] = battrObjects.get(i).getValue();
+                    }
+                    video.battr = battrsArray;
+                }
             }
             if (video.placement == null && adConfiguration.isPlacementTypeValid()) {
                 video.placement = adConfiguration.getPlacementTypeValue();

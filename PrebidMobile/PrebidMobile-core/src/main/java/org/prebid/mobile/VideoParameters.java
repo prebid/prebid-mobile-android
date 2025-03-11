@@ -3,6 +3,8 @@ package org.prebid.mobile;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -98,6 +100,11 @@ public class VideoParameters {
     @Nullable
     private AdSize adSize;
 
+    /**
+     * Array of blocked creative attributes.
+     */
+    @Nullable
+    private List<Signals.CreativeAttribute> battr;
 
     //Getters and setters
     @Nullable
@@ -216,4 +223,20 @@ public class VideoParameters {
         this.plcmt = plcmt;
     }
 
+    @Nullable
+    public List<Signals.CreativeAttribute> getBattr() {
+        return battr;
+    }
+
+    /**
+     * Sets {@link org.prebid.mobile.Signals.CreativeAttribute}.
+     */
+    public void setBattr(@Nullable List<Signals.CreativeAttribute> battr) {
+        if (battr != null) {
+            HashSet<Signals.CreativeAttribute> set = new HashSet<>(battr);
+            this.battr = new ArrayList<>(set);
+        } else {
+            this.battr = null;
+        }
+    }
 }
