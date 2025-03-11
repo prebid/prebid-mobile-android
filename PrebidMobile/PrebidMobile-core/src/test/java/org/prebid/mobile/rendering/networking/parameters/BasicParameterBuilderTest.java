@@ -108,6 +108,8 @@ public class BasicParameterBuilderTest {
         PrebidMobile.isCoppaEnabled = false;
         PrebidMobile.clearStoredBidResponses();
         PrebidMobile.setStoredAuctionResponse(null);
+        PrebidMobile.setPrebidServerAccountId("");
+        PrebidMobile.setAuctionSettingsId(null);
 
         PrebidMobile.unregisterPluginRenderer(otherPlugin);
     }
@@ -1012,6 +1014,91 @@ public class BasicParameterBuilderTest {
         assertTrue(renderersObj.length() == 2);
         assertEquals(((JSONObject)renderersObj.get(0)).get("name"), otherPlugin.getName());
         assertEquals(((JSONObject)renderersObj.get(1)).get("name"), PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME);
+    }
+
+    @Test
+    public void whenSetAuctionSettingsId_storedRequestIdEqualsToTheAuctionsSettingsId() throws JSONException {
+        // Given
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(false);
+        configuration.setAdFormat(AdFormat.BANNER);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
+        AdRequestInput adRequestInput = new AdRequestInput();
+
+        String expectedStoredRequestId = "test-auction-settings-id";
+        String serverAccountId = "test-prebid-server-account-id";
+
+        PrebidMobile.setAuctionSettingsId(expectedStoredRequestId);
+        PrebidMobile.setPrebidServerAccountId(serverAccountId);
+
+        // When
+
+        builder.appendBuilderParameters(adRequestInput);
+
+        // Then
+        JSONObject prebidObj = (JSONObject) adRequestInput.getBidRequest().getExt().getMap().get("prebid");
+        String id = prebidObj.getJSONObject("storedrequest").getString("id");
+
+        assertNotNull(PrebidMobile.getAuctionSettingsId());
+        assertEquals(expectedStoredRequestId, id);
+        assertNotEquals(serverAccountId, id);
+    }
+
+    @Test
+    public void whenSetOnlyServerAccountId_storedRequestIdEqualsToTheServerAccountId() throws JSONException {
+        // Given
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(false);
+        configuration.setAdFormat(AdFormat.BANNER);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
+        AdRequestInput adRequestInput = new AdRequestInput();
+
+        String serverAccountId = "test-prebid-server-account-id";
+
+        PrebidMobile.setPrebidServerAccountId(serverAccountId);
+
+        // When
+
+        builder.appendBuilderParameters(adRequestInput);
+
+        // Then
+
+        JSONObject prebidObj = (JSONObject) adRequestInput.getBidRequest().getExt().getMap().get("prebid");
+        String id = prebidObj.getJSONObject("storedrequest").getString("id");
+
+        assertNull(PrebidMobile.getAuctionSettingsId());
+        assertEquals(serverAccountId, id);
+    }
+
+    @Test
+    public void whenSetInvalidAuctionSettingsId_storedRequestIdEqualsToTheServerAccountId() throws JSONException {
+        // Given
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(false);
+        configuration.setAdFormat(AdFormat.BANNER);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
+        AdRequestInput adRequestInput = new AdRequestInput();
+
+        String settingsId = "";
+        String serverAccountId = "test-prebid-server-account-id";
+
+        PrebidMobile.setAuctionSettingsId(settingsId);
+        PrebidMobile.setPrebidServerAccountId(serverAccountId);
+
+        // When
+
+        builder.appendBuilderParameters(adRequestInput);
+
+        // Then
+
+        JSONObject prebidObj = (JSONObject) adRequestInput.getBidRequest().getExt().getMap().get("prebid");
+        String id = prebidObj.getJSONObject("storedrequest").getString("id");
+
+        assertNotNull(PrebidMobile.getAuctionSettingsId());
+        assertEquals(serverAccountId, id);
     }
 
     @Test
