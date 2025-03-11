@@ -421,24 +421,42 @@ public abstract class AdUnit {
     }
 
     /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
      * This method obtains the content for adunit, content, in which impression will appear
      */
+    @Deprecated
     public void setAppContent(ContentObject content) {
         configuration.setAppContent(content);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public ContentObject getAppContent() {
         return configuration.getAppContent();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public void addUserData(DataObject dataObject) {
         configuration.addUserData(dataObject);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed.Please, use TargetingParams.getGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public ArrayList<DataObject> getUserData() {
         return configuration.getUserData();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public void clearUserData() {
         configuration.clearUserData();
     }

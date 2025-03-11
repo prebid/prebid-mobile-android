@@ -254,22 +254,42 @@ public abstract class MediationBaseAdUnit {
         return adUnitConfig.getPbAdSlot();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public void setAppContent(ContentObject content) {
         adUnitConfig.setAppContent(content);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public ContentObject getAppContent() {
         return adUnitConfig.getAppContent();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public void addUserData(DataObject dataObject) {
         adUnitConfig.addUserData(dataObject);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public void clearUserData() {
         adUnitConfig.clearUserData();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public ArrayList<DataObject> getUserData() {
         return adUnitConfig.getUserData();
     }

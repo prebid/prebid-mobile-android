@@ -22,15 +22,23 @@ package org.prebid.mobile;
 public enum Host {
 
     /**
+     * In the upcoming major release, the property will be removed.
      * URL <a href=https://ib.adnxs.com/openrtb2/prebid>https://ib.adnxs.com/openrtb2/prebid</a>
      */
+    @Deprecated
     APPNEXUS("https://ib.adnxs.com/openrtb2/prebid"),
 
     /**
+     * In the upcoming major release, the property will be removed.
      * URL <a href=https://prebid-server.rubiconproject.com/openrtb2/auction>https://prebid-server.rubiconproject.com/openrtb2/auction</a>
      */
+    @Deprecated
     RUBICON("https://prebid-server.rubiconproject.com/openrtb2/auction"),
 
+    /**
+     * In the upcoming major release, the property will be removed.
+     */
+    @Deprecated
     CUSTOM("");
 
     private String url;

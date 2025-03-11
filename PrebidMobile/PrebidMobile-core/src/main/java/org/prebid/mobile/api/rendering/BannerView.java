@@ -480,7 +480,6 @@ public class BannerView extends FrameLayout {
         adUnitConfig.clearExtKeywords();
     }
 
-
     public void addExtData(
         String key,
         String value
@@ -545,23 +544,42 @@ public class BannerView extends FrameLayout {
         return adUnitConfig.getPbAdSlot();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
+     */
     @Deprecated
     public void addContent(ContentObject content) {
         adUnitConfig.setAppContent(content);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public void setAppContent(ContentObject content) {
         adUnitConfig.setAppContent(content);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public void addUserData(DataObject dataObject) {
         adUnitConfig.addUserData(dataObject);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public ArrayList<DataObject> getUserData() {
         return adUnitConfig.getUserData();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public void clearUserData() {
         adUnitConfig.clearUserData();
     }

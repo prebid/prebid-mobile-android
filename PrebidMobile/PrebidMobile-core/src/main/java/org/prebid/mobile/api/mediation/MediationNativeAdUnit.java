@@ -101,22 +101,42 @@ public class MediationNativeAdUnit {
         nativeAdUnit.setDUrlSupport(support);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public void setAppContent(ContentObject content) {
         nativeAdUnit.setAppContent(content);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public ContentObject getAppContent() {
         return nativeAdUnit.getAppContent();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public void addUserData(DataObject dataObject) {
         nativeAdUnit.addUserData(dataObject);
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public void clearUserData() {
         nativeAdUnit.clearUserData();
     }
 
+    /**
+     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
+     */
+    @Deprecated
     public ArrayList<DataObject> getUserData() {
         return nativeAdUnit.getUserData();
     }
