@@ -38,7 +38,6 @@ import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.SdkInitializer;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -108,7 +107,7 @@ public class PrebidMobile {
     /**
      * Tested Google SDK version.
      */
-    public static final String TESTED_GOOGLE_SDK_VERSION = "24.0.0";
+    public static final String TESTED_GOOGLE_SDK_VERSION = "24.1.0";
 
     /**
      * Please use {@link PrebidMobile#setLogLevel(LogLevel)}, this field will become private in next releases.
