@@ -3,6 +3,7 @@ package com.applovin.mediation.adapters;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
+
 import com.applovin.mediation.MaxAdFormat;
 import com.applovin.mediation.adapter.MaxAdViewAdapter;
 import com.applovin.mediation.adapter.MaxInterstitialAdapter;
@@ -19,6 +20,7 @@ import com.applovin.mediation.adapters.prebid.managers.MaxInterstitialManager;
 import com.applovin.mediation.adapters.prebid.managers.MaxNativeManager;
 import com.applovin.mediation.adapters.prebid.managers.MaxRewardedManager;
 import com.applovin.sdk.AppLovinSdk;
+
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
 
@@ -110,7 +112,9 @@ public class PrebidMaxMediationAdapter extends MediationAdapterBase implements M
             Activity activity,
             MaxInterstitialAdapterListener maxListener
     ) {
-        maxInterstitialManager.showAd();
+        activity.runOnUiThread(() -> {
+            maxInterstitialManager.showAd();
+        });
     }
 
 
@@ -120,7 +124,9 @@ public class PrebidMaxMediationAdapter extends MediationAdapterBase implements M
             Activity activity,
             MaxRewardedAdapterListener maxListener
     ) {
-        maxRewardedManager.showAd();
+        activity.runOnUiThread(() -> {
+            maxRewardedManager.showAd();
+        });
     }
 
 
