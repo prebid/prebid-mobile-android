@@ -45,13 +45,13 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -83,6 +83,24 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>protected boolean</code></div>
+<div class="col-second even-row-color"><code><a href="#activateInterstitialPrebidImpressionTracker" class="member-name-link">activateInterstitialPrebidImpressionTracker</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/WeakReference.html" title="class or interface in java.lang.ref" class="external-link">WeakReference</a>&lt;android.view.View&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#adViewReference" class="member-name-link">adViewReference</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -109,6 +127,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#activateInterstitialPrebidImpressionTracker(boolean)" class="member-name-link">activateInterstitialPrebidImpressionTracker</a><wbr>(boolean&nbsp;activate)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Applies the interstitial native visibility tracker for tracking `burl` url.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#activatePrebidImpressionTracker(android.view.View)" class="member-name-link">activatePrebidImpressionTracker</a><wbr>(android.view.View&nbsp;adView)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Applies the banner native visibility tracker for tracking `burl` url.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#destroy()" class="member-name-link">destroy</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -154,6 +182,26 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="activateInterstitialPrebidImpressionTracker">
+<h3>activateInterstitialPrebidImpressionTracker</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">activateInterstitialPrebidImpressionTracker</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="adViewReference">
+<h3>adViewReference</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ref/WeakReference.html" title="class or interface in java.lang.ref" class="external-link">WeakReference</a>&lt;android.view.View&gt;</span>&nbsp;<span class="element-name">adViewReference</span></div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -208,6 +256,24 @@ loadScripts(document, 'script');</script>
 <h3>setAutoRefreshInterval</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAutoRefreshInterval</span><wbr><span class="parameters">(int&nbsp;seconds)</span></div>
 <div class="block">Auto refresh interval for banner ad.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="activatePrebidImpressionTracker(android.view.View)">
+<h3>activatePrebidImpressionTracker</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">activatePrebidImpressionTracker</span><wbr><span class="parameters">(android.view.View&nbsp;adView)</span></div>
+<div class="block">Applies the banner native visibility tracker for tracking `burl` url.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>adView</code> - the ad view object (f.e. <code>AdManagerAdView</code>)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="activateInterstitialPrebidImpressionTracker(boolean)">
+<h3>activateInterstitialPrebidImpressionTracker</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">activateInterstitialPrebidImpressionTracker</span><wbr><span class="parameters">(boolean&nbsp;activate)</span></div>
+<div class="block">Applies the interstitial native visibility tracker for tracking `burl` url.</div>
 </section>
 </li>
 <li>
