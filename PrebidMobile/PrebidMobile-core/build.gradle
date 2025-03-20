@@ -31,7 +31,7 @@ android {
 dependencies {
     implementation project(":omsdk-android")
 
-    implementation 'androidx.annotation:annotation:1.5.0'
+    implementation libs.androidx.annotation
 
     implementation 'com.google.android.gms:play-services-base:18.1.0'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'

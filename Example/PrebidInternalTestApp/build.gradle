@@ -75,7 +75,7 @@ dependencies {
 
     // Base dependencies
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation libs.androidx.annotation
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
@@ -113,7 +113,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-web:3.4.0'
-    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
+    androidTestImplementation libs.androidx.annotation
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 
     // Video player
