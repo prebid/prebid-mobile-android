@@ -117,8 +117,8 @@ dependencies {
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 
     // Video player
-    implementation 'com.google.android.exoplayer:exoplayer:2.15.1'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.15.1'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.15.1'
-    implementation 'com.google.android.exoplayer:extension-ima:2.15.1'
+    implementation libs.exoplayer
+    implementation libs.exoplayer.core
+    implementation libs.exoplayer.ui
+    implementation libs.extension.ima
 }

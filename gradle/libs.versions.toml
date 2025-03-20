@@ -1,4 +1,5 @@
 [versions]
+exoplayer = "2.15.1"
 google-play-services-ads = "+"
 robolectric = "4.12.2"
 androidx-appcompat = "1.3.0"
@@ -6,6 +7,10 @@ androidx-annotation = "1.5.0"
 androidx-constraintlayout = "2.1.4"
 
 [libraries]
+exoplayer = { module = "com.google.android.exoplayer:exoplayer", version.ref = "exoplayer" }
+exoplayer-core = { module = "com.google.android.exoplayer:exoplayer-core", version.ref = "exoplayer" }
+extension-ima = { module = "com.google.android.exoplayer:extension-ima", version.ref = "exoplayer" }
+exoplayer-ui = { module = "com.google.android.exoplayer:exoplayer-ui", version.ref = "exoplayer" }
 google-play-services-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "google-play-services-ads" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 shadows-httpclient = { module = "org.robolectric:shadows-httpclient", version.ref = "robolectric" }
