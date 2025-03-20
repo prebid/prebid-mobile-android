@@ -36,7 +36,7 @@ dependencies {
 
     // Base
     implementation libs.androidx.appcompat
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation libs.androidx.constraintlayout
 
     // Ads
     implementation libs.google.play.services.ads
