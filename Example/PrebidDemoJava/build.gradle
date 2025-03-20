@@ -42,10 +42,10 @@ dependencies {
     implementation libs.google.play.services.ads
 
     // Video Player
-    implementation 'com.google.android.exoplayer:exoplayer:2.15.1'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.15.1'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.15.1'
-    implementation 'com.google.android.exoplayer:extension-ima:2.15.1'
+    implementation libs.exoplayer
+    implementation libs.exoplayer.core
+    implementation libs.exoplayer.ui
+    implementation libs.extension.ima
 
     // Multidex
     implementation 'androidx.multidex:multidex:2.0.0'
