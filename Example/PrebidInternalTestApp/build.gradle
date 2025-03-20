@@ -76,7 +76,7 @@ dependencies {
     // Base dependencies
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation libs.androidx.annotation
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation libs.androidx.constraintlayout
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation 'androidx.preference:preference-ktx:1.1.1'
