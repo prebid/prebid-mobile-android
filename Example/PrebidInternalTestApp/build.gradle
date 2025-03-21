@@ -74,7 +74,7 @@ dependencies {
 //    implementation "org.prebid:prebid-mobile-sdk-max-adapters:$prebidSdkVersionName"
 
     // Base dependencies
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation libs.kotlin.stdlib
     implementation libs.androidx.annotation
     implementation libs.androidx.constraintlayout
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
