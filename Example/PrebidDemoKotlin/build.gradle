@@ -40,7 +40,7 @@ dependencies {
 //    implementation "org.prebid:prebid-mobile-sdk-max-adapters:$prebidSdkVersionName"
 
     // Standard libraries
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation libs.kotlin.stdlib
     implementation libs.androidx.appcompat
     implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation libs.androidx.constraintlayout
