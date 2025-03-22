@@ -1,7 +1,7 @@
 dependencies {
     testImplementation project(':test-utils')
 
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation libs.junit
     testImplementation 'org.hamcrest:hamcrest-core:2.2'
     testImplementation 'org.hamcrest:hamcrest-library:2.2'
     testImplementation 'org.mockito:mockito-core:5.15.2'

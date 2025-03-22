@@ -11,6 +11,7 @@ glide = "4.14.2"
 google-play-services-ads = "+"
 google-play-services-ads-identifier = "18.0.1"
 gradle = "8.7.3"
+junit = "4.13.2"
 kotlin-stdlib = "2.1.0"
 robolectric = "4.12.2"
 
@@ -30,6 +31,7 @@ glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 google-play-services-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "google-play-services-ads" }
 google-play-services-ads-identifier = { module = "com.google.android.gms:play-services-ads-identifier", version.ref = "google-play-services-ads-identifier" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin-stdlib" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 shadows-httpclient = { module = "org.robolectric:shadows-httpclient", version.ref = "robolectric" }
