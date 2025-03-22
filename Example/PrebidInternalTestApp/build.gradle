@@ -114,7 +114,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-web:3.4.0'
     androidTestImplementation libs.androidx.annotation
-    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    androidTestImplementation libs.androidx.uiautomator
 
     // Video player
     implementation libs.exoplayer
