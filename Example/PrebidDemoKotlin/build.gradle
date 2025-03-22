@@ -66,6 +66,6 @@ dependencies {
     // Tests
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation libs.androidx.espresso.core
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
