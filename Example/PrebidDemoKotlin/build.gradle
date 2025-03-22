@@ -49,7 +49,7 @@ dependencies {
     // Advertisement
     implementation libs.google.play.services.ads
     implementation libs.applovin.sdk
-    implementation "com.google.android.gms:play-services-ads-identifier:18.0.1" // For Applovin Max
+    implementation libs.google.play.services.ads.identifier // For Applovin Max
 
     // Image Downloader
     implementation libs.glide
