@@ -6,6 +6,7 @@ androidx-espresso-core = "3.4.0"
 androidx-lifecycle-viewmodel-ktx = "2.5.1"
 androidx-multidex = "2.0.1"
 androidx-preference-ktx = "1.2.0"
+androidx-uiautomator = "2.2.0"
 applovin-sdk = "13.1.0"
 exoplayer = "2.15.1"
 glide = "4.14.2"
@@ -26,6 +27,7 @@ androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-j
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle-viewmodel-ktx" }
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "androidx-multidex" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference-ktx" }
+androidx-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "androidx-uiautomator" }
 applovin-sdk = { module = "com.applovin:applovin-sdk", version.ref = "applovin-sdk" }
 exoplayer = { module = "com.google.android.exoplayer:exoplayer", version.ref = "exoplayer" }
 exoplayer-core = { module = "com.google.android.exoplayer:exoplayer-core", version.ref = "exoplayer" }
