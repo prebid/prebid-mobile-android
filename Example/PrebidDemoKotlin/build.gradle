@@ -42,7 +42,7 @@ dependencies {
     // Standard libraries
     implementation libs.kotlin.stdlib
     implementation libs.androidx.appcompat
-    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation libs.androidx.preference.ktx
     implementation libs.androidx.constraintlayout
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 

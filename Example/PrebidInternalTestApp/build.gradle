@@ -79,7 +79,7 @@ dependencies {
     implementation libs.androidx.constraintlayout
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation 'androidx.preference:preference-ktx:1.1.1'
+    implementation libs.androidx.preference.ktx
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 
