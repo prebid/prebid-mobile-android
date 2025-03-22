@@ -81,7 +81,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation libs.androidx.preference.ktx
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation libs.androidx.lifecycle.viewmodel.ktx
 
     // Ad dependencies
     implementation 'com.google.android.gms:play-services-base:18.1.0'

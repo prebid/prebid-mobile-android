@@ -44,7 +44,7 @@ dependencies {
     implementation libs.androidx.appcompat
     implementation libs.androidx.preference.ktx
     implementation libs.androidx.constraintlayout
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation libs.androidx.lifecycle.viewmodel.ktx
 
     // Advertisement
     implementation libs.google.play.services.ads
