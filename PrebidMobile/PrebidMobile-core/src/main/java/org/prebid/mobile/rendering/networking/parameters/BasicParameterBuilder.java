@@ -298,6 +298,11 @@ public class BasicParameterBuilder extends ParameterBuilder {
                     }
                     video.battr = battrsArray;
                 }
+
+                Boolean skippable = videoParameters.getSkippable();
+                if (skippable != null) {
+                    video.skippable = skippable;
+                }
             }
             if (video.placement == null && adConfiguration.isPlacementTypeValid()) {
                 video.placement = adConfiguration.getPlacementTypeValue();
