@@ -106,6 +106,9 @@ public class VideoParameters {
     @Nullable
     private List<Signals.CreativeAttribute> battr;
 
+    @Nullable
+    private Boolean skippable;
+
     //Getters and setters
     @Nullable
     public List<Signals.Api> getApi() {
@@ -238,5 +241,17 @@ public class VideoParameters {
         } else {
             this.battr = null;
         }
+    }
+
+    @Nullable
+    public Boolean getSkippable() {
+        return skippable;
+    }
+
+    /**
+     * Indicates if the player will allow the video to be skipped, where 0 = no, 1 = yes.
+     */
+    public void setSkippable(@Nullable Boolean skippable) {
+        this.skippable = skippable;
     }
 }
