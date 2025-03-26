@@ -16,9 +16,17 @@
 
 package org.prebid.mobile.api.rendering;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import android.app.Activity;
 import android.content.Context;
+
 import androidx.annotation.Nullable;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,10 +45,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -112,32 +116,6 @@ public class BaseInterstitialAdUnitTest {
         // clear
         baseInterstitialAdUnit.clearExtData();
         assertTrue(baseInterstitialAdUnit.getExtDataDictionary().isEmpty());
-    }
-
-    @Test
-    public void addRemoveContextKeywords_EqualsGetContextKeyWordsSet() {
-        HashSet<String> expectedSet = new HashSet<>();
-        expectedSet.add("key1");
-        expectedSet.add("key2");
-
-        // add
-        baseInterstitialAdUnit.addExtKeyword("key1");
-        baseInterstitialAdUnit.addExtKeyword("key2");
-
-        assertEquals(expectedSet, baseInterstitialAdUnit.getExtKeywordsSet());
-
-        // remove
-        baseInterstitialAdUnit.removeExtKeyword("key2");
-        expectedSet.remove("key2");
-        assertEquals(expectedSet, baseInterstitialAdUnit.getExtKeywordsSet());
-
-        // clear
-        baseInterstitialAdUnit.clearExtKeywords();
-        assertTrue(baseInterstitialAdUnit.getExtKeywordsSet().isEmpty());
-
-        // add all
-        baseInterstitialAdUnit.addExtKeywords(expectedSet);
-        assertEquals(expectedSet, baseInterstitialAdUnit.getExtKeywordsSet());
     }
 
     @Test

@@ -270,11 +270,6 @@ public class MultiformatAdUnitFacadeTest {
         expectedExtData.put("Key", data);
         request.setExtData(expectedExtData);
 
-        HashSet<String> expectedExtKeywords = new HashSet<>();
-        expectedExtKeywords.add("Keyword 1");
-        expectedExtKeywords.add("Keyword 2");
-        request.setExtKeywords(expectedExtKeywords);
-
         subject = new MultiformatAdUnitFacade(configId, request);
 
         AdUnitConfiguration configuration = subject.getConfiguration();
@@ -290,10 +285,6 @@ public class MultiformatAdUnitFacadeTest {
         assertEquals(
                 expectedExtData,
                 configuration.getExtDataDictionary()
-        );
-        assertEquals(
-                expectedExtKeywords,
-                configuration.getExtKeywordsSet()
         );
         assertEquals(
                 expectedGpid,

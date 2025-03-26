@@ -24,7 +24,6 @@ object CommandLineArgumentParser {
     private val adUnitSpecificData = AdUnitSpecificData()
 
     class AdUnitSpecificData(
-        var extKeywords: String? = null,
         var extData: Map<String, List<String>>? = null,
         var appContentData: ContentObject? = null,
         var userData: DataObject? = null,
@@ -88,10 +87,6 @@ object CommandLineArgumentParser {
         extras.getString("ADD_ADUNIT_CONTEXT")?.let {
             adUnitSpecificData.extData = parseJsonToMapOfStringsAndStringLists(it)
         }
-        /* Example: "keywords1,keywords2" */
-        extras.getString("ADD_ADUNIT_KEYWORD")?.let {
-            adUnitSpecificData.extKeywords = it
-        }
         /* Example: "key value" */
         extras.getString("ADD_APP_CONTENT_DATA_EXT")?.let {
             adUnitSpecificData.appContentData = parseAppContentData(it)
@@ -111,21 +106,6 @@ object CommandLineArgumentParser {
                 }
             }
         }
-
-        val extKeywords = adUnitSpecificData.extKeywords
-        if (extKeywords != null) {
-            adUnit.addExtKeyword(extKeywords)
-        }
-
-        val appContentData = adUnitSpecificData.appContentData
-        if (appContentData != null) {
-            adUnit.appContent = appContentData
-        }
-
-        val userData = adUnitSpecificData.userData
-        if (userData != null) {
-            adUnit.addUserData(userData)
-        }
     }
 
     fun addAdUnitSpecificData(bannerView: BannerView) {
@@ -136,11 +116,6 @@ object CommandLineArgumentParser {
                     bannerView.addExtData(key, value)
                 }
             }
-        }
-
-        val extKeywords = adUnitSpecificData.extKeywords
-        if (extKeywords != null) {
-            bannerView.addExtKeyword(extKeywords)
         }
     }
 
@@ -153,11 +128,6 @@ object CommandLineArgumentParser {
                 }
             }
         }
-
-        val extKeywords = adUnitSpecificData.extKeywords
-        if (extKeywords != null) {
-            interstitial.addExtKeyword(extKeywords)
-        }
     }
 
     fun addAdUnitSpecificData(mediationAdUnit: MediationBaseAdUnit) {
@@ -168,11 +138,6 @@ object CommandLineArgumentParser {
                     mediationAdUnit.addExtData(key, value)
                 }
             }
-        }
-
-        val extKeywords = adUnitSpecificData.extKeywords
-        if (extKeywords != null) {
-            mediationAdUnit.addExtKeyword(extKeywords)
         }
     }
 
@@ -185,12 +150,6 @@ object CommandLineArgumentParser {
                 }
             }
         }
-
-        val extKeywords = adUnitSpecificData.extKeywords
-        if (extKeywords != null) {
-            nativeAdUnit.addExtKeyword(extKeywords)
-        }
-
     }
 
 

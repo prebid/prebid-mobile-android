@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
+import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.UserConsentUtils;
 
 import java.util.ArrayList;
@@ -449,7 +450,7 @@ public class TargetingParams {
      */
     public static synchronized String getBundleName() {
         if (TextUtils.isEmpty(bundleName)) {
-            Context context = PrebidMobile.getApplicationContext();
+            Context context = PrebidContextHolder.getContext();
             if (context != null) {
                 return context.getPackageName();
             }

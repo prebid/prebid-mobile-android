@@ -44,7 +44,7 @@ public class SdkInitializer {
         LogUtil.debug(TAG, "Initializing Prebid SDK");
         PrebidContextHolder.setContext(applicationContext);
 
-        if (PrebidMobile.logLevel != null) {
+        if (PrebidMobile.getLogLevel() != null) {
             LogUtil.setLogLevel(PrebidMobile.getLogLevel().getValue());
         }
 

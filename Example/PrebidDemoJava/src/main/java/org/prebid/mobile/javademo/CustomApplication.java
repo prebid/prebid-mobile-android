@@ -85,7 +85,7 @@ public class CustomApplication extends Application {
         externalUserIdArray.add(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap<String, Object>() {{
             put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
         }}));
-        PrebidMobile.setExternalUserIds(externalUserIdArray);
+        TargetingParams.setExternalUserIds(externalUserIdArray);
     }
 
 }

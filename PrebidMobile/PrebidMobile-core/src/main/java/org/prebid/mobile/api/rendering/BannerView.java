@@ -30,8 +30,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.AdSize;
-import org.prebid.mobile.ContentObject;
-import org.prebid.mobile.DataObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
@@ -60,7 +58,6 @@ import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -418,26 +415,6 @@ public class BannerView extends FrameLayout {
 
     public Map<String, Set<String>> getExtDataDictionary() {
         return adUnitConfig.getExtDataDictionary();
-    }
-
-    public void addExtKeyword(String keyword) {
-        adUnitConfig.addExtKeyword(keyword);
-    }
-
-    public void addExtKeywords(Set<String> keywords) {
-        adUnitConfig.addExtKeywords(keywords);
-    }
-
-    public void removeExtKeyword(String keyword) {
-        adUnitConfig.removeExtKeyword(keyword);
-    }
-
-    public Set<String> getExtKeywordsSet() {
-        return adUnitConfig.getExtKeywordsSet();
-    }
-
-    public void clearExtKeywords() {
-        adUnitConfig.clearExtKeywords();
     }
 
 

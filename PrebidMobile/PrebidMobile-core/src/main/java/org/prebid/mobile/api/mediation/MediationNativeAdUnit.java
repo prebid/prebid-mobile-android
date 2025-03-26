@@ -2,8 +2,6 @@ package org.prebid.mobile.api.mediation;
 
 import androidx.annotation.NonNull;
 
-import org.prebid.mobile.ContentObject;
-import org.prebid.mobile.DataObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.NativeAsset;
@@ -12,7 +10,6 @@ import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -123,21 +120,6 @@ public class MediationNativeAdUnit {
         nativeAdUnit.clearExtData();
     }
 
-    public void addExtKeyword(String keyword) {
-        nativeAdUnit.addExtKeyword(keyword);
-    }
-
-    public void addExtKeywords(Set<String> keywords) {
-        nativeAdUnit.addExtKeywords(keywords);
-    }
-
-    public void removeExtKeyword(String keyword) {
-        nativeAdUnit.removeExtKeyword(keyword);
-    }
-
-    public void clearExtKeywords() {
-        nativeAdUnit.clearExtKeywords();
-    }
 
     private FetchDemandResult convertResultCode(ResultCode originalResult) {
         switch (originalResult) {

@@ -16,10 +16,24 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_NAME;
+import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_VERSION;
+import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.VIDEO_INTERSTITIAL_PLAYBACK_END;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+
 import com.google.common.collect.Sets;
+
 import org.assertj.core.util.Lists;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +42,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.*;
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.BannerAdUnit;
+import org.prebid.mobile.BannerParameters;
+import org.prebid.mobile.DataObject;
+import org.prebid.mobile.ExternalUserId;
+import org.prebid.mobile.NativeTitleAsset;
+import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.Signals;
+import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
@@ -39,11 +62,14 @@ import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.*;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Native;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRendererList;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.pmps.Format;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
@@ -53,11 +79,14 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.lang.annotation.Target;
-import java.util.*;
-
-import static org.junit.Assert.*;
-import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19, qualifiers = "w1920dp-h1080dp")
@@ -100,7 +129,6 @@ public class BasicParameterBuilderTest {
         TargetingParams.setGlobalOrtbConfig(null);
         TargetingParams.setExternalUserIds(null);
 
-        PrebidMobile.sendMraidSupportParams = true;
         PrebidMobile.clearStoredBidResponses();
         PrebidMobile.setStoredAuctionResponse(null);
         PrebidMobile.setPrebidServerAccountId("");
@@ -559,9 +587,6 @@ public class BasicParameterBuilderTest {
         adConfiguration.setAdFormat(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
-        adConfiguration.addExtKeyword("adUnitContextKeyword1");
-        adConfiguration.addExtKeyword("adUnitContextKeyword2");
-
         adConfiguration.addExtData("adUnitContextDataKey1", "adUnitContextDataValue1");
         adConfiguration.addExtData("adUnitContextDataKey2", "adUnitContextDataValue2");
 
@@ -593,25 +618,6 @@ public class BasicParameterBuilderTest {
         JSONObject appJson = adRequestInput.getBidRequest().getApp().getJsonObject();
         assertTrue(appJson.has("keywords"));
         assertEquals("contextKeyword1,contextKeyword2", appJson.getString("keywords"));
-    }
-
-    @Test
-    public void whenAppendParametersAndSendMraidSupportParamsFalse_NoMraidApi() {
-        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdFormat(AdFormat.BANNER);
-        adConfiguration.addSize(new AdSize(320, 50));
-
-        PrebidMobile.sendMraidSupportParams = false;
-
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
-                context.getResources(),
-                browserActivityAvailable
-        );
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        Imp actualImp = adRequestInput.getBidRequest().getImp().get(0);
-        assertEquals(Arrays.toString(new int[]{7}), Arrays.toString(actualImp.banner.api));
     }
 
     @Test
@@ -1236,12 +1242,6 @@ public class BasicParameterBuilderTest {
                     dataJson.put(key, new JSONArray(contextDataDictionary.get(key)));
                 }
                 imp.getExt().put("data", dataJson);
-            }
-
-            Set<String> contextKeywordsSet = config.getExtKeywordsSet();
-            if (contextKeywordsSet.size() > 0) {
-                String join = stringsToCommaSeparatedString(contextKeywordsSet);
-                imp.getExt().put("keywords", join);
             }
         } catch (JSONException e) {
             throw new RuntimeException(e);

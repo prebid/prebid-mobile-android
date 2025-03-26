@@ -16,11 +16,26 @@
 
 package org.prebid.mobile.api.rendering;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,9 +68,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -467,31 +479,6 @@ public class BannerViewTest {
         assertTrue(bannerView.getExtDataDictionary().isEmpty());
     }
 
-    @Test
-    public void addRemoveContextKeywords_EqualsGetContextKeyWordsSet() {
-        HashSet<String> expectedSet = new HashSet<>();
-        expectedSet.add("key1");
-        expectedSet.add("key2");
-
-        // add
-        bannerView.addExtKeyword("key1");
-        bannerView.addExtKeyword("key2");
-
-        assertEquals(expectedSet, bannerView.getExtKeywordsSet());
-
-        // remove
-        bannerView.removeExtKeyword("key2");
-        expectedSet.remove("key2");
-        assertEquals(expectedSet, bannerView.getExtKeywordsSet());
-
-        // clear
-        bannerView.clearExtKeywords();
-        assertTrue(bannerView.getExtKeywordsSet().isEmpty());
-
-        // add all
-        bannerView.addExtKeywords(expectedSet);
-        assertEquals(expectedSet, bannerView.getExtKeywordsSet());
-    }
 
     @Test
     public void setAdPosition_EqualsGetAdPosition() {

@@ -98,38 +98,4 @@ public class AdUnitConfigurationTest {
         adUnitConfig.clearExtData();
         assertTrue(adUnitConfig.getExtDataDictionary().isEmpty());
     }
-
-    @Test
-    public void whenAddContextKeyword_ContextKeywordAdded() {
-        adUnitConfig.addExtKeyword("test");
-        assertTrue(adUnitConfig.getExtKeywordsSet().contains("test"));
-    }
-
-    @Test
-    public void whenAddContextKeywords_ContextKeywordsAdded() {
-        Set<String> stringSet = new HashSet<>();
-        stringSet.add("value0");
-        stringSet.add("value1");
-        adUnitConfig.addExtKeywords(stringSet);
-        assertTrue(adUnitConfig.getExtKeywordsSet().containsAll(stringSet));
-    }
-
-    @Test
-    public void whenRemoveContextKeyword_ContextKeywordRemoved() {
-        adUnitConfig.addExtKeyword("test");
-        adUnitConfig.addExtKeyword("keyword");
-        adUnitConfig.removeExtKeyword("test");
-        assertFalse(adUnitConfig.getExtKeywordsSet().isEmpty());
-        assertFalse(adUnitConfig.getExtKeywordsSet().contains("test"));
-    }
-
-    @Test
-    public void whenClearContextKeyword_ContextKeywordCleared() {
-        adUnitConfig.addExtKeyword("test");
-        adUnitConfig.addExtKeyword("keyword");
-        assertFalse(adUnitConfig.getExtKeywordsSet().isEmpty());
-
-        adUnitConfig.clearExtKeywords();
-        assertTrue(adUnitConfig.getExtKeywordsSet().isEmpty());
-    }
 }

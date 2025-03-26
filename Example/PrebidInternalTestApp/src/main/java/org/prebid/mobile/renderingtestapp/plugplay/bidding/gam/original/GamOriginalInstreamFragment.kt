@@ -66,14 +66,13 @@ class GamOriginalInstreamFragment : AdFragment() {
         val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 600)
         binding.viewContainer.addView(playerView, params)
 
-        val parameters = VideoBaseAdUnit.Parameters()
+        val parameters = VideoParameters(listOf("video/mp4"))
         parameters.protocols = listOf(Signals.Protocols.VAST_2_0)
         parameters.playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOff)
         parameters.placement = Signals.Placement.InStream
-        parameters.mimes = listOf("video/mp4")
 
         adUnit = VideoAdUnit(configId, width, height)
-        adUnit?.parameters = parameters
+        adUnit?.videoParameters = parameters
     }
 
     private fun initializePlayer() {

@@ -16,12 +16,18 @@
 
 package org.prebid.mobile.api.rendering;
 
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.LOADING;
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID;
+
 import android.content.Context;
+
 import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
 import org.prebid.mobile.ContentObject;
-import org.prebid.mobile.DataObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
@@ -37,11 +43,8 @@ import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
-
-import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.*;
 
 /**
  * Internal base interstitial ad unit for rendering API.
@@ -151,26 +154,6 @@ public abstract class BaseInterstitialAdUnit {
 
     public Map<String, Set<String>> getExtDataDictionary() {
         return config.getExtDataDictionary();
-    }
-
-    public void addExtKeyword(String keyword) {
-        config.addExtKeyword(keyword);
-    }
-
-    public void addExtKeywords(Set<String> keywords) {
-        config.addExtKeywords(keywords);
-    }
-
-    public void removeExtKeyword(String keyword) {
-        config.removeExtKeyword(keyword);
-    }
-
-    public Set<String> getExtKeywordsSet() {
-        return config.getExtKeywordsSet();
-    }
-
-    public void clearExtKeywords() {
-        config.clearExtKeywords();
     }
 
 

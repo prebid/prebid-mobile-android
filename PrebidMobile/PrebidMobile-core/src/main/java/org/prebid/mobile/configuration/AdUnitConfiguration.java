@@ -3,7 +3,13 @@ package org.prebid.mobile.configuration;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.prebid.mobile.*;
+
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.BannerParameters;
+import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.DataObject;
+import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.data.Position;
@@ -15,7 +21,13 @@ import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 public class AdUnitConfiguration {
@@ -71,8 +83,6 @@ public class AdUnitConfiguration {
     private ArrayList<DataObject> userDataObjects = new ArrayList<>();
     @NonNull
     private Map<String, Set<String>> extDataDictionary = new HashMap<>();
-    @NonNull
-    private Set<String> extKeywordsSet = new HashSet<>();
 
 
     public void modifyUsingBidResponse(@Nullable BidResponse bidResponse) {
@@ -174,39 +184,6 @@ public class AdUnitConfiguration {
         if (extData != null) {
             this.extDataDictionary = extData;
         }
-    }
-
-    public void addExtKeyword(String keyword) {
-        if (keyword != null) {
-            extKeywordsSet.add(keyword);
-        }
-    }
-
-    public void addExtKeywords(Set<String> keywords) {
-        if (keywords != null) {
-            extKeywordsSet.addAll(keywords);
-        }
-    }
-
-    public void removeExtKeyword(String key) {
-        if (key != null) {
-            extKeywordsSet.remove(key);
-        }
-    }
-
-    public void setExtKeywords(@Nullable Set<String> extKeywords) {
-        if (extKeywords != null) {
-            this.extKeywordsSet = extKeywords;
-        }
-    }
-
-    @NonNull
-    public Set<String> getExtKeywordsSet() {
-        return extKeywordsSet;
-    }
-
-    public void clearExtKeywords() {
-        extKeywordsSet.clear();
     }
 
     public void setMinSizePercentage(@Nullable AdSize minSizePercentage) {

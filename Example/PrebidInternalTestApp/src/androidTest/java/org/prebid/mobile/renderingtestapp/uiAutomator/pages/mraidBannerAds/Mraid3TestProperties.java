@@ -30,6 +30,7 @@ import androidx.test.uiautomator.Until;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.utils.helpers.AdvertisingIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 
@@ -56,8 +57,8 @@ public class Mraid3TestProperties extends MraidBasicPage {
         envJson.put("sdk", PrebidMobile.SDK_NAME);
         envJson.put("sdkVersion", PrebidMobile.SDK_VERSION);
         envJson.put("appId", AppInfoManager.getPackageName());
-        envJson.put("ifa", AdvertisingIdManager.getAdId());
-        envJson.put("limitAdTracking", AdvertisingIdManager.isLimitAdTrackingEnabled());
+        envJson.put("ifa", AdvertisingIdManager.getAdvertisingId(ManagersResolver.getInstance().getUserConsentManager()));
+        envJson.put("limitAdTracking", AdvertisingIdManager.isLimitedAdTrackingEnabled());
 
         String viewText = clearStringFromWhitespace(device.wait(Until.findObject(Locators.envContainer), TIMEOUT).getText());
         assertEquals(envJson.toString(), viewText);

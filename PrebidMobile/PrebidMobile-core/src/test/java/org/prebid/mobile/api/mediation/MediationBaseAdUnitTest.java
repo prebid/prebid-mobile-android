@@ -16,8 +16,14 @@
 
 package org.prebid.mobile.api.mediation;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import android.app.Activity;
 import android.content.Context;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,11 +48,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -177,32 +178,6 @@ public class MediationBaseAdUnitTest {
         // clear
         baseAdUnit.clearExtData();
         assertTrue(baseAdUnit.getExtDataDictionary().isEmpty());
-    }
-
-    @Test
-    public void addRemoveContextKeywords_EqualsGetContextKeyWordsSet() {
-        HashSet<String> expectedSet = new HashSet<>();
-        expectedSet.add("key1");
-        expectedSet.add("key2");
-
-        // add
-        baseAdUnit.addExtKeyword("key1");
-        baseAdUnit.addExtKeyword("key2");
-
-        assertEquals(expectedSet, baseAdUnit.getExtKeywordsSet());
-
-        // remove
-        baseAdUnit.removeExtKeyword("key2");
-        expectedSet.remove("key2");
-        assertEquals(expectedSet, baseAdUnit.getExtKeywordsSet());
-
-        // clear
-        baseAdUnit.clearExtKeywords();
-        assertTrue(baseAdUnit.getExtKeywordsSet().isEmpty());
-
-        // add all
-        baseAdUnit.addExtKeywords(expectedSet);
-        assertEquals(expectedSet, baseAdUnit.getExtKeywordsSet());
     }
 
     @Test

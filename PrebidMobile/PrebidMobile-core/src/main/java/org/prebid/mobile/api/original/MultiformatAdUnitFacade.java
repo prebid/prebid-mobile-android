@@ -135,9 +135,6 @@ class MultiformatAdUnitFacade extends AdUnit {
 
         Map<String, Set<String>> extData = request.getExtData();
         configuration.setExtData(extData);
-
-        Set<String> extKeywords = request.getExtKeywords();
-        configuration.setExtKeywords(extKeywords);
     }
 
     @Nullable

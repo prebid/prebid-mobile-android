@@ -38,16 +38,13 @@ import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
-import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
-import org.prebid.mobile.rendering.networking.tracking.ServerConnection;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -281,40 +278,6 @@ public abstract class AdUnit {
     }
 
     // MARK: - adunit context keywords (imp[].ext.keywords)
-
-    /**
-     * This method obtains the context keyword for adunit context targeting
-     * Inserts the given element in the set if it is not already present.
-     */
-    public void addExtKeyword(String keyword) {
-        configuration.addExtKeyword(keyword);
-    }
-
-    /**
-     * This method obtains the context keyword set for adunit context targeting
-     * Adds the elements of the given set to the set.
-     */
-    public void addExtKeywords(Set<String> keywords) {
-        configuration.addExtKeywords(keywords);
-    }
-
-    /**
-     * This method allows to remove specific context keyword from adunit context targeting
-     */
-    public void removeExtKeyword(String keyword) {
-        configuration.removeExtKeyword(keyword);
-    }
-
-    /**
-     * This method allows to remove all keywords from the set of adunit context targeting
-     */
-    public void clearExtKeywords() {
-        configuration.clearExtKeywords();
-    }
-
-    Set<String> getExtKeywordsSet() {
-        return configuration.getExtKeywordsSet();
-    }
 
 
     public String getPbAdSlot() {

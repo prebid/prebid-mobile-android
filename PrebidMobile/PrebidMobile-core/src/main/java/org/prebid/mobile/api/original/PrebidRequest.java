@@ -9,7 +9,6 @@ import org.prebid.mobile.VideoParameters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,8 +31,6 @@ public class PrebidRequest {
     private String gpid;
     @Nullable
     private Map<String, Set<String>> extData;
-    @Nullable
-    private Set<String> extKeywords;
     @Nullable
     private ContentObject appContent;
     @Nullable
@@ -116,19 +113,6 @@ public class PrebidRequest {
             return;
         }
         this.extData = new HashMap<>(extData);
-    }
-
-    @Nullable
-    Set<String> getExtKeywords() {
-        return extKeywords;
-    }
-
-    public void setExtKeywords(@Nullable Set<String> extKeywords) {
-        if (extKeywords == null) {
-            this.extKeywords = null;
-            return;
-        }
-        this.extKeywords = new HashSet<>(extKeywords);
     }
 
     @Nullable
