@@ -156,27 +156,27 @@ public class MediationBaseAdUnitTest {
         expectedMap.put("key2", value2);
 
         // add
-        baseAdUnit.addContextData("key1", "value1");
-        baseAdUnit.addContextData("key2", "value2");
+        baseAdUnit.addExtData("key1", "value1");
+        baseAdUnit.addExtData("key2", "value2");
 
-        assertEquals(expectedMap, baseAdUnit.getContextDataDictionary());
+        assertEquals(expectedMap, baseAdUnit.getExtDataDictionary());
 
         // update
         HashSet<String> updateSet = new HashSet<>();
         updateSet.add("value3");
-        baseAdUnit.updateContextData("key1", updateSet);
+        baseAdUnit.updateExtData("key1", updateSet);
         expectedMap.replace("key1", updateSet);
 
-        assertEquals(expectedMap, baseAdUnit.getContextDataDictionary());
+        assertEquals(expectedMap, baseAdUnit.getExtDataDictionary());
 
         // remove
-        baseAdUnit.removeContextData("key1");
+        baseAdUnit.removeExtData("key1");
         expectedMap.remove("key1");
-        assertEquals(expectedMap, baseAdUnit.getContextDataDictionary());
+        assertEquals(expectedMap, baseAdUnit.getExtDataDictionary());
 
         // clear
-        baseAdUnit.clearContextData();
-        assertTrue(baseAdUnit.getContextDataDictionary().isEmpty());
+        baseAdUnit.clearExtData();
+        assertTrue(baseAdUnit.getExtDataDictionary().isEmpty());
     }
 
     @Test
@@ -186,23 +186,23 @@ public class MediationBaseAdUnitTest {
         expectedSet.add("key2");
 
         // add
-        baseAdUnit.addContextKeyword("key1");
-        baseAdUnit.addContextKeyword("key2");
+        baseAdUnit.addExtKeyword("key1");
+        baseAdUnit.addExtKeyword("key2");
 
-        assertEquals(expectedSet, baseAdUnit.getContextKeywordsSet());
+        assertEquals(expectedSet, baseAdUnit.getExtKeywordsSet());
 
         // remove
-        baseAdUnit.removeContextKeyword("key2");
+        baseAdUnit.removeExtKeyword("key2");
         expectedSet.remove("key2");
-        assertEquals(expectedSet, baseAdUnit.getContextKeywordsSet());
+        assertEquals(expectedSet, baseAdUnit.getExtKeywordsSet());
 
         // clear
-        baseAdUnit.clearContextKeywords();
-        assertTrue(baseAdUnit.getContextKeywordsSet().isEmpty());
+        baseAdUnit.clearExtKeywords();
+        assertTrue(baseAdUnit.getExtKeywordsSet().isEmpty());
 
         // add all
-        baseAdUnit.addContextKeywords(expectedSet);
-        assertEquals(expectedSet, baseAdUnit.getContextKeywordsSet());
+        baseAdUnit.addExtKeywords(expectedSet);
+        assertEquals(expectedSet, baseAdUnit.getExtKeywordsSet());
     }
 
     @Test

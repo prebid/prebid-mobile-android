@@ -125,7 +125,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
     private void configureBidRequest(BidRequest bidRequest, String uuid) {
         bidRequest.setId(uuid);
         bidRequest.setImpOrtbConfig(adConfiguration.getImpOrtbConfig());
-        bidRequest.setOpenRtb(adConfiguration.getOrtbConfig());
+        bidRequest.setOpenRtb(adConfiguration.getImpOrtbConfig());
         boolean isVideo = adConfiguration.isAdType(AdFormat.VAST);
         String storedRequestId = PrebidMobile.getPrebidServerAccountId();
         String settingsId = PrebidMobile.getAuctionSettingsId();
@@ -165,7 +165,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
         user.id = TargetingParams.getUserId();
         user.keywords = TargetingParams.getUserKeywords();
-        user.customData = TargetingParams.getUserCustomData();
         user.ext = TargetingParams.getUserExt();
 
         ArrayList<DataObject> userData = adConfiguration.getUserData();
@@ -181,11 +180,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
         TargetingParams.GENDER gender = TargetingParams.getGender();
         if (gender != TargetingParams.GENDER.UNKNOWN) {
             user.gender = gender.getKey();
-        }
-
-        final Map<String, Set<String>> userDataDictionary = TargetingParams.getUserDataDictionary();
-        if (!userDataDictionary.isEmpty()) {
-            user.getExt().put("data", Utils.toJson(userDataDictionary));
         }
 
         List<ExternalUserId> extendedIds = TargetingParams.getExternalUserIds();

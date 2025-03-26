@@ -552,16 +552,6 @@ public class AdUnitConfiguration {
         this.impOrtbConfig = impOrtbConfig;
     }
 
-    @Deprecated
-    public String getOrtbConfig() {
-        return ortbConfig;
-    }
-
-    @Deprecated
-    public void setOrtbConfig(String ortbConfig) {
-        this.ortbConfig = ortbConfig;
-    }
-
     public boolean getHasEndCard() {
         return hasEndCard;
     }

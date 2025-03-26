@@ -51,13 +51,11 @@ public class TargetingParams {
     private static GENDER gender = GENDER.UNKNOWN;
     private static String userId;
     private static String publisherName;
-    private static String buyerUserId;
     private static String domain = "";
     private static String storeUrl = "";
     private static String bundleName = null;
     private static String omidPartnerName;
     private static String omidPartnerVersion;
-    private static String userCustomData;
     @Nullable
     private static String openRtbConfig;
     private static Pair<Float, Float> userLatLon;
@@ -67,7 +65,6 @@ public class TargetingParams {
 
 
     private static final Map<String, ExternalUserId> externalUserIdMap = new HashMap<>();
-    private static final Map<String, Set<String>> userDataMap = new HashMap<>();
     private static final Set<String> accessControlList = new HashSet<>();
     private static final Set<String> userKeywordsSet = new HashSet<>();
     private static final Map<String, Set<String>> extDataDictionary = new HashMap<>();
@@ -231,58 +228,6 @@ public class TargetingParams {
     }
 
     /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     * This method obtains the user data keyword & value for global user targeting
-     * if the key already exists the value will be appended to the list. No duplicates will be added
-     */
-    @Deprecated
-    public static void addUserData(
-        String key,
-        String value
-    ) {
-        Util.addValue(userDataMap, key, value);
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     * This method obtains the user data keyword & values set for global user targeting
-     * the values if the key already exist will be replaced with the new set of values
-     */
-    @Deprecated
-    public static void updateUserData(
-        String key,
-        Set<String> value
-    ) {
-        userDataMap.put(key, value);
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     * This method allows to remove specific user data keyword & value set from global user targeting
-     */
-    @Deprecated
-    public static void removeUserData(String key) {
-        userDataMap.remove(key);
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     * This method allows to remove all user data set from global user targeting
-     */
-    @Deprecated
-    public static void clearUserData() {
-        userDataMap.clear();
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public static Map<String, Set<String>> getUserDataDictionary() {
-        return userDataMap;
-    }
-
-    /**
      * This method obtains the user keyword for global user targeting
      * Inserts the given element in the set if it is not already present.
      */
@@ -321,27 +266,6 @@ public class TargetingParams {
     public static Set<String> getUserKeywordsSet() {
         return userKeywordsSet;
     }
-
-    /**
-     * Optional feature to pass bidder data that was set in the
-     * exchange’s cookie. The string must be in base85 cookie safe
-     * characters and be in any format. Proper JSON encoding must
-     * be used to include “escaped” quotation marks.
-     *
-     * @param data Custom data to be passed
-     *
-     * @deprecated this is exchange-specific information
-     */
-    @Deprecated
-    public static void setUserCustomData(@Nullable String data) {
-        userCustomData = data;
-    }
-
-    @Nullable
-    public static String getUserCustomData() {
-        return userCustomData;
-    }
-
 
     /* -------------------- Ids -------------------- */
 
@@ -540,111 +464,6 @@ public class TargetingParams {
     public static synchronized void setBundleName(String bundleName) {
         TargetingParams.bundleName = bundleName;
     }
-
-
-    /**
-     * This method obtains the context data keyword & value context for global context targeting
-     * if the key already exists the value will be appended to the list. No duplicates will be added
-     * (app.ext.data)
-     *
-     * @deprecated use addExtData
-     */
-    @Deprecated
-    public static void addContextData(
-        String key,
-        String value
-    ) {
-        Util.addValue(extDataDictionary, key, value);
-    }
-
-    /**
-     * This method obtains the context data keyword & values set for global context targeting.
-     * the values if the key already exist will be replaced with the new set of values
-     * @deprecated use updateExtData
-     */
-    @Deprecated
-    public static void updateContextData(
-        String key,
-        Set<String> value
-    ) {
-        extDataDictionary.put(key, value);
-    }
-
-    /**
-     * This method allows to remove specific context data keyword & values set from global context targeting
-     * @deprecated use removeExtData
-     */
-    @Deprecated
-    public static void removeContextData(String key) {
-        extDataDictionary.remove(key);
-    }
-
-    /**
-     * This method allows to remove all context data set from global context targeting
-     *
-     * @deprecated use clearExtData
-     */
-    @Deprecated
-    public static void clearContextData() {
-        extDataDictionary.clear();
-    }
-
-    /**
-     * @deprecated use getExtDataDictionary
-     */
-    @Deprecated
-    public static Map<String, Set<String>> getContextDataDictionary() {
-        return extDataDictionary;
-    }
-
-    /**
-     * This method obtains the context keyword for adunit context targeting
-     * Inserts the given element in the set if it is not already present.
-     * (imp[].ext.context.keywords)
-     * @deprecated use addExtKeyword
-     */
-    @Deprecated
-    public static void addContextKeyword(String keyword) {
-        extKeywordsSet.add(keyword);
-    }
-
-    /**
-     * This method obtains the context keyword set for adunit context targeting
-     * Adds the elements of the given set to the set.
-     * @deprecated use addExtKeywords
-     */
-    @Deprecated
-    public static void addContextKeywords(Set<String> keywords) {
-        extKeywordsSet.addAll(keywords);
-    }
-
-    /**
-     * This method allows to remove specific context keyword from adunit context targeting
-     * @deprecated use removeExtKeyword
-     */
-    @Deprecated
-    public static void removeContextKeyword(String keyword) {
-        extKeywordsSet.remove(keyword);
-    }
-
-    /**
-     * This method allows to remove all keywords from the set of adunit context targeting
-     *
-     * @deprecated use clearExtKeywords
-     */
-    @Deprecated
-    public static void clearContextKeywords() {
-        extKeywordsSet.clear();
-    }
-
-    /**
-     * @deprecated use getExtKeywordsSet
-     */
-    @Deprecated
-    public static Set<String> getContextKeywordsSet() {
-        return extKeywordsSet;
-    }
-
 
     /**
      * This method obtains the context data keyword & value context for global context targeting

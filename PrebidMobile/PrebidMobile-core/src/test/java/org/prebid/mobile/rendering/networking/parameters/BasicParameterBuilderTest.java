@@ -89,13 +89,11 @@ public class BasicParameterBuilderTest {
 
     @After
     public void cleanup() throws Exception {
-        TargetingParams.clearUserData();
         TargetingParams.clearUserKeywords();
         TargetingParams.setUserLatLng(null, null);
         TargetingParams.setGender(TargetingParams.GENDER.UNKNOWN);
         TargetingParams.clearStoredExternalUserIds();
         TargetingParams.setUserId(null);
-        TargetingParams.setUserCustomData(null);
         TargetingParams.setYearOfBirth(0);
         TargetingParams.setOmidPartnerName(null);
         TargetingParams.setOmidPartnerVersion(null);
@@ -490,7 +488,7 @@ public class BasicParameterBuilderTest {
         builder.appendBuilderParameters(adRequestInput);
 
         BidRequest actualBidRequest = adRequestInput.getBidRequest();
-        assertEquals(1, actualBidRequest.getRegs().coppa.intValue());
+        assertNull(actualBidRequest.getRegs().coppa);
     }
 
     @Test
@@ -520,7 +518,6 @@ public class BasicParameterBuilderTest {
         TargetingParams.setUserId(USER_ID);
         TargetingParams.setUserAge(USER_AGE);
         TargetingParams.addUserKeyword(USER_KEYWORDS);
-        TargetingParams.setUserCustomData(USER_CUSTOM);
         TargetingParams.setGender(TargetingParams.GENDER.MALE);
         TargetingParams.setUserExt(new Ext());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
@@ -586,8 +583,8 @@ public class BasicParameterBuilderTest {
         adConfiguration.setAdFormat(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
-        TargetingParams.addContextKeyword("contextKeyword1");
-        TargetingParams.addContextKeyword("contextKeyword2");
+        TargetingParams.addExtKeyword("contextKeyword1");
+        TargetingParams.addExtKeyword("contextKeyword2");
 
         AppInfoParameterBuilder builder = new AppInfoParameterBuilder(adConfiguration);
         AdRequestInput adRequestInput = new AdRequestInput();
@@ -665,24 +662,6 @@ public class BasicParameterBuilderTest {
         assertTrue(prebidJson.has("data"));
         JSONArray biddersArray = prebidJson.getJSONObject("data").getJSONArray("bidders");
         assertEquals("bidder", biddersArray.get(0));
-    }
-
-    @Test
-    public void whenAppendParametersAndTargetingUserDataNotEmpty_UserDataAddedToUserExt()
-            throws JSONException {
-        TargetingParams.addUserData("user", "userData");
-
-        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setConfigId("config");
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        User user = adRequestInput.getBidRequest().getUser();
-        assertTrue(user.getExt().getMap().containsKey("data"));
-        JSONObject userDataJson = (JSONObject) user.getExt().getMap().get("data");
-        assertTrue(userDataJson.has("user"));
-        assertEquals("userData", userDataJson.getJSONArray("user").get(0));
     }
 
     @Test
@@ -1343,9 +1322,7 @@ public class BasicParameterBuilderTest {
         user.id = USER_ID;
         user.yob = USER_YOB;
         user.keywords = USER_KEYWORDS;
-        user.customData = USER_CUSTOM;
         user.gender = USER_GENDER;
-        user.buyerUid = USER_BUYER_ID;
         List<ExternalUserId> extendedUserIds = TargetingParams.getExternalUserIds();
         if (extendedUserIds != null && extendedUserIds.size() > 0) {
             user.ext = new Ext();

@@ -394,92 +394,6 @@ public class BannerView extends FrameLayout {
         this.eventHandler = eventHandler;
     }
 
-    /**
-     * @deprecated use addExtData
-     */
-    @Deprecated
-    public void addContextData(
-        String key,
-        String value
-    ) {
-        adUnitConfig.addExtData(key, value);
-    }
-
-    /**
-     * @deprecated use updateExtData
-     */
-    @Deprecated
-    public void updateContextData(
-        String key,
-        Set<String> value
-    ) {
-        adUnitConfig.addExtData(key, value);
-    }
-
-    /**
-     * @deprecated use removeExtData
-     */
-    @Deprecated
-    public void removeContextData(String key) {
-        adUnitConfig.removeExtData(key);
-    }
-
-    /**
-     * @deprecated use clearExtData
-     */
-    @Deprecated
-    public void clearContextData() {
-        adUnitConfig.clearExtData();
-    }
-
-    /**
-     * @deprecated use getExtDataDictionary
-     */
-    @Deprecated
-    public Map<String, Set<String>> getContextDataDictionary() {
-        return adUnitConfig.getExtDataDictionary();
-    }
-
-    /**
-     * @deprecated use addExtKeyword
-     */
-    @Deprecated
-    public void addContextKeyword(String keyword) {
-        adUnitConfig.addExtKeyword(keyword);
-    }
-
-    /**
-     * @deprecated use addExtKeywords
-     */
-    @Deprecated
-    public void addContextKeywords(Set<String> keywords) {
-        adUnitConfig.addExtKeywords(keywords);
-    }
-
-    /**
-     * @deprecated use removeExtKeyword
-     */
-    @Deprecated
-    public void removeContextKeyword(String keyword) {
-        adUnitConfig.removeExtKeyword(keyword);
-    }
-
-    /**
-     * @deprecated use getExtKeywordsSet
-     */
-    @Deprecated
-    public Set<String> getContextKeywordsSet() {
-        return adUnitConfig.getExtKeywordsSet();
-    }
-
-    /**
-     * @deprecated use clearExtKeywords
-     */
-    @Deprecated
-    public void clearContextKeywords() {
-        adUnitConfig.clearExtKeywords();
-    }
-
     public void addExtData(
         String key,
         String value
@@ -542,46 +456,6 @@ public class BannerView extends FrameLayout {
     @Nullable
     public String getPbAdSlot() {
         return adUnitConfig.getPbAdSlot();
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public void addContent(ContentObject content) {
-        adUnitConfig.setAppContent(content);
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public void setAppContent(ContentObject content) {
-        adUnitConfig.setAppContent(content);
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public void addUserData(DataObject dataObject) {
-        adUnitConfig.addUserData(dataObject);
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public ArrayList<DataObject> getUserData() {
-        return adUnitConfig.getUserData();
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public void clearUserData() {
-        adUnitConfig.clearUserData();
     }
 
     //endregion ==================== getters and setters
@@ -701,15 +575,6 @@ public class BannerView extends FrameLayout {
 
     public BidResponse getBidResponse() {
         return bidResponse;
-    }
-
-    /**
-     * @deprecated use {@link org.prebid.mobile.TargetingParams#setGlobalOrtbConfig(String)}
-     * or {@link #setImpOrtbConfig(String)}.
-     */
-    @Deprecated(since = "2.2.3", forRemoval = true)
-    public void setOrtbConfig(@Nullable String config) {
-        adUnitConfig.setOrtbConfig(config);
     }
 
     @Nullable

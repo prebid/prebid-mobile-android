@@ -142,16 +142,6 @@ object CommandLineArgumentParser {
         if (extKeywords != null) {
             bannerView.addExtKeyword(extKeywords)
         }
-
-        val appContentData = adUnitSpecificData.appContentData
-        if (appContentData != null) {
-            bannerView.setAppContent(appContentData)
-        }
-
-        val userData = adUnitSpecificData.userData
-        if (userData != null) {
-            bannerView.addUserData(userData)
-        }
     }
 
     fun addAdUnitSpecificData(interstitial: BaseInterstitialAdUnit) {
@@ -168,16 +158,6 @@ object CommandLineArgumentParser {
         if (extKeywords != null) {
             interstitial.addExtKeyword(extKeywords)
         }
-
-        val appContentData = adUnitSpecificData.appContentData
-        if (appContentData != null) {
-            interstitial.appContent = appContentData
-        }
-
-        val userData = adUnitSpecificData.userData
-        if (userData != null) {
-            interstitial.addUserData(userData)
-        }
     }
 
     fun addAdUnitSpecificData(mediationAdUnit: MediationBaseAdUnit) {
@@ -193,16 +173,6 @@ object CommandLineArgumentParser {
         val extKeywords = adUnitSpecificData.extKeywords
         if (extKeywords != null) {
             mediationAdUnit.addExtKeyword(extKeywords)
-        }
-
-        val appContentData = adUnitSpecificData.appContentData
-        if (appContentData != null) {
-            mediationAdUnit.appContent = appContentData
-        }
-
-        val userData = adUnitSpecificData.userData
-        if (userData != null) {
-            mediationAdUnit.addUserData(userData)
         }
     }
 
@@ -221,15 +191,6 @@ object CommandLineArgumentParser {
             nativeAdUnit.addExtKeyword(extKeywords)
         }
 
-        val appContentData = adUnitSpecificData.appContentData
-        if (appContentData != null) {
-            nativeAdUnit.appContent = appContentData
-        }
-
-        val userData = adUnitSpecificData.userData
-        if (userData != null) {
-            nativeAdUnit.addUserData(userData)
-        }
     }
 
 
@@ -280,7 +241,7 @@ object CommandLineArgumentParser {
         val map = parseJsonToMapOfStringsAndStringLists(json)
         map.forEach {
             for (value in it.value) {
-                TargetingParams.addUserData(it.key, value)
+                TargetingParams.addExtData(it.key, value)
             }
         }
     }

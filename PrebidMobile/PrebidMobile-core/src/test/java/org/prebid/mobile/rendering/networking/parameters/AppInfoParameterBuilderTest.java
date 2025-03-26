@@ -56,7 +56,7 @@ public class AppInfoParameterBuilderTest {
 
     @Test
     public void testAppendBuilderParameters() throws Exception {
-        TargetingParams.clearContextData();
+        TargetingParams.clearExtData();
 
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         ContentObject contentObject = new ContentObject();
@@ -97,7 +97,7 @@ public class AppInfoParameterBuilderTest {
 
     @Test
     public void whenAppendParametersAndTargetingContextDataNotEmpty_ContextDataAddedToAppExt() throws JSONException {
-        TargetingParams.addContextData("context", "contextData");
+        TargetingParams.addExtData("context", "contextData");
 
         AppInfoParameterBuilder builder = new AppInfoParameterBuilder(new AdUnitConfiguration());
         AdRequestInput adRequestInput = new AdRequestInput();
@@ -112,8 +112,8 @@ public class AppInfoParameterBuilderTest {
 
     @Test
     public void whenAppendParametersAndTargetingContextKeywordNotEmpty_ContextKeywordAddedToAppExt() throws JSONException {
-        TargetingParams.addContextKeyword("contextKeyword1");
-        TargetingParams.addContextKeyword("contextKeyword2");
+        TargetingParams.addExtKeyword("contextKeyword1");
+        TargetingParams.addExtKeyword("contextKeyword2");
 
         AppInfoParameterBuilder builder = new AppInfoParameterBuilder(new AdUnitConfiguration());
         AdRequestInput adRequestInput = new AdRequestInput();

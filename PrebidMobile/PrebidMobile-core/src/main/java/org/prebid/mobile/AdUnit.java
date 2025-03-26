@@ -87,15 +87,6 @@ public abstract class AdUnit {
         configuration.setAdFormats(adTypes);
     }
 
-    /**
-     * @deprecated Please use setAutoRefreshInterval() in seconds!
-     */
-    @Deprecated
-    public void setAutoRefreshPeriodMillis(
-            @IntRange(from = AUTO_REFRESH_DELAY_MIN, to = AUTO_REFRESH_DELAY_MAX) int periodMillis
-    ) {
-        configuration.setAutoRefreshDelay(periodMillis / 1000);
-    }
 
     /**
      * Auto refresh interval for banner ad.
@@ -259,45 +250,6 @@ public abstract class AdUnit {
      * This method obtains the context data keyword & value for adunit context targeting
      * if the key already exists the value will be appended to the list. No duplicates will be added
      */
-    @Deprecated
-    public void addContextData(String key, String value) {
-        configuration.addExtData(key, value);
-    }
-
-    /**
-     * This method obtains the context data keyword & values for adunit context targeting
-     * the values if the key already exist will be replaced with the new set of values
-     */
-    @Deprecated
-    public void updateContextData(String key, Set<String> value) {
-        configuration.addExtData(key, value);
-    }
-
-    /**
-     * This method allows to remove specific context data keyword & values set from adunit context targeting
-     */
-    @Deprecated
-    public void removeContextData(String key) {
-        configuration.removeExtData(key);
-    }
-
-    /**
-     * This method allows to remove all context data set from adunit context targeting
-     */
-    @Deprecated
-    public void clearContextData() {
-        configuration.clearExtData();
-    }
-
-    @Deprecated
-    Map<String, Set<String>> getContextDataDictionary() {
-        return configuration.getExtDataDictionary();
-    }
-
-    /**
-     * This method obtains the context data keyword & value for adunit context targeting
-     * if the key already exists the value will be appended to the list. No duplicates will be added
-     */
     public void addExtData(String key, String value) {
         configuration.addExtData(key, value);
     }
@@ -333,59 +285,7 @@ public abstract class AdUnit {
     /**
      * This method obtains the context keyword for adunit context targeting
      * Inserts the given element in the set if it is not already present.
-     *
-     * @deprecated Use addExtKeyword
      */
-    @Deprecated
-    public void addContextKeyword(String keyword) {
-        configuration.addExtKeyword(keyword);
-    }
-
-    /**
-     * This method obtains the context keyword set for adunit context targeting
-     * Adds the elements of the given set to the set.
-     *
-     * @deprecated Use addExtKeywords
-     */
-    @Deprecated
-    public void addContextKeywords(Set<String> keywords) {
-        configuration.addExtKeywords(keywords);
-    }
-
-    /**
-     * This method allows to remove specific context keyword from adunit context targeting
-     *
-     * @deprecated Use removeExtKeyword
-     */
-    @Deprecated
-    public void removeContextKeyword(String keyword) {
-        configuration.removeExtKeyword(keyword);
-    }
-
-    /**
-     * This method allows to remove all keywords from the set of adunit context targeting
-     *
-     * @deprecated Use clearExtKeywords
-     */
-    @Deprecated
-    public void clearContextKeywords() {
-        configuration.clearExtKeywords();
-    }
-
-    @Deprecated
-    Set<String> getContextKeywordsSet() {
-        return configuration.getExtKeywordsSet();
-    }
-
-    /**
-     * This method obtains the context keyword for adunit context targeting
-     * Inserts the given element in the set if it is not already present.
-     */
-    
-    /**
-     * @deprecated imp.ext.context.keywords doesn't exist
-     */
-    @Deprecated
     public void addExtKeyword(String keyword) {
         configuration.addExtKeyword(keyword);
     }
@@ -394,10 +294,6 @@ public abstract class AdUnit {
      * This method obtains the context keyword set for adunit context targeting
      * Adds the elements of the given set to the set.
      */
-    /**
-     * @deprecated imp.ext.context.keywords doesn't exist
-     */
-    @Deprecated
     public void addExtKeywords(Set<String> keywords) {
         configuration.addExtKeywords(keywords);
     }
@@ -420,46 +316,6 @@ public abstract class AdUnit {
         return configuration.getExtKeywordsSet();
     }
 
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     * This method obtains the content for adunit, content, in which impression will appear
-     */
-    @Deprecated
-    public void setAppContent(ContentObject content) {
-        configuration.setAppContent(content);
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public ContentObject getAppContent() {
-        return configuration.getAppContent();
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public void addUserData(DataObject dataObject) {
-        configuration.addUserData(dataObject);
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed.Please, use TargetingParams.getGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public ArrayList<DataObject> getUserData() {
-        return configuration.getUserData();
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public void clearUserData() {
-        configuration.clearUserData();
-    }
 
     public String getPbAdSlot() {
         return configuration.getPbAdSlot();
@@ -476,15 +332,6 @@ public abstract class AdUnit {
 
     public void setGpid(@Nullable String gpid) {
         configuration.setGpid(gpid);
-    }
-
-    /**
-     * @deprecated use {@link org.prebid.mobile.TargetingParams#setGlobalOrtbConfig(String)}
-     * or {@link #setImpOrtbConfig(String)}.
-     */
-    @Deprecated(since = "2.2.3", forRemoval = true)
-    public void setOrtbConfig(@Nullable String config) {
-        configuration.setOrtbConfig(config);
     }
 
     @Nullable

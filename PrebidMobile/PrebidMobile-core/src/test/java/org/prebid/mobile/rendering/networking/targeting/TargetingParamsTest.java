@@ -54,14 +54,6 @@ public class TargetingParamsTest {
     }
 
     @Test
-    public void setUserCustomData_EqualToGetUserCustomData() {
-        final String expectedCustomData = "custom_data";
-        TargetingParams.setUserCustomData(expectedCustomData);
-
-        assertEquals(expectedCustomData, TargetingParams.getUserCustomData());
-    }
-
-    @Test
     public void setUserGender_EqualToGetUserGenderAndIsInRequestParams() {
         final String expected = UserParameters.GENDER_FEMALE;
 
@@ -121,7 +113,6 @@ public class TargetingParamsTest {
         TargetingParams.setStoreUrl(null);
         TargetingParams.setPublisherName(null);
         TargetingParams.setUserAge(null);
-        TargetingParams.setUserCustomData(null);
         TargetingParams.setUserExt(null);
         TargetingParams.setUserId(null);
         TargetingParams.setGender(null);
@@ -130,7 +121,6 @@ public class TargetingParamsTest {
         assertNull(TargetingParams.getStoreUrl());
         assertNull(TargetingParams.getPublisherName());
         assertNull(TargetingParams.getUserAge());
-        assertNull(TargetingParams.getUserCustomData());
         assertNull(TargetingParams.getUserExt());
         assertNull(TargetingParams.getUserId());
         assertNull(TargetingParams.getUserLatLng());

@@ -35,7 +35,6 @@ public class MraidEnvTest {
                 + "appId: \"null\","
                 + "ifa: \"null\","
                 + "limitAdTracking: false,"
-                + "coppa: true"
                 + "};";
 
         assertEquals(expectedValue, MraidEnv.getWindowMraidEnv());

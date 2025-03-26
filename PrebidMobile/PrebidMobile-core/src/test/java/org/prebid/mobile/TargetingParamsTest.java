@@ -78,9 +78,6 @@ public class TargetingParamsTest extends BaseSetup {
         TargetingParams.clearStoredExternalUserIds();
         TargetingParams.clearAccessControlList();
         TargetingParams.setExternalUserIds(null);
-        TargetingParams.clearUserData();
-        TargetingParams.clearContextData();
-        TargetingParams.clearContextKeywords();
         TargetingParams.clearUserKeywords();
     }
 
@@ -329,10 +326,10 @@ public class TargetingParamsTest extends BaseSetup {
     @Test
     public void testContextData() {
         // given
-        TargetingParams.addContextData("key1", "value10");
+        TargetingParams.addExtData("key1", "value10");
 
         //when
-        Map<String, Set<String>> dictionary = TargetingParams.getContextDataDictionary();
+        Map<String, Set<String>> dictionary = TargetingParams.getExtDataDictionary();
         Set<String> set = dictionary.get("key1");
 
         //then
@@ -342,29 +339,14 @@ public class TargetingParamsTest extends BaseSetup {
         assertThat(set, containsInAnyOrder("value10"));
     }
 
-    @Test
-    public void testUserData() {
-        // given
-        TargetingParams.addUserData("key1", "value10");
-
-        //when
-        Map<String, Set<String>> dictionary = TargetingParams.getUserDataDictionary();
-        Set<String> set = dictionary.get("key1");
-
-        //then
-        Assert.assertEquals(1, dictionary.size());
-
-        Assert.assertEquals(1, set.size());
-        assertThat(set, containsInAnyOrder("value10"));
-    }
 
     @Test
     public void testContextKeyword() {
         // given
-        TargetingParams.addContextKeyword("value10");
+        TargetingParams.addExtKeyword("value10");
 
         //when
-        Set<String> set = TargetingParams.getContextKeywordsSet();
+        Set<String> set = TargetingParams.getExtKeywordsSet();
 
         //then
         Assert.assertEquals(1, set.size());

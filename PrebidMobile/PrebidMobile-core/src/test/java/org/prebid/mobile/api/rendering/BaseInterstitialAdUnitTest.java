@@ -91,27 +91,27 @@ public class BaseInterstitialAdUnitTest {
         expectedMap.put("key2", value2);
 
         // add
-        baseInterstitialAdUnit.addContextData("key1", "value1");
-        baseInterstitialAdUnit.addContextData("key2", "value2");
+        baseInterstitialAdUnit.addExtData("key1", "value1");
+        baseInterstitialAdUnit.addExtData("key2", "value2");
 
-        assertEquals(expectedMap, baseInterstitialAdUnit.getContextDataDictionary());
+        assertEquals(expectedMap, baseInterstitialAdUnit.getExtDataDictionary());
 
         // update
         HashSet<String> updateSet = new HashSet<>();
         updateSet.add("value3");
-        baseInterstitialAdUnit.updateContextData("key1", updateSet);
+        baseInterstitialAdUnit.updateExtData("key1", updateSet);
         expectedMap.replace("key1", updateSet);
 
-        assertEquals(expectedMap, baseInterstitialAdUnit.getContextDataDictionary());
+        assertEquals(expectedMap, baseInterstitialAdUnit.getExtDataDictionary());
 
         // remove
-        baseInterstitialAdUnit.removeContextData("key1");
+        baseInterstitialAdUnit.removeExtData("key1");
         expectedMap.remove("key1");
-        assertEquals(expectedMap, baseInterstitialAdUnit.getContextDataDictionary());
+        assertEquals(expectedMap, baseInterstitialAdUnit.getExtDataDictionary());
 
         // clear
-        baseInterstitialAdUnit.clearContextData();
-        assertTrue(baseInterstitialAdUnit.getContextDataDictionary().isEmpty());
+        baseInterstitialAdUnit.clearExtData();
+        assertTrue(baseInterstitialAdUnit.getExtDataDictionary().isEmpty());
     }
 
     @Test
@@ -121,23 +121,23 @@ public class BaseInterstitialAdUnitTest {
         expectedSet.add("key2");
 
         // add
-        baseInterstitialAdUnit.addContextKeyword("key1");
-        baseInterstitialAdUnit.addContextKeyword("key2");
+        baseInterstitialAdUnit.addExtKeyword("key1");
+        baseInterstitialAdUnit.addExtKeyword("key2");
 
-        assertEquals(expectedSet, baseInterstitialAdUnit.getContextKeywordsSet());
+        assertEquals(expectedSet, baseInterstitialAdUnit.getExtKeywordsSet());
 
         // remove
-        baseInterstitialAdUnit.removeContextKeyword("key2");
+        baseInterstitialAdUnit.removeExtKeyword("key2");
         expectedSet.remove("key2");
-        assertEquals(expectedSet, baseInterstitialAdUnit.getContextKeywordsSet());
+        assertEquals(expectedSet, baseInterstitialAdUnit.getExtKeywordsSet());
 
         // clear
-        baseInterstitialAdUnit.clearContextKeywords();
-        assertTrue(baseInterstitialAdUnit.getContextKeywordsSet().isEmpty());
+        baseInterstitialAdUnit.clearExtKeywords();
+        assertTrue(baseInterstitialAdUnit.getExtKeywordsSet().isEmpty());
 
         // add all
-        baseInterstitialAdUnit.addContextKeywords(expectedSet);
-        assertEquals(expectedSet, baseInterstitialAdUnit.getContextKeywordsSet());
+        baseInterstitialAdUnit.addExtKeywords(expectedSet);
+        assertEquals(expectedSet, baseInterstitialAdUnit.getExtKeywordsSet());
     }
 
     @Test

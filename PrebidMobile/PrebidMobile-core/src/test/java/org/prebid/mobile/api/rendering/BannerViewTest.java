@@ -444,27 +444,27 @@ public class BannerViewTest {
         expectedMap.put("key2", value2);
 
         // add
-        bannerView.addContextData("key1", "value1");
-        bannerView.addContextData("key2", "value2");
+        bannerView.addExtData("key1", "value1");
+        bannerView.addExtData("key2", "value2");
 
-        assertEquals(expectedMap, bannerView.getContextDataDictionary());
+        assertEquals(expectedMap, bannerView.getExtDataDictionary());
 
         // update
         HashSet<String> updateSet = new HashSet<>();
         updateSet.add("value3");
-        bannerView.updateContextData("key1", updateSet);
+        bannerView.updateExtData("key1", updateSet);
         expectedMap.replace("key1", updateSet);
 
-        assertEquals(expectedMap, bannerView.getContextDataDictionary());
+        assertEquals(expectedMap, bannerView.getExtDataDictionary());
 
         // remove
-        bannerView.removeContextData("key1");
+        bannerView.removeExtData("key1");
         expectedMap.remove("key1");
-        assertEquals(expectedMap, bannerView.getContextDataDictionary());
+        assertEquals(expectedMap, bannerView.getExtDataDictionary());
 
         // clear
-        bannerView.clearContextData();
-        assertTrue(bannerView.getContextDataDictionary().isEmpty());
+        bannerView.clearExtData();
+        assertTrue(bannerView.getExtDataDictionary().isEmpty());
     }
 
     @Test
@@ -474,23 +474,23 @@ public class BannerViewTest {
         expectedSet.add("key2");
 
         // add
-        bannerView.addContextKeyword("key1");
-        bannerView.addContextKeyword("key2");
+        bannerView.addExtKeyword("key1");
+        bannerView.addExtKeyword("key2");
 
-        assertEquals(expectedSet, bannerView.getContextKeywordsSet());
+        assertEquals(expectedSet, bannerView.getExtKeywordsSet());
 
         // remove
-        bannerView.removeContextKeyword("key2");
+        bannerView.removeExtKeyword("key2");
         expectedSet.remove("key2");
-        assertEquals(expectedSet, bannerView.getContextKeywordsSet());
+        assertEquals(expectedSet, bannerView.getExtKeywordsSet());
 
         // clear
-        bannerView.clearContextKeywords();
-        assertTrue(bannerView.getContextKeywordsSet().isEmpty());
+        bannerView.clearExtKeywords();
+        assertTrue(bannerView.getExtKeywordsSet().isEmpty());
 
         // add all
-        bannerView.addContextKeywords(expectedSet);
-        assertEquals(expectedSet, bannerView.getContextKeywordsSet());
+        bannerView.addExtKeywords(expectedSet);
+        assertEquals(expectedSet, bannerView.getExtKeywordsSet());
     }
 
     @Test

@@ -127,93 +127,6 @@ public abstract class BaseInterstitialAdUnit {
         }
     }
 
-    /**
-     * @deprecated use addExtData
-     */
-    @Deprecated
-    public void addContextData(
-        String key,
-        String value
-    ) {
-        config.addExtData(key, value);
-    }
-
-    /**
-     * @deprecated use updateExtData
-     */
-    @Deprecated
-    public void updateContextData(
-        String key,
-        Set<String> value
-    ) {
-        config.addExtData(key, value);
-    }
-
-    /**
-     * @deprecated use removeExtData
-     */
-    @Deprecated
-    public void removeContextData(String key) {
-        config.removeExtData(key);
-    }
-
-    /**
-     * @deprecated use clearExtData
-     */
-    @Deprecated
-    public void clearContextData() {
-        config.clearExtData();
-    }
-
-    /**
-     * @deprecated use getExtDataDictionary
-     */
-    @Deprecated
-    public Map<String, Set<String>> getContextDataDictionary() {
-        return config.getExtDataDictionary();
-    }
-
-    /**
-     * @deprecated use addExtKeyword
-     */
-    @Deprecated
-    public void addContextKeyword(String keyword) {
-        config.addExtKeyword(keyword);
-    }
-
-    /**
-     * @deprecated use addExtKeywords
-     */
-    @Deprecated
-    public void addContextKeywords(Set<String> keywords) {
-        config.addExtKeywords(keywords);
-    }
-
-    /**
-     * @deprecated use removeExtKeyword
-     */
-    @Deprecated
-    public void removeContextKeyword(String keyword) {
-        config.removeExtKeyword(keyword);
-    }
-
-    /**
-     * @deprecated use getExtKeywordsSet
-     */
-    @Deprecated
-    public Set<String> getContextKeywordsSet() {
-        return config.getExtKeywordsSet();
-    }
-
-    /**
-     * @deprecated use clearExtKeywords
-     */
-    @Deprecated
-    public void clearContextKeywords() {
-        config.clearExtKeywords();
-    }
-
-    @Deprecated
     public void addExtData(
         String key,
         String value
@@ -240,10 +153,6 @@ public abstract class BaseInterstitialAdUnit {
         return config.getExtDataDictionary();
     }
 
-    /**
-     * @deprecated imp.ext.context.keywords doesn't exist
-     */
-    @Deprecated
     public void addExtKeyword(String keyword) {
         config.addExtKeyword(keyword);
     }
@@ -264,55 +173,6 @@ public abstract class BaseInterstitialAdUnit {
         config.clearExtKeywords();
     }
 
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public void setAppContent(ContentObject content) {
-        config.setAppContent(content);
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public ContentObject getAppContent() {
-        return config.getAppContent();
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public void addUserData(DataObject dataObject) {
-        config.addUserData(dataObject);
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public ArrayList<DataObject> getUserData() {
-        return config.getUserData();
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public void clearUserData() {
-        config.clearUserData();
-    }
-
-
-    /**
-     * @deprecated use {@link org.prebid.mobile.TargetingParams#setGlobalOrtbConfig(String)}
-     * or {@link #setImpOrtbConfig(String)}.
-     */
-    @Deprecated(since = "2.2.3", forRemoval = true)
-    public void setOrtbConfig(@Nullable String openRtbConfig) {
-        config.setOrtbConfig(openRtbConfig);
-    }
 
     @Nullable
     public String getImpOrtbConfig() {
