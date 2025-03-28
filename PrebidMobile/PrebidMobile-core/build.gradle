@@ -33,7 +33,7 @@ dependencies {
 
     implementation libs.androidx.annotation
 
-    implementation 'com.google.android.gms:play-services-base:18.1.0'
+    implementation libs.google.play.services.base
     implementation libs.google.play.services.ads.identifier
     implementation libs.exoplayer.core
     implementation libs.exoplayer.ui
