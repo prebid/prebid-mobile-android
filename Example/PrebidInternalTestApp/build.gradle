@@ -95,7 +95,7 @@ dependencies {
     implementation(libs.okhttp.mockwebserver) {
         exclude group: 'junit'
     }
-    implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
+    implementation libs.androidx.espresso.idling.resource
 
     // Helper
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -108,8 +108,8 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
     androidTestImplementation libs.androidx.espresso.core
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-web:3.4.0'
+    androidTestImplementation libs.androidx.espresso.intents
+    androidTestImplementation libs.androidx.espresso.web
     androidTestImplementation libs.androidx.annotation
     androidTestImplementation libs.androidx.uiautomator
 
