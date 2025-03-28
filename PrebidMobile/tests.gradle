@@ -4,7 +4,7 @@ dependencies {
     testImplementation libs.junit
     testImplementation libs.hamcrest.core
     testImplementation libs.hamcrest.library
-    testImplementation 'org.mockito:mockito-core:5.15.2'
+    testImplementation libs.mockito.core
     testImplementation libs.androidx.test.runner
     testImplementation libs.androidx.test.rules
 
