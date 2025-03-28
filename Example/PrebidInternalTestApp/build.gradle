@@ -79,7 +79,7 @@ dependencies {
     implementation libs.androidx.recyclerview
     implementation libs.androidx.lifecycle.extensions
     implementation libs.androidx.preference.ktx
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
+    implementation libs.androidx.vectordrawable.animated
     implementation libs.androidx.lifecycle.viewmodel.ktx
 
     // Ad dependencies
