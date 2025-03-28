@@ -106,7 +106,7 @@ dependencies {
     // Android tests
     androidTestImplementation libs.robotium.solo
     androidTestImplementation libs.androidx.test.runner
-    androidTestImplementation 'androidx.test:rules:1.4.0'
+    androidTestImplementation libs.androidx.test.rules
     androidTestImplementation libs.androidx.espresso.core
     androidTestImplementation libs.androidx.espresso.intents
     androidTestImplementation libs.androidx.espresso.web
