@@ -22,5 +22,5 @@ dependencies {
 
     testImplementation 'org.apache.commons:commons-lang3:3.7'
     testImplementation 'org.json:json:20180813'
-    testImplementation 'com.google.code.gson:gson:2.8.6'
+    testImplementation libs.gson
 }
