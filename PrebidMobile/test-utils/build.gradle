@@ -4,6 +4,6 @@ plugins {
 
 dependencies {
     implementation libs.junit
-    implementation 'org.json:json:20180813'
+    implementation libs.json
     implementation libs.gson
 }

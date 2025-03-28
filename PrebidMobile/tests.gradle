@@ -21,6 +21,6 @@ dependencies {
     testImplementation libs.okhttp
 
     testImplementation 'org.apache.commons:commons-lang3:3.7'
-    testImplementation 'org.json:json:20180813'
+    testImplementation libs.json
     testImplementation libs.gson
 }
