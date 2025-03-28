@@ -9,6 +9,7 @@ androidx-multidex = "2.0.1"
 androidx-navigation = "2.3.1"
 androidx-preference-ktx = "1.2.0"
 androidx-recyclerview = "1.1.0"
+androidx-test-runner = "1.4.0"
 androidx-uiautomator = "2.2.0"
 androidx-vectordrawable-animated = "1.1.0"
 applovin-sdk = "13.1.0"
@@ -43,6 +44,7 @@ androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fr
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference-ktx" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "androidx-recyclerview" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
 androidx-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "androidx-uiautomator" }
 androidx-vectordrawable-animated = { module = "androidx.vectordrawable:vectordrawable-animated", version.ref = "androidx-vectordrawable-animated" }
 applovin-sdk = { module = "com.applovin:applovin-sdk", version.ref = "applovin-sdk" }
