@@ -38,5 +38,5 @@ dependencies {
     implementation libs.exoplayer.core
     implementation libs.exoplayer.ui
 
-    implementation "androidx.localbroadcastmanager:localbroadcastmanager:1.0.0"
+    implementation libs.androidx.localbroadcastmanager
 }
