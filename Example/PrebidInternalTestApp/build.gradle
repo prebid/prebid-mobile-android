@@ -104,7 +104,7 @@ dependencies {
     implementation libs.segmentedcontrol
 
     // Android tests
-    androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.5.4'
+    androidTestImplementation libs.robotium.solo
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
     androidTestImplementation libs.androidx.espresso.core
