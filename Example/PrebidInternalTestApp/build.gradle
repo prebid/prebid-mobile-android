@@ -60,7 +60,6 @@ android {
 
 dependencies {
     def nav_version = "2.3.1"
-    def lifecycle_version = "2.2.0"
 
     implementation project(':PrebidMobile')
     implementation project(':PrebidMobile-gamEventHandlers')
@@ -78,7 +77,7 @@ dependencies {
     implementation libs.androidx.annotation
     implementation libs.androidx.constraintlayout
     implementation libs.androidx.recyclerview
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation libs.androidx.lifecycle.extensions
     implementation libs.androidx.preference.ktx
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
     implementation libs.androidx.lifecycle.viewmodel.ktx
