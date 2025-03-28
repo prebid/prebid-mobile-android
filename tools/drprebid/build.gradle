@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-vision:17.0.2'
     implementation 'com.google.android.gms:play-services-ads:17.1.3'
 
-    implementation 'com.squareup.okhttp3:okhttp:3.14.2'
+    implementation libs.okhttp
 
     implementation libs.androidx.multidex
 }
