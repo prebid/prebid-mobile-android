@@ -20,7 +20,7 @@ dependencies {
     testImplementation libs.okhttp.mockwebserver
     testImplementation libs.okhttp
 
-    testImplementation 'org.apache.commons:commons-lang3:3.7'
+    testImplementation libs.apache.commons.lang3
     testImplementation libs.json
     testImplementation libs.gson
 }

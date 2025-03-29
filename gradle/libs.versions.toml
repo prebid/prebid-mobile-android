@@ -15,6 +15,7 @@ androidx-test-runner = "1.4.0"
 androidx-uiautomator = "2.2.0"
 androidx-vectordrawable-animated = "1.1.0"
 apache-camel-json-patch = "3.22.2"
+apache-commons-lang3 = "3.7"
 applovin-sdk = "13.1.0"
 assertj-core = "1.7.0"
 exoplayer = "2.15.1"
@@ -59,6 +60,7 @@ androidx-test-runner = { module = "androidx.test:runner", version.ref = "android
 androidx-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "androidx-uiautomator" }
 androidx-vectordrawable-animated = { module = "androidx.vectordrawable:vectordrawable-animated", version.ref = "androidx-vectordrawable-animated" }
 apache-camel-json-patch = { module = "org.apache.camel:camel-json-patch", version.ref = "apache-camel-json-patch" }
+apache-commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "apache-commons-lang3" }
 applovin-sdk = { module = "com.applovin:applovin-sdk", version.ref = "applovin-sdk" }
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj-core" }
 exoplayer = { module = "com.google.android.exoplayer:exoplayer", version.ref = "exoplayer" }
