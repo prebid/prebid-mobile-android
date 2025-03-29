@@ -10,7 +10,7 @@ dependencies {
 
     // JSON comparators
     testImplementation libs.jackson.databind
-    testImplementation "org.apache.camel:camel-json-patch:3.22.2"
+    testImplementation libs.apache.camel.json.patch
 
     testImplementation libs.robolectric
     testImplementation libs.shadows.httpclient
