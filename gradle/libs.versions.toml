@@ -14,6 +14,7 @@ androidx-test-rules = "1.4.0"
 androidx-test-runner = "1.4.0"
 androidx-uiautomator = "2.2.0"
 androidx-vectordrawable-animated = "1.1.0"
+apache-camel-json-patch = "3.22.2"
 applovin-sdk = "13.1.0"
 exoplayer = "2.15.1"
 glide = "4.14.2"
@@ -55,6 +56,7 @@ androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
 androidx-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "androidx-uiautomator" }
 androidx-vectordrawable-animated = { module = "androidx.vectordrawable:vectordrawable-animated", version.ref = "androidx-vectordrawable-animated" }
+apache-camel-json-patch = { module = "org.apache.camel:camel-json-patch", version.ref = "apache-camel-json-patch" }
 applovin-sdk = { module = "com.applovin:applovin-sdk", version.ref = "applovin-sdk" }
 exoplayer = { module = "com.google.android.exoplayer:exoplayer", version.ref = "exoplayer" }
 exoplayer-core = { module = "com.google.android.exoplayer:exoplayer-core", version.ref = "exoplayer" }
