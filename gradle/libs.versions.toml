@@ -27,6 +27,7 @@ gson = "2.8.6"
 hamcrest = "2.2"
 jackson-databind = "2.14.3"
 json = "20180813"
+jsonassert = "1.5.0"
 junit = "4.13.2"
 androidx-junit = "1.1.3"
 kotlin-stdlib = "2.1.0"
@@ -74,6 +75,7 @@ hamcrest-core = { module = "org.hamcrest:hamcrest-core", version.ref = "hamcrest
 hamcrest-library = { module = "org.hamcrest:hamcrest-library", version.ref = "hamcrest" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson-databind" }
 json = { module = "org.json:json", version.ref = "json" }
+jsonassert = { module = "org.skyscreamer:jsonassert", version.ref = "jsonassert" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin-stdlib" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }

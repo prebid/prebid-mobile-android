@@ -16,7 +16,7 @@ dependencies {
     testImplementation libs.shadows.httpclient
 
     testImplementation libs.assertj.core
-    testImplementation 'org.skyscreamer:jsonassert:1.5.0'
+    testImplementation libs.jsonassert
     testImplementation libs.okhttp.mockwebserver
     testImplementation libs.okhttp
 
