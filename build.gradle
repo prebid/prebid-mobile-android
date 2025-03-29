@@ -12,7 +12,6 @@ ext {
 }
 
 buildscript {
-    ext.kotlin_version = '2.1.0'
     repositories {
         google()
         mavenCentral()
@@ -20,7 +19,7 @@ buildscript {
 
     dependencies {
         classpath libs.gradle
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath libs.kotlin.gradle.plugin
     }
 }
 
