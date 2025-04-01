@@ -64,10 +64,10 @@ public class GamOriginalApiVideoInStream extends BaseAdActivity {
         parameters.setPlcmt(Signals.Plcmt.InStream);
         adUnit.setVideoParameters(parameters);
 
-        adUnit.fetchDemand((resultCode, keysMap) -> {
+        adUnit.fetchDemand((bidInfo) -> {
             HashSet<org.prebid.mobile.AdSize> sizes = new HashSet<>();
             sizes.add(new org.prebid.mobile.AdSize(WIDTH, HEIGHT));
-            adsUri = Uri.parse(Util.generateInstreamUriForGam(AD_UNIT_ID, sizes, keysMap));
+            adsUri = Uri.parse(Util.generateInstreamUriForGam(AD_UNIT_ID, sizes, bidInfo.getTargetingKeywords()));
 
             ImaAdsLoader.Builder imaBuilder = new ImaAdsLoader.Builder(this);
             adsLoader = imaBuilder.build();

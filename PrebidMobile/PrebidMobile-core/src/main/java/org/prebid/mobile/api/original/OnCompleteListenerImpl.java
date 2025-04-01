@@ -3,18 +3,16 @@ package org.prebid.mobile.api.original;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.OnCompleteListener;
-import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
 import org.prebid.mobile.api.data.BidInfo;
 
-import java.util.Map;
-
 /**
  * Listener implementation for multiformat PrebidAdUnit.
  */
-class OnCompleteListenerImpl implements OnCompleteListener, OnCompleteListener2 {
+class OnCompleteListenerImpl implements OnCompleteListener, OnFetchDemandResult {
 
     @Nullable
     private final Object adObject;
@@ -39,8 +37,8 @@ class OnCompleteListenerImpl implements OnCompleteListener, OnCompleteListener2 
     }
 
     @Override
-    public void onComplete(ResultCode resultCode, @Nullable Map<String, String> unmodifiableMap) {
-        notifyListener(resultCode);
+    public void onComplete(@NonNull @NotNull BidInfo bidInfo) {
+        notifyListener(bidInfo.getResultCode());
     }
 
 
@@ -49,5 +47,4 @@ class OnCompleteListenerImpl implements OnCompleteListener, OnCompleteListener2 
         Util.saveCacheId(bidInfo.getNativeCacheId(), adObject);
         listener.onComplete(bidInfo);
     }
-
 }

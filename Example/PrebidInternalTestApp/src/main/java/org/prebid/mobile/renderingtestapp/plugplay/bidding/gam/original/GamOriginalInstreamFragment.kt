@@ -43,14 +43,14 @@ class GamOriginalInstreamFragment : AdFragment() {
     }
 
     override fun loadAd() {
-        adUnit?.fetchDemand { _: ResultCode?, keysMap: Map<String?, String?>? ->
+        adUnit?.fetchDemand {
             val sizes = HashSet<AdSize>()
             sizes.add(AdSize(width, height))
             adsUri = Uri.parse(
                 Util.generateInstreamUriForGam(
                     adUnitId,
                     sizes,
-                    keysMap
+                    it.targetingKeywords
                 )
             )
             val imaBuilder = ImaAdsLoader.Builder(requireActivity())

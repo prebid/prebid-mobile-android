@@ -42,10 +42,8 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
-import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.lang.ref.WeakReference;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -122,20 +120,6 @@ public abstract class AdUnit {
             bidLoader.destroy();
         }
         visibilityMonitor.stopTracking();
-    }
-
-    /**
-     * Use {@link #fetchDemand(OnFetchDemandResult)}.
-     */
-    @Deprecated
-    public void fetchDemand(@NonNull final OnCompleteListener2 listener) {
-        final Map<String, String> keywordsMap = new HashMap<>();
-
-        fetchDemand(keywordsMap, resultCode -> {
-            TasksManager.getInstance().executeOnMainThread(() ->
-                    listener.onComplete(resultCode, keywordsMap.size() != 0 ? Collections.unmodifiableMap(keywordsMap) : null)
-            );
-        });
     }
 
     /**
