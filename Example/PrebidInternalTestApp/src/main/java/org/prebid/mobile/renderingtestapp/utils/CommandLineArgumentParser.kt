@@ -11,7 +11,13 @@ import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
 import org.json.JSONObject
-import org.prebid.mobile.*
+import org.prebid.mobile.BannerAdUnit
+import org.prebid.mobile.ContentObject
+import org.prebid.mobile.DataObject
+import org.prebid.mobile.ExternalUserId
+import org.prebid.mobile.ExternalUserId.UniqueId
+import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.api.mediation.MediationBaseAdUnit
 import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.api.rendering.BannerView
@@ -183,9 +189,9 @@ object CommandLineArgumentParser {
                     TargetingParams.setExternalUserIds(
                         listOf(
                             if (aType == null) {
-                                ExternalUserId(source, identifier, null, null)
+                                ExternalUserId(source, listOf(UniqueId(identifier, 1)))
                             } else {
-                                ExternalUserId(source, identifier, aType.asInt, null)
+                                ExternalUserId(source, listOf(UniqueId(identifier, aType.asInt)))
                             }
                         )
                     )
