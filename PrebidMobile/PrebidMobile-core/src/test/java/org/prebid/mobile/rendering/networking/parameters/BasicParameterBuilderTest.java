@@ -1214,7 +1214,6 @@ public class BasicParameterBuilderTest {
         final String pbAdSlot = adConfiguration.getPbAdSlot();
         if (pbAdSlot != null) {
             JSONObject data = new JSONObject();
-            Utils.addValue(data, "adslot", pbAdSlot);
             Utils.addValue(data, "pbadslot", pbAdSlot);
             imp.getExt().put("data", data);
         }
