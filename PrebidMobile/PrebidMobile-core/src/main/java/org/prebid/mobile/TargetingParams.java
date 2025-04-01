@@ -40,11 +40,6 @@ import java.util.Set;
  */
 public class TargetingParams {
 
-    public static final String BIDDER_NAME_APP_NEXUS = "appnexus";
-    public static final String BIDDER_NAME_RUBICON_PROJECT = "rubicon";
-    private static final String TAG = "TargetingParams";
-
-    private static String userId;
     private static String publisherName;
     private static String domain = "";
     private static String storeUrl = "";
@@ -62,7 +57,6 @@ public class TargetingParams {
     private static final Set<String> accessControlList = new HashSet<>();
     private static final Set<String> userKeywordsSet = new HashSet<>();
     private static final Map<String, Set<String>> extDataDictionary = new HashMap<>();
-    private static final Set<String> extKeywordsSet = new HashSet<>();
 
     private TargetingParams() {
     }
@@ -131,19 +125,6 @@ public class TargetingParams {
     }
 
     /* -------------------- Ids -------------------- */
-
-    /**
-     * Set the user identifier.
-     *
-     * @param userId the new user identifier
-     */
-    public static void setUserId(String userId) {
-        TargetingParams.userId = userId;
-    }
-
-    public static String getUserId() {
-        return TargetingParams.userId;
-    }
 
     /**
      * Sets external user ids. Set null for clearing.
@@ -317,42 +298,6 @@ public class TargetingParams {
         return extDataDictionary;
     }
 
-    /**
-     * This method obtains the context keyword for adunit context targeting
-     * Inserts the given element in the set if it is not already present.
-     * (imp[].ext.context.keywords)
-     */
-    public static void addExtKeyword(String keyword) {
-        extKeywordsSet.add(keyword);
-    }
-
-    /**
-     * This method obtains the context keyword set for adunit context targeting
-     * Adds the elements of the given set to the set.
-     */
-    public static void addExtKeywords(Set<String> keywords) {
-        extKeywordsSet.addAll(keywords);
-    }
-
-    /**
-     * This method allows to remove specific context keyword from adunit context targeting
-     */
-    public static void removeExtKeyword(String keyword) {
-        extKeywordsSet.remove(keyword);
-    }
-
-    /**
-     * This method allows to remove all keywords from the set of adunit context targeting
-     */
-    public static void clearExtKeywords() {
-        extKeywordsSet.clear();
-    }
-
-    public static Set<String> getExtKeywordsSet() {
-        return extKeywordsSet;
-    }
-
-
     /* -------------------- Publishers -------------------- */
 
     /**
@@ -408,7 +353,7 @@ public class TargetingParams {
     /**
      * Sets subject to COPPA. Null to set undefined. <br><br>
      * <p>
-     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}.
      */
     public static void setSubjectToCOPPA(@Nullable Boolean value) {
         UserConsentUtils.tryToSetSubjectToCoppa(value);
@@ -417,7 +362,7 @@ public class TargetingParams {
     /**
      * Gets subject to COPPA. Null is undefined. <br><br>
      * <p>
-     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}.
      */
     @Nullable
     public static Boolean isSubjectToCOPPA() {
@@ -427,7 +372,7 @@ public class TargetingParams {
     /**
      * Sets subject to GDPR for Prebid. It uses custom static field, not IAB. <br><br>
      * <p>
-     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}.
      */
     public static void setSubjectToGDPR(@Nullable Boolean value) {
         UserConsentUtils.tryToSetPrebidSubjectToGdpr(value);
@@ -439,7 +384,7 @@ public class TargetingParams {
      * 2) IAB subject to GDPR TCF 2.0. <br>
      * Otherwise, null. <br><br>
      * <p>
-     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}.
      */
     @Nullable
     public static Boolean isSubjectToGDPR() {
@@ -449,7 +394,7 @@ public class TargetingParams {
     /**
      * Sets GDPR consent for Prebid. It uses custom static field, not IAB. <br><br>
      * <p>
-     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}.
      */
     public static void setGDPRConsentString(@Nullable String consent) {
         UserConsentUtils.tryToSetPrebidGdprConsent(consent);
@@ -461,7 +406,7 @@ public class TargetingParams {
      * 2) IAB GDPR consent TCF 2.0. <br>
      * Otherwise, null. <br><br>
      * <p>
-     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}.
      */
     @Nullable
     public static String getGDPRConsentString() {
@@ -471,7 +416,7 @@ public class TargetingParams {
     /**
      * Sets Prebid custom GDPR purpose consents (device access consent). <br><br>
      * <p>
-     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}.
      */
     public static void setPurposeConsents(@Nullable String purposeConsents) {
         UserConsentUtils.tryToSetPrebidGdprPurposeConsents(purposeConsents);
@@ -483,7 +428,7 @@ public class TargetingParams {
      * 2) IAB GDPR TCF 2.0 purpose consent. <br>
      * Returns null if purpose consent isn't set or index is out of bounds. <br><br>
      * <p>
-     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}.
      */
     @Nullable
     public static Boolean getPurposeConsent(int index) {
@@ -496,7 +441,7 @@ public class TargetingParams {
      * 2) IAB GDPR TCF 2.0 purpose consent. <br>
      * Otherwise, null.
      * <p>
-     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}.
      */
     @Nullable
     public static String getPurposeConsents() {
@@ -508,7 +453,7 @@ public class TargetingParams {
      * If custom Prebid subject and purpose consent set, gets device access from them.
      * Otherwise, from IAB standard.
      * <p>
-     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}.
      */
     @Nullable
     public static Boolean getDeviceAccessConsent() {

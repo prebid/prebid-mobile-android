@@ -2,12 +2,9 @@ package org.prebid.mobile.api.original;
 
 import org.jetbrains.annotations.Nullable;
 import org.prebid.mobile.BannerParameters;
-import org.prebid.mobile.ContentObject;
-import org.prebid.mobile.DataObject;
 import org.prebid.mobile.NativeParameters;
 import org.prebid.mobile.VideoParameters;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -31,10 +28,6 @@ public class PrebidRequest {
     private String gpid;
     @Nullable
     private Map<String, Set<String>> extData;
-    @Nullable
-    private ContentObject appContent;
-    @Nullable
-    private ArrayList<DataObject> userData;
 
     public PrebidRequest() {
     }
@@ -94,15 +87,6 @@ public class PrebidRequest {
     }
 
     @Nullable
-    ContentObject getAppContent() {
-        return appContent;
-    }
-
-    public void setAppContent(@Nullable ContentObject appContent) {
-        this.appContent = appContent;
-    }
-
-    @Nullable
     Map<String, Set<String>> getExtData() {
         return extData;
     }
@@ -113,19 +97,6 @@ public class PrebidRequest {
             return;
         }
         this.extData = new HashMap<>(extData);
-    }
-
-    @Nullable
-    ArrayList<DataObject> getUserData() {
-        return userData;
-    }
-
-    public void setUserData(@Nullable ArrayList<DataObject> userData) {
-        if (userData == null) {
-            this.userData = null;
-            return;
-        }
-        this.userData = new ArrayList<>(userData);
     }
 
 }
