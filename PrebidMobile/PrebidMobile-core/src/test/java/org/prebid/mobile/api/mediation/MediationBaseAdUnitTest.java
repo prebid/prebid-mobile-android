@@ -67,7 +67,7 @@ public class MediationBaseAdUnitTest {
 
         context = Robolectric.buildActivity(Activity.class).create().get();
         baseAdUnit = createAdUnit("config");
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://test.com"));
 
         assertEquals(AdPosition.UNDEFINED.getValue(), baseAdUnit.adUnitConfig.getAdPositionValue());
     }

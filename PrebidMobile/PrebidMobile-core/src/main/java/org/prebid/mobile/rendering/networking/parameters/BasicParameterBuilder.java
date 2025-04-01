@@ -193,11 +193,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
             user.yob = TargetingParams.getYearOfBirth();
         }
 
-        TargetingParams.GENDER gender = TargetingParams.getGender();
-        if (gender != TargetingParams.GENDER.UNKNOWN) {
-            user.gender = gender.getKey();
-        }
-
         List<ExternalUserId> extendedIds = TargetingParams.getExternalUserIds();
         if (TargetingParams.getSendSharedId()) {
             extendedIds.add(TargetingParams.getSharedId());

@@ -14,7 +14,7 @@ open class AdMobInterstitialMultiformatFragment : AdMobInterstitialFragment() {
 
         extras = Bundle()
         val mediationUtils = AdMobMediationInterstitialUtils(extras)
-        val adUnitFormats = EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO)
+        val adUnitFormats = EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO)
         adUnit = MediationInterstitialAdUnit(
             activity,
             listOf(

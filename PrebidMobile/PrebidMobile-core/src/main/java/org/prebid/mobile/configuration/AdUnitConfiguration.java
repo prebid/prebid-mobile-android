@@ -61,8 +61,6 @@ public class AdUnitConfiguration {
     private String gpid;
     @Nullable
     private String impOrtbConfig;
-    @Deprecated
-    private String ortbConfig;
 
     private Position closeButtonPosition = Position.TOP_RIGHT;
     private Position skipButtonPosition = Position.TOP_RIGHT;

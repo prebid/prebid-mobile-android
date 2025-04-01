@@ -100,7 +100,6 @@ public class BasicParameterBuilderTest {
     private static final String USER_ID = "id";
     private static final String USER_KEYWORDS = "keywords";
     private static final String USER_CUSTOM = "custom";
-    private static final String USER_GENDER = "M";
     private static final String USER_BUYER_ID = "bid";
     private PrebidMobilePluginRenderer otherPlugin = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, null, true, "FakePlugin", "1.0");
 
@@ -120,8 +119,7 @@ public class BasicParameterBuilderTest {
     public void cleanup() throws Exception {
         TargetingParams.clearUserKeywords();
         TargetingParams.setUserLatLng(null, null);
-        TargetingParams.setGender(TargetingParams.GENDER.UNKNOWN);
-        TargetingParams.clearStoredExternalUserIds();
+        TargetingParams.setExternalUserIds(null);
         TargetingParams.setUserId(null);
         TargetingParams.setYearOfBirth(0);
         TargetingParams.setOmidPartnerName(null);
@@ -546,7 +544,6 @@ public class BasicParameterBuilderTest {
         TargetingParams.setUserId(USER_ID);
         TargetingParams.setUserAge(USER_AGE);
         TargetingParams.addUserKeyword(USER_KEYWORDS);
-        TargetingParams.setGender(TargetingParams.GENDER.MALE);
         TargetingParams.setUserExt(new Ext());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
 
@@ -716,7 +713,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void testMultiFormatAdUnit_bannerAndVideoObjectsAreNotNull() {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
-        configuration.setAdUnitFormats(EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO));
+        configuration.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
 
         BasicParameterBuilder builder = new BasicParameterBuilder(configuration, null, false);
 
@@ -1322,7 +1319,6 @@ public class BasicParameterBuilderTest {
         user.id = USER_ID;
         user.yob = USER_YOB;
         user.keywords = USER_KEYWORDS;
-        user.gender = USER_GENDER;
         List<ExternalUserId> extendedUserIds = TargetingParams.getExternalUserIds();
         if (extendedUserIds != null && extendedUserIds.size() > 0) {
             user.ext = new Ext();

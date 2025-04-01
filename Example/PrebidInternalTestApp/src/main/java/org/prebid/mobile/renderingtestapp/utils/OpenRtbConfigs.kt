@@ -35,9 +35,6 @@ object OpenRtbConfigs {
         if (openRtbExtra.userId != null) {
             TargetingParams.setUserId(openRtbExtra.userId)
         }
-        if (openRtbExtra.gender != null) {
-            TargetingParams.setGender(TargetingParams.GENDER.genderByKey(openRtbExtra.gender))
-        }
         if (openRtbExtra.keywords != null) {
             openRtbExtra.keywords.split(",").forEach {
                 TargetingParams.addUserKeyword(it)

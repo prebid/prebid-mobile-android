@@ -75,7 +75,7 @@ public class TargetingParamsTest extends BaseSetup {
     public void tearDown() {
         super.tearDown();
 
-        TargetingParams.clearStoredExternalUserIds();
+        TargetingParams.setExternalUserIds(null);
         TargetingParams.clearAccessControlList();
         TargetingParams.setExternalUserIds(null);
         TargetingParams.clearUserKeywords();
@@ -105,16 +105,6 @@ public class TargetingParamsTest extends BaseSetup {
         int yearOfBirth = Calendar.getInstance().get(Calendar.YEAR) - 20;
         TargetingParams.setYearOfBirth(yearOfBirth);
         assertEquals(yearOfBirth, TargetingParams.getYearOfBirth());
-    }
-
-    @Test
-    public void testGender() throws Exception {
-        TargetingParams.setGender(TargetingParams.GENDER.UNKNOWN);
-        assertEquals(TargetingParams.GENDER.UNKNOWN, TargetingParams.getGender());
-        TargetingParams.setGender(TargetingParams.GENDER.FEMALE);
-        assertEquals(TargetingParams.GENDER.FEMALE, TargetingParams.getGender());
-        TargetingParams.setGender(TargetingParams.GENDER.MALE);
-        assertEquals(TargetingParams.GENDER.MALE, TargetingParams.getGender());
     }
 
     @Test
@@ -442,27 +432,6 @@ public class TargetingParamsTest extends BaseSetup {
     }
 
     @Test
-    public void testStoreRemoveAndFetchExternalUserIds() {
-        TargetingParams.setExternalUserIds(createTestExternalUserIds());
-
-        // removing two externalUserId
-        TargetingParams.removeStoredExternalUserId("adserver.org");
-        TargetingParams.removeStoredExternalUserId("criteo.com");
-
-        ArrayList<String> arrSource = new ArrayList<>(Arrays.asList("adserver.org", "netid.de", "criteo.com", "liveramp.com", "sharedid.org"));
-
-        List<ExternalUserId> externalUserIdList = TargetingParams.getExternalUserIds();
-        assertTrue(externalUserIdList.size() == arrSource.size() - 2); // removed 2 externaUserId
-
-        for (ExternalUserId externalUserId : externalUserIdList) {
-            assertTrue(arrSource.contains(externalUserId.getSource()));
-            arrSource.remove(externalUserId.getSource());
-        }
-
-        assertTrue(arrSource.size() == 2); // removed 2 externalUserId
-    }
-
-    @Test
     public void testStoreClearAndFetchExternalUserIds() {
         TargetingParams.setExternalUserIds(createTestExternalUserIds());
         // clearing externalUserId
@@ -486,8 +455,8 @@ public class TargetingParamsTest extends BaseSetup {
     public void testStoreAndFetchExternalUserId() {
         TargetingParams.setExternalUserIds(createTestExternalUserIds());
 
-        ExternalUserId externalUserId = TargetingParams.fetchStoredExternalUserId("sharedid.org");
-        assertTrue(externalUserId.getSource().equals("sharedid.org"));
+        ExternalUserId externalUserId = TargetingParams.getExternalUserIds().get(2);
+        assertEquals("sharedid.org", externalUserId.getSource());
         assertTrue(externalUserId.getIdentifier().equals("111111111111"));
         assertTrue(externalUserId.getAtype() == 1);
         assertTrue(externalUserId.getExt().get("third").equals("01ERJWE5FS4RAZKG6SKQ3ZYSKV"));

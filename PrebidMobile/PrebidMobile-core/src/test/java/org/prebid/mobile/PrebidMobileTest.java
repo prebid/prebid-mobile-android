@@ -58,8 +58,8 @@ public class PrebidMobileTest extends BaseSetup {
         PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
         PrebidMobile.setShareGeoLocation(true);
         assertTrue(PrebidMobile.isShareGeoLocation());
-        PrebidMobile.setPrebidServerHost(Host.RUBICON);
-        assertEquals(Host.RUBICON, PrebidMobile.getPrebidServerHost());
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://test.com"));
+        assertEquals(Host.createCustomHost("https://test.com"), PrebidMobile.getPrebidServerHost());
         PrebidMobile.setStoredAuctionResponse("111122223333");
         assertEquals("111122223333", PrebidMobile.getStoredAuctionResponse());
         PrebidMobile.addStoredBidResponse("appnexus", "221144");

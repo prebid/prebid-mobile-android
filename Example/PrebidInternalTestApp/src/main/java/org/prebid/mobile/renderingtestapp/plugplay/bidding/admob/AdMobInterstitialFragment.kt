@@ -55,7 +55,7 @@ open class AdMobInterstitialFragment : AdFragment() {
         val mediationUtils = AdMobMediationInterstitialUtils(extras)
 
         isVideo = arguments?.getBoolean(ARG_IS_VIDEO) ?: false
-        var adUnitFormat = EnumSet.of(AdUnitFormat.DISPLAY)
+        var adUnitFormat = EnumSet.of(AdUnitFormat.BANNER)
         if (isVideo) adUnitFormat = EnumSet.of(AdUnitFormat.VIDEO)
         adUnit = MediationInterstitialAdUnit(
             activity,

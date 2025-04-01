@@ -16,19 +16,19 @@
 
 package org.prebid.mobile.rendering.networking.targeting;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import android.util.Pair;
+
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
-import org.prebid.mobile.rendering.networking.parameters.UserParameters;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.Calendar;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 @RunWith(RobolectricTestRunner.class)
 public class TargetingParamsTest {
@@ -51,14 +51,6 @@ public class TargetingParamsTest {
         TargetingParams.addUserKeyword(expectedKeywords);
 
         assertEquals(expectedKeywords, TargetingParams.getUserKeywords());
-    }
-
-    @Test
-    public void setUserGender_EqualToGetUserGenderAndIsInRequestParams() {
-        final String expected = UserParameters.GENDER_FEMALE;
-
-        TargetingParams.setGender(TargetingParams.GENDER.FEMALE);
-        assertEquals(expected, TargetingParams.getGender().getKey());
     }
 
     @Test
@@ -115,7 +107,6 @@ public class TargetingParamsTest {
         TargetingParams.setUserAge(null);
         TargetingParams.setUserExt(null);
         TargetingParams.setUserId(null);
-        TargetingParams.setGender(null);
         TargetingParams.setUserLatLng(null, null);
 
         assertNull(TargetingParams.getStoreUrl());

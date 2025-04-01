@@ -13,14 +13,16 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import org.prebid.mobile.*
+import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerVideoBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import java.util.*
 
 class GamOriginalInstreamFragment : AdFragment() {
 
-    private var adUnit: VideoAdUnit? = null
+    private var adUnit: BannerAdUnit? = null
     private var player: SimpleExoPlayer? = null
     private var adsUri: Uri? = null
     private var adsLoader: ImaAdsLoader? = null
@@ -71,7 +73,7 @@ class GamOriginalInstreamFragment : AdFragment() {
         parameters.playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOff)
         parameters.placement = Signals.Placement.InStream
 
-        adUnit = VideoAdUnit(configId, width, height)
+        adUnit = BannerAdUnit(configId, width, height, EnumSet.of(AdUnitFormat.VIDEO))
         adUnit?.videoParameters = parameters
     }
 

@@ -20,7 +20,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
@@ -49,7 +48,6 @@ public class TargetingParams {
 
     private static int yearOfBirth = 0;
     private static Integer userAge = null;
-    private static GENDER gender = GENDER.UNKNOWN;
     private static String userId;
     private static String publisherName;
     private static String domain = "";
@@ -141,69 +139,6 @@ public class TargetingParams {
             TargetingParams.userAge = currentYear - yearOfBirth;
         } else {
             throw new Exception("Year of birth must be between 1900 and " + Calendar.getInstance().get(Calendar.YEAR));
-        }
-    }
-
-    /**
-     * Gender.
-     * 
-     * @deprecated by ORTB
-     */
-    @Deprecated
-    public enum GENDER {
-        FEMALE,
-        MALE,
-        UNKNOWN;
-
-        public String getKey() {
-            switch (this) {
-                case MALE:
-                    return "M";
-                case FEMALE:
-                    return "F";
-                default:
-                    return "O";
-            }
-        }
-
-        public static GENDER genderByKey(String key) {
-            switch (key) {
-                case "M":
-                    return MALE;
-                case "F":
-                    return FEMALE;
-                default:
-                    return UNKNOWN;
-            }
-        }
-    }
-
-    /**
-     * Get the current user's gender, if it's available.  The default value is UNKNOWN.
-     *
-     * @return The user's gender.
-     *
-     * @deprecated by ORTB
-     */
-    @Deprecated
-    @NonNull
-    public static GENDER getGender() {
-        return gender;
-    }
-
-    /**
-     * Set the user's gender.  This should be set if the user's gender is known, as it
-     * can help make buying the ad space more attractive to advertisers.  The default
-     * value is UNKNOWN.
-     *
-     * @param gender The user's gender.
-     *
-     * @deprecated by ORTB
-     */
-    @Deprecated
-    public static void setGender(@Nullable GENDER gender) {
-        if (gender != null) {
-            TargetingParams.gender = gender;
         }
     }
 
@@ -303,58 +238,6 @@ public class TargetingParams {
      */
     public static List<ExternalUserId> getExternalUserIds() {
         return new ArrayList<>(externalUserIdMap.values());
-    }
-
-    /**
-     * Use this API for storing the externalUserId in the SharedPreference.
-     * Prebid server provide them participating server-side bid adapters.
-     *
-     * @param externalUserId the externalUserId instance to be stored in the SharedPreference
-     * @deprecated use {@link #setExternalUserIds(List)}
-     */
-    @Deprecated(forRemoval = true)
-    public static void storeExternalUserId(ExternalUserId externalUserId) {
-        if (externalUserId == null) return;
-
-        externalUserIdMap.put(externalUserId.getSource(), externalUserId);
-    }
-
-    /**
-     * Returns the ExternalUserId instance for a given source
-     * @deprecated use {@link #getExternalUserIds()}
-     */
-    @Deprecated(forRemoval = true)
-    public static ExternalUserId fetchStoredExternalUserId(@NonNull String source) {
-        return externalUserIdMap.get(source);
-    }
-
-    /**
-     * Returns the External User UniqueId list
-     * @deprecated use {@link #setExternalUserIds(List)}
-     */
-    @Deprecated(forRemoval = true)
-    public static List<ExternalUserId> fetchStoredExternalUserIds() {
-        return getExternalUserIds();
-    }
-
-    /**
-     * Removes the ExternalUserId instance for a given source
-     * @deprecated use {@link #setExternalUserIds(List)}
-     */
-    @Deprecated(forRemoval = true)
-    public static void removeStoredExternalUserId(@NonNull String source) {
-        if (!TextUtils.isEmpty(source)) {
-            externalUserIdMap.remove(source);
-        }
-    }
-
-    /**
-     * Clear the ExternalUserId list from the SharedPreference
-     * @deprecated use {@link #setExternalUserIds(List)}
-     */
-    @Deprecated(forRemoval = true)
-    public static void clearStoredExternalUserIds() {
-        externalUserIdMap.clear();
     }
 
     /**
