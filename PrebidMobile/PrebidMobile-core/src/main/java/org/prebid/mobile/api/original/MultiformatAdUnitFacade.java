@@ -123,9 +123,6 @@ class MultiformatAdUnitFacade extends AdUnit {
 
         String gpid = request.getGpid();
         configuration.setGpid(gpid);
-
-        Map<String, Set<String>> extData = request.getExtData();
-        configuration.setExtData(extData);
     }
 
     @Nullable

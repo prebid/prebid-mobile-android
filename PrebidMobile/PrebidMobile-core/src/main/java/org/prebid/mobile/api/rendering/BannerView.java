@@ -391,33 +391,6 @@ public class BannerView extends FrameLayout {
         this.eventHandler = eventHandler;
     }
 
-    public void addExtData(
-        String key,
-        String value
-    ) {
-        adUnitConfig.addExtData(key, value);
-    }
-
-    public void updateExtData(
-        String key,
-        Set<String> value
-    ) {
-        adUnitConfig.addExtData(key, value);
-    }
-
-    public void removeExtData(String key) {
-        adUnitConfig.removeExtData(key);
-    }
-
-    public void clearExtData() {
-        adUnitConfig.clearExtData();
-    }
-
-    public Map<String, Set<String>> getExtDataDictionary() {
-        return adUnitConfig.getExtDataDictionary();
-    }
-
-
     public void setAdPosition(AdPosition adPosition) {
         adUnitConfig.setAdPosition(adPosition);
     }

@@ -225,45 +225,6 @@ public abstract class AdUnit {
         adViewReference = new WeakReference<>(adView);
     }
 
-    // MARK: - adunit context data aka inventory data (imp[].ext.data)
-
-    /**
-     * This method obtains the context data keyword & value for adunit context targeting
-     * if the key already exists the value will be appended to the list. No duplicates will be added
-     */
-    public void addExtData(String key, String value) {
-        configuration.addExtData(key, value);
-    }
-
-    /**
-     * This method obtains the context data keyword & values for adunit context targeting
-     * the values if the key already exist will be replaced with the new set of values
-     */
-    public void updateExtData(String key, Set<String> value) {
-        configuration.addExtData(key, value);
-    }
-
-    /**
-     * This method allows to remove specific context data keyword & values set from adunit context targeting
-     */
-    public void removeExtData(String key) {
-        configuration.removeExtData(key);
-    }
-
-    /**
-     * This method allows to remove all context data set from adunit context targeting
-     */
-    public void clearExtData() {
-        configuration.clearExtData();
-    }
-
-    Map<String, Set<String>> getExtDataDictionary() {
-        return configuration.getExtDataDictionary();
-    }
-
-    // MARK: - adunit context keywords (imp[].ext.keywords)
-
-
     public String getPbAdSlot() {
         return configuration.getPbAdSlot();
     }

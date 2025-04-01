@@ -74,8 +74,6 @@ public class AppInfoParameterBuilder extends ParameterBuilder {
             app.domain = domain;
         }
 
-        app.contentObject = adConfiguration.getAppContent();
-
         app.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidMobile.SDK_VERSION));
         final Map<String, Set<String>> extDataDictionary = TargetingParams.getExtDataDictionary();
         if (!extDataDictionary.isEmpty()) {

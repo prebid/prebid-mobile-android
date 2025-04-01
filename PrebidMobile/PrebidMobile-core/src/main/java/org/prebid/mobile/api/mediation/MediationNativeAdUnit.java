@@ -98,29 +98,6 @@ public class MediationNativeAdUnit {
         nativeAdUnit.setDUrlSupport(support);
     }
 
-    public void addExtData(
-            String key,
-            String value
-    ) {
-        nativeAdUnit.addExtData(key, value);
-    }
-
-    public void updateExtData(
-            String key,
-            Set<String> value
-    ) {
-        nativeAdUnit.updateExtData(key, value);
-    }
-
-    public void removeExtData(String key) {
-        nativeAdUnit.removeExtData(key);
-    }
-
-    public void clearExtData() {
-        nativeAdUnit.clearExtData();
-    }
-
-
     private FetchDemandResult convertResultCode(ResultCode originalResult) {
         switch (originalResult) {
             case SUCCESS:

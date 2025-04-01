@@ -77,11 +77,6 @@ public class AdUnitConfiguration {
 
     private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
     private final HashSet<AdSize> adSizes = new HashSet<>();
-    @NonNull
-    private ArrayList<DataObject> userDataObjects = new ArrayList<>();
-    @NonNull
-    private Map<String, Set<String>> extDataDictionary = new HashMap<>();
-
 
     public void modifyUsingBidResponse(@Nullable BidResponse bidResponse) {
         if (bidResponse != null) {
@@ -97,91 +92,12 @@ public class AdUnitConfiguration {
         return configId;
     }
 
-    public void setAppContent(@Nullable ContentObject content) {
-        if (content != null) {
-            appContent = content;
-        }
-    }
-
-    public ContentObject getAppContent() {
-        return appContent;
-    }
-
     public void setPbAdSlot(String pbAdSlot) {
         this.pbAdSlot = pbAdSlot;
     }
 
     public String getPbAdSlot() {
         return pbAdSlot;
-    }
-
-    public void addUserData(DataObject dataObject) {
-        if (dataObject != null) {
-            userDataObjects.add(dataObject);
-        }
-    }
-
-    @NonNull
-    public ArrayList<DataObject> getUserData() {
-        return userDataObjects;
-    }
-
-    public void clearUserData() {
-        userDataObjects.clear();
-    }
-
-    public void setUserData(@Nullable ArrayList<DataObject> userData) {
-        if (userData != null) {
-            userDataObjects = userData;
-        }
-    }
-
-    public void addExtData(
-        String key,
-        String value
-    ) {
-        if (key == null || value == null) {
-            return;
-        }
-
-        if (extDataDictionary.containsKey(key)) {
-            Set<String> existingSet = extDataDictionary.get(key);
-            if (existingSet != null) {
-                existingSet.add(value);
-            }
-        } else {
-            HashSet<String> hashSet = new HashSet<>();
-            hashSet.add(value);
-            extDataDictionary.put(key, hashSet);
-        }
-    }
-
-    public void addExtData(
-        String key,
-        Set<String> value
-    ) {
-        if (key != null && value != null) {
-            extDataDictionary.put(key, value);
-        }
-    }
-
-    public void removeExtData(String key) {
-        extDataDictionary.remove(key);
-    }
-
-    @NonNull
-    public Map<String, Set<String>> getExtDataDictionary() {
-        return extDataDictionary;
-    }
-
-    public void clearExtData() {
-        extDataDictionary.clear();
-    }
-
-    public void setExtData(@Nullable Map<String, Set<String>> extData) {
-        if (extData != null) {
-            this.extDataDictionary = extData;
-        }
     }
 
     public void setMinSizePercentage(@Nullable AdSize minSizePercentage) {

@@ -144,40 +144,6 @@ public class MediationBaseAdUnitTest {
     }
 
     @Test
-    public void addUpdateRemoveClearContextData_EqualsGetContextDataDictionary() {
-        Map<String, Set<String>> expectedMap = new HashMap<>();
-        HashSet<String> value1 = new HashSet<>();
-        value1.add("value1");
-        HashSet<String> value2 = new HashSet<>();
-        value2.add("value2");
-        expectedMap.put("key1", value1);
-        expectedMap.put("key2", value2);
-
-        // add
-        baseAdUnit.addExtData("key1", "value1");
-        baseAdUnit.addExtData("key2", "value2");
-
-        assertEquals(expectedMap, baseAdUnit.getExtDataDictionary());
-
-        // update
-        HashSet<String> updateSet = new HashSet<>();
-        updateSet.add("value3");
-        baseAdUnit.updateExtData("key1", updateSet);
-        expectedMap.replace("key1", updateSet);
-
-        assertEquals(expectedMap, baseAdUnit.getExtDataDictionary());
-
-        // remove
-        baseAdUnit.removeExtData("key1");
-        expectedMap.remove("key1");
-        assertEquals(expectedMap, baseAdUnit.getExtDataDictionary());
-
-        // clear
-        baseAdUnit.clearExtData();
-        assertTrue(baseAdUnit.getExtDataDictionary().isEmpty());
-    }
-
-    @Test
     public void setPbAdSlot_EqualsGetPbAdSlot() {
         final String expected = "12345";
         baseAdUnit.setPbAdSlot(expected);

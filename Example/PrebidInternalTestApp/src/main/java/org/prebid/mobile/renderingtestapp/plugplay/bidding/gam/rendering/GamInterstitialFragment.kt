@@ -46,8 +46,5 @@ open class GamInterstitialFragment : BaseBidInterstitialFragment() {
         }
 
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
-        interstitialAdUnit?.let {
-            CommandLineArgumentParser.addAdUnitSpecificData(it)
-        }
     }
 }

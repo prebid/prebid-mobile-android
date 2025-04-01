@@ -63,7 +63,6 @@ open class AdMobInterstitialFragment : AdFragment() {
             adUnitFormat,
             mediationUtils
         )
-        adUnit?.let { CommandLineArgumentParser.addAdUnitSpecificData(it) }
         if (!isVideo) {
             adUnit?.setMinSizePercentage(30, 30)
         }

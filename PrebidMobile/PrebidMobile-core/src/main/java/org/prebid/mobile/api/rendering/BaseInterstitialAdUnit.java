@@ -130,33 +130,6 @@ public abstract class BaseInterstitialAdUnit {
         }
     }
 
-    public void addExtData(
-        String key,
-        String value
-    ) {
-        config.addExtData(key, value);
-    }
-
-    public void updateExtData(
-        String key,
-        Set<String> value
-    ) {
-        config.addExtData(key, value);
-    }
-
-    public void removeExtData(String key) {
-        config.removeExtData(key);
-    }
-
-    public void clearExtData() {
-        config.clearExtData();
-    }
-
-    public Map<String, Set<String>> getExtDataDictionary() {
-        return config.getExtDataDictionary();
-    }
-
-
     @Nullable
     public String getImpOrtbConfig() {
         return config.getImpOrtbConfig();
@@ -170,7 +143,6 @@ public abstract class BaseInterstitialAdUnit {
     public void setImpOrtbConfig(@Nullable String ortbConfig) {
         config.setImpOrtbConfig(ortbConfig);
     }
-
 
     @Nullable
     public String getPbAdSlot() {
@@ -310,10 +282,6 @@ public abstract class BaseInterstitialAdUnit {
     @VisibleForTesting
     final InterstitialAdUnitState getAdUnitState() {
         return interstitialAdUnitState;
-    }
-
-    public void addContent(ContentObject content) {
-        config.setAppContent(content);
     }
 
     private BidRequesterListener createBidRequesterListener() {

@@ -106,33 +106,6 @@ public abstract class MediationBaseAdUnit {
         bidLoader.load();
     }
 
-    public void addExtData(
-        String key,
-        String value
-    ) {
-        adUnitConfig.addExtData(key, value);
-    }
-
-    public void updateExtData(
-        String key,
-        Set<String> value
-    ) {
-        adUnitConfig.addExtData(key, value);
-    }
-
-    public void removeExtData(String key) {
-        adUnitConfig.removeExtData(key);
-    }
-
-    public void clearExtData() {
-        adUnitConfig.clearExtData();
-    }
-
-    public Map<String, Set<String>> getExtDataDictionary() {
-        return adUnitConfig.getExtDataDictionary();
-    }
-
-
     public void setPbAdSlot(String adSlot) {
         adUnitConfig.setPbAdSlot(adSlot);
     }

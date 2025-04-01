@@ -99,62 +99,6 @@ object CommandLineArgumentParser {
         }
     }
 
-    fun addAdUnitSpecificData(adUnit: BannerAdUnit) {
-        val extData = adUnitSpecificData.extData
-        if (extData != null) {
-            for (key in extData.keys) {
-                for (value in extData[key]!!) {
-                    adUnit.addExtData(key, value)
-                }
-            }
-        }
-    }
-
-    fun addAdUnitSpecificData(bannerView: BannerView) {
-        val extData = adUnitSpecificData.extData
-        if (extData != null) {
-            for (key in extData.keys) {
-                for (value in extData[key]!!) {
-                    bannerView.addExtData(key, value)
-                }
-            }
-        }
-    }
-
-    fun addAdUnitSpecificData(interstitial: BaseInterstitialAdUnit) {
-        val extData = adUnitSpecificData.extData
-        if (extData != null) {
-            for (key in extData.keys) {
-                for (value in extData[key]!!) {
-                    interstitial.addExtData(key, value)
-                }
-            }
-        }
-    }
-
-    fun addAdUnitSpecificData(mediationAdUnit: MediationBaseAdUnit) {
-        val extData = adUnitSpecificData.extData
-        if (extData != null) {
-            for (key in extData.keys) {
-                for (value in extData[key]!!) {
-                    mediationAdUnit.addExtData(key, value)
-                }
-            }
-        }
-    }
-
-    fun addAdUnitSpecificData(nativeAdUnit: MediationNativeAdUnit) {
-        val extData = adUnitSpecificData.extData
-        if (extData != null) {
-            for (key in extData.keys) {
-                for (value in extData[key]!!) {
-                    nativeAdUnit.addExtData(key, value)
-                }
-            }
-        }
-    }
-
-
     private fun extractOpenRtbExtra(openRtbListJson: String, context: Context) {
         val openRtbExtrasList = try {
             Gson().fromJson<OpenRtbExtra>(openRtbListJson, object : TypeToken<OpenRtbExtra>() {}.type)

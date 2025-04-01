@@ -52,6 +52,7 @@ import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -180,11 +181,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
         user.keywords = TargetingParams.getUserKeywords();
         user.ext = TargetingParams.getUserExt();
-
-        ArrayList<DataObject> userData = adConfiguration.getUserData();
-        if (!userData.isEmpty()) {
-            user.dataObjects = userData;
-        }
 
         List<ExternalUserId> extendedIds = TargetingParams.getExternalUserIds();
         if (TargetingParams.getSendSharedId()) {
@@ -399,7 +395,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
             imp.getExt().put("gpid", gpid);
         }
 
-        final Map<String, Set<String>> extDataDictionary = adConfiguration.getExtDataDictionary();
+        final Map<String, Set<String>> extDataDictionary = new HashMap<>();
         JSONObject data = Utils.toJson(extDataDictionary);
         String adSlot = adConfiguration.getPbAdSlot();
         if (adSlot != null) {

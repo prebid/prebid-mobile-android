@@ -26,8 +26,6 @@ public class PrebidRequest {
 
     @Nullable
     private String gpid;
-    @Nullable
-    private Map<String, Set<String>> extData;
 
     public PrebidRequest() {
     }
@@ -85,18 +83,4 @@ public class PrebidRequest {
     public void setGpid(@Nullable String gpid) {
         this.gpid = gpid;
     }
-
-    @Nullable
-    Map<String, Set<String>> getExtData() {
-        return extData;
-    }
-
-    public void setExtData(@Nullable Map<String, Set<String>> extData) {
-        if (extData == null) {
-            this.extData = null;
-            return;
-        }
-        this.extData = new HashMap<>(extData);
-    }
-
 }

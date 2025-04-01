@@ -42,7 +42,6 @@ open class MemoryLeakTestingOriginalApiBannerFragment : AdFragment() {
     override fun initAd(): Any {
         adUnit = createAdUnit()
         adUnit?.setAutoRefreshInterval(refreshDelay)
-        CommandLineArgumentParser.addAdUnitSpecificData(adUnit!!)
         return "Testing"
     }
 
