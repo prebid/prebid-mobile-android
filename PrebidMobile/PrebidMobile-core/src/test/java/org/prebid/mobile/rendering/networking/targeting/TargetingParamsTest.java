@@ -28,22 +28,8 @@ import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.robolectric.RobolectricTestRunner;
 
-import java.util.Calendar;
-
 @RunWith(RobolectricTestRunner.class)
 public class TargetingParamsTest {
-
-    @Test
-    public void setUserAge_CalculateYobAndSetAgeParameter() {
-        final int age = 20;
-        int expectedYob = Calendar.getInstance().get(Calendar.YEAR) - age;
-
-        TargetingParams.setUserAge(age);
-
-        assert TargetingParams.getUserAge() != null;
-        assertEquals(age, TargetingParams.getUserAge().intValue());
-        assertEquals(expectedYob, TargetingParams.getYearOfBirth());
-    }
 
     @Test
     public void setUserKeywords_EqualToGetUserKeywords() {
@@ -104,14 +90,12 @@ public class TargetingParamsTest {
     public void cleanup() {
         TargetingParams.setStoreUrl(null);
         TargetingParams.setPublisherName(null);
-        TargetingParams.setUserAge(null);
         TargetingParams.setUserExt(null);
         TargetingParams.setUserId(null);
         TargetingParams.setUserLatLng(null, null);
 
         assertNull(TargetingParams.getStoreUrl());
         assertNull(TargetingParams.getPublisherName());
-        assertNull(TargetingParams.getUserAge());
         assertNull(TargetingParams.getUserExt());
         assertNull(TargetingParams.getUserId());
         assertNull(TargetingParams.getUserLatLng());

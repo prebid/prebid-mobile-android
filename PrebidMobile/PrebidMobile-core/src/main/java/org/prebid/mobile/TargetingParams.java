@@ -22,14 +22,12 @@ import android.util.Pair;
 
 import androidx.annotation.Nullable;
 
-import org.json.JSONArray;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.UserConsentUtils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -46,8 +44,6 @@ public class TargetingParams {
     public static final String BIDDER_NAME_RUBICON_PROJECT = "rubicon";
     private static final String TAG = "TargetingParams";
 
-    private static int yearOfBirth = 0;
-    private static Integer userAge = null;
     private static String userId;
     private static String publisherName;
     private static String domain = "";
@@ -59,7 +55,6 @@ public class TargetingParams {
     private static String openRtbConfig;
     private static Pair<Float, Float> userLatLon;
     private static Ext userExt;
-    private static JSONArray extendedUserIds;
     private static Boolean sendSharedId = false;
 
 
@@ -74,74 +69,6 @@ public class TargetingParams {
 
 
     /* -------------------- User data -------------------- */
-     /**
-        * @deprecated by ORTB
-     */
-    @Deprecated
-    public static void setUserAge(@Nullable Integer age) {
-        if (age == null) {
-            yearOfBirth = 0;
-            userAge = null;
-            return;
-        }
-
-        if (age <= 0 || age > 120) {
-            LogUtil.error(TAG, "Can't set age, it must be in range from 0 to 120");
-            return;
-        }
-
-        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        int yearOfBirth = currentYear - age;
-
-        TargetingParams.userAge = age;
-        TargetingParams.yearOfBirth = yearOfBirth;
-    }
-
-    /**
-        * @deprecated by ORTB
-    */
-    @Deprecated
-    @Nullable
-    public static Integer getUserAge() {
-        return userAge;
-    }
-
-    /**
-     * Get the year of birth for targeting
-     *
-     * @return yob
-     *
-     * @deprecated by ORTB
-     */
-    @Deprecated
-    public static int getYearOfBirth() {
-        return yearOfBirth;
-    }
-
-    /**
-     * Set the year of birth and user age for targeting
-     *
-     * @param yob yob of the user
-     *
-     * @deprecated by ORTB
-     */
-    @Deprecated
-    public static void setYearOfBirth(int yob) throws Exception {
-        if (yob == 0) {
-            TargetingParams.yearOfBirth = 0;
-            TargetingParams.userAge = null;
-            return;
-        }
-
-        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        if (yob >= 1900 && yob < currentYear) {
-            TargetingParams.yearOfBirth = yob;
-            TargetingParams.userAge = currentYear - yearOfBirth;
-        } else {
-            throw new Exception("Year of birth must be between 1900 and " + Calendar.getInstance().get(Calendar.YEAR));
-        }
-    }
-
     /**
      * Sets user latitude and longitude
      *

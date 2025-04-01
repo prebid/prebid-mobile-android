@@ -28,7 +28,6 @@ import java.util.ArrayList;
 
 public class User extends BaseBid {
 
-    public Integer yob = null;
     public String keywords = null;
     public Geo geo = null;
     public String customData = null;
@@ -42,7 +41,6 @@ public class User extends BaseBid {
 
         toJSON(jsonObject, "id", this.id);
         toJSON(jsonObject, "buyeruid", this.buyerUid);
-        toJSON(jsonObject, "yob", this.yob);
         toJSON(jsonObject, "keywords", this.keywords);
         toJSON(jsonObject, "customdata", this.customData);
         toJSON(jsonObject, "geo", (geo != null) ? this.geo.getJsonObject() : null);

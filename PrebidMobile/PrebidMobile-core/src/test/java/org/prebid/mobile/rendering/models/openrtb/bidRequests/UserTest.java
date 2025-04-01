@@ -28,13 +28,12 @@ public class UserTest {
     public void getJsonObject() throws Exception {
         User user = new User();
 
-        user.yob = 2016;
         user.geo = new Geo();
         user.geo.accuracy = 1;
         user.keywords = "q, a";
 
         JSONObject actualObj = user.getJsonObject();
-        String expectedString = "{\"geo\":{\"accuracy\":1},\"keywords\":\"q, a\",\"yob\":2016}";
+        String expectedString = "{\"geo\":{\"accuracy\":1},\"keywords\":\"q, a\"}";
         assertEquals("got: " + actualObj.toString(), expectedString, actualObj.toString());
         user.getJsonObject();
     }

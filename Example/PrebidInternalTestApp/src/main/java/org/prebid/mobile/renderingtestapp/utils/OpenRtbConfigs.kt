@@ -26,9 +26,6 @@ object OpenRtbConfigs {
     var impExtData: Map<String, List<String>>? = null
 
     fun setTargeting(openRtbExtra: OpenRtbExtra) {
-        if (openRtbExtra.age != 0) {
-            TargetingParams.setUserAge(openRtbExtra.age)
-        }
         if (openRtbExtra.appStoreUrl != null) {
             TargetingParams.setStoreUrl(openRtbExtra.appStoreUrl)
         }

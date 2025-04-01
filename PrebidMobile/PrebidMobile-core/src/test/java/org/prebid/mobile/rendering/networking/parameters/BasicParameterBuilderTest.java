@@ -81,7 +81,6 @@ import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -93,8 +92,6 @@ import java.util.Set;
 public class BasicParameterBuilderTest {
 
     private static final int VIDEO_INTERSTITIAL_PLACEMENT = 5;
-    private static final int USER_AGE = 20;
-    private static final int USER_YOB = Calendar.getInstance().get(Calendar.YEAR) - USER_AGE;
     private static final float USER_LAT = 1;
     private static final float USER_LON = 0;
     private static final String USER_ID = "id";
@@ -121,7 +118,6 @@ public class BasicParameterBuilderTest {
         TargetingParams.setUserLatLng(null, null);
         TargetingParams.setExternalUserIds(null);
         TargetingParams.setUserId(null);
-        TargetingParams.setYearOfBirth(0);
         TargetingParams.setOmidPartnerName(null);
         TargetingParams.setOmidPartnerVersion(null);
         TargetingParams.setGlobalOrtbConfig(null);
@@ -542,7 +538,6 @@ public class BasicParameterBuilderTest {
         adConfiguration.addSize(new AdSize(320, 50));
 
         TargetingParams.setUserId(USER_ID);
-        TargetingParams.setUserAge(USER_AGE);
         TargetingParams.addUserKeyword(USER_KEYWORDS);
         TargetingParams.setUserExt(new Ext());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
@@ -1317,7 +1312,6 @@ public class BasicParameterBuilderTest {
         final User user = new User();
 
         user.id = USER_ID;
-        user.yob = USER_YOB;
         user.keywords = USER_KEYWORDS;
         List<ExternalUserId> extendedUserIds = TargetingParams.getExternalUserIds();
         if (extendedUserIds != null && extendedUserIds.size() > 0) {

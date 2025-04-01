@@ -187,11 +187,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
             user.dataObjects = userData;
         }
 
-        int yearOfBirth = TargetingParams.getYearOfBirth();
-        if (yearOfBirth != 0) {
-            user.yob = TargetingParams.getYearOfBirth();
-        }
-
         List<ExternalUserId> extendedIds = TargetingParams.getExternalUserIds();
         if (TargetingParams.getSendSharedId()) {
             extendedIds.add(TargetingParams.getSharedId());
