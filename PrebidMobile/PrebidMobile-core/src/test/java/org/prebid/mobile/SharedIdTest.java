@@ -8,8 +8,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -19,7 +17,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockedStatic;
 import org.prebid.mobile.testutils.BaseSetup;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -35,9 +32,6 @@ public class SharedIdTest {
         paramsMock = mockStatic(TargetingParams.class);
         prefsMock = mockStatic(PreferenceManager.class);
 
-        Context context = Robolectric.buildActivity(Activity.class).create().get();
-        PrebidMobile.initializeSdk(context, null);
-        SharedId.resetIdentifier();
     }
 
     @After

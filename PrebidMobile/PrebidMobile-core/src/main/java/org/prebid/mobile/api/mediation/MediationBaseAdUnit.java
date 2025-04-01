@@ -181,7 +181,10 @@ public abstract class MediationBaseAdUnit {
     }
 
     private void initSdk(Context context) {
-        PrebidMobile.initializeSdk(context, null);
+        String hostUrl = PrebidMobile.getPrebidServerHost().getHostUrl();
+        if (!hostUrl.isEmpty()) {
+            PrebidMobile.initializeSdk(context, hostUrl, null);
+        }
     }
 
     private void cancelRefresh() {

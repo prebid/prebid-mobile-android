@@ -55,7 +55,6 @@ public class MediationBaseAdUnitTest {
 
     private MediationBaseAdUnit baseAdUnit;
     private Context context;
-    private Object mopubView = new Object();
     @Mock
     private AdSize mockAdSize;
     @Mock
@@ -67,7 +66,6 @@ public class MediationBaseAdUnitTest {
 
         context = Robolectric.buildActivity(Activity.class).create().get();
         baseAdUnit = createAdUnit("config");
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://test.com"));
 
         assertEquals(AdPosition.UNDEFINED.getValue(), baseAdUnit.adUnitConfig.getAdPositionValue());
     }
@@ -114,7 +112,6 @@ public class MediationBaseAdUnitTest {
         PrebidMobile.setPrebidServerAccountId("id");
         final Host custom = Host.CUSTOM;
         custom.setHostUrl("");
-        PrebidMobile.setPrebidServerHost(custom);
         baseAdUnit = createAdUnit("123");
         baseAdUnit.fetchDemand(result -> {
             assertEquals(FetchDemandResult.INVALID_HOST_URL, result);

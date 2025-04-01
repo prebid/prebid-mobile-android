@@ -174,19 +174,6 @@ public class PrebidMobile {
         return accountId;
     }
 
-    /**
-     * @deprecated In the upcoming major release, the method will be removed.
-     * Please, use {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}}
-     */
-    @Deprecated
-    public static void setPrebidServerHost(Host host) {
-        if (host == null) {
-            LogUtil.error(TAG, "setPrebidServerHost: Can't set null.");
-            return;
-        }
-        PrebidMobile.host = host;
-    }
-
     public static Host getPrebidServerHost() {
         return host;
     }
@@ -231,36 +218,6 @@ public class PrebidMobile {
     @NonNull
     public static HashMap<String, String> getCustomHeaders() {
         return PrebidMobile.customHeaders;
-    }
-
-
-    /**
-     * Initializes the main SDK classes and makes request to Prebid server to check its status.
-     * You have to set host url ({@link PrebidMobile#setPrebidServerHost(Host)}) before calling this method.
-     * If you use custom /status endpoint set it with ({@link PrebidMobile#setCustomStatusEndpoint(String)}) before starting initialization.
-     * <p>
-     * Calls SdkInitializationListener callback with enum initialization status parameter:
-     * <p>
-     * SUCCEEDED - Prebid SDK is initialized successfully and ready to work.
-     * <p>
-     * FAILED - Prebid SDK is failed to initialize and is not able to work.
-     * <p>
-     * SERVER_STATUS_WARNING - Prebid SDK failed to check the PBS status. The SDK is initialized and able to work, though.
-     * <p>
-     * To get the description of the problem you can call {@link InitializationStatus#getDescription()}
-     *
-     * @param context  any context (must be not null)
-     * @param listener initialization listener (can be null).
-     * <p>
-     * @deprecated Please, use {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}} instead.
-     */
-    @Deprecated
-    @MainThread
-    public static void initializeSdk(
-        @Nullable Context context,
-        @Nullable SdkInitializationListener listener
-    ) {
-        SdkInitializer.init(context, listener);
     }
 
     /**

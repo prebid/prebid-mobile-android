@@ -21,14 +21,16 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,6 +41,7 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.reflection.sdk.ManagersResolverReflection;
 import org.prebid.mobile.reflection.sdk.UserConsentManagerReflection;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
+import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
@@ -64,7 +67,6 @@ public class TargetingParamsTest extends BaseSetup {
         ManagersResolver resolver = ManagersResolver.getInstance();
         ManagersResolverReflection.resetManagers(resolver);
 
-        PrebidMobile.initializeSdk(activity, null);
         ManagersResolver.getInstance().prepare(activity);
         UserConsentManager userConsentManager = resolver.getUserConsentManager();
         UserConsentManagerReflection.resetAllFields(userConsentManager);
@@ -82,8 +84,10 @@ public class TargetingParamsTest extends BaseSetup {
 
     @Test
     public void testBundleName() throws Exception {
-        FieldUtils.writeStaticField(TargetingParams.class, "bundleName", null, true);
-        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
+        Context mockContext = mock(Context.class);
+        PrebidContextHolder.setContext(mockContext);
+        when(mockContext.getPackageName()).thenReturn("org.prebid.mobile.core.test");
+
         assertEquals("org.prebid.mobile.core.test", TargetingParams.getBundleName());
         TargetingParams.setBundleName("org.prebid.mobile");
         assertEquals("org.prebid.mobile", TargetingParams.getBundleName());
@@ -103,7 +107,6 @@ public class TargetingParamsTest extends BaseSetup {
 
     @Test
     public void testCOPPAFlag() throws Exception {
-        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
         TargetingParams.setSubjectToCOPPA(true);
         assertEquals(true, TargetingParams.isSubjectToCOPPA());
         TargetingParams.setSubjectToCOPPA(false);
@@ -113,7 +116,6 @@ public class TargetingParamsTest extends BaseSetup {
     @Test
     public void testCOPPAFlagWithoutContext() {
         //given
-        PrebidMobile.initializeSdk(null, null);
 
         //when
         Boolean result = TargetingParams.isSubjectToCOPPA();
@@ -122,12 +124,10 @@ public class TargetingParamsTest extends BaseSetup {
         assertNull(result);
 
         //defer
-        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
     }
 
     @Test
     public void testGDPRFlag() throws Exception {
-        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
         TargetingParams.setSubjectToGDPR(true);
         assertEquals(Boolean.TRUE, TargetingParams.isSubjectToGDPR());
         TargetingParams.setSubjectToGDPR(false);
@@ -176,7 +176,6 @@ public class TargetingParamsTest extends BaseSetup {
         editor.remove(UserConsentManager.GDPR_2_SUBJECT_KEY);
         editor.apply();
 
-        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
         TargetingParams.setGDPRConsentString("testString");
         assertEquals("testString", TargetingParams.getGDPRConsentString());
     }

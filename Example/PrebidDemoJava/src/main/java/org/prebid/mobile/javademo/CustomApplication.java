@@ -22,7 +22,6 @@ import android.util.Log;
 import com.google.android.gms.ads.MobileAds;
 
 import org.prebid.mobile.ExternalUserId;
-import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.api.data.InitializationStatus;
@@ -50,12 +49,7 @@ public class CustomApplication extends Application {
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d");
         PrebidMobile.setCustomStatusEndpoint("https://prebid-server-test-j.prebid.org/status");
-        PrebidMobile.setPrebidServerHost(
-                Host.createCustomHost(
-                        "https://prebid-server-test-j.prebid.org/openrtb2/auction"
-                )
-        );
-        PrebidMobile.initializeSdk(getApplicationContext(), status -> {
+        PrebidMobile.initializeSdk(getApplicationContext(), "https://prebid-server-test-j.prebid.org/openrtb2/auction", status -> {
             if (status == InitializationStatus.SUCCEEDED) {
                 Log.d(TAG, "SDK initialized successfully!");
             } else {

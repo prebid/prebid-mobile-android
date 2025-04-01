@@ -307,36 +307,6 @@ public class PrebidNativeAd {
     }
 
     /**
-     * @deprecated use {@link PrebidNativeAd#registerView(View, List, PrebidNativeAdEventListener)}
-     */
-    @Deprecated
-    public boolean registerView(View view, final PrebidNativeAdEventListener listener) {
-        if (!expired && view != null) {
-            this.listener = listener;
-            visibilityDetector = VisibilityDetector.create(view);
-            if (visibilityDetector == null) {
-                return false;
-            }
-
-            createImpressionTrackers(view);
-
-            registeredView = new WeakReference<>(view);
-
-            view.setOnClickListener(v -> handleClick(v, listener));
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @deprecated use {@link PrebidNativeAd#registerView(View, List, PrebidNativeAdEventListener)}
-     */
-    @Deprecated
-    public boolean registerViewList(View container, List<View> viewList, final PrebidNativeAdEventListener listener) {
-        return registerView(container, viewList, listener);
-    }
-
-    /**
      * This API is used to register the view for Ad Events (#onAdClicked(), #onAdImpression, #onAdExpired).
      *
      * @param container      the native ad container used to track impression

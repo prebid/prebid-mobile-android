@@ -98,7 +98,10 @@ public abstract class BaseAdView extends FrameLayout {
         int visibility = getVisibility();
 
         setScreenVisibility(visibility);
-        PrebidMobile.initializeSdk(getContext(), null);
+        String hostUrl = PrebidMobile.getPrebidServerHost().getHostUrl();
+        if (!hostUrl.isEmpty()) {
+            PrebidMobile.initializeSdk(getContext(), hostUrl, null);
+        }
     }
 
     protected void registerEventBroadcast() {
