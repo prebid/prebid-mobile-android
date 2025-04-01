@@ -33,9 +33,7 @@ class GamOriginalInstreamNewApiFragment : AdFragment() {
 
     override fun initAd(): Any? {
         PrebidMobile.setPrebidServerAccountId("1001")
-        PrebidMobile.setPrebidServerHost(
-            Host.createCustomHost("https://prebid-server.rubiconproject.com/openrtb2/auction")
-        )
+        PrebidMobile.initializeSdk(context, "https://prebid-server.rubiconproject.com/openrtb2/auction", null);
         createAd()
         return null
     }
@@ -106,7 +104,7 @@ class GamOriginalInstreamNewApiFragment : AdFragment() {
         adsLoader?.setPlayer(null)
         adsLoader?.release()
         player?.release()
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
+        PrebidMobile.initializeSdk(context, "https://prebid-server-test-j.prebid.org/openrtb2/auction", null);
         PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod))
     }
 

@@ -74,7 +74,6 @@ public abstract class MediationBaseAdUnit {
         contextWeakReference = new WeakReference<>(context);
         this.mediationDelegate = mediationDelegate;
         adUnitConfig.setAutoRefreshDelay(PrebidMobile.AUTO_REFRESH_DELAY_MIN / 1000);
-        initSdk(context);
         initAdConfig(configId, adSize);
         initBidLoader();
     }
@@ -178,13 +177,6 @@ public abstract class MediationBaseAdUnit {
 
     protected void initBidLoader() {
         bidLoader = new BidLoader(adUnitConfig, bidRequesterListener);
-    }
-
-    private void initSdk(Context context) {
-        String hostUrl = PrebidMobile.getPrebidServerHost().getHostUrl();
-        if (!hostUrl.isEmpty()) {
-            PrebidMobile.initializeSdk(context, hostUrl, null);
-        }
     }
 
     private void cancelRefresh() {
