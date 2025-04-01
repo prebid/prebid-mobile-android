@@ -424,7 +424,7 @@ public class TargetingParamsTest extends BaseSetup {
             arrSource.remove(externalUserId.getSource());
 
             if (externalUserId.getSource().equals("adserver.org")) {
-                assertTrue(externalUserId.getIdentifier().equals("111111111111"));
+                assertEquals("111111111111", externalUserId.getUniqueIds().get(0).getId());
             }
         }
 
@@ -457,8 +457,8 @@ public class TargetingParamsTest extends BaseSetup {
 
         ExternalUserId externalUserId = TargetingParams.getExternalUserIds().get(2);
         assertEquals("sharedid.org", externalUserId.getSource());
-        assertTrue(externalUserId.getIdentifier().equals("111111111111"));
-        assertTrue(externalUserId.getAtype() == 1);
+        assertTrue(externalUserId.getUniqueIds().get(0).getId().equals("111111111111"));
+        assertTrue(externalUserId.getUniqueIds().get(0).getAtype() == 1);
         assertTrue(externalUserId.getExt().get("third").equals("01ERJWE5FS4RAZKG6SKQ3ZYSKV"));
     }
 
@@ -503,17 +503,20 @@ public class TargetingParamsTest extends BaseSetup {
 
     @NotNull
     private static ArrayList<ExternalUserId> createTestExternalUserIds() {
-        return new ArrayList<>(Arrays.asList(
-                new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{
-                    put("rtiPartner", "TDID");
-                }}),
-                new ExternalUserId("netid.de", "999888777", null, null),
-                new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null),
-                new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null),
-                new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{
-                    put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
-                }})
-        ));
+        ExternalUserId id1 = new ExternalUserId("adserver.org", List.of(new ExternalUserId.UniqueId("111111111111", 1)));
+        id1.setExt(new HashMap() {{
+            put("rtiPartner", "TDID");
+        }});
+
+        ExternalUserId id2 = new ExternalUserId("netid.de", List.of(new ExternalUserId.UniqueId("999888777", 2)));
+        ExternalUserId id3 = new ExternalUserId("criteo.com", List.of(new ExternalUserId.UniqueId("_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", 3)));
+        ExternalUserId id4 = new ExternalUserId("liveramp.com", List.of(new ExternalUserId.UniqueId("AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", 3)));
+        ExternalUserId id5 = new ExternalUserId("sharedid.org", List.of(new ExternalUserId.UniqueId("111111111111", 1)));
+        id5.setExt(new HashMap() {{
+            put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
+        }});
+
+        return new ArrayList<>(Arrays.asList(id1, id2, id3, id4, id5));
     }
 
 }

@@ -23,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -50,19 +49,6 @@ public class ExternalUserId {
         this.uniqueIds = uniqueIds;
     }
 
-    /**
-     * @deprecated use {@link #ExternalUserId(String, List)}
-     */
-    @Deprecated
-    public ExternalUserId(@NonNull String source, @NonNull String identifier, Integer atype, Map<String, Object> ext) {
-        this.source = source;
-        this.uniqueIds = new ArrayList<>();
-        this.ext = ext;
-        UniqueId uniqueId = new UniqueId(identifier, atype);
-        uniqueIds.add(uniqueId);
-
-    }
-
     @NonNull
     public String getSource() {
         return source;
@@ -81,32 +67,6 @@ public class ExternalUserId {
     public void setExt(@Nullable Map<String, Object> ext) {
         this.ext = ext;
     }
-
-    @Deprecated
-    public String getIdentifier() {
-        if (!uniqueIds.isEmpty()) {
-            return uniqueIds.get(0).id;
-        }
-        return null;
-    }
-
-    @Deprecated
-    public void setIdentifier(String identifier) {}
-
-    /**
-     * @deprecated {@link #getUniqueIds()}
-     */
-    @Deprecated
-    public Integer getAtype() {
-        if (!uniqueIds.isEmpty()) {
-            return uniqueIds.get(0).atype;
-        }
-        return null;
-    }
-
-    @Deprecated
-    public void setAtype(Integer atype) {}
-
 
     @Nullable
     public JSONObject getJson() {
@@ -156,6 +116,16 @@ public class ExternalUserId {
 
         public void setExt(@Nullable Map<String, Object> ext) {
             this.ext = ext;
+        }
+
+        @NonNull
+        public String getId() {
+            return id;
+        }
+
+        @NonNull
+        public Integer getAtype() {
+            return atype;
         }
 
         @Nullable

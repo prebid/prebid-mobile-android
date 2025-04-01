@@ -29,7 +29,9 @@ import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.javademo.utils.Settings;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class CustomApplication extends Application {
 
@@ -75,17 +77,20 @@ public class CustomApplication extends Application {
     }
 
     private void initPrebidExternalUserIds() {
-        ArrayList<ExternalUserId> externalUserIdArray = new ArrayList<>();
-        externalUserIdArray.add(new ExternalUserId("adserver.org", "111111111111", null, new HashMap<String, Object>() {{
+        ExternalUserId id1 = new ExternalUserId("adserver.org", List.of(new ExternalUserId.UniqueId("111111111111", 1)));
+        id1.setExt(new HashMap() {{
             put("rtiPartner", "TDID");
-        }}));
-        externalUserIdArray.add(new ExternalUserId("netid.de", "999888777", null, null));
-        externalUserIdArray.add(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
-        externalUserIdArray.add(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        externalUserIdArray.add(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap<String, Object>() {{
+        }});
+
+        ExternalUserId id2 = new ExternalUserId("netid.de", List.of(new ExternalUserId.UniqueId("999888777", 2)));
+        ExternalUserId id3 = new ExternalUserId("criteo.com", List.of(new ExternalUserId.UniqueId("_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", 3)));
+        ExternalUserId id4 = new ExternalUserId("liveramp.com", List.of(new ExternalUserId.UniqueId("AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", 3)));
+        ExternalUserId id5 = new ExternalUserId("sharedid.org", List.of(new ExternalUserId.UniqueId("111111111111", 1)));
+        id5.setExt(new HashMap() {{
             put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
-        }}));
-        TargetingParams.setExternalUserIds(externalUserIdArray);
+        }});
+
+        TargetingParams.setExternalUserIds(new ArrayList<>(Arrays.asList(id1, id2, id3, id4, id5)));
     }
 
 }
