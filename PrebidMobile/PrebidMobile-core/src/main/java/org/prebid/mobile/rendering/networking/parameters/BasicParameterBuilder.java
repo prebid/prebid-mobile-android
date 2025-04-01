@@ -178,7 +178,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
         final BidRequest bidRequest = adRequestInput.getBidRequest();
         final User user = bidRequest.getUser();
 
-        user.id = TargetingParams.getUserId();
         user.keywords = TargetingParams.getUserKeywords();
         user.ext = TargetingParams.getUserExt();
 

@@ -29,9 +29,6 @@ object OpenRtbConfigs {
         if (openRtbExtra.appStoreUrl != null) {
             TargetingParams.setStoreUrl(openRtbExtra.appStoreUrl)
         }
-        if (openRtbExtra.userId != null) {
-            TargetingParams.setUserId(openRtbExtra.userId)
-        }
         if (openRtbExtra.keywords != null) {
             openRtbExtra.keywords.split(",").forEach {
                 TargetingParams.addUserKeyword(it)

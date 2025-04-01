@@ -81,10 +81,5 @@ public class AppInfoParameterBuilder extends ParameterBuilder {
         if (!extDataDictionary.isEmpty()) {
             app.getExt().put("data", Utils.toJson(extDataDictionary));
         }
-
-        Set<String> extKeywords = TargetingParams.getExtKeywordsSet();
-        if (extKeywords.size() > 0) {
-            app.keywords = TextUtils.join(",", extKeywords);
-        }
     }
 }

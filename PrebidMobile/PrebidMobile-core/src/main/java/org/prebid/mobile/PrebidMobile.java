@@ -374,7 +374,7 @@ public class PrebidMobile {
 
     /**
      * Sets full valid URL for the /status endpoint of the PBS.
-     * Request to /status is sent when you call {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     * Request to /status is sent when you call {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)} )}.
      *
      * @see <a href="https://docs.prebid.org/prebid-server/endpoints/pbs-endpoint-status.html">GET /status</a>
      */

@@ -74,10 +74,6 @@ object CommandLineArgumentParser {
         extras.getString("ADD_APP_EXT")?.let {
             parseAppExtData(it)
         }
-        /* Example: "appKeyword" */
-        extras.getString("ADD_APP_KEYWORD")?.let {
-            TargetingParams.addExtKeyword(it)
-        }
         /* Example: "userKeyword" */
         extras.getString("ADD_USER_KEYWORD")?.let {
             TargetingParams.addUserKeyword(it)
