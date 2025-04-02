@@ -303,19 +303,6 @@ public class TargetingParamsTest extends BaseSetup {
 
 
     @Test
-    public void testContextKeyword() {
-        // given
-        TargetingParams.addExtKeyword("value10");
-
-        //when
-        Set<String> set = TargetingParams.getExtKeywordsSet();
-
-        //then
-        Assert.assertEquals(1, set.size());
-        assertThat(set, containsInAnyOrder("value10"));
-    }
-
-    @Test
     public void testUserKeyword() {
 
         //given

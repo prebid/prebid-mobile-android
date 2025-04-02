@@ -36,6 +36,7 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
+import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
@@ -66,6 +67,7 @@ public class MediationBaseAdUnitTest {
 
         context = Robolectric.buildActivity(Activity.class).create().get();
         baseAdUnit = createAdUnit("config");
+        PrebidMobileReflection.setHost("https://test.com");
 
         assertEquals(AdPosition.UNDEFINED.getValue(), baseAdUnit.adUnitConfig.getAdPositionValue());
     }

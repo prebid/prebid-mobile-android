@@ -446,41 +446,6 @@ public class BannerViewTest {
     }
 
     @Test
-    public void addUpdateRemoveClearContextData_EqualsGetContextDataDictionary() {
-        Map<String, Set<String>> expectedMap = new HashMap<>();
-        HashSet<String> value1 = new HashSet<>();
-        value1.add("value1");
-        HashSet<String> value2 = new HashSet<>();
-        value2.add("value2");
-        expectedMap.put("key1", value1);
-        expectedMap.put("key2", value2);
-
-        // add
-        bannerView.addExtData("key1", "value1");
-        bannerView.addExtData("key2", "value2");
-
-        assertEquals(expectedMap, bannerView.getExtDataDictionary());
-
-        // update
-        HashSet<String> updateSet = new HashSet<>();
-        updateSet.add("value3");
-        bannerView.updateExtData("key1", updateSet);
-        expectedMap.replace("key1", updateSet);
-
-        assertEquals(expectedMap, bannerView.getExtDataDictionary());
-
-        // remove
-        bannerView.removeExtData("key1");
-        expectedMap.remove("key1");
-        assertEquals(expectedMap, bannerView.getExtDataDictionary());
-
-        // clear
-        bannerView.clearExtData();
-        assertTrue(bannerView.getExtDataDictionary().isEmpty());
-    }
-
-
-    @Test
     public void setAdPosition_EqualsGetAdPosition() {
         bannerView.setAdPosition(null);
         assertEquals(AdPosition.UNDEFINED, bannerView.getAdPosition());

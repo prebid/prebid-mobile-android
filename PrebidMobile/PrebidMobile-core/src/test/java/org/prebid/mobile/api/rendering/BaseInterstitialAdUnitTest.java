@@ -85,40 +85,6 @@ public class BaseInterstitialAdUnitTest {
     }
 
     @Test
-    public void addUpdateRemoveClearContextData_EqualsGetContextDataDictionary() {
-        Map<String, Set<String>> expectedMap = new HashMap<>();
-        HashSet<String> value1 = new HashSet<>();
-        value1.add("value1");
-        HashSet<String> value2 = new HashSet<>();
-        value2.add("value2");
-        expectedMap.put("key1", value1);
-        expectedMap.put("key2", value2);
-
-        // add
-        baseInterstitialAdUnit.addExtData("key1", "value1");
-        baseInterstitialAdUnit.addExtData("key2", "value2");
-
-        assertEquals(expectedMap, baseInterstitialAdUnit.getExtDataDictionary());
-
-        // update
-        HashSet<String> updateSet = new HashSet<>();
-        updateSet.add("value3");
-        baseInterstitialAdUnit.updateExtData("key1", updateSet);
-        expectedMap.replace("key1", updateSet);
-
-        assertEquals(expectedMap, baseInterstitialAdUnit.getExtDataDictionary());
-
-        // remove
-        baseInterstitialAdUnit.removeExtData("key1");
-        expectedMap.remove("key1");
-        assertEquals(expectedMap, baseInterstitialAdUnit.getExtDataDictionary());
-
-        // clear
-        baseInterstitialAdUnit.clearExtData();
-        assertTrue(baseInterstitialAdUnit.getExtDataDictionary().isEmpty());
-    }
-
-    @Test
     public void setPbAdSlot_EqualsGetPbAdSlot() {
         final String expected = "12345";
         baseInterstitialAdUnit.setPbAdSlot(expected);

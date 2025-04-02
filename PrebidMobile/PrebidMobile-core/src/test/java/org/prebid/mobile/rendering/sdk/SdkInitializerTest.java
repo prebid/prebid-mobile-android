@@ -81,6 +81,7 @@ public class SdkInitializerTest {
         isSuccessful = null;
         error = null;
         serverWarning = null;
+        PrebidMobileReflection.setHost("");
         Reflection.setStaticVariableTo(PrebidMobile.class, "customStatusEndpoint", null);
         PrebidContextHolder.clearContext();
         Reflection.setStaticVariableTo(InitializationNotifier.class, "initializationInProgress", false);
@@ -294,6 +295,7 @@ public class SdkInitializerTest {
 
     private void setStatusResponse(int code, String body) {
         String host = createStatusResponse(code, body).replace("/status", "/openrtb2/auction");
+        PrebidMobileReflection.setHost(host);
     }
 
     private void setCustomStatusResponse(int code, String body) {

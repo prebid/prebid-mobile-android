@@ -116,7 +116,6 @@ public class BasicParameterBuilderTest {
         TargetingParams.clearUserKeywords();
         TargetingParams.setUserLatLng(null, null);
         TargetingParams.setExternalUserIds(null);
-        TargetingParams.setUserId(null);
         TargetingParams.setOmidPartnerName(null);
         TargetingParams.setOmidPartnerVersion(null);
         TargetingParams.setGlobalOrtbConfig(null);
@@ -536,7 +535,6 @@ public class BasicParameterBuilderTest {
         adConfiguration.setAdFormat(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
-        TargetingParams.setUserId(USER_ID);
         TargetingParams.addUserKeyword(USER_KEYWORDS);
         TargetingParams.setUserExt(new Ext());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
@@ -570,45 +568,6 @@ public class BasicParameterBuilderTest {
         User actualUser = adRequestInput.getBidRequest().getUser();
         User expectedUser = getExpectedUser();
         assertEquals(expectedUser.getJsonObject().toString(), actualUser.getJsonObject().toString());
-    }
-
-    @Test
-    public void appendContextKeywordsAndData() throws JSONException {
-        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdFormat(AdFormat.BANNER);
-        adConfiguration.addSize(new AdSize(320, 50));
-
-        adConfiguration.addExtData("adUnitContextDataKey1", "adUnitContextDataValue1");
-        adConfiguration.addExtData("adUnitContextDataKey2", "adUnitContextDataValue2");
-
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
-            context.getResources(),
-            browserActivityAvailable
-        );
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        BidRequest actualRequest = adRequestInput.getBidRequest();
-        BidRequest expectedRequest = getExpectedBidRequest(adConfiguration, actualRequest.getId());
-        assertEquals(expectedRequest.getJsonObject().toString(), actualRequest.getJsonObject().toString());
-    }
-
-    @Test
-    public void appendTargetingContextKeywords() throws JSONException {
-        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdFormat(AdFormat.BANNER);
-        adConfiguration.addSize(new AdSize(320, 50));
-
-        TargetingParams.addExtKeyword("contextKeyword1");
-        TargetingParams.addExtKeyword("contextKeyword2");
-
-        AppInfoParameterBuilder builder = new AppInfoParameterBuilder(adConfiguration);
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        JSONObject appJson = adRequestInput.getBidRequest().getApp().getJsonObject();
-        assertTrue(appJson.has("keywords"));
-        assertEquals("contextKeyword1,contextKeyword2", appJson.getString("keywords"));
     }
 
     @Test
@@ -659,49 +618,6 @@ public class BasicParameterBuilderTest {
         assertTrue(prebidJson.has("data"));
         JSONArray biddersArray = prebidJson.getJSONObject("data").getJSONArray("bidders");
         assertEquals("bidder", biddersArray.get(0));
-    }
-
-    @Test
-    public void whenAppendUserData_UserDataAddedToUser()
-            throws JSONException {
-        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setConfigId("config");
-        DataObject dataObject = new DataObject();
-        String testName = "testDataObject";
-        dataObject.setName(testName);
-        adConfiguration.addUserData(dataObject);
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        User user = adRequestInput.getBidRequest().getUser();
-        assertEquals(1, user.dataObjects.size());
-        JSONObject jsonUser = user.getJsonObject();
-        assertTrue(jsonUser.has("data"));
-        JSONArray jsonData = jsonUser.getJSONArray("data");
-        JSONObject jsonDataObject = jsonData.getJSONObject(0);
-        assertTrue(jsonDataObject.has("name"));
-        String dataName = jsonDataObject.getString("name");
-        assertEquals(testName, dataName);
-    }
-
-    @Test
-    public void whenAppendParametersAndAdConfigContextDataNotEmpty_ContextDataAddedToImpExt()
-    throws JSONException {
-        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.addExtData("context", "contextData");
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext impExt = adRequestInput.getBidRequest().getImp().get(0).getExt();
-
-        Map<String, Object> impExtMap = impExt.getMap();
-        assertTrue(impExtMap.containsKey("data"));
-
-        JSONObject dataJson = (JSONObject) impExtMap.get("data");
-        assertTrue(dataJson.has("context"));
-        assertEquals("contextData", dataJson.getJSONArray("context").get(0));
     }
 
     @Test
@@ -1218,24 +1134,7 @@ public class BasicParameterBuilderTest {
             imp.getExt().put("data", data);
         }
 
-        appendImpExtParameters(imp, adConfiguration);
-
         return imp;
-    }
-
-    private void appendImpExtParameters(Imp imp, AdUnitConfiguration config) {
-        try {
-            Map<String, Set<String>> contextDataDictionary = config.getExtDataDictionary();
-            if (contextDataDictionary.size() > 0) {
-                JSONObject dataJson = new JSONObject();
-                for (String key : contextDataDictionary.keySet()) {
-                    dataJson.put(key, new JSONArray(contextDataDictionary.get(key)));
-                }
-                imp.getExt().put("data", dataJson);
-            }
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private String stringsToCommaSeparatedString(Set<String> strings) {
@@ -1309,7 +1208,6 @@ public class BasicParameterBuilderTest {
     private User getExpectedUser() {
         final User user = new User();
 
-        user.id = USER_ID;
         user.keywords = USER_KEYWORDS;
         List<ExternalUserId> extendedUserIds = TargetingParams.getExternalUserIds();
         if (extendedUserIds != null && extendedUserIds.size() > 0) {

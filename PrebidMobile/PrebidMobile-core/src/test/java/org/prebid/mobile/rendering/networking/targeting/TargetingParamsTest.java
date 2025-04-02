@@ -69,13 +69,6 @@ public class TargetingParamsTest {
         assertEquals(expected, TargetingParams.getUserExt());
     }
 
-    @Test
-    public void setUserId_EqualToGetUserIdAndIsInRequestParams() {
-        final String expected = "123";
-
-        TargetingParams.setUserId(expected);
-        assertEquals(expected, TargetingParams.getUserId());
-    }
 
     @Test
     public void setPublisherName_EqualToGetPublisherName() {
@@ -91,13 +84,11 @@ public class TargetingParamsTest {
         TargetingParams.setStoreUrl(null);
         TargetingParams.setPublisherName(null);
         TargetingParams.setUserExt(null);
-        TargetingParams.setUserId(null);
         TargetingParams.setUserLatLng(null, null);
 
         assertNull(TargetingParams.getStoreUrl());
         assertNull(TargetingParams.getPublisherName());
         assertNull(TargetingParams.getUserExt());
-        assertNull(TargetingParams.getUserId());
         assertNull(TargetingParams.getUserLatLng());
     }
 }

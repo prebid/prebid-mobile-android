@@ -59,9 +59,6 @@ public class AppInfoParameterBuilderTest {
         TargetingParams.clearExtData();
 
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        ContentObject contentObject = new ContentObject();
-        contentObject.setUrl("test.com");
-        adConfiguration.setAppContent(contentObject);
         AppInfoParameterBuilder builder = new AppInfoParameterBuilder(adConfiguration);
         AdRequestInput adRequestInput = new AdRequestInput();
 
@@ -85,9 +82,6 @@ public class AppInfoParameterBuilderTest {
         expectedApp.getPublisher().name = expectedPublisherName;
         expectedApp.domain = expectedDomain;
         expectedApp.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidMobile.SDK_VERSION));
-        ContentObject expectedContentObject = new ContentObject();
-        expectedContentObject.setUrl("test.com");
-        expectedApp.contentObject = expectedContentObject;
 
         assertEquals(
                 expectedBidRequest.getJsonObject().toString(),
@@ -108,24 +102,6 @@ public class AppInfoParameterBuilderTest {
         JSONObject appDataJson = (JSONObject) appExt.getMap().get("data");
         assertTrue(appDataJson.has("context"));
         assertEquals("contextData", appDataJson.getJSONArray("context").get(0));
-    }
-
-    @Test
-    public void whenAppendParametersAndTargetingContextKeywordNotEmpty_ContextKeywordAddedToAppExt() throws JSONException {
-        TargetingParams.addExtKeyword("contextKeyword1");
-        TargetingParams.addExtKeyword("contextKeyword2");
-
-        AppInfoParameterBuilder builder = new AppInfoParameterBuilder(new AdUnitConfiguration());
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        App app = adRequestInput.getBidRequest().getApp();
-
-        assertEquals("contextKeyword1,contextKeyword2", app.keywords);
-
-        JSONObject appJson = app.getJsonObject();
-        assertTrue(appJson.has("keywords"));
-        assertEquals("contextKeyword1,contextKeyword2", appJson.getString("keywords"));
     }
 
 }
