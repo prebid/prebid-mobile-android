@@ -48,9 +48,6 @@ open class PpmInterstitialPluginRendererFragment : BaseBidInterstitialFragment()
         }
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
         interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
-        interstitialAdUnit?.let {
-            CommandLineArgumentParser.addAdUnitSpecificData(it)
-        }
     }
 
     override fun onDestroy() {

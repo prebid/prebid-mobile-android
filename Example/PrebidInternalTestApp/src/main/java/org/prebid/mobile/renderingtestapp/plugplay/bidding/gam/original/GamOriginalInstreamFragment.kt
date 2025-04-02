@@ -13,14 +13,16 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import org.prebid.mobile.*
+import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerVideoBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import java.util.*
 
 class GamOriginalInstreamFragment : AdFragment() {
 
-    private var adUnit: VideoAdUnit? = null
+    private var adUnit: BannerAdUnit? = null
     private var player: SimpleExoPlayer? = null
     private var adsUri: Uri? = null
     private var adsLoader: ImaAdsLoader? = null
@@ -33,22 +35,20 @@ class GamOriginalInstreamFragment : AdFragment() {
 
     override fun initAd(): Any? {
         PrebidMobile.setPrebidServerAccountId("1001")
-        PrebidMobile.setPrebidServerHost(
-            Host.createCustomHost("https://prebid-server.rubiconproject.com/openrtb2/auction")
-        )
+        PrebidMobile.initializeSdk(context, "https://prebid-server.rubiconproject.com/openrtb2/auction", null);
         createAd()
         return null
     }
 
     override fun loadAd() {
-        adUnit?.fetchDemand { _: ResultCode?, keysMap: Map<String?, String?>? ->
+        adUnit?.fetchDemand {
             val sizes = HashSet<AdSize>()
             sizes.add(AdSize(width, height))
             adsUri = Uri.parse(
                 Util.generateInstreamUriForGam(
                     adUnitId,
                     sizes,
-                    keysMap
+                    it.targetingKeywords
                 )
             )
             val imaBuilder = ImaAdsLoader.Builder(requireActivity())
@@ -66,14 +66,13 @@ class GamOriginalInstreamFragment : AdFragment() {
         val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 600)
         binding.viewContainer.addView(playerView, params)
 
-        val parameters = VideoBaseAdUnit.Parameters()
+        val parameters = VideoParameters(listOf("video/mp4"))
         parameters.protocols = listOf(Signals.Protocols.VAST_2_0)
         parameters.playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOff)
         parameters.placement = Signals.Placement.InStream
-        parameters.mimes = listOf("video/mp4")
 
-        adUnit = VideoAdUnit(configId, width, height)
-        adUnit?.parameters = parameters
+        adUnit = BannerAdUnit(configId, width, height, EnumSet.of(AdUnitFormat.VIDEO))
+        adUnit?.videoParameters = parameters
     }
 
     private fun initializePlayer() {
@@ -105,7 +104,7 @@ class GamOriginalInstreamFragment : AdFragment() {
         adsLoader?.setPlayer(null)
         adsLoader?.release()
         player?.release()
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
+        PrebidMobile.initializeSdk(context, "https://prebid-server-test-j.prebid.org/openrtb2/auction", null);
         PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod))
     }
 

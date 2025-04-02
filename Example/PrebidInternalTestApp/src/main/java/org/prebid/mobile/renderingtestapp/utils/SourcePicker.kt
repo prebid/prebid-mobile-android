@@ -39,13 +39,6 @@ object SourcePicker {
             host = PBS_SERVER_DOMAIN
             accountId = PROD_ACCOUNT_ID
         }
-        setBidServerHost(host)
         PrebidMobile.setPrebidServerAccountId(accountId)
-    }
-
-    fun setBidServerHost(hostUrl: String) {
-        val host = Host.CUSTOM
-        host.hostUrl = hostUrl
-        PrebidMobile.setPrebidServerHost(host)
     }
 }

@@ -16,11 +16,26 @@
 
 package org.prebid.mobile.api.rendering;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,9 +68,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -431,66 +443,6 @@ public class BannerViewTest {
         bannerView.stopRefresh();
 
         verify(mockBidLoader, times(1)).cancelRefresh();
-    }
-
-    @Test
-    public void addUpdateRemoveClearContextData_EqualsGetContextDataDictionary() {
-        Map<String, Set<String>> expectedMap = new HashMap<>();
-        HashSet<String> value1 = new HashSet<>();
-        value1.add("value1");
-        HashSet<String> value2 = new HashSet<>();
-        value2.add("value2");
-        expectedMap.put("key1", value1);
-        expectedMap.put("key2", value2);
-
-        // add
-        bannerView.addContextData("key1", "value1");
-        bannerView.addContextData("key2", "value2");
-
-        assertEquals(expectedMap, bannerView.getContextDataDictionary());
-
-        // update
-        HashSet<String> updateSet = new HashSet<>();
-        updateSet.add("value3");
-        bannerView.updateContextData("key1", updateSet);
-        expectedMap.replace("key1", updateSet);
-
-        assertEquals(expectedMap, bannerView.getContextDataDictionary());
-
-        // remove
-        bannerView.removeContextData("key1");
-        expectedMap.remove("key1");
-        assertEquals(expectedMap, bannerView.getContextDataDictionary());
-
-        // clear
-        bannerView.clearContextData();
-        assertTrue(bannerView.getContextDataDictionary().isEmpty());
-    }
-
-    @Test
-    public void addRemoveContextKeywords_EqualsGetContextKeyWordsSet() {
-        HashSet<String> expectedSet = new HashSet<>();
-        expectedSet.add("key1");
-        expectedSet.add("key2");
-
-        // add
-        bannerView.addContextKeyword("key1");
-        bannerView.addContextKeyword("key2");
-
-        assertEquals(expectedSet, bannerView.getContextKeywordsSet());
-
-        // remove
-        bannerView.removeContextKeyword("key2");
-        expectedSet.remove("key2");
-        assertEquals(expectedSet, bannerView.getContextKeywordsSet());
-
-        // clear
-        bannerView.clearContextKeywords();
-        assertTrue(bannerView.getContextKeywordsSet().isEmpty());
-
-        // add all
-        bannerView.addContextKeywords(expectedSet);
-        assertEquals(expectedSet, bannerView.getContextKeywordsSet());
     }
 
     @Test

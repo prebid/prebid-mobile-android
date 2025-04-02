@@ -40,7 +40,6 @@ import org.prebid.mobile.rendering.sdk.SdkInitializer;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,24 +47,6 @@ import java.util.Map;
  * and manage internal behaviour.
  */
 public class PrebidMobile {
-
-    /**
-     * In the upcoming major release, the property will be removed.
-     */
-    @Deprecated
-    public static boolean isCoppaEnabled = false;
-    /**
-     * In the upcoming major release, the property will be removed.
-     */
-    @Deprecated
-    public static boolean useExternalBrowser = false;
-
-    /**
-     * In the upcoming major release, the property will be replaced with the method to setup supported MRAID versions.
-     * If true, the SDK sends "af=3,5,6", indicating support for MRAID
-     */
-    @Deprecated
-    public static boolean sendMraidSupportParams = true;
 
     /**
      * Minimum refresh interval allowed. 30 seconds
@@ -109,11 +90,7 @@ public class PrebidMobile {
      */
     public static final String TESTED_GOOGLE_SDK_VERSION = "24.1.0";
 
-    /**
-     * Please use {@link PrebidMobile#setLogLevel(LogLevel)}, this field will become private in next releases.
-     */
-    @Deprecated
-    public static LogLevel logLevel = LogLevel.NONE;
+    private static LogLevel logLevel = LogLevel.NONE;
     @Nullable
     private static PrebidLogger customLogger = null;
 
@@ -197,19 +174,6 @@ public class PrebidMobile {
         return accountId;
     }
 
-    /**
-     * @deprecated In the upcoming major release, the method will be removed.
-     * Please, use {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}}
-     */
-    @Deprecated
-    public static void setPrebidServerHost(Host host) {
-        if (host == null) {
-            LogUtil.error(TAG, "setPrebidServerHost: Can't set null.");
-            return;
-        }
-        PrebidMobile.host = host;
-    }
-
     public static Host getPrebidServerHost() {
         return host;
     }
@@ -238,26 +202,6 @@ public class PrebidMobile {
     }
 
     /**
-     * List containing objects that hold External User UniqueId parameters for the current application user.
-     * @deprecated use {@link TargetingParams#setExternalUserIds(List)}
-     */
-    @Deprecated(forRemoval = true)
-    public static void setExternalUserIds(List<ExternalUserId> externalUserIds) {
-        TargetingParams.setExternalUserIds(externalUserIds);
-    }
-
-    /**
-     * Returns the List that hold External UserId parameters for the current application user
-     *
-     * @return externalUserIds as Array.
-     * @deprecated use {@link TargetingParams#getExternalUserIds()}
-     */
-    @Deprecated(forRemoval = true)
-    public static List<ExternalUserId> getExternalUserIds() {
-        return TargetingParams.getExternalUserIds();
-    }
-
-    /**
      * HashMap containing a list of custom headers to add to requests
      */
     public static void setCustomHeaders(@Nullable HashMap<String, String> customHeaders) {
@@ -274,36 +218,6 @@ public class PrebidMobile {
     @NonNull
     public static HashMap<String, String> getCustomHeaders() {
         return PrebidMobile.customHeaders;
-    }
-
-
-    /**
-     * Initializes the main SDK classes and makes request to Prebid server to check its status.
-     * You have to set host url ({@link PrebidMobile#setPrebidServerHost(Host)}) before calling this method.
-     * If you use custom /status endpoint set it with ({@link PrebidMobile#setCustomStatusEndpoint(String)}) before starting initialization.
-     * <p>
-     * Calls SdkInitializationListener callback with enum initialization status parameter:
-     * <p>
-     * SUCCEEDED - Prebid SDK is initialized successfully and ready to work.
-     * <p>
-     * FAILED - Prebid SDK is failed to initialize and is not able to work.
-     * <p>
-     * SERVER_STATUS_WARNING - Prebid SDK failed to check the PBS status. The SDK is initialized and able to work, though.
-     * <p>
-     * To get the description of the problem you can call {@link InitializationStatus#getDescription()}
-     *
-     * @param context  any context (must be not null)
-     * @param listener initialization listener (can be null).
-     * <p>
-     * @deprecated Please, use {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)}} instead.
-     */
-    @Deprecated
-    @MainThread
-    public static void initializeSdk(
-        @Nullable Context context,
-        @Nullable SdkInitializationListener listener
-    ) {
-        SdkInitializer.init(context, listener);
     }
 
     /**
@@ -337,11 +251,6 @@ public class PrebidMobile {
         }
         PrebidMobile.host = Host.createCustomHost(serverURL);
         SdkInitializer.init(context, listener);
-    }
-
-    @Deprecated
-    public static Context getApplicationContext() {
-        return PrebidContextHolder.getContext();
     }
 
     /**
@@ -465,7 +374,7 @@ public class PrebidMobile {
 
     /**
      * Sets full valid URL for the /status endpoint of the PBS.
-     * Request to /status is sent when you call {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     * Request to /status is sent when you call {@link PrebidMobile#initializeSdk(Context, String, SdkInitializationListener)} )}.
      *
      * @see <a href="https://docs.prebid.org/prebid-server/endpoints/pbs-endpoint-status.html">GET /status</a>
      */

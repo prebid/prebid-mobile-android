@@ -51,9 +51,6 @@ open class PpmInterstitialPluginEventListenerFragment : BaseBidInterstitialFragm
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
         interstitialAdUnit?.setPluginEventListener(this)
         interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
-        interstitialAdUnit?.let {
-            CommandLineArgumentParser.addAdUnitSpecificData(it)
-        }
     }
 
     override fun onImpression() {

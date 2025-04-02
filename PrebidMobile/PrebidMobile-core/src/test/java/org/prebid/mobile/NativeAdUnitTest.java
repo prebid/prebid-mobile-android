@@ -1,5 +1,12 @@
 package org.prebid.mobile;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
@@ -13,8 +20,6 @@ import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-
-import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK, manifest = Config.NONE)
@@ -262,9 +267,7 @@ public class NativeAdUnitTest {
 
         NativeTitleAsset title = new NativeTitleAsset();
         title.setLength(25);
-        NativeImageAsset image = new NativeImageAsset();
-        image.setWMin(20);
-        image.setHMin(30);
+        NativeImageAsset image = new NativeImageAsset(20, 30);
         nativeUnit.getNativeConfiguration().addAsset(title);
         nativeUnit.getNativeConfiguration().addAsset(image);
 

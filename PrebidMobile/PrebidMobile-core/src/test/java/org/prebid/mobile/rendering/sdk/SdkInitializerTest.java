@@ -1,6 +1,5 @@
 package org.prebid.mobile.rendering.sdk;
 
-import static android.os.Looper.getMainLooper;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertEquals;
@@ -17,6 +16,7 @@ import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginR
 import static org.robolectric.Shadows.shadowOf;
 import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 import static java.lang.Thread.sleep;
+import static android.os.Looper.getMainLooper;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,7 +27,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
@@ -82,7 +81,7 @@ public class SdkInitializerTest {
         isSuccessful = null;
         error = null;
         serverWarning = null;
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost(""));
+        PrebidMobileReflection.setHost("");
         Reflection.setStaticVariableTo(PrebidMobile.class, "customStatusEndpoint", null);
         PrebidContextHolder.clearContext();
         Reflection.setStaticVariableTo(InitializationNotifier.class, "initializationInProgress", false);
@@ -296,7 +295,7 @@ public class SdkInitializerTest {
 
     private void setStatusResponse(int code, String body) {
         String host = createStatusResponse(code, body).replace("/status", "/openrtb2/auction");
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost(host));
+        PrebidMobileReflection.setHost(host);
     }
 
     private void setCustomStatusResponse(int code, String body) {

@@ -13,7 +13,7 @@ class GamOriginalInterstitialRandomMultiformatFragment : GamOriginalInterstitial
     override fun createAdUnit(adUnitFormat: AdUnitFormat): AdUnit {
         val configId =
             if (Random.nextBoolean()) getString(R.string.imp_prebid_id_interstitial_320_480) else getString(R.string.imp_prebid_id_video_interstitial_320_480_original_api)
-        val adUnit = InterstitialAdUnit(configId, EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO))
+        val adUnit = InterstitialAdUnit(configId, EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO))
         adUnit.videoParameters = VideoParameters(listOf("video/mp4"))
         return adUnit
     }

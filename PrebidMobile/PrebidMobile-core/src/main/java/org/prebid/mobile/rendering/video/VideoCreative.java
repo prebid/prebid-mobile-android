@@ -225,11 +225,7 @@ public class VideoCreative extends VideoCreativeProtocol
             return;
         }
 
-        AdUnitConfiguration adConfiguration = model.getAdConfiguration();
-        ContentObject contentObject = adConfiguration.getAppContent();
-        String contentUrl = null;
-        if (contentObject != null) contentUrl = contentObject.getUrl();
-        omAdSessionManager.initVideoAdSession(model.getAdVerifications(), contentUrl);
+        omAdSessionManager.initVideoAdSession(model.getAdVerifications(), null);
         startOmSession();
     }
 

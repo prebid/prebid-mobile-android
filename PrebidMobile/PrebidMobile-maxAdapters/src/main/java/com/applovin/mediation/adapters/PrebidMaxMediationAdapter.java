@@ -1,8 +1,6 @@
 package com.applovin.mediation.adapters;
 
 import android.app.Activity;
-import android.os.Handler;
-import android.os.Looper;
 
 import com.applovin.mediation.MaxAdFormat;
 import com.applovin.mediation.adapter.MaxAdViewAdapter;
@@ -51,26 +49,6 @@ public class PrebidMaxMediationAdapter extends MediationAdapterBase implements M
         setConsents(parameters);
         if (PrebidMobile.isSdkInitialized()) {
             onCompletionListener.onCompletion(InitializationStatus.INITIALIZED_SUCCESS, null);
-        } else {
-            Handler handler = new Handler(Looper.getMainLooper());
-            Runnable runnable = () -> {
-                if (activity == null) {
-                    return;
-                }
-
-                PrebidMobile.initializeSdk(activity.getApplicationContext(), status -> {
-                    if (onCompletionListener != null) {
-                        if (status != org.prebid.mobile.api.data.InitializationStatus.FAILED) {
-                            onCompletionListener.onCompletion(InitializationStatus.INITIALIZED_SUCCESS, null);
-                        } else {
-                            onCompletionListener.onCompletion(InitializationStatus.INITIALIZED_FAILURE, status.getDescription());
-                        }
-                    }
-                });
-            };
-            handler.post(runnable);
-
-            onCompletionListener.onCompletion(InitializationStatus.INITIALIZING, null);
         }
     }
 

@@ -16,8 +16,14 @@
 
 package org.prebid.mobile.api.mediation;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import android.app.Activity;
 import android.content.Context;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +36,7 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
+import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
@@ -43,18 +50,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class MediationBaseAdUnitTest {
 
     private MediationBaseAdUnit baseAdUnit;
     private Context context;
-    private Object mopubView = new Object();
     @Mock
     private AdSize mockAdSize;
     @Mock
@@ -66,7 +67,7 @@ public class MediationBaseAdUnitTest {
 
         context = Robolectric.buildActivity(Activity.class).create().get();
         baseAdUnit = createAdUnit("config");
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobileReflection.setHost("https://test.com");
 
         assertEquals(AdPosition.UNDEFINED.getValue(), baseAdUnit.adUnitConfig.getAdPositionValue());
     }
@@ -113,7 +114,6 @@ public class MediationBaseAdUnitTest {
         PrebidMobile.setPrebidServerAccountId("id");
         final Host custom = Host.CUSTOM;
         custom.setHostUrl("");
-        PrebidMobile.setPrebidServerHost(custom);
         baseAdUnit = createAdUnit("123");
         baseAdUnit.fetchDemand(result -> {
             assertEquals(FetchDemandResult.INVALID_HOST_URL, result);
@@ -143,66 +143,6 @@ public class MediationBaseAdUnitTest {
         baseAdUnit.fetchDemand(mockListener);
         baseAdUnit.onErrorReceived(adException);
         verify(mockListener).onComplete(FetchDemandResult.SERVER_ERROR);
-    }
-
-    @Test
-    public void addUpdateRemoveClearContextData_EqualsGetContextDataDictionary() {
-        Map<String, Set<String>> expectedMap = new HashMap<>();
-        HashSet<String> value1 = new HashSet<>();
-        value1.add("value1");
-        HashSet<String> value2 = new HashSet<>();
-        value2.add("value2");
-        expectedMap.put("key1", value1);
-        expectedMap.put("key2", value2);
-
-        // add
-        baseAdUnit.addContextData("key1", "value1");
-        baseAdUnit.addContextData("key2", "value2");
-
-        assertEquals(expectedMap, baseAdUnit.getContextDataDictionary());
-
-        // update
-        HashSet<String> updateSet = new HashSet<>();
-        updateSet.add("value3");
-        baseAdUnit.updateContextData("key1", updateSet);
-        expectedMap.replace("key1", updateSet);
-
-        assertEquals(expectedMap, baseAdUnit.getContextDataDictionary());
-
-        // remove
-        baseAdUnit.removeContextData("key1");
-        expectedMap.remove("key1");
-        assertEquals(expectedMap, baseAdUnit.getContextDataDictionary());
-
-        // clear
-        baseAdUnit.clearContextData();
-        assertTrue(baseAdUnit.getContextDataDictionary().isEmpty());
-    }
-
-    @Test
-    public void addRemoveContextKeywords_EqualsGetContextKeyWordsSet() {
-        HashSet<String> expectedSet = new HashSet<>();
-        expectedSet.add("key1");
-        expectedSet.add("key2");
-
-        // add
-        baseAdUnit.addContextKeyword("key1");
-        baseAdUnit.addContextKeyword("key2");
-
-        assertEquals(expectedSet, baseAdUnit.getContextKeywordsSet());
-
-        // remove
-        baseAdUnit.removeContextKeyword("key2");
-        expectedSet.remove("key2");
-        assertEquals(expectedSet, baseAdUnit.getContextKeywordsSet());
-
-        // clear
-        baseAdUnit.clearContextKeywords();
-        assertTrue(baseAdUnit.getContextKeywordsSet().isEmpty());
-
-        // add all
-        baseAdUnit.addContextKeywords(expectedSet);
-        assertEquals(expectedSet, baseAdUnit.getContextKeywordsSet());
     }
 
     @Test

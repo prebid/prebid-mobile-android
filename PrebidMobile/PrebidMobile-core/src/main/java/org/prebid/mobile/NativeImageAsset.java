@@ -10,11 +10,6 @@ import java.util.ArrayList;
  */
 public class NativeImageAsset extends NativeAsset {
 
-    @Deprecated
-    public NativeImageAsset() {
-        super(REQUEST_ASSET.IMAGE);
-    }
-
     public NativeImageAsset(int w, int h, int minWidth, int minHeight) {
         super(REQUEST_ASSET.IMAGE);
         this.w = w;

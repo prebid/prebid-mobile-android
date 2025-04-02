@@ -70,15 +70,14 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
         adWrapperView.addView(playerView, params)
 
         // 4. Make a bid request to Prebid Server
-        adUnit?.fetchDemand { _: ResultCode?, keysMap: Map<String?, String?>? ->
-
+        adUnit?.fetchDemand {
             // 5. Prepare the creative URI
             val sizes = HashSet<AdSize>()
             sizes.add(AdSize(WIDTH, HEIGHT))
             val prebidURL =  Util.generateInstreamUriForGam(
                 AD_UNIT_ID,
                 sizes,
-                keysMap
+                it.targetingKeywords
             )
 
             adsUri = Uri.parse(prebidURL)

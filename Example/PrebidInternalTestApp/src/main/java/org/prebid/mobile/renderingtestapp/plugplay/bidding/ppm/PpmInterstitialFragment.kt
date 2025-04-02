@@ -37,8 +37,5 @@ open class PpmInterstitialFragment : BaseBidInterstitialFragment() {
         }
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
         interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
-        interstitialAdUnit?.let {
-            CommandLineArgumentParser.addAdUnitSpecificData(it)
-        }
     }
 }

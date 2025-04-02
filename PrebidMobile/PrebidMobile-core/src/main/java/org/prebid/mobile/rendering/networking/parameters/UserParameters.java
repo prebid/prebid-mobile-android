@@ -22,51 +22,8 @@ package org.prebid.mobile.rendering.networking.parameters;
 public class UserParameters {
     public static final String TAG = UserParameters.class.getSimpleName();
 
-    public static final String GENDER_MALE = "M";
-    public static final String GENDER_FEMALE = "F";
-    public static final String GENDER_OTHER = "O";
-
     private UserParameters() {
 
-    }
-
-    /**
-     * User gender.
-     *
-     * @deprecated by ORTB
-     */
-    @Deprecated
-    public enum Gender {
-        /**
-         * User is male.
-         */
-        MALE,
-
-        /**
-         * User is female.
-         */
-        FEMALE,
-
-        /**
-         * Other.
-         */
-        OTHER
-    }
-
-    public static String getGenderDescription(Gender gender) {
-        String desc = null;
-        switch (gender) {
-            case MALE:
-                desc = GENDER_MALE;
-                break;
-            case FEMALE:
-                desc = GENDER_FEMALE;
-                break;
-            case OTHER:
-                desc = GENDER_OTHER;
-                break;
-        }
-        return desc;
     }
 
     /**

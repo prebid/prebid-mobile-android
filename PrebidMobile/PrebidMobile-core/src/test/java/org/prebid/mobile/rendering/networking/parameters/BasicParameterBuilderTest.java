@@ -16,10 +16,24 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_NAME;
+import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_VERSION;
+import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.VIDEO_INTERSTITIAL_PLAYBACK_END;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+
 import com.google.common.collect.Sets;
+
 import org.assertj.core.util.Lists;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +42,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.*;
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.BannerAdUnit;
+import org.prebid.mobile.BannerParameters;
+import org.prebid.mobile.DataObject;
+import org.prebid.mobile.ExternalUserId;
+import org.prebid.mobile.NativeTitleAsset;
+import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.Signals;
+import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
@@ -39,11 +62,14 @@ import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.*;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Native;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRendererList;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.pmps.Format;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
@@ -53,25 +79,24 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.lang.annotation.Target;
-import java.util.*;
-
-import static org.junit.Assert.*;
-import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19, qualifiers = "w1920dp-h1080dp")
 public class BasicParameterBuilderTest {
 
     private static final int VIDEO_INTERSTITIAL_PLACEMENT = 5;
-    private static final int USER_AGE = 20;
-    private static final int USER_YOB = Calendar.getInstance().get(Calendar.YEAR) - USER_AGE;
     private static final float USER_LAT = 1;
     private static final float USER_LON = 0;
     private static final String USER_ID = "id";
     private static final String USER_KEYWORDS = "keywords";
     private static final String USER_CUSTOM = "custom";
-    private static final String USER_GENDER = "M";
     private static final String USER_BUYER_ID = "bid";
     private PrebidMobilePluginRenderer otherPlugin = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, null, true, "FakePlugin", "1.0");
 
@@ -82,30 +107,20 @@ public class BasicParameterBuilderTest {
     @Before
     public void setUp() throws Exception {
         context = Robolectric.buildActivity(Activity.class).create().get();
-        org.prebid.mobile.PrebidMobile.initializeSdk(context, null);
         ManagersResolver.getInstance().prepare(context);
         TargetingParams.setExternalUserIds(null);
     }
 
     @After
     public void cleanup() throws Exception {
-        TargetingParams.clearUserData();
         TargetingParams.clearUserKeywords();
         TargetingParams.setUserLatLng(null, null);
-        TargetingParams.setGender(TargetingParams.GENDER.UNKNOWN);
-        TargetingParams.clearStoredExternalUserIds();
-        TargetingParams.setBuyerId(null);
-        TargetingParams.setUserId(null);
-        TargetingParams.setUserCustomData(null);
-        TargetingParams.setYearOfBirth(0);
+        TargetingParams.setExternalUserIds(null);
         TargetingParams.setOmidPartnerName(null);
         TargetingParams.setOmidPartnerVersion(null);
         TargetingParams.setGlobalOrtbConfig(null);
         TargetingParams.setExternalUserIds(null);
 
-        PrebidMobile.sendMraidSupportParams = true;
-        PrebidMobile.useExternalBrowser = false;
-        PrebidMobile.isCoppaEnabled = false;
         PrebidMobile.clearStoredBidResponses();
         PrebidMobile.setStoredAuctionResponse(null);
         PrebidMobile.setPrebidServerAccountId("");
@@ -485,8 +500,6 @@ public class BasicParameterBuilderTest {
         adConfiguration.setAdFormat(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
-        PrebidMobile.isCoppaEnabled = true;
-
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
                 context.getResources(),
                 browserActivityAvailable
@@ -495,7 +508,7 @@ public class BasicParameterBuilderTest {
         builder.appendBuilderParameters(adRequestInput);
 
         BidRequest actualBidRequest = adRequestInput.getBidRequest();
-        assertEquals(1, actualBidRequest.getRegs().coppa.intValue());
+        assertNull(actualBidRequest.getRegs().coppa);
     }
 
     @Test
@@ -522,12 +535,7 @@ public class BasicParameterBuilderTest {
         adConfiguration.setAdFormat(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
-        TargetingParams.setUserId(USER_ID);
-        TargetingParams.setUserAge(USER_AGE);
         TargetingParams.addUserKeyword(USER_KEYWORDS);
-        TargetingParams.setUserCustomData(USER_CUSTOM);
-        TargetingParams.setGender(TargetingParams.GENDER.MALE);
-        TargetingParams.setBuyerId(USER_BUYER_ID);
         TargetingParams.setUserExt(new Ext());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
 
@@ -563,73 +571,11 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
-    public void appendContextKeywordsAndData() throws JSONException {
-        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdFormat(AdFormat.BANNER);
-        adConfiguration.addSize(new AdSize(320, 50));
-
-        adConfiguration.addExtKeyword("adUnitContextKeyword1");
-        adConfiguration.addExtKeyword("adUnitContextKeyword2");
-
-        adConfiguration.addExtData("adUnitContextDataKey1", "adUnitContextDataValue1");
-        adConfiguration.addExtData("adUnitContextDataKey2", "adUnitContextDataValue2");
-
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
-            context.getResources(),
-            browserActivityAvailable
-        );
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        BidRequest actualRequest = adRequestInput.getBidRequest();
-        BidRequest expectedRequest = getExpectedBidRequest(adConfiguration, actualRequest.getId());
-        assertEquals(expectedRequest.getJsonObject().toString(), actualRequest.getJsonObject().toString());
-    }
-
-    @Test
-    public void appendTargetingContextKeywords() throws JSONException {
-        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdFormat(AdFormat.BANNER);
-        adConfiguration.addSize(new AdSize(320, 50));
-
-        TargetingParams.addContextKeyword("contextKeyword1");
-        TargetingParams.addContextKeyword("contextKeyword2");
-
-        AppInfoParameterBuilder builder = new AppInfoParameterBuilder(adConfiguration);
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        JSONObject appJson = adRequestInput.getBidRequest().getApp().getJsonObject();
-        assertTrue(appJson.has("keywords"));
-        assertEquals("contextKeyword1,contextKeyword2", appJson.getString("keywords"));
-    }
-
-    @Test
-    public void whenAppendParametersAndSendMraidSupportParamsFalse_NoMraidApi() {
-        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdFormat(AdFormat.BANNER);
-        adConfiguration.addSize(new AdSize(320, 50));
-
-        PrebidMobile.sendMraidSupportParams = false;
-
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
-                context.getResources(),
-                browserActivityAvailable
-        );
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        Imp actualImp = adRequestInput.getBidRequest().getImp().get(0);
-        assertEquals(Arrays.toString(new int[]{7}), Arrays.toString(actualImp.banner.api));
-    }
-
-    @Test
     public void whenAppendParametersAndUseExternalBrowserFalseAndBrowserActivityAvailable_ClickBrowserEqualsZero() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.setAdFormat(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
-        PrebidMobile.useExternalBrowser = false;
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
                 context.getResources(),
@@ -643,31 +589,10 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
-    public void whenAppendParametersAndUseExternalBrowserTrueAndBrowserActivityAvailable_ClickBrowserEqualsOne() {
-        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdFormat(AdFormat.BANNER);
-        adConfiguration.addSize(new AdSize(320, 50));
-
-        PrebidMobile.useExternalBrowser = true;
-
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
-                context.getResources(),
-                browserActivityAvailable
-        );
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        Imp actualImp = adRequestInput.getBidRequest().getImp().get(0);
-        assertEquals(1, actualImp.clickBrowser.intValue());
-    }
-
-    @Test
     public void whenAppendParametersAndUseExternalBrowserFalseAndBrowserActivityNotAvailable_ClickBrowserEqualsOne() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.setAdFormat(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
-
-        PrebidMobile.useExternalBrowser = false;
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
         AdRequestInput adRequestInput = new AdRequestInput();
@@ -696,70 +621,9 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
-    public void whenAppendParametersAndTargetingUserDataNotEmpty_UserDataAddedToUserExt()
-            throws JSONException {
-        TargetingParams.addUserData("user", "userData");
-
-        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setConfigId("config");
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        User user = adRequestInput.getBidRequest().getUser();
-        assertTrue(user.getExt().getMap().containsKey("data"));
-        JSONObject userDataJson = (JSONObject) user.getExt().getMap().get("data");
-        assertTrue(userDataJson.has("user"));
-        assertEquals("userData", userDataJson.getJSONArray("user").get(0));
-    }
-
-    @Test
-    public void whenAppendUserData_UserDataAddedToUser()
-            throws JSONException {
-        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setConfigId("config");
-        DataObject dataObject = new DataObject();
-        String testName = "testDataObject";
-        dataObject.setName(testName);
-        adConfiguration.addUserData(dataObject);
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        User user = adRequestInput.getBidRequest().getUser();
-        assertEquals(1, user.dataObjects.size());
-        JSONObject jsonUser = user.getJsonObject();
-        assertTrue(jsonUser.has("data"));
-        JSONArray jsonData = jsonUser.getJSONArray("data");
-        JSONObject jsonDataObject = jsonData.getJSONObject(0);
-        assertTrue(jsonDataObject.has("name"));
-        String dataName = jsonDataObject.getString("name");
-        assertEquals(testName, dataName);
-    }
-
-    @Test
-    public void whenAppendParametersAndAdConfigContextDataNotEmpty_ContextDataAddedToImpExt()
-    throws JSONException {
-        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.addExtData("context", "contextData");
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext impExt = adRequestInput.getBidRequest().getImp().get(0).getExt();
-
-        Map<String, Object> impExtMap = impExt.getMap();
-        assertTrue(impExtMap.containsKey("data"));
-
-        JSONObject dataJson = (JSONObject) impExtMap.get("data");
-        assertTrue(dataJson.has("context"));
-        assertEquals("contextData", dataJson.getJSONArray("context").get(0));
-    }
-
-    @Test
     public void testMultiFormatAdUnit_bannerAndVideoObjectsAreNotNull() {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
-        configuration.setAdUnitFormats(EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO));
+        configuration.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
 
         BasicParameterBuilder builder = new BasicParameterBuilder(configuration, null, false);
 
@@ -1225,10 +1089,6 @@ public class BasicParameterBuilderTest {
                 "prebid",
                 Prebid.getJsonObjectForBidRequest(PrebidMobile.getPrebidServerAccountId(), isVideo, adConfiguration)
         );
-        //if coppaEnabled - set 1, else No coppa is sent
-        if (PrebidMobile.isCoppaEnabled) {
-            bidRequest.getRegs().coppa = 1;
-        }
 
         Imp imp = getExpectedImp(adConfiguration, uuid);
         bidRequest.getImp().add(imp);
@@ -1257,7 +1117,7 @@ public class BasicParameterBuilderTest {
         imp.instl = isInterstitial ? 1 : 0;
 
         // 0 == embedded, 1 == native
-        imp.clickBrowser = !PrebidMobile.useExternalBrowser && browserActivityAvailable ? 0 : 1;
+        imp.clickBrowser = browserActivityAvailable ? 0 : 1;
         imp.id = uuid;
         imp.getExt().put("prebid", Prebid.getJsonObjectForImp(adConfiguration));
 
@@ -1270,35 +1130,11 @@ public class BasicParameterBuilderTest {
         final String pbAdSlot = adConfiguration.getPbAdSlot();
         if (pbAdSlot != null) {
             JSONObject data = new JSONObject();
-            Utils.addValue(data, "adslot", pbAdSlot);
             Utils.addValue(data, "pbadslot", pbAdSlot);
             imp.getExt().put("data", data);
         }
 
-        appendImpExtParameters(imp, adConfiguration);
-
         return imp;
-    }
-
-    private void appendImpExtParameters(Imp imp, AdUnitConfiguration config) {
-        try {
-            Map<String, Set<String>> contextDataDictionary = config.getExtDataDictionary();
-            if (contextDataDictionary.size() > 0) {
-                JSONObject dataJson = new JSONObject();
-                for (String key : contextDataDictionary.keySet()) {
-                    dataJson.put(key, new JSONArray(contextDataDictionary.get(key)));
-                }
-                imp.getExt().put("data", dataJson);
-            }
-
-            Set<String> contextKeywordsSet = config.getExtKeywordsSet();
-            if (contextKeywordsSet.size() > 0) {
-                String join = stringsToCommaSeparatedString(contextKeywordsSet);
-                imp.getExt().put("keywords", join);
-            }
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private String stringsToCommaSeparatedString(Set<String> strings) {
@@ -1372,12 +1208,7 @@ public class BasicParameterBuilderTest {
     private User getExpectedUser() {
         final User user = new User();
 
-        user.id = USER_ID;
-        user.yob = USER_YOB;
         user.keywords = USER_KEYWORDS;
-        user.customData = USER_CUSTOM;
-        user.gender = USER_GENDER;
-        user.buyerUid = USER_BUYER_ID;
         List<ExternalUserId> extendedUserIds = TargetingParams.getExternalUserIds();
         if (extendedUserIds != null && extendedUserIds.size() > 0) {
             user.ext = new Ext();

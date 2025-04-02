@@ -106,7 +106,6 @@ open class GamOriginalBannerFragment : AdFragment() {
 
         adUnit = createAdUnit()
         adUnit?.setAutoRefreshInterval(refreshDelay)
-        CommandLineArgumentParser.addAdUnitSpecificData(adUnit!!)
 
         return adView
     }

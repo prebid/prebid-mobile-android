@@ -17,11 +17,9 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
-import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.AdPosition;
 
 import java.util.EnumSet;
@@ -51,7 +49,7 @@ public class BannerAdUnit extends BannerBaseAdUnit {
      * @param width         ad width
      * @param height        ad height
      * @param adUnitFormats ad formats ({@link AdUnitFormat}). <br>
-     *                      For multi-format request {@code EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO);} <br>
+     *                      For multi-format request {@code EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO);} <br>
      *                      For only video request {@code EnumSet.of(AdUnitFormat.VIDEO);}
      */
     public BannerAdUnit(@NonNull String configId, int width, int height, EnumSet<AdUnitFormat> adUnitFormats) {

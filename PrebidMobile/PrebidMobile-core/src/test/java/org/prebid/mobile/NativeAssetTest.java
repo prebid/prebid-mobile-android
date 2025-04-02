@@ -1,5 +1,9 @@
 package org.prebid.mobile;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -8,8 +12,6 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK, manifest = Config.NONE)
@@ -129,11 +131,7 @@ public class NativeAssetTest {
 
     @Test
     public void testNativeAssetImage() {
-        NativeImageAsset image = new NativeImageAsset();
-        image.setWMin(20);
-        image.setHMin(30);
-        image.setW(100);
-        image.setH(200);
+        NativeImageAsset image = new NativeImageAsset(100, 200, 20, 30);
         image.setRequired(true);
         image.addMime("png");
         JSONObject assetExt = new JSONObject();
@@ -196,11 +194,7 @@ public class NativeAssetTest {
 
     @Test
     public void testNativeAssetImageAssignNativeAssetID() {
-        NativeImageAsset image = new NativeImageAsset();
-        image.setWMin(20);
-        image.setHMin(30);
-        image.setW(100);
-        image.setH(200);
+        NativeImageAsset image = new NativeImageAsset(100, 200, 20, 30);
         image.setRequired(true);
         image.addMime("png");
         JSONObject assetExt = new JSONObject();

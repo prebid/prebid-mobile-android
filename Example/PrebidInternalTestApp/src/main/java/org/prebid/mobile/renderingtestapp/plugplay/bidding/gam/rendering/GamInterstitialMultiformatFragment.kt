@@ -41,7 +41,7 @@ open class GamInterstitialMultiformatFragment : BaseBidInterstitialFragment() {
                 context.getString(R.string.imp_prebid_id_interstitial_320_480),
                 context.getString(R.string.imp_prebid_id_video_interstitial_320_480)
             ).shuffled().first(),
-            EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO),
+            EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO),
             interstitialEventHandler
         )
         interstitialAdUnit?.setInterstitialAdUnitListener(this)

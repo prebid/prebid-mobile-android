@@ -79,14 +79,6 @@ public abstract class BaseAdView extends FrameLayout {
         return AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
     }
 
-    public void setAppContent(ContentObject contentObject) {
-        if (adViewManager == null) {
-            LogUtil.error(TAG, "setContentUrl: Failed. AdViewManager is null. Can't set content object. ");
-            return;
-        }
-        adViewManager.getAdConfiguration().setAppContent(contentObject);
-    }
-
     /**
      * @return a creative view associated with the displayed ad
      */
@@ -98,7 +90,10 @@ public abstract class BaseAdView extends FrameLayout {
         int visibility = getVisibility();
 
         setScreenVisibility(visibility);
-        PrebidMobile.initializeSdk(getContext(), null);
+        String hostUrl = PrebidMobile.getPrebidServerHost().getHostUrl();
+        if (!hostUrl.isEmpty()) {
+            PrebidMobile.initializeSdk(getContext(), hostUrl, null);
+        }
     }
 
     protected void registerEventBroadcast() {

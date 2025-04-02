@@ -50,7 +50,7 @@ public class InterstitialAdUnit extends BannerBaseAdUnit {
     /**
      * Constructor for multi-format request.
      *
-     * @param adUnitFormats for example `EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO);`
+     * @param adUnitFormats for example `EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO);`
      */
     public InterstitialAdUnit(@NonNull String configId, EnumSet<AdUnitFormat> adUnitFormats) {
         super(configId, AdFormat.fromSet(adUnitFormats, true));
