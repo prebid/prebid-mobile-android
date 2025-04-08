@@ -222,6 +222,7 @@ public class AdUnitSuccessorTest {
         parameters.setPlcmt(Signals.Plcmt.Standalone);
         parameters.setLinearity(1);
         parameters.setBattr(Arrays.asList(Signals.CreativeAttribute.AudioButton, Signals.CreativeAttribute.TextOnly));
+        parameters.setSkippable(true);
 
         videoBaseAdUnit.setVideoParameters(parameters);
 
@@ -240,6 +241,7 @@ public class AdUnitSuccessorTest {
         Signals.Placement placement = testedVideoParameters.getPlacement();
         Integer linearity = testedVideoParameters.getLinearity();
         List<Signals.CreativeAttribute> battr = testedVideoParameters.getBattr();
+        Boolean skippable = testedVideoParameters.getSkippable();
 
         //then
         assertEquals(2, api.size());
@@ -259,6 +261,7 @@ public class AdUnitSuccessorTest {
         assertEquals(new Signals.Plcmt(4), testedVideoParameters.getPlcmt());
         assertEquals(new Integer(1), linearity);
         assertTrue(battr.contains(new Signals.CreativeAttribute(12)) && battr.contains(new Signals.CreativeAttribute(15)));
+        assertTrue(skippable);
     }
 
     private void setupAndCheckVideoParametersHelper(BannerBaseAdUnit videoBaseAdUnit) {
@@ -294,6 +297,7 @@ public class AdUnitSuccessorTest {
         Signals.Placement placement = testedVideoParameters.getPlacement();
         Integer linearity = testedVideoParameters.getLinearity();
         List<Signals.CreativeAttribute> battr = testedVideoParameters.getBattr();
+        Boolean skippable = testedVideoParameters.getSkippable();
 
         //then
         assertEquals(2, api.size());
@@ -313,5 +317,6 @@ public class AdUnitSuccessorTest {
         assertEquals(new Integer(1), linearity);
         assertEquals(new Signals.Plcmt(4), testedVideoParameters.getPlcmt());
         assertNull(battr);
+        assertNull(skippable);
     }
 }

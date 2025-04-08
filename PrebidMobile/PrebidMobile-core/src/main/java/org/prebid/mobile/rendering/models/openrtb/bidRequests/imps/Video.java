@@ -56,6 +56,8 @@ public class Video extends BaseBid {
 
     public int[] battr;
 
+    public Boolean skippable = null;
+
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
@@ -139,6 +141,10 @@ public class Video extends BaseBid {
                 jsonArray.put(number);
             }
             toJSON(jsonObject, "battr", jsonArray);
+        }
+
+        if (skippable != null) {
+            toJSON(jsonObject, "skip", skippable);
         }
 
         return jsonObject;
