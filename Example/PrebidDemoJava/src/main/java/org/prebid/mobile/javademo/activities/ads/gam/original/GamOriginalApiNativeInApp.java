@@ -36,6 +36,7 @@ import org.prebid.mobile.javademo.activities.BaseAdActivity;
 import org.prebid.mobile.javademo.utils.ImageUtils;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class GamOriginalApiNativeInApp extends BaseAdActivity {
 
@@ -60,9 +61,17 @@ public class GamOriginalApiNativeInApp extends BaseAdActivity {
         adUnit = new NativeAdUnit(CONFIG_ID);
         configureNativeAdUnit(adUnit);
 
-        final AdManagerAdRequest adRequest = new AdManagerAdRequest.Builder().build();
+        final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
         adLoader = createAdLoader(getAdWrapperView());
-        adUnit.fetchDemand(adRequest, resultCode -> adLoader.loadAd(adRequest));
+        adUnit.fetchDemand((bidInfo) -> {
+            final Map<String, String> targetingKeywords = bidInfo.getTargetingKeywords();
+            if (targetingKeywords == null) return;
+            for (var entry : targetingKeywords.entrySet()) {
+                builder.addCustomTargeting(entry.getKey(), entry.getValue());
+            }
+            AdManagerAdRequest request = builder.build();
+            adLoader.loadAd(request);
+        });
     }
 
     private void inflatePrebidNativeAd(
