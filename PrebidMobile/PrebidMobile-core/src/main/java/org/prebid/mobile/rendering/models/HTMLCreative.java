@@ -164,11 +164,7 @@ public class HTMLCreative extends AbstractCreative implements WebViewDelegate, I
 
         WebViewBase webView = getCreativeView().getWebView();
 
-        AdUnitConfiguration adConfiguration = getCreativeModel().getAdConfiguration();
-        ContentObject contentObject = adConfiguration.getAppContent();
-        String contentUrl = null;
-        if (contentObject != null) contentUrl = contentObject.getUrl();
-        omAdSessionManager.initWebAdSessionManager(webView, contentUrl);
+        omAdSessionManager.initWebAdSessionManager(webView, null);
         startOmSession(omAdSessionManager, webView);
     }
 

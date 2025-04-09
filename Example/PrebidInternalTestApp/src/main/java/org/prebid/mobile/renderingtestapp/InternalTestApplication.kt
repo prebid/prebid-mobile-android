@@ -44,13 +44,9 @@ class InternalTestApplication : MultiDexApplication() {
 
         WebView.setWebContentsDebuggingEnabled(true)
 
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
-        PrebidMobile.initializeSdk(this, null)
         PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod))
-        PrebidMobile.logLevel = PrebidMobile.LogLevel.DEBUG
-        SourcePicker.setBidServerHost(SourcePicker.PBS_SERVER_DOMAIN)
-
-        // Setup mock responses only in mock build
+        PrebidMobile.setLogLevel(PrebidMobile.LogLevel.DEBUG)
+        PrebidMobile.initializeSdk(this, "https://prebid-server-test-j.prebid.org/openrtb2/auction", null)
 
         DemoItemProvider.init(this)
         // Only uncomment while testing memory leaks

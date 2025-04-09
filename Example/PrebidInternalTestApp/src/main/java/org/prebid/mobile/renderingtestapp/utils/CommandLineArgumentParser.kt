@@ -11,7 +11,13 @@ import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
 import org.json.JSONObject
-import org.prebid.mobile.*
+import org.prebid.mobile.BannerAdUnit
+import org.prebid.mobile.ContentObject
+import org.prebid.mobile.DataObject
+import org.prebid.mobile.ExternalUserId
+import org.prebid.mobile.ExternalUserId.UniqueId
+import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.api.mediation.MediationBaseAdUnit
 import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.api.rendering.BannerView
@@ -24,7 +30,6 @@ object CommandLineArgumentParser {
     private val adUnitSpecificData = AdUnitSpecificData()
 
     class AdUnitSpecificData(
-        var extKeywords: String? = null,
         var extData: Map<String, List<String>>? = null,
         var appContentData: ContentObject? = null,
         var userData: DataObject? = null,
@@ -75,10 +80,6 @@ object CommandLineArgumentParser {
         extras.getString("ADD_APP_EXT")?.let {
             parseAppExtData(it)
         }
-        /* Example: "appKeyword" */
-        extras.getString("ADD_APP_KEYWORD")?.let {
-            TargetingParams.addExtKeyword(it)
-        }
         /* Example: "userKeyword" */
         extras.getString("ADD_USER_KEYWORD")?.let {
             TargetingParams.addUserKeyword(it)
@@ -87,10 +88,6 @@ object CommandLineArgumentParser {
         /* Example: {"key1": ["value1"],"key2": ["value2"]} */
         extras.getString("ADD_ADUNIT_CONTEXT")?.let {
             adUnitSpecificData.extData = parseJsonToMapOfStringsAndStringLists(it)
-        }
-        /* Example: "keywords1,keywords2" */
-        extras.getString("ADD_ADUNIT_KEYWORD")?.let {
-            adUnitSpecificData.extKeywords = it
         }
         /* Example: "key value" */
         extras.getString("ADD_APP_CONTENT_DATA_EXT")?.let {
@@ -101,137 +98,6 @@ object CommandLineArgumentParser {
             adUnitSpecificData.userData = parseUserData(it)
         }
     }
-
-    fun addAdUnitSpecificData(adUnit: BannerAdUnit) {
-        val extData = adUnitSpecificData.extData
-        if (extData != null) {
-            for (key in extData.keys) {
-                for (value in extData[key]!!) {
-                    adUnit.addExtData(key, value)
-                }
-            }
-        }
-
-        val extKeywords = adUnitSpecificData.extKeywords
-        if (extKeywords != null) {
-            adUnit.addExtKeyword(extKeywords)
-        }
-
-        val appContentData = adUnitSpecificData.appContentData
-        if (appContentData != null) {
-            adUnit.appContent = appContentData
-        }
-
-        val userData = adUnitSpecificData.userData
-        if (userData != null) {
-            adUnit.addUserData(userData)
-        }
-    }
-
-    fun addAdUnitSpecificData(bannerView: BannerView) {
-        val extData = adUnitSpecificData.extData
-        if (extData != null) {
-            for (key in extData.keys) {
-                for (value in extData[key]!!) {
-                    bannerView.addExtData(key, value)
-                }
-            }
-        }
-
-        val extKeywords = adUnitSpecificData.extKeywords
-        if (extKeywords != null) {
-            bannerView.addExtKeyword(extKeywords)
-        }
-
-        val appContentData = adUnitSpecificData.appContentData
-        if (appContentData != null) {
-            bannerView.setAppContent(appContentData)
-        }
-
-        val userData = adUnitSpecificData.userData
-        if (userData != null) {
-            bannerView.addUserData(userData)
-        }
-    }
-
-    fun addAdUnitSpecificData(interstitial: BaseInterstitialAdUnit) {
-        val extData = adUnitSpecificData.extData
-        if (extData != null) {
-            for (key in extData.keys) {
-                for (value in extData[key]!!) {
-                    interstitial.addExtData(key, value)
-                }
-            }
-        }
-
-        val extKeywords = adUnitSpecificData.extKeywords
-        if (extKeywords != null) {
-            interstitial.addExtKeyword(extKeywords)
-        }
-
-        val appContentData = adUnitSpecificData.appContentData
-        if (appContentData != null) {
-            interstitial.appContent = appContentData
-        }
-
-        val userData = adUnitSpecificData.userData
-        if (userData != null) {
-            interstitial.addUserData(userData)
-        }
-    }
-
-    fun addAdUnitSpecificData(mediationAdUnit: MediationBaseAdUnit) {
-        val extData = adUnitSpecificData.extData
-        if (extData != null) {
-            for (key in extData.keys) {
-                for (value in extData[key]!!) {
-                    mediationAdUnit.addExtData(key, value)
-                }
-            }
-        }
-
-        val extKeywords = adUnitSpecificData.extKeywords
-        if (extKeywords != null) {
-            mediationAdUnit.addExtKeyword(extKeywords)
-        }
-
-        val appContentData = adUnitSpecificData.appContentData
-        if (appContentData != null) {
-            mediationAdUnit.appContent = appContentData
-        }
-
-        val userData = adUnitSpecificData.userData
-        if (userData != null) {
-            mediationAdUnit.addUserData(userData)
-        }
-    }
-
-    fun addAdUnitSpecificData(nativeAdUnit: MediationNativeAdUnit) {
-        val extData = adUnitSpecificData.extData
-        if (extData != null) {
-            for (key in extData.keys) {
-                for (value in extData[key]!!) {
-                    nativeAdUnit.addExtData(key, value)
-                }
-            }
-        }
-
-        val extKeywords = adUnitSpecificData.extKeywords
-        if (extKeywords != null) {
-            nativeAdUnit.addExtKeyword(extKeywords)
-        }
-
-        val appContentData = adUnitSpecificData.appContentData
-        if (appContentData != null) {
-            nativeAdUnit.appContent = appContentData
-        }
-
-        val userData = adUnitSpecificData.userData
-        if (userData != null) {
-            nativeAdUnit.addUserData(userData)
-        }
-    }
-
 
     private fun extractOpenRtbExtra(openRtbListJson: String, context: Context) {
         val openRtbExtrasList = try {
@@ -264,12 +130,14 @@ object CommandLineArgumentParser {
                 val identifier = jsonObject.get("identifier").asString
                 if (source == null || identifier == null) {
                     val aType = jsonObject.get("atype")
-                    TargetingParams.storeExternalUserId(
-                        if (aType == null) {
-                            ExternalUserId(source, identifier, null, null)
-                        } else {
-                            ExternalUserId(source, identifier, aType.asInt, null)
-                        }
+                    TargetingParams.setExternalUserIds(
+                        listOf(
+                            if (aType == null) {
+                                ExternalUserId(source, listOf(UniqueId(identifier, 1)))
+                            } else {
+                                ExternalUserId(source, listOf(UniqueId(identifier, aType.asInt)))
+                            }
+                        )
                     )
                 }
             }
@@ -280,7 +148,7 @@ object CommandLineArgumentParser {
         val map = parseJsonToMapOfStringsAndStringLists(json)
         map.forEach {
             for (value in it.value) {
-                TargetingParams.addUserData(it.key, value)
+                TargetingParams.addExtData(it.key, value)
             }
         }
     }

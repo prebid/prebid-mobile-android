@@ -16,12 +16,18 @@
 
 package org.prebid.mobile.api.rendering;
 
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.LOADING;
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID;
+
 import android.content.Context;
+
 import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
 import org.prebid.mobile.ContentObject;
-import org.prebid.mobile.DataObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
@@ -37,11 +43,8 @@ import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
-
-import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.*;
 
 /**
  * Internal base interstitial ad unit for rendering API.
@@ -127,193 +130,6 @@ public abstract class BaseInterstitialAdUnit {
         }
     }
 
-    /**
-     * @deprecated use addExtData
-     */
-    @Deprecated
-    public void addContextData(
-        String key,
-        String value
-    ) {
-        config.addExtData(key, value);
-    }
-
-    /**
-     * @deprecated use updateExtData
-     */
-    @Deprecated
-    public void updateContextData(
-        String key,
-        Set<String> value
-    ) {
-        config.addExtData(key, value);
-    }
-
-    /**
-     * @deprecated use removeExtData
-     */
-    @Deprecated
-    public void removeContextData(String key) {
-        config.removeExtData(key);
-    }
-
-    /**
-     * @deprecated use clearExtData
-     */
-    @Deprecated
-    public void clearContextData() {
-        config.clearExtData();
-    }
-
-    /**
-     * @deprecated use getExtDataDictionary
-     */
-    @Deprecated
-    public Map<String, Set<String>> getContextDataDictionary() {
-        return config.getExtDataDictionary();
-    }
-
-    /**
-     * @deprecated use addExtKeyword
-     */
-    @Deprecated
-    public void addContextKeyword(String keyword) {
-        config.addExtKeyword(keyword);
-    }
-
-    /**
-     * @deprecated use addExtKeywords
-     */
-    @Deprecated
-    public void addContextKeywords(Set<String> keywords) {
-        config.addExtKeywords(keywords);
-    }
-
-    /**
-     * @deprecated use removeExtKeyword
-     */
-    @Deprecated
-    public void removeContextKeyword(String keyword) {
-        config.removeExtKeyword(keyword);
-    }
-
-    /**
-     * @deprecated use getExtKeywordsSet
-     */
-    @Deprecated
-    public Set<String> getContextKeywordsSet() {
-        return config.getExtKeywordsSet();
-    }
-
-    /**
-     * @deprecated use clearExtKeywords
-     */
-    @Deprecated
-    public void clearContextKeywords() {
-        config.clearExtKeywords();
-    }
-
-    @Deprecated
-    public void addExtData(
-        String key,
-        String value
-    ) {
-        config.addExtData(key, value);
-    }
-
-    public void updateExtData(
-        String key,
-        Set<String> value
-    ) {
-        config.addExtData(key, value);
-    }
-
-    public void removeExtData(String key) {
-        config.removeExtData(key);
-    }
-
-    public void clearExtData() {
-        config.clearExtData();
-    }
-
-    public Map<String, Set<String>> getExtDataDictionary() {
-        return config.getExtDataDictionary();
-    }
-
-    /**
-     * @deprecated imp.ext.context.keywords doesn't exist
-     */
-    @Deprecated
-    public void addExtKeyword(String keyword) {
-        config.addExtKeyword(keyword);
-    }
-
-    public void addExtKeywords(Set<String> keywords) {
-        config.addExtKeywords(keywords);
-    }
-
-    public void removeExtKeyword(String keyword) {
-        config.removeExtKeyword(keyword);
-    }
-
-    public Set<String> getExtKeywordsSet() {
-        return config.getExtKeywordsSet();
-    }
-
-    public void clearExtKeywords() {
-        config.clearExtKeywords();
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public void setAppContent(ContentObject content) {
-        config.setAppContent(content);
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public ContentObject getAppContent() {
-        return config.getAppContent();
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public void addUserData(DataObject dataObject) {
-        config.addUserData(dataObject);
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.getGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public ArrayList<DataObject> getUserData() {
-        return config.getUserData();
-    }
-
-    /**
-     * In the upcoming major release, the method will be removed. Please, use TargetingParams.setGlobalOrtbConfig method instead.
-     */
-    @Deprecated
-    public void clearUserData() {
-        config.clearUserData();
-    }
-
-
-    /**
-     * @deprecated use {@link org.prebid.mobile.TargetingParams#setGlobalOrtbConfig(String)}
-     * or {@link #setImpOrtbConfig(String)}.
-     */
-    @Deprecated(since = "2.2.3", forRemoval = true)
-    public void setOrtbConfig(@Nullable String openRtbConfig) {
-        config.setOrtbConfig(openRtbConfig);
-    }
-
     @Nullable
     public String getImpOrtbConfig() {
         return config.getImpOrtbConfig();
@@ -327,7 +143,6 @@ public abstract class BaseInterstitialAdUnit {
     public void setImpOrtbConfig(@Nullable String ortbConfig) {
         config.setImpOrtbConfig(ortbConfig);
     }
-
 
     @Nullable
     public String getPbAdSlot() {
@@ -438,7 +253,10 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     private void initPrebidRenderingSdk() {
-        PrebidMobile.initializeSdk(getContext(), null);
+        String hostUrl = PrebidMobile.getPrebidServerHost().getHostUrl();
+        if (!hostUrl.isEmpty()) {
+            PrebidMobile.initializeSdk(getContext(), hostUrl, null);
+        }
     }
 
     private void initBidLoader() {
@@ -464,10 +282,6 @@ public abstract class BaseInterstitialAdUnit {
     @VisibleForTesting
     final InterstitialAdUnitState getAdUnitState() {
         return interstitialAdUnitState;
-    }
-
-    public void addContent(ContentObject content) {
-        config.setAppContent(content);
     }
 
     private BidRequesterListener createBidRequesterListener() {

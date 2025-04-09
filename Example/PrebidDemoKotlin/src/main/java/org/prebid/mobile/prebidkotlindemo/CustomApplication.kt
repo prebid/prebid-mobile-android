@@ -44,9 +44,8 @@ class CustomApplication : Application() {
 
     private fun initPrebidSDK() {
         PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
         PrebidMobile.setCustomStatusEndpoint("https://prebid-server-test-j.prebid.org/status")
-        PrebidMobile.initializeSdk(applicationContext) { status ->
+        PrebidMobile.initializeSdk(applicationContext, "https://prebid-server-test-j.prebid.org/openrtb2/auction") { status ->
             if (status == InitializationStatus.SUCCEEDED) {
                 Log.d(TAG, "SDK initialized successfully!")
             } else {

@@ -98,7 +98,7 @@ public class AdUnitConfigurationTest {
 
         assertEquals(0, subject.getAdFormats().size());
 
-        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.DISPLAY));
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER));
 
         assertEquals(1, subject.getAdFormats().size());
         assertEquals(EnumSet.of(AdFormat.INTERSTITIAL), subject.getAdFormats());
@@ -108,7 +108,7 @@ public class AdUnitConfigurationTest {
         assertEquals(1, subject.getAdFormats().size());
         assertEquals(EnumSet.of(AdFormat.VAST), subject.getAdFormats());
 
-        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO));
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
 
         assertEquals(2, subject.getAdFormats().size());
         assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), subject.getAdFormats());

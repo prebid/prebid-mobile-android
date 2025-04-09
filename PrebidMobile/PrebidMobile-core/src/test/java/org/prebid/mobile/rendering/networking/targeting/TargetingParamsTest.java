@@ -16,34 +16,20 @@
 
 package org.prebid.mobile.rendering.networking.targeting;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import android.util.Pair;
+
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
-import org.prebid.mobile.rendering.networking.parameters.UserParameters;
 import org.robolectric.RobolectricTestRunner;
-
-import java.util.Calendar;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 @RunWith(RobolectricTestRunner.class)
 public class TargetingParamsTest {
-
-    @Test
-    public void setUserAge_CalculateYobAndSetAgeParameter() {
-        final int age = 20;
-        int expectedYob = Calendar.getInstance().get(Calendar.YEAR) - age;
-
-        TargetingParams.setUserAge(age);
-
-        assert TargetingParams.getUserAge() != null;
-        assertEquals(age, TargetingParams.getUserAge().intValue());
-        assertEquals(expectedYob, TargetingParams.getYearOfBirth());
-    }
 
     @Test
     public void setUserKeywords_EqualToGetUserKeywords() {
@@ -51,22 +37,6 @@ public class TargetingParamsTest {
         TargetingParams.addUserKeyword(expectedKeywords);
 
         assertEquals(expectedKeywords, TargetingParams.getUserKeywords());
-    }
-
-    @Test
-    public void setUserCustomData_EqualToGetUserCustomData() {
-        final String expectedCustomData = "custom_data";
-        TargetingParams.setUserCustomData(expectedCustomData);
-
-        assertEquals(expectedCustomData, TargetingParams.getUserCustomData());
-    }
-
-    @Test
-    public void setUserGender_EqualToGetUserGenderAndIsInRequestParams() {
-        final String expected = UserParameters.GENDER_FEMALE;
-
-        TargetingParams.setGender(TargetingParams.GENDER.FEMALE);
-        assertEquals(expected, TargetingParams.getGender().getKey());
     }
 
     @Test
@@ -99,22 +69,6 @@ public class TargetingParamsTest {
         assertEquals(expected, TargetingParams.getUserExt());
     }
 
-    @Test
-    public void setUserId_EqualToGetUserIdAndIsInRequestParams() {
-        final String expected = "123";
-
-        TargetingParams.setUserId(expected);
-        assertEquals(expected, TargetingParams.getUserId());
-    }
-
-    @Test
-    public void setBuyerUid_EqualToGetBuyerUid() {
-        final String expected = "12345";
-
-        TargetingParams.setBuyerId(expected);
-
-        assertEquals(expected, TargetingParams.getBuyerId());
-    }
 
     @Test
     public void setPublisherName_EqualToGetPublisherName() {
@@ -128,22 +82,13 @@ public class TargetingParamsTest {
     @After
     public void cleanup() {
         TargetingParams.setStoreUrl(null);
-        TargetingParams.setBuyerId(null);
         TargetingParams.setPublisherName(null);
-        TargetingParams.setUserAge(null);
-        TargetingParams.setUserCustomData(null);
         TargetingParams.setUserExt(null);
-        TargetingParams.setUserId(null);
-        TargetingParams.setGender(null);
         TargetingParams.setUserLatLng(null, null);
 
         assertNull(TargetingParams.getStoreUrl());
-        assertNull(TargetingParams.getBuyerId());
         assertNull(TargetingParams.getPublisherName());
-        assertNull(TargetingParams.getUserAge());
-        assertNull(TargetingParams.getUserCustomData());
         assertNull(TargetingParams.getUserExt());
-        assertNull(TargetingParams.getUserId());
         assertNull(TargetingParams.getUserLatLng());
     }
 }

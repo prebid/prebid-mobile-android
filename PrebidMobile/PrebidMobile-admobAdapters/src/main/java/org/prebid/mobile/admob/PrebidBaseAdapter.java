@@ -15,7 +15,6 @@ import com.google.android.gms.ads.mediation.VersionInfo;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.ParametersMatcher;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 
 import java.util.HashMap;
@@ -38,14 +37,7 @@ public abstract class PrebidBaseAdapter extends Adapter {
         if (PrebidMobile.isSdkInitialized()) {
             callback.onInitializationSucceeded();
         } else {
-            PrebidMobile.initializeSdk(context, status -> {
-                if (status == InitializationStatus.SUCCEEDED) {
-                    callback.onInitializationSucceeded();
-                } else {
-                    String description = status.getDescription() != null ? status.getDescription() : "";
-                    callback.onInitializationFailed(description);
-                }
-            });
+            callback.onInitializationFailed("Please initialize Prebid Mobile SDK");
         }
     }
 

@@ -19,7 +19,6 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.base
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
@@ -30,7 +29,6 @@ import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingInterstitia
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamInterstitialFragment
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 abstract class BaseBidInterstitialFragment : AdFragment(),
     InterstitialAdUnitListener {
@@ -125,7 +123,7 @@ abstract class BaseBidInterstitialFragment : AdFragment(),
         ) {
             AdUnitFormat.VIDEO
         } else {
-            AdUnitFormat.DISPLAY
+            AdUnitFormat.BANNER
         }
     }
 

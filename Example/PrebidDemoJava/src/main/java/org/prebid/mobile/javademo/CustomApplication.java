@@ -22,14 +22,15 @@ import android.util.Log;
 import com.google.android.gms.ads.MobileAds;
 
 import org.prebid.mobile.ExternalUserId;
-import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.javademo.utils.Settings;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class CustomApplication extends Application {
 
@@ -48,12 +49,7 @@ public class CustomApplication extends Application {
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d");
         PrebidMobile.setCustomStatusEndpoint("https://prebid-server-test-j.prebid.org/status");
-        PrebidMobile.setPrebidServerHost(
-                Host.createCustomHost(
-                        "https://prebid-server-test-j.prebid.org/openrtb2/auction"
-                )
-        );
-        PrebidMobile.initializeSdk(getApplicationContext(), status -> {
+        PrebidMobile.initializeSdk(getApplicationContext(), "https://prebid-server-test-j.prebid.org/openrtb2/auction", status -> {
             if (status == InitializationStatus.SUCCEEDED) {
                 Log.d(TAG, "SDK initialized successfully!");
             } else {
@@ -75,17 +71,20 @@ public class CustomApplication extends Application {
     }
 
     private void initPrebidExternalUserIds() {
-        ArrayList<ExternalUserId> externalUserIdArray = new ArrayList<>();
-        externalUserIdArray.add(new ExternalUserId("adserver.org", "111111111111", null, new HashMap<String, Object>() {{
+        ExternalUserId id1 = new ExternalUserId("adserver.org", List.of(new ExternalUserId.UniqueId("111111111111", 1)));
+        id1.setExt(new HashMap() {{
             put("rtiPartner", "TDID");
-        }}));
-        externalUserIdArray.add(new ExternalUserId("netid.de", "999888777", null, null));
-        externalUserIdArray.add(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
-        externalUserIdArray.add(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        externalUserIdArray.add(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap<String, Object>() {{
+        }});
+
+        ExternalUserId id2 = new ExternalUserId("netid.de", List.of(new ExternalUserId.UniqueId("999888777", 2)));
+        ExternalUserId id3 = new ExternalUserId("criteo.com", List.of(new ExternalUserId.UniqueId("_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", 3)));
+        ExternalUserId id4 = new ExternalUserId("liveramp.com", List.of(new ExternalUserId.UniqueId("AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", 3)));
+        ExternalUserId id5 = new ExternalUserId("sharedid.org", List.of(new ExternalUserId.UniqueId("111111111111", 1)));
+        id5.setExt(new HashMap() {{
             put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
-        }}));
-        PrebidMobile.setExternalUserIds(externalUserIdArray);
+        }});
+
+        TargetingParams.setExternalUserIds(new ArrayList<>(Arrays.asList(id1, id2, id3, id4, id5)));
     }
 
 }

@@ -16,9 +16,17 @@
 
 package org.prebid.mobile.api.rendering;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import android.app.Activity;
 import android.content.Context;
+
 import androidx.annotation.Nullable;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,10 +45,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -78,66 +82,6 @@ public class BaseInterstitialAdUnitTest {
         final AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         baseInterstitialAdUnit.init(adUnitConfiguration);
         assertEquals(AdPosition.FULLSCREEN.getValue(), adUnitConfiguration.getAdPositionValue());
-    }
-
-    @Test
-    public void addUpdateRemoveClearContextData_EqualsGetContextDataDictionary() {
-        Map<String, Set<String>> expectedMap = new HashMap<>();
-        HashSet<String> value1 = new HashSet<>();
-        value1.add("value1");
-        HashSet<String> value2 = new HashSet<>();
-        value2.add("value2");
-        expectedMap.put("key1", value1);
-        expectedMap.put("key2", value2);
-
-        // add
-        baseInterstitialAdUnit.addContextData("key1", "value1");
-        baseInterstitialAdUnit.addContextData("key2", "value2");
-
-        assertEquals(expectedMap, baseInterstitialAdUnit.getContextDataDictionary());
-
-        // update
-        HashSet<String> updateSet = new HashSet<>();
-        updateSet.add("value3");
-        baseInterstitialAdUnit.updateContextData("key1", updateSet);
-        expectedMap.replace("key1", updateSet);
-
-        assertEquals(expectedMap, baseInterstitialAdUnit.getContextDataDictionary());
-
-        // remove
-        baseInterstitialAdUnit.removeContextData("key1");
-        expectedMap.remove("key1");
-        assertEquals(expectedMap, baseInterstitialAdUnit.getContextDataDictionary());
-
-        // clear
-        baseInterstitialAdUnit.clearContextData();
-        assertTrue(baseInterstitialAdUnit.getContextDataDictionary().isEmpty());
-    }
-
-    @Test
-    public void addRemoveContextKeywords_EqualsGetContextKeyWordsSet() {
-        HashSet<String> expectedSet = new HashSet<>();
-        expectedSet.add("key1");
-        expectedSet.add("key2");
-
-        // add
-        baseInterstitialAdUnit.addContextKeyword("key1");
-        baseInterstitialAdUnit.addContextKeyword("key2");
-
-        assertEquals(expectedSet, baseInterstitialAdUnit.getContextKeywordsSet());
-
-        // remove
-        baseInterstitialAdUnit.removeContextKeyword("key2");
-        expectedSet.remove("key2");
-        assertEquals(expectedSet, baseInterstitialAdUnit.getContextKeywordsSet());
-
-        // clear
-        baseInterstitialAdUnit.clearContextKeywords();
-        assertTrue(baseInterstitialAdUnit.getContextKeywordsSet().isEmpty());
-
-        // add all
-        baseInterstitialAdUnit.addContextKeywords(expectedSet);
-        assertEquals(expectedSet, baseInterstitialAdUnit.getContextKeywordsSet());
     }
 
     @Test

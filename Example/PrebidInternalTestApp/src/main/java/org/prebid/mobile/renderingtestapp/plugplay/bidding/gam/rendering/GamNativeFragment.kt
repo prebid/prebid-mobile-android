@@ -65,9 +65,6 @@ class GamNativeFragment(
         val builder = AdManagerAdRequest.Builder()
         val publisherAdRequest = builder.build()
 
-        nativeAdUnit?.let {
-            CommandLineArgumentParser.addAdUnitSpecificData(it)
-        }
         nativeAdUnit?.fetchDemand { result ->
             if (result != FetchDemandResult.SUCCESS) {
                 events.fetchDemandFailure(true)

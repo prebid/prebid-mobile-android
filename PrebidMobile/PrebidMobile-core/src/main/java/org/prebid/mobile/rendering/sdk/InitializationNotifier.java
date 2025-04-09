@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.InitializationStatus;
-import org.prebid.mobile.api.exceptions.InitError;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 
 
@@ -41,7 +40,6 @@ public class InitializationNotifier {
                     //allows placing of bids to occur in InitializationListener
                     postOnMainThread(() -> {
                         listener.onInitializationComplete(InitializationStatus.SUCCEEDED);
-                        listener.onSdkInit();
                         listener = null;
                     });
                 }
@@ -53,7 +51,6 @@ public class InitializationNotifier {
                         InitializationStatus serverStatusWarning = InitializationStatus.SERVER_STATUS_WARNING;
                         serverStatusWarning.setDescription(statusRequesterError);
                         listener.onInitializationComplete(serverStatusWarning);
-                        listener.onSdkFailedToInit(new InitError(statusRequesterError));
                         listener = null;
                     });
                 }
@@ -72,8 +69,6 @@ public class InitializationNotifier {
                 InitializationStatus status = InitializationStatus.FAILED;
                 status.setDescription(error);
                 listener.onInitializationComplete(status);
-
-                listener.onSdkFailedToInit(new InitError(error));
             }
 
             PrebidContextHolder.clearContext();

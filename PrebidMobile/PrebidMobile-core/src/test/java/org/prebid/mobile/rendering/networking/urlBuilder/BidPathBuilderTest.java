@@ -16,23 +16,27 @@
 
 package org.prebid.mobile.rendering.networking.urlBuilder;
 
+import static org.junit.Assert.assertEquals;
+
+import android.app.Activity;
+import android.content.Context;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class BidPathBuilderTest {
+
     @Test
     public void testBuildUrlPath() {
-        final Host custom = Host.CUSTOM;
-        custom.setHostUrl("https://prebid.customhost.net/openrtb2/auction");
-        PrebidMobile.setPrebidServerHost(custom);
+        Context context = Robolectric.buildActivity(Activity.class).create().get();
+
+        PrebidMobile.initializeSdk(context, "https://prebid.customhost.net/openrtb2/auction", null);
 
         assertEquals("https://prebid.customhost.net/openrtb2/auction", new BidPathBuilder().buildURLPath(null));
     }

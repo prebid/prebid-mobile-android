@@ -16,26 +16,24 @@
 
 package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 
+import static org.junit.Assert.assertEquals;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
-
-import static org.junit.Assert.assertEquals;
 
 public class UserTest {
     @Test
     public void getJsonObject() throws Exception {
         User user = new User();
 
-        user.yob = 2016;
-        user.gender = "M";
         user.geo = new Geo();
         user.geo.accuracy = 1;
         user.keywords = "q, a";
 
         JSONObject actualObj = user.getJsonObject();
-        String expectedString = "{\"geo\":{\"accuracy\":1},\"gender\":\"M\",\"keywords\":\"q, a\",\"yob\":2016}";
+        String expectedString = "{\"geo\":{\"accuracy\":1},\"keywords\":\"q, a\"}";
         assertEquals("got: " + actualObj.toString(), expectedString, actualObj.toString());
         user.getJsonObject();
     }

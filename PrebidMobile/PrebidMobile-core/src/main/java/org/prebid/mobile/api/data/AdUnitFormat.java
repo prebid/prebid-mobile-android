@@ -22,9 +22,4 @@ package org.prebid.mobile.api.data;
 public enum AdUnitFormat {
     BANNER,
     VIDEO,
-    /**
-     * @deprecated use {@link #BANNER}
-     */
-    @Deprecated
-    DISPLAY,
 }

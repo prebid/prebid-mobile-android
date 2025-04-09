@@ -33,22 +33,20 @@ class GamOriginalInstreamNewApiFragment : AdFragment() {
 
     override fun initAd(): Any? {
         PrebidMobile.setPrebidServerAccountId("1001")
-        PrebidMobile.setPrebidServerHost(
-            Host.createCustomHost("https://prebid-server.rubiconproject.com/openrtb2/auction")
-        )
+        PrebidMobile.initializeSdk(context, "https://prebid-server.rubiconproject.com/openrtb2/auction", null);
         createAd()
         return null
     }
 
     override fun loadAd() {
-        adUnit?.fetchDemand { _: ResultCode?, keysMap: Map<String?, String?>? ->
+        adUnit?.fetchDemand {
             val sizes = HashSet<AdSize>()
             sizes.add(AdSize(width, height))
             adsUri = Uri.parse(
                 Util.generateInstreamUriForGam(
                     adUnitId,
                     sizes,
-                    keysMap
+                    it.targetingKeywords
                 )
             )
             val imaBuilder = ImaAdsLoader.Builder(requireActivity())
@@ -106,7 +104,7 @@ class GamOriginalInstreamNewApiFragment : AdFragment() {
         adsLoader?.setPlayer(null)
         adsLoader?.release()
         player?.release()
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
+        PrebidMobile.initializeSdk(context, "https://prebid-server-test-j.prebid.org/openrtb2/auction", null);
         PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod))
     }
 

@@ -94,7 +94,6 @@ class AdMobNativeFragment : AdFragment() {
         extras = Bundle()
         adUnit = MediationNativeAdUnit(configId, extras!!)
         configureNativeAdUnit(adUnit!!)
-        adUnit?.let { CommandLineArgumentParser.addAdUnitSpecificData(it) }
         return adUnit
     }
 

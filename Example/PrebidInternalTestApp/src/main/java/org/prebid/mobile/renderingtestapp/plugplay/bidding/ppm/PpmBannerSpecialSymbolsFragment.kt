@@ -35,7 +35,6 @@ class PpmBannerSpecialSymbolsFragment : PpmBannerFragment() {
         )
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
-        bannerView?.let { CommandLineArgumentParser.addAdUnitSpecificData(it) }
         binding.viewContainer.addView(bannerView)
 
         AppInfoManager.setAppName("天気")
