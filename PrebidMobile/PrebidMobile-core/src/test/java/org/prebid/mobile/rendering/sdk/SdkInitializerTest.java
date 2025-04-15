@@ -86,6 +86,7 @@ public class SdkInitializerTest {
         Reflection.setStaticVariableTo(PrebidMobile.class, "customStatusEndpoint", null);
         PrebidContextHolder.clearContext();
         Reflection.setStaticVariableTo(InitializationNotifier.class, "initializationInProgress", false);
+        Reflection.setStaticVariableTo(PrebidMobile.class, "disableStatusCheck", false);
     }
 
 
