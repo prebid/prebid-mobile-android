@@ -3,7 +3,13 @@ package org.prebid.mobile.configuration;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.prebid.mobile.*;
+
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.BannerParameters;
+import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.DataObject;
+import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.data.Position;
@@ -15,7 +21,13 @@ import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 public class AdUnitConfiguration {
@@ -49,8 +61,6 @@ public class AdUnitConfiguration {
     private String gpid;
     @Nullable
     private String impOrtbConfig;
-    @Deprecated
-    private String ortbConfig;
 
     private Position closeButtonPosition = Position.TOP_RIGHT;
     private Position skipButtonPosition = Position.TOP_RIGHT;
@@ -67,13 +77,6 @@ public class AdUnitConfiguration {
 
     private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
     private final HashSet<AdSize> adSizes = new HashSet<>();
-    @NonNull
-    private ArrayList<DataObject> userDataObjects = new ArrayList<>();
-    @NonNull
-    private Map<String, Set<String>> extDataDictionary = new HashMap<>();
-    @NonNull
-    private Set<String> extKeywordsSet = new HashSet<>();
-
 
     public void modifyUsingBidResponse(@Nullable BidResponse bidResponse) {
         if (bidResponse != null) {
@@ -89,124 +92,12 @@ public class AdUnitConfiguration {
         return configId;
     }
 
-    public void setAppContent(@Nullable ContentObject content) {
-        if (content != null) {
-            appContent = content;
-        }
-    }
-
-    public ContentObject getAppContent() {
-        return appContent;
-    }
-
     public void setPbAdSlot(String pbAdSlot) {
         this.pbAdSlot = pbAdSlot;
     }
 
     public String getPbAdSlot() {
         return pbAdSlot;
-    }
-
-    public void addUserData(DataObject dataObject) {
-        if (dataObject != null) {
-            userDataObjects.add(dataObject);
-        }
-    }
-
-    @NonNull
-    public ArrayList<DataObject> getUserData() {
-        return userDataObjects;
-    }
-
-    public void clearUserData() {
-        userDataObjects.clear();
-    }
-
-    public void setUserData(@Nullable ArrayList<DataObject> userData) {
-        if (userData != null) {
-            userDataObjects = userData;
-        }
-    }
-
-    public void addExtData(
-        String key,
-        String value
-    ) {
-        if (key == null || value == null) {
-            return;
-        }
-
-        if (extDataDictionary.containsKey(key)) {
-            Set<String> existingSet = extDataDictionary.get(key);
-            if (existingSet != null) {
-                existingSet.add(value);
-            }
-        } else {
-            HashSet<String> hashSet = new HashSet<>();
-            hashSet.add(value);
-            extDataDictionary.put(key, hashSet);
-        }
-    }
-
-    public void addExtData(
-        String key,
-        Set<String> value
-    ) {
-        if (key != null && value != null) {
-            extDataDictionary.put(key, value);
-        }
-    }
-
-    public void removeExtData(String key) {
-        extDataDictionary.remove(key);
-    }
-
-    @NonNull
-    public Map<String, Set<String>> getExtDataDictionary() {
-        return extDataDictionary;
-    }
-
-    public void clearExtData() {
-        extDataDictionary.clear();
-    }
-
-    public void setExtData(@Nullable Map<String, Set<String>> extData) {
-        if (extData != null) {
-            this.extDataDictionary = extData;
-        }
-    }
-
-    public void addExtKeyword(String keyword) {
-        if (keyword != null) {
-            extKeywordsSet.add(keyword);
-        }
-    }
-
-    public void addExtKeywords(Set<String> keywords) {
-        if (keywords != null) {
-            extKeywordsSet.addAll(keywords);
-        }
-    }
-
-    public void removeExtKeyword(String key) {
-        if (key != null) {
-            extKeywordsSet.remove(key);
-        }
-    }
-
-    public void setExtKeywords(@Nullable Set<String> extKeywords) {
-        if (extKeywords != null) {
-            this.extKeywordsSet = extKeywords;
-        }
-    }
-
-    @NonNull
-    public Set<String> getExtKeywordsSet() {
-        return extKeywordsSet;
-    }
-
-    public void clearExtKeywords() {
-        extKeywordsSet.clear();
     }
 
     public void setMinSizePercentage(@Nullable AdSize minSizePercentage) {
@@ -550,16 +441,6 @@ public class AdUnitConfiguration {
 
     public void setImpOrtbConfig(@Nullable String impOrtbConfig) {
         this.impOrtbConfig = impOrtbConfig;
-    }
-
-    @Deprecated
-    public String getOrtbConfig() {
-        return ortbConfig;
-    }
-
-    @Deprecated
-    public void setOrtbConfig(String ortbConfig) {
-        this.ortbConfig = ortbConfig;
     }
 
     public boolean getHasEndCard() {

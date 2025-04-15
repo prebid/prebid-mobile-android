@@ -25,10 +25,10 @@ import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.InterstitialAdUnit
-import org.prebid.mobile.VideoInterstitialAdUnit
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
+import java.util.*
 
 open class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
     companion object {
@@ -39,10 +39,13 @@ open class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
     private var displayAdCallback: (() -> Unit)? = null
 
     open fun createAdUnit(adUnitFormat: AdUnitFormat): AdUnit {
-        return if (adUnitFormat == AdUnitFormat.VIDEO) {
-            VideoInterstitialAdUnit(configId)
+        val formats = if (adUnitFormat == AdUnitFormat.VIDEO) {
+            EnumSet.of(AdUnitFormat.VIDEO)
         } else {
-            InterstitialAdUnit(configId, 30, 30)
+            EnumSet.of(AdUnitFormat.BANNER)
+        }
+        return InterstitialAdUnit(configId, formats).apply {
+            this.setMinSizePercentage(30, 30)
         }
     }
 

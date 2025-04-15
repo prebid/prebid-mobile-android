@@ -37,7 +37,7 @@ open class PpmInterstitialMultiformatFragment : BaseBidInterstitialFragment() {
                     context.getString(R.string.imp_prebid_id_interstitial_320_480),
                     context.getString(R.string.imp_prebid_id_video_interstitial_320_480)
                 ).shuffled().first(),
-                EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO)
+                EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO)
             )
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
         interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))

@@ -53,7 +53,7 @@ open class MaxInterstitialFragment : AdFragment() {
         maxInterstitialAd?.setListener(createListener())
 
         val mediationUtils = MaxMediationInterstitialUtils(maxInterstitialAd)
-        var adUnitFormats = EnumSet.of(AdUnitFormat.DISPLAY)
+        var adUnitFormats = EnumSet.of(AdUnitFormat.BANNER)
         if (isVideo) {
             adUnitFormats = EnumSet.of(AdUnitFormat.VIDEO)
         }

@@ -19,12 +19,12 @@ package org.prebid.mobile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 
+import java.util.List;
 import java.util.UUID;
 
 public class SharedId {
@@ -39,7 +39,10 @@ public class SharedId {
         // If sharedId was used previously in this session, then use that id
         if (sessionId != null) {
             if (persistentStorageAllowed != null && persistentStorageAllowed) {
-                storeSharedId(sessionId.getIdentifier());
+                if (!sessionId.getUniqueIds().isEmpty()) {
+                    ExternalUserId.UniqueId uniqueId = sessionId.getUniqueIds().get(0);
+                    storeSharedId(uniqueId.getId());
+                }
             }
             return sessionId;
         }
@@ -58,7 +61,10 @@ public class SharedId {
         ExternalUserId eid = externalUserIdFrom(UUID.randomUUID().toString());
         sessionId = eid;
         if (persistentStorageAllowed != null && persistentStorageAllowed) {
-            storeSharedId(eid.getIdentifier());
+            if (!sessionId.getUniqueIds().isEmpty()) {
+                ExternalUserId.UniqueId uniqueId = sessionId.getUniqueIds().get(0);
+                storeSharedId(uniqueId.getId());
+            }
         }
         return eid;
     }
@@ -90,7 +96,8 @@ public class SharedId {
     }
 
     private static ExternalUserId externalUserIdFrom(String identifier) {
-        return new ExternalUserId("pubcid.org", identifier, 1, null);
+        ExternalUserId.UniqueId uniqueId = new ExternalUserId.UniqueId(identifier, 1);
+        return new ExternalUserId("pubcid.org", List.of(uniqueId));
     }
 
     @Nullable

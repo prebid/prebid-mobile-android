@@ -21,14 +21,16 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,6 +41,7 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.reflection.sdk.ManagersResolverReflection;
 import org.prebid.mobile.reflection.sdk.UserConsentManagerReflection;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
+import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
@@ -47,7 +50,6 @@ import org.robolectric.annotation.LooperMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +67,6 @@ public class TargetingParamsTest extends BaseSetup {
         ManagersResolver resolver = ManagersResolver.getInstance();
         ManagersResolverReflection.resetManagers(resolver);
 
-        PrebidMobile.initializeSdk(activity, null);
         ManagersResolver.getInstance().prepare(activity);
         UserConsentManager userConsentManager = resolver.getUserConsentManager();
         UserConsentManagerReflection.resetAllFields(userConsentManager);
@@ -75,55 +76,18 @@ public class TargetingParamsTest extends BaseSetup {
     public void tearDown() {
         super.tearDown();
 
-        TargetingParams.clearStoredExternalUserIds();
+        TargetingParams.setExternalUserIds(null);
         TargetingParams.clearAccessControlList();
         TargetingParams.setExternalUserIds(null);
-        TargetingParams.clearUserData();
-        TargetingParams.clearContextData();
-        TargetingParams.clearContextKeywords();
         TargetingParams.clearUserKeywords();
     }
 
     @Test
-    public void testYearOfBirth() throws Exception {
-        // force initial state since it's static might be changed from other tests
-        FieldUtils.writeStaticField(TargetingParams.class, "yearOfBirth", 0, true);
-        assertEquals(0, TargetingParams.getYearOfBirth());
-        boolean errorThrown1 = false;
-        try {
-            TargetingParams.setYearOfBirth(-1);
-        } catch (Exception e) {
-            errorThrown1 = true;
-            assertEquals(0, TargetingParams.getYearOfBirth());
-        }
-        assertTrue(errorThrown1);
-        boolean errorThrown2 = false;
-        try {
-            TargetingParams.setYearOfBirth(Calendar.getInstance().get(Calendar.YEAR) + 5);
-        } catch (Exception e) {
-            errorThrown2 = true;
-            assertEquals(0, TargetingParams.getYearOfBirth());
-        }
-        assertTrue(errorThrown2);
-        int yearOfBirth = Calendar.getInstance().get(Calendar.YEAR) - 20;
-        TargetingParams.setYearOfBirth(yearOfBirth);
-        assertEquals(yearOfBirth, TargetingParams.getYearOfBirth());
-    }
-
-    @Test
-    public void testGender() throws Exception {
-        TargetingParams.setGender(TargetingParams.GENDER.UNKNOWN);
-        assertEquals(TargetingParams.GENDER.UNKNOWN, TargetingParams.getGender());
-        TargetingParams.setGender(TargetingParams.GENDER.FEMALE);
-        assertEquals(TargetingParams.GENDER.FEMALE, TargetingParams.getGender());
-        TargetingParams.setGender(TargetingParams.GENDER.MALE);
-        assertEquals(TargetingParams.GENDER.MALE, TargetingParams.getGender());
-    }
-
-    @Test
     public void testBundleName() throws Exception {
-        FieldUtils.writeStaticField(TargetingParams.class, "bundleName", null, true);
-        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
+        Context mockContext = mock(Context.class);
+        PrebidContextHolder.setContext(mockContext);
+        when(mockContext.getPackageName()).thenReturn("org.prebid.mobile.core.test");
+
         assertEquals("org.prebid.mobile.core.test", TargetingParams.getBundleName());
         TargetingParams.setBundleName("org.prebid.mobile");
         assertEquals("org.prebid.mobile", TargetingParams.getBundleName());
@@ -143,7 +107,6 @@ public class TargetingParamsTest extends BaseSetup {
 
     @Test
     public void testCOPPAFlag() throws Exception {
-        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
         TargetingParams.setSubjectToCOPPA(true);
         assertEquals(true, TargetingParams.isSubjectToCOPPA());
         TargetingParams.setSubjectToCOPPA(false);
@@ -153,7 +116,6 @@ public class TargetingParamsTest extends BaseSetup {
     @Test
     public void testCOPPAFlagWithoutContext() {
         //given
-        PrebidMobile.initializeSdk(null, null);
 
         //when
         Boolean result = TargetingParams.isSubjectToCOPPA();
@@ -162,12 +124,10 @@ public class TargetingParamsTest extends BaseSetup {
         assertNull(result);
 
         //defer
-        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
     }
 
     @Test
     public void testGDPRFlag() throws Exception {
-        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
         TargetingParams.setSubjectToGDPR(true);
         assertEquals(Boolean.TRUE, TargetingParams.isSubjectToGDPR());
         TargetingParams.setSubjectToGDPR(false);
@@ -216,7 +176,6 @@ public class TargetingParamsTest extends BaseSetup {
         editor.remove(UserConsentManager.GDPR_2_SUBJECT_KEY);
         editor.apply();
 
-        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
         TargetingParams.setGDPRConsentString("testString");
         assertEquals("testString", TargetingParams.getGDPRConsentString());
     }
@@ -329,10 +288,10 @@ public class TargetingParamsTest extends BaseSetup {
     @Test
     public void testContextData() {
         // given
-        TargetingParams.addContextData("key1", "value10");
+        TargetingParams.addExtData("key1", "value10");
 
         //when
-        Map<String, Set<String>> dictionary = TargetingParams.getContextDataDictionary();
+        Map<String, Set<String>> dictionary = TargetingParams.getExtDataDictionary();
         Set<String> set = dictionary.get("key1");
 
         //then
@@ -342,34 +301,6 @@ public class TargetingParamsTest extends BaseSetup {
         assertThat(set, containsInAnyOrder("value10"));
     }
 
-    @Test
-    public void testUserData() {
-        // given
-        TargetingParams.addUserData("key1", "value10");
-
-        //when
-        Map<String, Set<String>> dictionary = TargetingParams.getUserDataDictionary();
-        Set<String> set = dictionary.get("key1");
-
-        //then
-        Assert.assertEquals(1, dictionary.size());
-
-        Assert.assertEquals(1, set.size());
-        assertThat(set, containsInAnyOrder("value10"));
-    }
-
-    @Test
-    public void testContextKeyword() {
-        // given
-        TargetingParams.addContextKeyword("value10");
-
-        //when
-        Set<String> set = TargetingParams.getContextKeywordsSet();
-
-        //then
-        Assert.assertEquals(1, set.size());
-        assertThat(set, containsInAnyOrder("value10"));
-    }
 
     @Test
     public void testUserKeyword() {
@@ -452,32 +383,11 @@ public class TargetingParamsTest extends BaseSetup {
             arrSource.remove(externalUserId.getSource());
 
             if (externalUserId.getSource().equals("adserver.org")) {
-                assertTrue(externalUserId.getIdentifier().equals("111111111111"));
+                assertEquals("111111111111", externalUserId.getUniqueIds().get(0).getId());
             }
         }
 
         assertTrue(arrSource.size() == 0);
-    }
-
-    @Test
-    public void testStoreRemoveAndFetchExternalUserIds() {
-        TargetingParams.setExternalUserIds(createTestExternalUserIds());
-
-        // removing two externalUserId
-        TargetingParams.removeStoredExternalUserId("adserver.org");
-        TargetingParams.removeStoredExternalUserId("criteo.com");
-
-        ArrayList<String> arrSource = new ArrayList<>(Arrays.asList("adserver.org", "netid.de", "criteo.com", "liveramp.com", "sharedid.org"));
-
-        List<ExternalUserId> externalUserIdList = TargetingParams.getExternalUserIds();
-        assertTrue(externalUserIdList.size() == arrSource.size() - 2); // removed 2 externaUserId
-
-        for (ExternalUserId externalUserId : externalUserIdList) {
-            assertTrue(arrSource.contains(externalUserId.getSource()));
-            arrSource.remove(externalUserId.getSource());
-        }
-
-        assertTrue(arrSource.size() == 2); // removed 2 externalUserId
     }
 
     @Test
@@ -504,10 +414,10 @@ public class TargetingParamsTest extends BaseSetup {
     public void testStoreAndFetchExternalUserId() {
         TargetingParams.setExternalUserIds(createTestExternalUserIds());
 
-        ExternalUserId externalUserId = TargetingParams.fetchStoredExternalUserId("sharedid.org");
-        assertTrue(externalUserId.getSource().equals("sharedid.org"));
-        assertTrue(externalUserId.getIdentifier().equals("111111111111"));
-        assertTrue(externalUserId.getAtype() == 1);
+        ExternalUserId externalUserId = TargetingParams.getExternalUserIds().get(2);
+        assertEquals("sharedid.org", externalUserId.getSource());
+        assertTrue(externalUserId.getUniqueIds().get(0).getId().equals("111111111111"));
+        assertTrue(externalUserId.getUniqueIds().get(0).getAtype() == 1);
         assertTrue(externalUserId.getExt().get("third").equals("01ERJWE5FS4RAZKG6SKQ3ZYSKV"));
     }
 
@@ -552,17 +462,20 @@ public class TargetingParamsTest extends BaseSetup {
 
     @NotNull
     private static ArrayList<ExternalUserId> createTestExternalUserIds() {
-        return new ArrayList<>(Arrays.asList(
-                new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{
-                    put("rtiPartner", "TDID");
-                }}),
-                new ExternalUserId("netid.de", "999888777", null, null),
-                new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null),
-                new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null),
-                new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{
-                    put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
-                }})
-        ));
+        ExternalUserId id1 = new ExternalUserId("adserver.org", List.of(new ExternalUserId.UniqueId("111111111111", 1)));
+        id1.setExt(new HashMap() {{
+            put("rtiPartner", "TDID");
+        }});
+
+        ExternalUserId id2 = new ExternalUserId("netid.de", List.of(new ExternalUserId.UniqueId("999888777", 2)));
+        ExternalUserId id3 = new ExternalUserId("criteo.com", List.of(new ExternalUserId.UniqueId("_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", 3)));
+        ExternalUserId id4 = new ExternalUserId("liveramp.com", List.of(new ExternalUserId.UniqueId("AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", 3)));
+        ExternalUserId id5 = new ExternalUserId("sharedid.org", List.of(new ExternalUserId.UniqueId("111111111111", 1)));
+        id5.setExt(new HashMap() {{
+            put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
+        }});
+
+        return new ArrayList<>(Arrays.asList(id1, id2, id3, id4, id5));
     }
 
 }

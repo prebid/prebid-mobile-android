@@ -75,7 +75,6 @@ open class AdMobBannerFragment : AdFragment() {
             mediationUtils
         )
         adUnit?.setRefreshInterval(refreshDelay)
-        adUnit?.let { CommandLineArgumentParser.addAdUnitSpecificData(it) }
         return adUnit
     }
 

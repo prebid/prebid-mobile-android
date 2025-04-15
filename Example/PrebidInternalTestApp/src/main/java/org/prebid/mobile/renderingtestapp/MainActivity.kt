@@ -32,12 +32,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.test.espresso.IdlingResource
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener
+import org.prebid.mobile.api.data.InitializationStatus
+import org.prebid.mobile.rendering.listeners.SdkInitializationListener
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
 import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 import org.prebid.mobile.renderingtestapp.utils.PermissionHelper
 
-class MainActivity : AppCompatActivity(), SdkInitListener {
+class MainActivity : AppCompatActivity(), SdkInitializationListener {
 
     companion object {
         const val CURRENT_AD_TYPE = "CURRENT_AD_TYPE"
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
         consentUpdateManager?.stopTimer()
     }
 
-    override fun onSDKInit() {
+    override fun onInitializationComplete(status: InitializationStatus) {
         Log.i(TAG, "Prebid rendering SDK initialized successfully")
         progress.dismiss()
     }

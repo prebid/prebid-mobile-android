@@ -16,14 +16,26 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
+import static org.prebid.mobile.PrebidMobile.SDK_VERSION;
+
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Pair;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.prebid.mobile.*;
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.BannerParameters;
+import org.prebid.mobile.DataObject;
+import org.prebid.mobile.ExternalUserId;
+import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.Signals;
+import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
@@ -38,9 +50,14 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
-import java.util.*;
-
-import static org.prebid.mobile.PrebidMobile.SDK_VERSION;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class BasicParameterBuilder extends ParameterBuilder {
 
@@ -125,7 +142,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
     private void configureBidRequest(BidRequest bidRequest, String uuid) {
         bidRequest.setId(uuid);
         bidRequest.setImpOrtbConfig(adConfiguration.getImpOrtbConfig());
-        bidRequest.setOpenRtb(adConfiguration.getOrtbConfig());
         boolean isVideo = adConfiguration.isAdType(AdFormat.VAST);
         String storedRequestId = PrebidMobile.getPrebidServerAccountId();
         String settingsId = PrebidMobile.getAuctionSettingsId();
@@ -137,10 +153,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
             }
         }
         bidRequest.getExt().put("prebid", Prebid.getJsonObjectForBidRequest(storedRequestId, isVideo, adConfiguration));
-        //if coppaEnabled - set 1, else No coppa is sent
-        if (PrebidMobile.isCoppaEnabled) {
-            bidRequest.getRegs().coppa = 1;
-        }
     }
 
     private void configureSource(Source source, String uuid) {
@@ -167,31 +179,8 @@ public class BasicParameterBuilder extends ParameterBuilder {
         final BidRequest bidRequest = adRequestInput.getBidRequest();
         final User user = bidRequest.getUser();
 
-        user.id = TargetingParams.getUserId();
         user.keywords = TargetingParams.getUserKeywords();
-        user.customData = TargetingParams.getUserCustomData();
-        user.buyerUid = TargetingParams.getBuyerId();
         user.ext = TargetingParams.getUserExt();
-
-        ArrayList<DataObject> userData = adConfiguration.getUserData();
-        if (!userData.isEmpty()) {
-            user.dataObjects = userData;
-        }
-
-        int yearOfBirth = TargetingParams.getYearOfBirth();
-        if (yearOfBirth != 0) {
-            user.yob = TargetingParams.getYearOfBirth();
-        }
-
-        TargetingParams.GENDER gender = TargetingParams.getGender();
-        if (gender != TargetingParams.GENDER.UNKNOWN) {
-            user.gender = gender.getKey();
-        }
-
-        final Map<String, Set<String>> userDataDictionary = TargetingParams.getUserDataDictionary();
-        if (!userDataDictionary.isEmpty()) {
-            user.getExt().put("data", Utils.toJson(userDataDictionary));
-        }
 
         List<ExternalUserId> extendedIds = TargetingParams.getExternalUserIds();
         if (TargetingParams.getSendSharedId()) {
@@ -298,6 +287,11 @@ public class BasicParameterBuilder extends ParameterBuilder {
                     }
                     video.battr = battrsArray;
                 }
+
+                Boolean skippable = videoParameters.getSkippable();
+                if (skippable != null) {
+                    video.skippable = skippable;
+                }
             }
             if (video.placement == null && adConfiguration.isPlacementTypeValid()) {
                 video.placement = adConfiguration.getPlacementTypeValue();
@@ -391,7 +385,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
         //Send 1 for interstitial/interstitial video and 0 for banners
         imp.instl = isInterstitial ? 1 : 0;
         // 0 == embedded, 1 == native
-        imp.clickBrowser = !PrebidMobile.useExternalBrowser && browserActivityAvailable ? 0 : 1;
+        imp.clickBrowser = browserActivityAvailable ? 0 : 1;
         //set secure=1 for https or secure=0 for http
         if (!adConfiguration.isAdType(AdFormat.VAST)) {
             imp.secure = 1;
@@ -406,26 +400,15 @@ public class BasicParameterBuilder extends ParameterBuilder {
             imp.getExt().put("gpid", gpid);
         }
 
-        final Map<String, Set<String>> extDataDictionary = adConfiguration.getExtDataDictionary();
+        final Map<String, Set<String>> extDataDictionary = new HashMap<>();
         JSONObject data = Utils.toJson(extDataDictionary);
         String adSlot = adConfiguration.getPbAdSlot();
         if (adSlot != null) {
-            LogUtil.warning("Prebid SDK will stop sending imp[].ext.data.adslot field soon. If you still need it, add a comment to: prebid-mobile-android repository issue #810.");
-            Utils.addValue(data, "adslot", adSlot);
             Utils.addValue(data, "pbadslot", adSlot);
         }
         if (data.length() > 0) {
             imp.getExt().put("data", data);
         }
-
-        final Set<String> extKeywords = adConfiguration.getExtKeywordsSet();
-        if (extKeywords.size() > 0) {
-            String string = TextUtils.join(",", extKeywords);
-            imp.getExt().put("keywords", string);
-        }
-
-        // TODO: 15.12.2020 uncomment when Prebid server will be able to process Ext content not related to bidders
-        //imp.getExt().put(KEY_DEEPLINK_PLUS, 1);
     }
 
     private void setDisplayManager(Imp imp) {
@@ -436,10 +419,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
     private int[] getApiFrameworks() {
         List<Integer> supportedApiFrameworks = new ArrayList<>();
 
-        // If MRAID is on, then add api(3,5)
-        if (PrebidMobile.sendMraidSupportParams) {
-            supportedApiFrameworks.addAll(SUPPORTED_MRAID_VERSIONS);
-        }
+        supportedApiFrameworks.addAll(SUPPORTED_MRAID_VERSIONS);
 
         // Add OM support
         supportedApiFrameworks.add(API_OPEN_MEASUREMENT);

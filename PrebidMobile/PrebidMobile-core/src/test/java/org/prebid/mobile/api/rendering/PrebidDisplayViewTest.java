@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -59,6 +60,8 @@ public class PrebidDisplayViewTest {
         MockitoAnnotations.initMocks(PrebidDisplayViewTest.this);
 
         context = Robolectric.buildActivity(Activity.class).create().get();
+
+        PrebidMobile.initializeSdk(context, "https://prebid-server-test-j.prebid.org/openrtb2/auction", null);
 
         adUnitConfiguration = new AdUnitConfiguration();
         adUnitConfiguration.setAdFormat(AdFormat.BANNER);

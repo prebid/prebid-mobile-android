@@ -4,10 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.clearAllCaches;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.app.Activity;
@@ -20,8 +18,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockedStatic;
-import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
-import org.prebid.mobile.rendering.sdk.SdkInitializer;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -40,7 +36,7 @@ public class SharedIdTest {
         prefsMock = mockStatic(PreferenceManager.class);
 
         Context context = Robolectric.buildActivity(Activity.class).create().get();
-        PrebidMobile.initializeSdk(context, null);
+        PrebidMobile.initializeSdk(context, "https://prebid-server-test-j.prebid.org/openrtb2/auction", null);
         SharedId.resetIdentifier();
     }
 
@@ -85,7 +81,8 @@ public class SharedIdTest {
         when(prefsMock.getString(any(), any())).thenReturn(storedId);
 
         ExternalUserId id = SharedId.getIdentifier();
-        assertEquals(storedId, id.getIdentifier());
+        ExternalUserId.UniqueId uniqueId = id.getUniqueIds().get(0);
+        assertEquals(storedId, uniqueId.getId());
     }
 
     @Test
@@ -94,7 +91,8 @@ public class SharedIdTest {
         when(TargetingParams.getDeviceAccessConsent()).thenReturn(true);
 
         ExternalUserId id = SharedId.getIdentifier();
-        assertNotNull(id.getIdentifier());
+        ExternalUserId.UniqueId uniqueId = id.getUniqueIds().get(0);
+        assertNotNull(uniqueId.getId());
     }
 
     private SharedPreferences mockSharedPreferences() {

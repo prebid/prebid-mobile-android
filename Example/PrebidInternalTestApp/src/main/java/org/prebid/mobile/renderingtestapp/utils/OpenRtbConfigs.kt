@@ -26,23 +26,8 @@ object OpenRtbConfigs {
     var impExtData: Map<String, List<String>>? = null
 
     fun setTargeting(openRtbExtra: OpenRtbExtra) {
-        if (openRtbExtra.age != 0) {
-            TargetingParams.setUserAge(openRtbExtra.age)
-        }
         if (openRtbExtra.appStoreUrl != null) {
             TargetingParams.setStoreUrl(openRtbExtra.appStoreUrl)
-        }
-        if (openRtbExtra.userId != null) {
-            TargetingParams.setUserId(openRtbExtra.userId)
-        }
-        if (openRtbExtra.gender != null) {
-            TargetingParams.setGender(TargetingParams.GENDER.genderByKey(openRtbExtra.gender))
-        }
-        if (openRtbExtra.buyerId != null) {
-            TargetingParams.setBuyerId(openRtbExtra.buyerId)
-        }
-        if (openRtbExtra.customData != null) {
-            TargetingParams.setUserCustomData(openRtbExtra.customData)
         }
         if (openRtbExtra.keywords != null) {
             openRtbExtra.keywords.split(",").forEach {
@@ -66,16 +51,6 @@ object OpenRtbConfigs {
         if (openRtbExtra.accessControl?.isNotEmpty() == true) {
             for (bidder in openRtbExtra.accessControl) {
                 TargetingParams.addBidderToAccessControlList(bidder)
-            }
-        }
-        if (openRtbExtra.userData?.isNotEmpty() == true) {
-            for (key in openRtbExtra.userData.keys) {
-                val dataList = openRtbExtra.userData[key]
-                if (dataList != null) {
-                    for (data in dataList) {
-                        TargetingParams.addUserData(key, data)
-                    }
-                }
             }
         }
         if (openRtbExtra.appExtData?.isNotEmpty() == true) {
