@@ -81,7 +81,7 @@ public class SdkInitializer {
     ) {
         try {
             Future<String> statusRequesterResult = null;
-            if (!PrebidMobile.shouldSkipStatusCheck()) {
+            if (!PrebidMobile.shouldDisableStatusCheck()) {
                 statusRequesterResult = executor.submit(new StatusRequester());
             } else {
                 LogUtil.debug(TAG, "Prebid SDK initialization skipping status check");
