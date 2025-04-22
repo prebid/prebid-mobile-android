@@ -3,6 +3,8 @@ package org.prebid.mobile;
 import android.app.Application;
 import android.content.Context;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -23,7 +25,12 @@ public class VisibilityMonitor {
 
     private boolean stopAfterFirstFinding = false;
 
-    private final VisibilityTimer visibilityTimer = new VisibilityTimer();
+    private VisibilityTimer visibilityTimer;
+
+    public VisibilityMonitor() {
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+        mainHandler.post(() -> visibilityTimer = new VisibilityTimer());
+    }
 
     @Nullable
     private VisibilityActivityListener activityListener;
