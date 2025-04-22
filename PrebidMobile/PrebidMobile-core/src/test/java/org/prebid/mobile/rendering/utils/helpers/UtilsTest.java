@@ -341,6 +341,12 @@ public class UtilsTest extends TestCase {
     }
 
     @Test
+    public void isVastWithVastDataContainsSingleQuotes_ReturnTrue() throws IOException {
+        String vast = ResourceUtils.convertResourceToString("ad_inline_contains_single_quotes.xml");
+        assertTrue(Utils.isVast(vast));
+    }
+
+    @Test
     public void isVastWithHtmlData_ReturnFalse() throws IOException {
         String html = ResourceUtils.convertResourceToString("ad_contains_iframe");
         assertFalse(Utils.isVast(html));
