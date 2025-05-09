@@ -3,6 +3,8 @@ package org.prebid.mobile;
 import android.app.Application;
 import android.content.Context;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -23,7 +25,12 @@ public class VisibilityMonitor {
 
     private boolean stopAfterFirstFinding = false;
 
-    private final VisibilityTimer visibilityTimer = new VisibilityTimer();
+    private VisibilityTimer visibilityTimer;
+
+    public VisibilityMonitor() {
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+        mainHandler.post(() -> visibilityTimer = new VisibilityTimer());
+    }
 
     @Nullable
     private VisibilityActivityListener activityListener;
@@ -31,7 +38,9 @@ public class VisibilityMonitor {
     public void trackView(@NotNull View adViewContainer, @NotNull String burl, @NotNull String cacheId) {
         stopTracking();
 
-        visibilityTimer.start(adViewContainer, burl, cacheId, stopAfterFirstFinding);
+        if (visibilityTimer != null) {
+            visibilityTimer.start(adViewContainer, burl, cacheId, stopAfterFirstFinding);
+        }
     }
 
     public void trackInterstitial(String burl, String cacheId) {
@@ -43,7 +52,9 @@ public class VisibilityMonitor {
     }
 
     public void stopTracking() {
-        visibilityTimer.destroy();
+        if (visibilityTimer != null) {
+            visibilityTimer.destroy();
+        }
 
         if (activityListener != null) {
             getApplication().unregisterActivityLifecycleCallbacks(activityListener);
