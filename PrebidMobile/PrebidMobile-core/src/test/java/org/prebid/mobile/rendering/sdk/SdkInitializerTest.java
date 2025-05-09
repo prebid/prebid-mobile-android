@@ -2,6 +2,7 @@ package org.prebid.mobile.rendering.sdk;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -85,6 +86,7 @@ public class SdkInitializerTest {
         Reflection.setStaticVariableTo(PrebidMobile.class, "customStatusEndpoint", null);
         PrebidContextHolder.clearContext();
         Reflection.setStaticVariableTo(InitializationNotifier.class, "initializationInProgress", false);
+        Reflection.setStaticVariableTo(PrebidMobile.class, "disableStatusCheck", false);
     }
 
 
@@ -262,6 +264,32 @@ public class SdkInitializerTest {
         SdkInitializer.runBackgroundTasks(listenerMock, executorMock);
 
         verify(listenerMock, times(1)).initializationCompleted("Error");
+    }
+
+    @Test
+    public void runBackgroundTasks_checkStartedTasks_disableStatusCheck() throws InterruptedException, ExecutionException {
+        PrebidMobileReflection.setDisableStatusCheckToTrue();
+
+        ExecutorService executorMock = mock(ExecutorService.class);
+        SdkInitializer.runBackgroundTasks(mock(InitializationNotifier.class), executorMock);
+
+        ArgumentCaptor<Callable> requesterCaptor = ArgumentCaptor.forClass(Callable.class);
+        verify(executorMock, times(0)).submit(requesterCaptor.capture());
+        List<Callable> capturedCallables = requesterCaptor.getAllValues();
+        MatcherAssert.assertThat(capturedCallables, is(empty()));
+
+        ArgumentCaptor<Runnable> tasksCaptor = ArgumentCaptor.forClass(Runnable.class);
+        verify(executorMock, times(3)).execute(tasksCaptor.capture());
+
+        List<Runnable> allTasks = tasksCaptor.getAllValues();
+        String firstTaskName = allTasks.get(0).getClass().toString();
+        MatcherAssert.assertThat(firstTaskName, is(startsWith("class org.prebid.mobile.rendering.sdk.SdkInitializer$UserConsentFetcherTask")));
+
+        String secondTaskName = allTasks.get(1).getClass().toString();
+        MatcherAssert.assertThat(secondTaskName, is(startsWith("class org.prebid.mobile.rendering.sdk.UserAgentFetcherTask")));
+
+        verify(executorMock, times(1)).shutdown();
+        verify(executorMock, times(1)).awaitTermination(TERMINATION_TIMEOUT, TimeUnit.SECONDS);
     }
 
 

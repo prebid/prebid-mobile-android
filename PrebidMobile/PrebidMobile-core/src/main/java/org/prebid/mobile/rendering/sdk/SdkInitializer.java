@@ -80,7 +80,12 @@ public class SdkInitializer {
             ExecutorService executor
     ) {
         try {
-            Future<String> statusRequesterResult = executor.submit(new StatusRequester());
+            Future<String> statusRequesterResult = null;
+            if (!PrebidMobile.shouldDisableStatusCheck()) {
+                statusRequesterResult = executor.submit(new StatusRequester());
+            } else {
+                LogUtil.debug(TAG, "Prebid SDK initialization skipping status check");
+            }
             executor.execute(new UserConsentFetcherTask());
             executor.execute(new UserAgentFetcherTask());
             executor.execute(AdvertisingIdManager::initAdvertisingId);
@@ -92,7 +97,7 @@ public class SdkInitializer {
                 return;
             }
 
-            String statusRequesterError = statusRequesterResult.get();
+            String statusRequesterError = statusRequesterResult != null ? statusRequesterResult.get() : null;
             initializationNotifier.initializationCompleted(statusRequesterError);
         } catch (Exception exception) {
             initializationNotifier.initializationFailed("Exception during initialization: " + Log.getStackTraceString(exception));
