@@ -131,6 +131,7 @@ public class PrebidMobile {
     private static int creativeFactoryTimeoutPreRenderContent = DEFAULT_PRERENDER_TIMEOUT;
     @NonNull
     private static WeakReference<PrebidEventDelegate> eventDelegateReference = new WeakReference<>(null);
+    private static boolean disableStatusCheck = false;
 
     private PrebidMobile() {
     }
@@ -523,6 +524,22 @@ public class PrebidMobile {
      */
     public static void setEventDelegate(@Nullable PrebidEventDelegate eventDelegate) {
         eventDelegateReference = new WeakReference<>(eventDelegate);
+    }
+
+    /**
+     * @param disableStatusCheck boolean flag for skipping status check
+     * If true, the SDK will not check the PBS status during initialization. This will save initialization time
+     * if the PBS endpoint is always live and handled client side
+     */
+    public static void setDisableStatusCheck(boolean disableStatusCheck) {
+        PrebidMobile.disableStatusCheck = disableStatusCheck;
+    }
+
+    /**
+     * {@link #setDisableStatusCheck(boolean)}
+     */
+    public static boolean shouldDisableStatusCheck() {
+        return disableStatusCheck;
     }
 
     /**
