@@ -5,23 +5,23 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
-
-import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.ext.ima.ImaAdsLoader;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.source.ads.AdsMediaSource;
-import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DataSpec;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import androidx.annotation.OptIn;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.datasource.DataSource;
+import androidx.media3.datasource.DataSpec;
+import androidx.media3.datasource.DefaultDataSource;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.ima.ImaAdsLoader;
+import androidx.media3.exoplayer.source.MediaSource;
+import androidx.media3.exoplayer.source.ProgressiveMediaSource;
+import androidx.media3.exoplayer.source.ads.AdsMediaSource;
+import androidx.media3.ui.PlayerView;
 
 import org.prebid.mobile.InStreamVideoAdUnit;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.Util;
 import org.prebid.mobile.VideoParameters;
-import org.prebid.mobile.javademo.R;
 import org.prebid.mobile.javademo.activities.BaseAdActivity;
 
 import java.util.Collections;
@@ -38,7 +38,7 @@ public class GamOriginalApiVideoInStream extends BaseAdActivity {
     private static final String VIDEO_URL = "https://storage.googleapis.com/gvabox/media/samples/stock.mp4";
 
     private InStreamVideoAdUnit adUnit;
-    private SimpleExoPlayer player;
+    private ExoPlayer player;
     private Uri adsUri;
     private ImaAdsLoader adsLoader;
     private PlayerView playerView;
@@ -76,15 +76,16 @@ public class GamOriginalApiVideoInStream extends BaseAdActivity {
         });
     }
 
+    @OptIn(markerClass = UnstableApi.class)
     private void initializePlayer() {
-        SimpleExoPlayer.Builder playerBuilder = new SimpleExoPlayer.Builder(this);
+        ExoPlayer.Builder playerBuilder = new ExoPlayer.Builder(this);
         player = playerBuilder.build();
         playerView.setPlayer(player);
         adsLoader.setPlayer(player);
 
         Uri uri = Uri.parse(VIDEO_URL);
         MediaItem mediaItem = MediaItem.fromUri(uri);
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, getString(R.string.app_name));
+        DataSource.Factory dataSourceFactory = new DefaultDataSource.Factory(this);
         ProgressiveMediaSource.Factory mediaSourceFactory = new ProgressiveMediaSource.Factory(dataSourceFactory);
         MediaSource mediaSource = mediaSourceFactory.createMediaSource(mediaItem);
 
