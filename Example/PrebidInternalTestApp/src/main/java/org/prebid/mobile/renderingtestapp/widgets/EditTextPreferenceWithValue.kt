@@ -28,12 +28,5 @@ open class EditTextPreferenceWithValue : EditTextPreference {
 
     constructor(context: Context) : super(context)
 
-    override fun getSummary(): CharSequence {
-        return if (text != null) {
-            text
-        }
-        else {
-            ""
-        }
-    }
+    override fun getSummary(): CharSequence = text.orEmpty()
 }
