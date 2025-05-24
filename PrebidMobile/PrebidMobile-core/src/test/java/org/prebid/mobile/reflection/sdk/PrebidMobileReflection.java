@@ -35,4 +35,7 @@ public class PrebidMobileReflection {
         PrebidContextHolder.clearContext();
     }
 
+    public static void setDisableStatusCheckToTrue() {
+        Reflection.setStaticVariableTo(PrebidMobile.class, "disableStatusCheck", true);
+    }
 }
