@@ -6,7 +6,7 @@
     <groupId>org.prebid</groupId>
     <artifactId>prebid-mobile-sdk-core</artifactId>
 
-    <version>3.0.1</version>
+    <version>3.0.2</version>
     <packaging>aar</packaging>
     <name>Prebid Mobile Android SDK</name>
     <description>Prebid Mobile</description>
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>androidx.annotation</groupId>
             <artifactId>annotation</artifactId>
-            <version>1.5.0</version>
+            <version>1.9.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
