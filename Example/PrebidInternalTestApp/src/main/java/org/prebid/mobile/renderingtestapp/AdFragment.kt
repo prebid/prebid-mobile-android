@@ -173,7 +173,8 @@ abstract class AdFragment : BaseFragment() {
 
     private fun addProgressDialog(view: View) {
         val keyShowProgressDialog = getString(R.string.key_show_progress_dialog)
-        val showProgressDialog = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(keyShowProgressDialog, false)
+        val showProgressDialog = PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .getBoolean(keyShowProgressDialog, false)
 
         if (showProgressDialog && view is ViewGroup) {
             val progressBar = ProgressBar(context)
