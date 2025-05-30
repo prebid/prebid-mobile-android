@@ -56,7 +56,7 @@ public class Video extends BaseBid {
 
     public int[] battr;
 
-    public Boolean skippable = null;
+    public Integer skippable = null;
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();

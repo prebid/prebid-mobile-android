@@ -694,6 +694,7 @@ public class BasicParameterBuilderTest {
         assertNull(video.pos);
         assertNull(video.playbackend);
         assertNull(video.startDelay);
+        assertNull(video.skippable);
     }
 
     @Test
@@ -733,6 +734,7 @@ public class BasicParameterBuilderTest {
 
         assertNull(video.pos);
         assertNull(video.playbackend);
+        assertEquals(Integer.valueOf(1), video.skippable);
     }
 
     @Test
@@ -1057,6 +1059,7 @@ public class BasicParameterBuilderTest {
         parameters.setPlcmt(Signals.Plcmt.Standalone);
         parameters.setLinearity(1);
         parameters.setStartDelay(Signals.StartDelay.PreRoll);
+        parameters.setSkippable(true);
 
         ArrayList<Signals.Protocols> protocols = new ArrayList<>(2);
         protocols.add(new Signals.Protocols(11));

@@ -290,7 +290,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
                 Boolean skippable = videoParameters.getSkippable();
                 if (skippable != null) {
-                    video.skippable = skippable;
+                    video.skippable = skippable ? 1 : 0;
                 }
             }
             if (video.placement == null && adConfiguration.isPlacementTypeValid()) {
