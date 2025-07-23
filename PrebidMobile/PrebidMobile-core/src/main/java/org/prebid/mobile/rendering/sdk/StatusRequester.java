@@ -63,7 +63,7 @@ public class StatusRequester implements Callable<String> {
                     resultHolder.resultReceived(null);
                     return;
                 }
-                resultHolder.resultReceived("Server status is not ok!");
+                resultHolder.resultReceived("Server status is not ok! Status code: " + response.statusCode);
             }
 
             @Override

@@ -53,7 +53,7 @@ public class StatusRequesterTest {
 
         String result = StatusRequester.makeRequest();
 
-        assertEquals("Server status is not ok!", result);
+        assertEquals("Server status is not ok! Status code: 404", result);
     }
 
     @Test

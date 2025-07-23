@@ -155,7 +155,7 @@ public class SdkInitializerTest {
 
         assertTrue(isSuccessful);
         assertTrue(PrebidMobile.isSdkInitialized());
-        assertEquals("Server status is not ok!", error);
+        assertEquals("Server status is not ok! Status code: 404", error);
         assertTrue(serverWarning);
     }
 
@@ -196,7 +196,7 @@ public class SdkInitializerTest {
 
         assertTrue(isSuccessful);
         assertTrue(PrebidMobile.isSdkInitialized());
-        assertEquals("Server status is not ok!", error);
+        assertEquals("Server status is not ok! Status code: 404", error);
         assertTrue(serverWarning);
     }
 
