@@ -1,0 +1,125 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx3g"
+
+jobs:
+  build-java-demo:
+    name: Build Java Demo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v3
+
+      - name: Assemble Java demo
+        run: ./gradlew PrebidDemoJava:assembleDebug
+
+  build-internal-test-app:
+    name: Build Internal Test App
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v3
+
+      - name: Assemble internal test app
+        run: ./gradlew PrebidInternalTestApp:assembleDebug
+
+  build-prebidmobile-frameworks:
+    name: Build PrebidMobile Frameworks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v3
+
+      - name: Build frameworks (no JAR)
+        run: scripts/buildPrebidMobile.sh -nojar
+
+  unit-tests:
+    name: Run Unit Tests - Prebid Mobile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v3
+
+      - name: Test Frameworks
+        run: scripts/testPrebidMobile.sh
+
+  ui-smoke-tests:
+    name: Run Smoke UI Tests - Demo App Kotlin - Android 11
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v3
+
+      - name: Assemble app & androidTest
+        run: ./gradlew PrebidDemoKotlin:assembleDebug PrebidDemoKotlin:assembleAndroidTest
+
+      - name: Launch emulator & run connected tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: google_apis
+          arch: x86_64
+          profile: pixel_5
+          script: ./gradlew PrebidDemoKotlin:connectedDebugAndroidTest
+          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -camera-back none -camera-front none
