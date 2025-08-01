@@ -2,6 +2,7 @@ name: Pull Request Checks
 
 on:
   pull_request:
+    types: [opened, reopened, synchronize, ready_for_review, labeled]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -11,50 +12,9 @@ env:
   GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx3g"
 
 jobs:
-  build-java-demo:
-    name: Build Java Demo
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v3
-
-      - name: Assemble Java demo
-        run: ./gradlew PrebidDemoJava:assembleDebug
-
-  build-internal-test-app:
-    name: Build Internal Test App
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v3
-
-      - name: Assemble internal test app
-        run: ./gradlew PrebidInternalTestApp:assembleDebug
-
   build-prebidmobile-frameworks:
     name: Build PrebidMobile Frameworks
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -76,6 +36,7 @@ jobs:
 
   unit-tests:
     name: Run Unit Tests - Prebid Mobile
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -95,8 +56,53 @@ jobs:
       - name: Test Frameworks
         run: scripts/testPrebidMobile.sh
 
+  build-java-demo:
+    name: Build Java Demo
+    if: ${{!github.event.pull_request.draft && (contains(github.head_ref, 'feature/release') || contains(toJson(github.event.pull_request.labels), 'run-full-tests'))}}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v3
+
+      - name: Assemble Java demo
+        run: ./gradlew PrebidDemoJava:assembleDebug
+
+  build-internal-test-app:
+    name: Build Internal Test App
+    if: ${{!github.event.pull_request.draft && (contains(github.head_ref, 'feature/release') || contains(toJson(github.event.pull_request.labels), 'run-full-tests'))}}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v3
+
+      - name: Assemble internal test app
+        run: ./gradlew PrebidInternalTestApp:assembleDebug
+
   ui-smoke-tests:
     name: Run Smoke UI Tests - Demo App Kotlin - Android 11
+    if: ${{!github.event.pull_request.draft && (contains(github.head_ref, 'feature/release') || contains(toJson(github.event.pull_request.labels), 'run-full-tests'))}}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
