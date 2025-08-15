@@ -76,8 +76,8 @@ public class BasicParameterBuilder extends ParameterBuilder {
     // 5 - VAST 2.0 Wrapper
     static final int[] SUPPORTED_VIDEO_PROTOCOLS = new int[]{2, 5};
 
-    // 2 - On Leaving Viewport or when Terminated by User
-    static final int VIDEO_INTERSTITIAL_PLAYBACK_END = 2;
+    // 1 - On Video Completion or when Terminated by User
+    static final int VIDEO_INTERSTITIAL_PLAYBACK_END = 1;
     //term to say cached locally as per Mopub & dfp - approved by product
     static final int VIDEO_DELIVERY_DOWNLOAD = 3;
     static final int VIDEO_LINEARITY_LINEAR = 1;
@@ -303,7 +303,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
             video.linearity = VIDEO_LINEARITY_LINEAR;
 
             //Interstitial video specific values
-            video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Leaving Viewport or when Terminated by User
+            video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Video Completion or when Terminated by User
 
             if (adConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
                 video.plcmt = Signals.Plcmt.Interstitial.getValue();

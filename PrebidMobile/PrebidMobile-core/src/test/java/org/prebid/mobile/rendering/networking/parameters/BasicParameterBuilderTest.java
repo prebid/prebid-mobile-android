@@ -759,7 +759,7 @@ public class BasicParameterBuilderTest {
         assertNull(video.h);
         assertEquals(new Integer(5), video.placement);
         assertEquals(new Integer(1), video.linearity);
-        assertEquals(new Integer(2), video.playbackend);
+        assertEquals(new Integer(1), video.playbackend);
         assertArrayEquals(new String[]{"video/mp4", "video/3gpp", "video/webm", "video/mkv"}, video.mimes);
         assertArrayEquals(new int[]{2, 5}, video.protocols);
         assertArrayEquals(new int[]{3}, video.delivery);
@@ -799,7 +799,7 @@ public class BasicParameterBuilderTest {
         assertEquals(new Integer(5), video.placement);
 
         assertEquals(new Integer(1), video.linearity);
-        assertEquals(new Integer(2), video.playbackend);
+        assertEquals(new Integer(1), video.playbackend);
         assertArrayEquals(new int[]{3}, video.delivery);
         assertArrayEquals(new String[]{"video/mp4", "video/3gpp", "video/webm", "video/mkv"}, video.mimes);
         assertArrayEquals(new int[]{2, 5}, video.protocols);
@@ -1183,7 +1183,7 @@ public class BasicParameterBuilderTest {
         video.linearity = BasicParameterBuilder.VIDEO_LINEARITY_LINEAR;
 
         //Interstitial video specific values
-        video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Leaving Viewport or when Terminated by User
+        video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Video Completion or when Terminated by User
         video.delivery = new int[]{BasicParameterBuilder.VIDEO_DELIVERY_DOWNLOAD};
         video.pos = AdPosition.FULLSCREEN.getValue();
 
