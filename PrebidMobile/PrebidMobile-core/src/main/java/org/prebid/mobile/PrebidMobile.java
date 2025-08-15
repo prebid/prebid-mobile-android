@@ -88,7 +88,7 @@ public class PrebidMobile {
     /**
      * Tested Google SDK version.
      */
-    public static final String TESTED_GOOGLE_SDK_VERSION = "24.4.0";
+    public static final String TESTED_GOOGLE_SDK_VERSION = "24.5.0";
 
     private static LogLevel logLevel = LogLevel.NONE;
     @Nullable
