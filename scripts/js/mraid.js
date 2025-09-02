@@ -266,6 +266,14 @@ var printDebug = function(messageBuilder) {};
 
 
         handlers.push(listener);
+
+        if(event === 'exposureChange') {
+            setTimeout(mraid.fireEvent, 0, 'exposureChange');
+        }
+
+        if(event === 'audioVolumeChange') {
+            setTimeout(mraid.fireEvent, 0, 'audioVolumeChange', mraid.volumePercentage);
+        }
     };
 
 
