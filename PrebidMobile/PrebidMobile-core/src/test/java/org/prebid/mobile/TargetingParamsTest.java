@@ -478,4 +478,63 @@ public class TargetingParamsTest extends BaseSetup {
         return new ArrayList<>(Arrays.asList(id1, id2, id3, id4, id5));
     }
 
+    @Test
+    public void testLocationDecimalPrecision_defaultValue() {
+        // Default should be null (no precision limit)
+        assertNull(TargetingParams.getLocationDecimalPrecision());
+    }
+
+    @Test
+    public void testLocationDecimalPrecision_setValidValues() {
+        // Test valid precision values
+        TargetingParams.setLocationDecimalPrecision(0);
+        assertEquals(Integer.valueOf(0), TargetingParams.getLocationDecimalPrecision());
+        
+        TargetingParams.setLocationDecimalPrecision(2);
+        assertEquals(Integer.valueOf(2), TargetingParams.getLocationDecimalPrecision());
+        
+        TargetingParams.setLocationDecimalPrecision(6);
+        assertEquals(Integer.valueOf(6), TargetingParams.getLocationDecimalPrecision());
+        
+        TargetingParams.setLocationDecimalPrecision(null);
+        assertNull(TargetingParams.getLocationDecimalPrecision());
+    }
+
+    @Test
+    public void testLocationDecimalPrecision_clampInvalidValues() {
+        // Test that invalid values are clamped
+        TargetingParams.setLocationDecimalPrecision(-5);
+        assertEquals(Integer.valueOf(0), TargetingParams.getLocationDecimalPrecision());
+        
+        TargetingParams.setLocationDecimalPrecision(10);
+        assertEquals(Integer.valueOf(6), TargetingParams.getLocationDecimalPrecision());
+    }
+
+    @Test
+    public void testUtilApplyLocationPrecision() {
+        // Test the Util.applyLocationPrecision method directly
+        float coordinate = 37.123456789f;
+        
+        // Test with null precision (no limit)
+        float result = Util.applyLocationPrecision(coordinate, null);
+        assertEquals(coordinate, result, 0.0f);
+        
+        // Test with precision 2
+        result = Util.applyLocationPrecision(coordinate, 2);
+        assertEquals(37.12f, result, 0.001f);
+        
+        // Test with precision 0 (whole numbers)
+        result = Util.applyLocationPrecision(coordinate, 0);
+        assertEquals(37.0f, result, 0.0f);
+        
+        // Test with negative precision (should return original)
+        result = Util.applyLocationPrecision(coordinate, -1);
+        assertEquals(coordinate, result, 0.0f);
+        
+        // Test with negative coordinates
+        float negativeCoord = -122.987654321f;
+        result = Util.applyLocationPrecision(negativeCoord, 2);
+        assertEquals(-122.99f, result, 0.001f);
+    }
+
 }

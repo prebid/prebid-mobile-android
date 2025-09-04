@@ -23,6 +23,7 @@ import android.util.Pair;
 import androidx.annotation.Nullable;
 
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.UserConsentUtils;
@@ -51,6 +52,13 @@ public class TargetingParams {
     private static Pair<Float, Float> userLatLon;
     private static Ext userExt;
     private static Boolean sendSharedId = false;
+    
+    /**
+     * Location decimal precision for geo-targeting. Default is null (no precision limit).
+     * Valid values: null (no limit), 0-6 decimal places
+     */
+    @Nullable
+    private static Integer locationDecimalPrecision = null;
 
 
     private static final Map<String, ExternalUserId> externalUserIdMap = new HashMap<>();
@@ -82,6 +90,53 @@ public class TargetingParams {
 
     public static Pair<Float, Float> getUserLatLng() {
         return userLatLon;
+    }
+
+    /**
+     * Sets the decimal precision for location coordinates (latitude/longitude) in geo-targeting.
+     * This helps control the precision of location data sent in ad requests for privacy purposes.
+     * 
+     * <p>Precision levels and their practical meaning:</p>
+     * <ul>
+     *   <li>null = No precision limit (default, maintains current behavior)</li>
+     *   <li>0 = Whole numbers (~111 km precision)</li>
+     *   <li>1 = ~11.1 km precision</li>
+     *   <li>2 = ~1.1 km precision</li>
+     *   <li>3 = ~110 m precision</li>
+     *   <li>4 = ~11 m precision</li>
+     *   <li>5 = ~1.1 m precision</li>
+     *   <li>6 = ~0.11 m precision (maximum recommended)</li>
+     * </ul>
+     * 
+     * <p>Values outside the 0-6 range will be clamped to valid range.</p>
+     * 
+     * @param precision Number of decimal places to keep, or null for no limit
+     */
+    public static void setLocationDecimalPrecision(@Nullable Integer precision) {
+        Integer originalPrecision = precision;
+        if (precision != null) {
+            if (precision < 0) {
+                precision = 0;
+            } else if (precision > 6) {
+                precision = 6;
+            }
+        }
+        TargetingParams.locationDecimalPrecision = precision;
+        
+        // Log precision changes for debugging
+        if (originalPrecision != null && !originalPrecision.equals(precision)) {
+            LogUtil.debug("Location precision clamped from " + originalPrecision + " to " + precision);
+        }
+    }
+
+    /**
+     * Gets the current decimal precision setting for location coordinates.
+     * 
+     * @return Current precision setting (null for no limit, 0-6 for decimal places)
+     */
+    @Nullable
+    public static Integer getLocationDecimalPrecision() {
+        return locationDecimalPrecision;
     }
 
     /**

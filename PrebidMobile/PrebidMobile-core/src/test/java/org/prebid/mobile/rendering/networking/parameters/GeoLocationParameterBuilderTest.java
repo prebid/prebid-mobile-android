@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.reflection.sdk.ManagersResolverReflection;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
@@ -104,5 +105,33 @@ public class GeoLocationParameterBuilderTest {
         builder.appendBuilderParameters(adRequestInput);
 
         assertEquals(new Geo().getJsonObject().toString(), adRequestInput.getBidRequest().getDevice().getGeo().getJsonObject().toString());
+    }
+
+    @Test
+    public void testLocationPrecisionApplied() throws Exception {
+        // Set precision to 2 decimal places
+        TargetingParams.setLocationDecimalPrecision(2);
+        
+        GeoLocationParameterBuilder builder = new GeoLocationParameterBuilder();
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        // Verify that coordinates are rounded to 2 decimal places
+        assertEquals(1.00f, adRequestInput.getBidRequest().getDevice().getGeo().lat, 0.001f);
+        assertEquals(-1.00f, adRequestInput.getBidRequest().getDevice().getGeo().lon, 0.001f);
+    }
+
+    @Test
+    public void testLocationPrecisionNoLimit() throws Exception {
+        // Set precision to no limit (null)
+        TargetingParams.setLocationDecimalPrecision(null);
+        
+        GeoLocationParameterBuilder builder = new GeoLocationParameterBuilder();
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        // Verify that coordinates maintain full precision
+        assertEquals(LATITUDE.floatValue(), adRequestInput.getBidRequest().getDevice().getGeo().lat, 0.0f);
+        assertEquals(LONGITUDE.floatValue(), adRequestInput.getBidRequest().getDevice().getGeo().lon, 0.0f);
     }
 }

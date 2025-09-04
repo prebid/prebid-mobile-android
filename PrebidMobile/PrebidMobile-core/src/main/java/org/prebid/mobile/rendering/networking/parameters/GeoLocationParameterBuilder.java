@@ -23,6 +23,8 @@ import android.telephony.TelephonyManager;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.Util;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.geo.Geo;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
@@ -63,8 +65,9 @@ public class GeoLocationParameterBuilder extends ParameterBuilder {
 
         Geo geo = adRequestInput.getBidRequest().getDevice().getGeo();
         if (latitude != null && longitude != null) {
-            geo.lat = latitude.floatValue();
-            geo.lon = longitude.floatValue();
+            Integer precision = TargetingParams.getLocationDecimalPrecision();
+            geo.lat = Util.applyLocationPrecision(latitude.floatValue(), precision);
+            geo.lon = Util.applyLocationPrecision(longitude.floatValue(), precision);
             geo.type = LOCATION_SOURCE_GPS;
             try {
 
