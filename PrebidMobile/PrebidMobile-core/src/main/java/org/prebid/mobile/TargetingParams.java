@@ -115,11 +115,7 @@ public class TargetingParams {
     public static void setLocationDecimalPrecision(@Nullable Integer precision) {
         Integer originalPrecision = precision;
         if (precision != null) {
-            if (precision < 0) {
-                precision = 0;
-            } else if (precision > 6) {
-                precision = 6;
-            }
+            precision = Math.max(Math.min(precision, 6), 0);
         }
         TargetingParams.locationDecimalPrecision = precision;
         
