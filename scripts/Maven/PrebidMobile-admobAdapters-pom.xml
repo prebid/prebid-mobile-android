@@ -58,7 +58,7 @@
         <dependency>
             <groupId>com.google.android.gms</groupId>
             <artifactId>play-services-ads</artifactId>
-            <version>24.5.0</version>
+            <version>24.6.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
