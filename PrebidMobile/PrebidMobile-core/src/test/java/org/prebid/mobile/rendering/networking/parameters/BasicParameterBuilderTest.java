@@ -1232,4 +1232,63 @@ public class BasicParameterBuilderTest {
         return user;
     }
 
+    @Test
+    public void testUserLocationPrecisionApplied() throws Exception {
+        // Set precision to 3 decimal places
+        TargetingParams.setLocationDecimalPrecision(3);
+        
+        // Set user location with high precision
+        TargetingParams.setUserLatLng(37.123456789f, -122.987654321f);
+        
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setAdFormat(AdFormat.BANNER);
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+        
+        // Verify that user coordinates are rounded to 3 decimal places
+        assertEquals(37.123f, adRequestInput.getBidRequest().getUser().getGeo().lat, 0.001f);
+        assertEquals(-122.988f, adRequestInput.getBidRequest().getUser().getGeo().lon, 0.001f);
+    }
+
+    @Test
+    public void testUserLocationPrecisionNoLimit() throws Exception {
+        // Set precision to no limit (null)
+        TargetingParams.setLocationDecimalPrecision(null);
+        
+        // Set user location with high precision
+        float testLat = 37.123456789f;
+        float testLon = -122.987654321f;
+        TargetingParams.setUserLatLng(testLat, testLon);
+        
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setAdFormat(AdFormat.BANNER);
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+        
+        // Verify that user coordinates maintain full precision
+        assertEquals(testLat, adRequestInput.getBidRequest().getUser().getGeo().lat, 0.0f);
+        assertEquals(testLon, adRequestInput.getBidRequest().getUser().getGeo().lon, 0.0f);
+    }
+
+    @Test
+    public void testUserLocationPrecisionZero() throws Exception {
+        // Set precision to 0 decimal places (integer only)
+        TargetingParams.setLocationDecimalPrecision(0);
+        
+        // Set user location
+        TargetingParams.setUserLatLng(37.789f, -122.456f);
+        
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setAdFormat(AdFormat.BANNER);
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+        
+        // Verify that user coordinates are rounded to integers
+        assertEquals(38.0f, adRequestInput.getBidRequest().getUser().getGeo().lat, 0.0f);
+        assertEquals(-122.0f, adRequestInput.getBidRequest().getUser().getGeo().lon, 0.0f);
+    }
+
 }

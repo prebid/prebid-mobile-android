@@ -35,6 +35,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.Util;
 import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -202,8 +203,9 @@ public class BasicParameterBuilder extends ParameterBuilder {
         final Pair<Float, Float> userLatLng = TargetingParams.getUserLatLng();
         if (userLatLng != null) {
             final Geo userGeo = user.getGeo();
-            userGeo.lat = userLatLng.first;
-            userGeo.lon = userLatLng.second;
+            Integer precision = TargetingParams.getLocationDecimalPrecision();
+            userGeo.lat = Util.applyLocationPrecision(userLatLng.first, precision);
+            userGeo.lon = Util.applyLocationPrecision(userLatLng.second, precision);
         }
     }
 

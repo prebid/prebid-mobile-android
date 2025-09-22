@@ -568,5 +568,48 @@ public class Util {
         }
         return uri;
     }
+
+    /**
+     * Applies location decimal precision to a coordinate value.
+     * 
+     * @param coordinate The coordinate value to round
+     * @param precision The precision level (null for no limit, 0-6 for decimal places)
+     * @return The coordinate rounded to the specified precision, or original value if precision is null
+     */
+    public static float applyLocationPrecision(float coordinate, @Nullable Integer precision) {
+        // Return original coordinate if precision is null (no limit)
+        if (precision == null) {
+            return coordinate;
+        }
+        
+        // Return original coordinate for invalid input (negative precision)
+        if (precision < 0) {
+            return coordinate;
+        }
+        
+        // Optimized path for precision 0 (rounding to whole numbers)
+        if (precision == 0) {
+            return Math.round(coordinate);
+        }
+        
+        // Calculate multiplier for rounding (e.g., precision 2 -> multiplier 100)
+        double multiplier = Math.pow(10.0, precision);
+        
+        // Guard against edge cases where multiplier becomes 0 or infinite
+        if (multiplier == 0.0 || !Double.isFinite(multiplier)) {
+            // For cases that result in 0/inf values of multiplier which can lead to unexpected behavior
+            return coordinate;
+        }
+        
+        // Round coordinate using standard rounding (round half up)
+        double roundedCoordinate = Math.round(coordinate * multiplier) / multiplier;
+        
+        // Ensure rounded value is finite (not NaN or infinite)
+        if (!Double.isFinite(roundedCoordinate)) {
+            return coordinate;
+        }
+        
+        return (float) roundedCoordinate;
+    }
 }
 
