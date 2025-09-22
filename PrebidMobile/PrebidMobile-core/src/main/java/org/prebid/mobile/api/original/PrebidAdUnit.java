@@ -8,10 +8,12 @@ import android.view.View;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.api.data.BidInfo;
+import org.prebid.mobile.rendering.models.AdPosition;
 
 import java.lang.ref.WeakReference;
 
@@ -25,6 +27,8 @@ public class PrebidAdUnit {
     private final String configId;
     @Nullable
     private MultiformatAdUnitFacade adUnit;
+    @Nullable
+    private AdPosition adPosition;
 
     protected boolean activateInterstitialPrebidImpressionTracker = false;
     protected WeakReference<View> adViewReference = new WeakReference<>(null);
@@ -118,6 +122,21 @@ public class PrebidAdUnit {
         }
     }
 
+    /**
+     * Sets ad position which be passed to ad configuration.
+     */
+    public void setAdPosition(AdPosition adPosition) {
+        this.adPosition = adPosition;
+    }
+
+    /**
+     * Returns ad position of the ad unit. Used only for testing purposes.
+     */
+    @VisibleForTesting
+    AdPosition getAdConfigurationPosition() {
+        if (adUnit == null) return null;
+        return adUnit.getConfiguration().getAdPosition();
+    }
 
     private void baseFetchDemand(
             @Nullable PrebidRequest request,
@@ -142,6 +161,9 @@ public class PrebidAdUnit {
         adUnit.activatePrebidImpressionTracker(adViewReference.get());
         if (activateInterstitialPrebidImpressionTracker) {
             adUnit.activateInterstitialPrebidImpressionTracker();
+        }
+        if (adPosition != null) {
+            adUnit.getConfiguration().setAdPosition(adPosition);
         }
 
         OnCompleteListenerImpl innerListener = new OnCompleteListenerImpl(adUnit, adObject, userListener);
