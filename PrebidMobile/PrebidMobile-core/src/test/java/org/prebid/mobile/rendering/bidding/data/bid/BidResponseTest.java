@@ -192,4 +192,24 @@ public class BidResponseTest {
         assertNull(subject.getExpirationTimeSeconds());
     }
 
+    @Test
+    public void testBidType_banner() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/bid_type_banner.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertFalse(subject.isVideo());
+    }
+
+    @Test
+    public void testBidType_video() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/bid_type_video.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertTrue(subject.isVideo());
+    }
+
 }
