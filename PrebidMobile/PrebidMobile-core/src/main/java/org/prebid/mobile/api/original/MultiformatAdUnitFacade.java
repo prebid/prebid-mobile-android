@@ -74,9 +74,6 @@ class MultiformatAdUnitFacade extends AdUnit {
     private void setConfigurationBasedOnRequest(
             @NonNull PrebidRequest request
     ) {
-        if (request.isInterstitial()) {
-            configuration.setAdPosition(AdPosition.FULLSCREEN);
-        }
 
         BannerParameters bannerParameters = request.getBannerParameters();
         if (bannerParameters != null) {
@@ -122,7 +119,11 @@ class MultiformatAdUnitFacade extends AdUnit {
         String gpid = request.getGpid();
         configuration.setGpid(gpid);
 
-        configuration.setAdPosition(request.getAdPosition());
+        if (request.isInterstitial()) {
+            configuration.setAdPosition(AdPosition.FULLSCREEN);
+        } else {
+            configuration.setAdPosition(request.getAdPosition());
+        }
     }
 
     @Nullable
