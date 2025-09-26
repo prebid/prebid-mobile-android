@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.models;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
@@ -30,6 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -129,6 +131,38 @@ public class CreativeModelMakerBidsTest {
         assertEquals(bid.getWidth(), creativeModel.getWidth());
         assertEquals(bid.getHeight(), creativeModel.getHeight());
         assertFalse(creativeModel.isRequireImpressionUrl());
+    }
+
+    @Test
+    public void bidType_banner() {
+        when(mockJsManager.checkIfScriptsDownloadedAndStartDownloadingIfNot()).thenReturn(true);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        BidResponse bidResponse = new BidResponse(ResourceUtils.convertResourceToString("bidding_response_obj.json"), new AdUnitConfiguration());
+        ArgumentCaptor<CreativeModelsMaker.Result> resultArgumentCaptor = ArgumentCaptor.forClass(CreativeModelsMaker.Result.class);
+        modelMakerBids.makeModels(configuration, bidResponse);
+
+        verify(mockLoadListener).onCreativeModelReady(resultArgumentCaptor.capture());
+        CreativeModel creativeModel = resultArgumentCaptor.getValue().creativeModels.get(0);
+        Bid bid = bidResponse.getSeatbids().get(0).getBids().get(0);
+        assertEquals("HTML", creativeModel.getName());
+        assertEquals(bid.getAdm(), creativeModel.getHtml());
+        assertEquals(bid.getWidth(), creativeModel.getWidth());
+        assertEquals(bid.getHeight(), creativeModel.getHeight());
+        assertFalse(creativeModel.isRequireImpressionUrl());
+    }
+
+    @Test
+    public void bidType_video() {
+        when(mockJsManager.checkIfScriptsDownloadedAndStartDownloadingIfNot()).thenReturn(true);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        BidResponse bidResponse = new BidResponse(ResourceUtils.convertResourceToString("auction_response_video_type.json"), new AdUnitConfiguration());
+        ArgumentCaptor<CreativeModelsMaker.Result> resultArgumentCaptor = ArgumentCaptor.forClass(CreativeModelsMaker.Result.class);
+        modelMakerBids.makeModels(configuration, bidResponse);
+
+        assertTrue(configuration.isAdType(AdFormat.VAST));
+        verify(mockExtractor, Mockito.times(1)).extract(any());
     }
 
     @Test

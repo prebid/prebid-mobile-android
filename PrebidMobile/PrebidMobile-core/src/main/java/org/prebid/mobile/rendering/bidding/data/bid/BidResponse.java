@@ -31,7 +31,6 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.utils.helpers.Dips;
-import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -225,10 +224,9 @@ public class BidResponse {
 
     public boolean isVideo() {
         Bid bid = getWinningBid();
-        if (bid != null) {
-            return Utils.isVast(bid.getAdm());
-        }
-        return false;
+        if (bid == null) return false;
+
+        return "video".equals(bid.getType());
     }
 
     public String getPreferredPluginRendererName() {

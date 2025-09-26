@@ -47,6 +47,7 @@ public class Prebid {
     private Cache cache;
     private HashMap<String, String> targeting = new HashMap<>();
     private HashMap<String, String> meta = new HashMap<>();
+    @Nullable
     private String type;
     private String winEventUrl;
     private String impEventUrl;
@@ -69,6 +70,7 @@ public class Prebid {
         return meta;
     }
 
+    @Nullable
     public String getType() {
         return type;
     }
