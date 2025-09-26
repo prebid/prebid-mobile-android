@@ -21,7 +21,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -44,7 +46,7 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
     private long videoDuration;
     private VideoCreativeViewListener trackEventListener;
     private boolean start, firstQuartile, midpoint, thirdQuartile;
-    private long vastVideoDuration = -1;
+    private long vastTagDuration = -1;
     private Handler mainHandler;
     private AdUnitConfiguration config;
     @Nullable
@@ -96,25 +98,25 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
                                         // If the new current value is 0 while the old current value is > 0,
                                         // it means the video has ended so set the new current to the duration
                                         // to end the AsyncTask
-                                        long newCurrent = videoView.getCurrentPosition();
+                                        long videoPlayerPosition = videoView.getCurrentPosition();
 
-                                        if (vastVideoDuration != -1 && newCurrent >= vastVideoDuration) {
+                                        if (vastTagDuration != -1 && videoPlayerPosition >= vastTagDuration) {
                                             LogUtil.debug(
                                                     VideoCreativeView.class.getName(),
-                                                    "VAST duration reached, video interrupted. VAST duration:" + vastVideoDuration + " ms, Video duration: " + videoDuration + " ms"
+                                                    "VAST duration reached, video interrupted. VAST duration:" + vastTagDuration + " ms, Video duration: " + videoDuration + " ms"
                                             );
                                             videoView.forceStop();
                                         }
 
-                                        if (autoCloseTime != null && newCurrent >= autoCloseTime) {
+                                        if (autoCloseTime != null && videoPlayerPosition >= autoCloseTime) {
                                             LogUtil.debug("Auto close time reached. Auto close time: " + autoCloseTime + " ms");
                                             videoView.forceStop();
                                         }
 
-                                        if (newCurrent == 0 && current > 0) {
+                                        if (videoPlayerPosition == 0 && current > 0) {
                                             current = videoDuration;
                                         } else {
-                                            current = newCurrent;
+                                            current = videoPlayerPosition;
                                         }
                                     }
                                 }
@@ -203,8 +205,8 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
         return thirdQuartile;
     }
 
-    public void setVastVideoDuration(long vastVideoDuration) {
-        this.vastVideoDuration = vastVideoDuration;
+    public void setVastTagDuration(long vastTagDuration) {
+        this.vastTagDuration = vastTagDuration;
     }
 
 

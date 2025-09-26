@@ -16,7 +16,19 @@
 
 package org.prebid.mobile.rendering.video;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import android.view.View;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,9 +43,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.lang.reflect.Field;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -87,10 +96,10 @@ public class AdViewProgressUpdateTaskTest {
 
     @Test
     public void setVastVideoDurationTest() throws IllegalAccessException, NoSuchFieldException {
-        Field vastDurationField = WhiteBox.field(AdViewProgressUpdateTask.class, "vastVideoDuration");
+        Field vastDurationField = WhiteBox.field(AdViewProgressUpdateTask.class, "vastTagDuration");
         assertEquals((long) -1, vastDurationField.get(adViewProgressTask));
 
-        adViewProgressTask.setVastVideoDuration(10);
+        adViewProgressTask.setVastTagDuration(10);
         assertEquals((long) 10, vastDurationField.get(adViewProgressTask));
     }
 
