@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerParameters;
 import org.prebid.mobile.ContentObject;
-import org.prebid.mobile.DataObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
@@ -21,12 +20,9 @@ import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 
@@ -66,8 +62,13 @@ public class AdUnitConfiguration {
     private Position skipButtonPosition = Position.TOP_RIGHT;
     private AdSize minSizePercentage;
     private PlacementType placementType;
+
+    /**
+     * Global ad position for all ad units.
+     */
     @NonNull
     private AdPosition adPosition = AdPosition.UNDEFINED;
+
     @Nullable
     private ContentObject appContent;
     private BannerParameters bannerParameters;
@@ -150,6 +151,7 @@ public class AdUnitConfiguration {
         bannerParameters = parameters;
     }
 
+    @Nullable
     public BannerParameters getBannerParameters() {
         return bannerParameters;
     }
@@ -158,6 +160,7 @@ public class AdUnitConfiguration {
         videoParameters = parameters;
     }
 
+    @Nullable
     public VideoParameters getVideoParameters() {
         return videoParameters;
     }

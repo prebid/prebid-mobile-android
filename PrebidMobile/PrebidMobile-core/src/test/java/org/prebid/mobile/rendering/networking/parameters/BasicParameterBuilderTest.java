@@ -45,7 +45,6 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.BannerParameters;
-import org.prebid.mobile.DataObject;
 import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.NativeTitleAsset;
 import org.prebid.mobile.PrebidMobile;
@@ -84,7 +83,6 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @RunWith(RobolectricTestRunner.class)
@@ -194,6 +192,31 @@ public class BasicParameterBuilderTest {
 
         Native nativeObj = imp.nativeObj;
         assertNotNull(nativeObj);
+    }
+
+    @Test
+    public void multiformat_globalAdPosition() {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setAdPosition(AdPosition.FOOTER);
+
+        BannerParameters bannerParams = new BannerParameters();
+        config.setBannerParameters(bannerParams);
+
+        VideoParameters videoParameters = new VideoParameters(Lists.newArrayList("video/mp4"));
+        config.setVideoParameters(videoParameters);
+
+        config.setAdFormats(EnumSet.of(AdFormat.BANNER, AdFormat.VAST));
+
+        BidRequest bidRequest = configIntoBidRequest(config);
+        Imp imp = bidRequest.getImp().get(0);
+        assertNotNull(imp);
+        Banner banner = imp.banner;
+        assertNotNull(banner);
+        assertEquals(Integer.valueOf(AdPosition.FOOTER.getValue()), banner.pos);
+
+        Video video = imp.video;
+        assertNotNull(video);
+        assertEquals(Integer.valueOf(AdPosition.FOOTER.getValue()), video.pos);
     }
 
     private BidRequest configIntoBidRequest(AdUnitConfiguration config) {

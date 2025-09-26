@@ -10,8 +10,6 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerParameters;
-import org.prebid.mobile.ContentObject;
-import org.prebid.mobile.DataObject;
 import org.prebid.mobile.NativeAsset;
 import org.prebid.mobile.NativeParameters;
 import org.prebid.mobile.NativeTitleAsset;
@@ -24,9 +22,7 @@ import org.prebid.mobile.rendering.models.PlacementType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 public class MultiformatAdUnitFacadeTest {
 
@@ -42,6 +38,28 @@ public class MultiformatAdUnitFacadeTest {
         AdUnitConfiguration configuration = subject.getConfiguration();
 
         assertEquals(configId, configuration.getConfigId());
+    }
+
+    @Test
+    public void configuration_gpid() {
+        PrebidRequest request = new PrebidRequest();
+        request.setGpid("testgpid");
+
+        subject = new MultiformatAdUnitFacade(configId, request);
+        AdUnitConfiguration configuration = subject.getConfiguration();
+
+        assertEquals("testgpid", configuration.getGpid());
+    }
+
+    @Test
+    public void configuration_position() {
+        PrebidRequest request = new PrebidRequest();
+        request.setAdPosition(AdPosition.FOOTER);
+
+        subject = new MultiformatAdUnitFacade(configId, request);
+        AdUnitConfiguration configuration = subject.getConfiguration();
+
+        assertEquals(AdPosition.FOOTER, configuration.getAdPosition());
     }
 
     @Test
