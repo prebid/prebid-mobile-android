@@ -19,7 +19,6 @@ import org.prebid.mobile.renderingtestapp.databinding.FragmentAdmobNativeBinding
 import org.prebid.mobile.renderingtestapp.databinding.ViewNativeAdBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 
 class AdMobNativeFragment : AdFragment() {
 
@@ -34,14 +33,12 @@ class AdMobNativeFragment : AdFragment() {
 
     private val binding: FragmentAdmobNativeBinding
         get() = getBinding()
-    private lateinit var events: Events
+    protected val events by lazy { Events(binding.root) }
 
     override val layoutRes = R.layout.fragment_admob_native
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-
-        events = Events(view)
 
         binding.adIdLabel.text = getString(R.string.label_auid, configId)
         binding.btnLoad.setOnClickListener {
@@ -149,7 +146,7 @@ class AdMobNativeFragment : AdFragment() {
         wrapper.addView(binding.root)
     }
 
-    private class Events(parentView: View) : BaseEvents(parentView) {
+    protected class Events(parentView: View) : BaseEvents(parentView) {
 
         fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
         fun opened(b: Boolean) = enable(R.id.btnAdOpened, b)

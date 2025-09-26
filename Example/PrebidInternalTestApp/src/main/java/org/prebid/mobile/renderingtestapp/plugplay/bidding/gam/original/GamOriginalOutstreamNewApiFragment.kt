@@ -44,10 +44,9 @@ class GamOriginalOutstreamNewApiFragment : AdFragment() {
 
     private val binding: FragmentBiddingBannerVideoBinding
         get() = getBinding()
-    private lateinit var events: Events
+    protected val events by lazy { Events(binding.root) }
 
     override fun initAd(): Any? {
-        events = Events(view!!)
         adUnit = BannerAdUnit(
             configId,
             width,
@@ -111,7 +110,7 @@ class GamOriginalOutstreamNewApiFragment : AdFragment() {
     override val layoutRes: Int = R.layout.fragment_bidding_banner_video
 
 
-    private class Events(parentView: View) : BaseEvents(parentView) {
+    protected class Events(parentView: View) : BaseEvents(parentView) {
 
         fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
         fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)

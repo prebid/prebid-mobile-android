@@ -46,7 +46,7 @@ open class GamOriginalMultiformatBannerVideoNativeStylesFragment : AdFragment() 
 
     override val layoutRes = R.layout.fragment_bidding_multiformat
 
-    private lateinit var events: Events
+    protected val events by lazy { Events(binding.root) }
     private var prebidAdUnit: PrebidAdUnit? = null
     private val params = arrayOf(Params.BANNER, Params.VIDEO, Params.NATIVE)
     private val binding: FragmentBiddingMultiformatBinding get() = getBinding()
@@ -58,7 +58,6 @@ open class GamOriginalMultiformatBannerVideoNativeStylesFragment : AdFragment() 
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        events = Events(view)
         initButtons()
     }
 
@@ -198,7 +197,7 @@ open class GamOriginalMultiformatBannerVideoNativeStylesFragment : AdFragment() 
         prebidAdUnit?.destroy()
     }
 
-    private class Events(parentView: View) : BaseEvents(parentView) {
+    protected class Events(parentView: View) : BaseEvents(parentView) {
 
         fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
         fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)

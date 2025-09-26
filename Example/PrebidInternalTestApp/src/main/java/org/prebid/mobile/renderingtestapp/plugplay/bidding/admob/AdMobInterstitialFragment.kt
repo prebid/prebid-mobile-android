@@ -18,7 +18,6 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentAdmobRewardedBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 import java.util.*
 
 open class AdMobInterstitialFragment : AdFragment() {
@@ -35,14 +34,12 @@ open class AdMobInterstitialFragment : AdFragment() {
 
     protected val binding: FragmentAdmobRewardedBinding
         get() = getBinding()
-    protected lateinit var events: Events
+    protected val events by lazy { Events(binding.root) }
 
     override val layoutRes = R.layout.fragment_admob_rewarded
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-
-        events = Events(view)
 
         binding.adIdLabel.text = getString(R.string.label_auid, configId)
         binding.btnLoad.setOnClickListener {

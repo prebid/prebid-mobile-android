@@ -43,11 +43,10 @@ open class PpmNativeFragment : AdFragment() {
 
     protected val binding: FragmentNativeBinding
         get() = getBinding()
-    protected lateinit var events: Events
+    protected val events by lazy { Events(binding.root) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        events = Events(view)
 
         if (layoutRes == R.layout.fragment_native) {
             layoutInflater.inflate(

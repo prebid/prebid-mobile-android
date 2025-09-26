@@ -38,7 +38,7 @@ class GamOutstreamFragment : AdFragment(), BannerViewListener {
     override val layoutRes: Int = R.layout.fragment_bidding_banner_video
 
     protected var bannerView: BannerView? = null
-    protected lateinit var events: Events
+    protected val events by lazy { Events(binding.root) }
     protected val binding: FragmentBiddingBannerVideoBinding
         get() = getBinding()
 
@@ -51,7 +51,6 @@ class GamOutstreamFragment : AdFragment(), BannerViewListener {
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        events = Events(view)
         binding.adIdLabel.text = getString(R.string.label_auid, configId)
         binding.btnLoad.setOnClickListener {
             resetEventButtons()

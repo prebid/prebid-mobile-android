@@ -31,11 +31,11 @@ open class MaxRewardedFragment : AdFragment() {
 
     private val binding: FragmentBiddingRewardedApplovinMaxBinding
         get() = getBinding()
-    private lateinit var events: Events
+    protected val events by lazy { Events(binding.root) }
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        events = Events(view)
+
         binding.adIdLabel.text = getString(R.string.label_auid, configId)
         binding.btnLoad.setOnClickListener {
             handleLoadButtonClick()
