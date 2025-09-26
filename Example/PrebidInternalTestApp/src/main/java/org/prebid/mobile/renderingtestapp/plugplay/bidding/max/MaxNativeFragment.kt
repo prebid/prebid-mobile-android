@@ -34,12 +34,11 @@ open class MaxNativeFragment : AdFragment() {
 
     private val binding: FragmentBiddingNativeApplovinMaxBinding
         get() = getBinding()
-    private lateinit var events: Events
+    protected val events by lazy { Events(binding.root) }
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
 
-        events = Events(view)
         binding.adIdLabel.text = getString(R.string.label_auid, configId)
         binding.btnLoad.setOnClickListener {
             resetAdEvents()

@@ -32,7 +32,6 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 
 open class GamOriginalBannerFragment : AdFragment() {
     companion object {
@@ -46,7 +45,7 @@ open class GamOriginalBannerFragment : AdFragment() {
 
     private val binding: FragmentBiddingBannerBinding
         get() = getBinding()
-    private lateinit var events: Events
+    protected val events by lazy { Events(binding.root) }
 
     open fun createAdUnit(): BannerAdUnit {
         val adUnit = BannerAdUnit(configId, width, height)
@@ -58,7 +57,7 @@ open class GamOriginalBannerFragment : AdFragment() {
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        events = Events(view)
+
         binding.adIdLabel.text = getString(R.string.label_auid, configId)
         binding.btnLoad.setOnClickListener {
             resetEventButtons()
@@ -127,7 +126,7 @@ open class GamOriginalBannerFragment : AdFragment() {
         adUnit?.destroy()
     }
 
-    private class Events(parentView: View) : BaseEvents(parentView) {
+    protected class Events(parentView: View) : BaseEvents(parentView) {
 
         fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
         fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)

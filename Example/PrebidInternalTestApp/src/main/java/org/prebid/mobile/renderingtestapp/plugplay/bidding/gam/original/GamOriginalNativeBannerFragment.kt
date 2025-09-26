@@ -3,8 +3,6 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.RelativeLayout
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
@@ -18,7 +16,6 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 class GamOriginalNativeBannerFragment : AdFragment() {
 
@@ -31,11 +28,10 @@ class GamOriginalNativeBannerFragment : AdFragment() {
 
     private val binding: FragmentBiddingBannerBinding
         get() = getBinding()
-    private lateinit var events: Events
+    protected val events by lazy { Events(binding.root) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        events = Events(view)
         binding.btnLoad.setOnClickListener {
             resetEventButtons()
             loadAd()
@@ -147,7 +143,7 @@ class GamOriginalNativeBannerFragment : AdFragment() {
         nativeAdUnit?.destroy()
     }
 
-    private class Events(parentView: View) : BaseEvents(parentView) {
+    class Events(parentView: View) : BaseEvents(parentView) {
 
         fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
         fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)

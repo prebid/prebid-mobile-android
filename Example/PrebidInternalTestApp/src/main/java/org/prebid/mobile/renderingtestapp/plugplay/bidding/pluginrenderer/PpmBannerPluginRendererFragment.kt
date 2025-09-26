@@ -28,7 +28,6 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
 
 open class PpmBannerPluginRendererFragment : AdFragment(), BannerViewListener {
@@ -42,7 +41,7 @@ open class PpmBannerPluginRendererFragment : AdFragment(), BannerViewListener {
     protected val binding: FragmentBiddingBannerBinding
         get() = getBinding()
 
-    protected lateinit var events: Events
+    protected val events by lazy { Events(binding.root) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +50,7 @@ open class PpmBannerPluginRendererFragment : AdFragment(), BannerViewListener {
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        events = Events(view)
+
         binding.adIdLabel.text = getString(R.string.label_auid, configId)
         binding.btnLoad.setOnClickListener {
             resetEventButtons()
