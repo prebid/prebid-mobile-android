@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import android.widget.ProgressBar
+import androidx.annotation.CallSuper
 import androidx.preference.PreferenceManager
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.prebid.mobile.*
@@ -58,6 +59,7 @@ abstract class AdFragment : BaseFragment() {
 
     private var adView: Any? = null
 
+    @CallSuper
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         arguments?.let {
             configId = it.getString(getString(R.string.key_bid_config_id), "")

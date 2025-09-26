@@ -39,12 +39,11 @@ abstract class BaseBidInterstitialFragment : AdFragment(),
 
     protected val binding: FragmentBiddingInterstitialBinding
         get() = getBinding()
-    protected lateinit var events: Events
+    protected val events by lazy { Events(binding.root) }
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
 
-        events = Events(view)
         binding.btnLoad.setOnClickListener {
             handleLoadInterstitialClick()
         }

@@ -32,13 +32,12 @@ open class MaxBannerFragment : AdFragment() {
 
     protected val binding: FragmentBiddingBannerApplovinMaxBinding
         get() = getBinding()
-    protected lateinit var events: Events
+    protected val events by lazy { Events(binding.root) }
 
     override fun configuratorMode() = AdConfiguratorDialogFragment.AdConfiguratorMode.BANNER
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        events = Events(view)
         binding.adIdLabel.text = getString(R.string.label_auid, configId)
         binding.btnLoad.setOnClickListener {
             resetAdEvents()
