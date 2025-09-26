@@ -19,13 +19,20 @@ package org.prebid.mobile.rendering.video;
 import android.content.Context;
 import android.net.Uri;
 import android.widget.RelativeLayout;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import com.google.android.exoplayer2.*;
+
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.PlaybackException;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -220,7 +227,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
                     (int) player.getDuration(),
                     config
             );
-            adViewProgressUpdateTask.setVastVideoDuration(vastVideoDuration);
+            adViewProgressUpdateTask.setVastTagDuration(vastVideoDuration);
             adViewProgressUpdateTask.execute();
         }
         catch (AdException e) {

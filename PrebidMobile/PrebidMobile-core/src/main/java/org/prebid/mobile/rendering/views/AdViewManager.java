@@ -348,6 +348,11 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     }
 
     public void show() {
+        if (isPlaying()) {
+            LogUtil.debug(TAG, "Video already playing. Ignoring new start.");
+            return;
+        }
+
         if (!isCreativeResolved()) {
             LogUtil.debug(TAG, "Couldn't proceed show(): Video or HTML is not resolved.");
             return;
