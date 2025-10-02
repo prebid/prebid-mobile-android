@@ -31,16 +31,20 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.utils.helpers.Dips;
+import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class BidResponse {
+
     private final static String TAG = BidResponse.class.getSimpleName();
+
     public static final String KEY_CACHE_ID = "hb_cache_id_local";
     public static final String KEY_RENDERER_NAME = "rendererName";
     public static final String KEY_RENDERER_VERSION = "rendererVersion";
+    public static final String TYPE_VIDEO = "video";
 
     // ID of the bid request to which this is a response
     private String id;
@@ -226,7 +230,12 @@ public class BidResponse {
         Bid bid = getWinningBid();
         if (bid == null) return false;
 
-        return "video".equals(bid.getType());
+        String type = bid.getType();
+        if (type != null && !type.isEmpty()) {
+            return type.equals(TYPE_VIDEO);
+        }
+
+        return Utils.isVast(bid.getAdm());
     }
 
     public String getPreferredPluginRendererName() {
