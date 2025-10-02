@@ -212,4 +212,24 @@ public class BidResponseTest {
         assertTrue(subject.isVideo());
     }
 
+    @Test
+    public void testBidType_noType_htmlContent() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/bid_type_none_with_html_content.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertFalse(subject.isVideo());
+    }
+
+    @Test
+    public void testBidType_noType_videoContent() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/bid_type_none_with_vast_content.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertTrue(subject.isVideo());
+    }
+
 }
