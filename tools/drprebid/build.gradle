@@ -34,20 +34,18 @@ dependencies {
 
     implementation project(':PrebidMobile')
 
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.constraintlayout
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation libs.androidx.recyclerview
 
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation libs.androidx.lifecycle.extensions
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.0.0'
 
     implementation 'com.google.android.gms:play-services-vision:17.0.2'
     implementation 'com.google.android.gms:play-services-ads:17.1.3'
 
-    implementation 'com.squareup.okhttp3:okhttp:3.14.2'
+    implementation libs.okhttp
 
-    implementation 'androidx.multidex:multidex:2.0.1'
-
-
+    implementation libs.androidx.multidex
 }

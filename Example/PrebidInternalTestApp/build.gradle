@@ -59,9 +59,6 @@ android {
 }
 
 dependencies {
-    def nav_version = "2.3.1"
-    def lifecycle_version = "2.2.0"
-
     implementation project(':PrebidMobile')
     implementation project(':PrebidMobile-gamEventHandlers')
     implementation project(':PrebidMobile-admobAdapters')
@@ -74,51 +71,51 @@ dependencies {
 //    implementation "org.prebid:prebid-mobile-sdk-max-adapters:$prebidSdkVersionName"
 
     // Base dependencies
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.annotation:annotation:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation 'androidx.preference:preference-ktx:1.1.1'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation libs.kotlin.stdlib
+    implementation libs.androidx.annotation
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.recyclerview
+    implementation libs.androidx.lifecycle.extensions
+    implementation libs.androidx.preference.ktx
+    implementation libs.androidx.vectordrawable.animated
+    implementation libs.androidx.lifecycle.viewmodel.ktx
 
     // Ad dependencies
-    implementation 'com.google.android.gms:play-services-base:18.1.0'
+    implementation libs.google.play.services.base
     implementation libs.google.play.services.ads
-    implementation "com.applovin:applovin-sdk:13.1.0"
-    implementation "com.google.android.gms:play-services-ads-identifier:18.0.1" // For Applovin Max
+    implementation libs.applovin.sdk
+    implementation libs.google.play.services.ads.identifier // For Applovin Max
 
 
     // Navigation component
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation libs.androidx.navigation.fragment.ktx
+    implementation libs.androidx.navigation.ui.ktx
 
     // Mock server
-    implementation('com.squareup.okhttp3:mockwebserver:4.9.2') {
+    implementation(libs.okhttp.mockwebserver) {
         exclude group: 'junit'
     }
-    implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
+    implementation libs.androidx.espresso.idling.resource
 
     // Helper
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'com.github.RobertApikyan:SegmentedControl:1.1.3'
+    implementation libs.gson
+    implementation libs.glide
+    implementation libs.androidx.multidex
+    implementation libs.segmentedcontrol
 
     // Android tests
-    androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.5.4'
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    androidTestImplementation 'androidx.test:rules:1.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-web:3.4.0'
-    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
-    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    androidTestImplementation libs.robotium.solo
+    androidTestImplementation libs.androidx.test.runner
+    androidTestImplementation libs.androidx.test.rules
+    androidTestImplementation libs.androidx.espresso.core
+    androidTestImplementation libs.androidx.espresso.intents
+    androidTestImplementation libs.androidx.espresso.web
+    androidTestImplementation libs.androidx.annotation
+    androidTestImplementation libs.androidx.uiautomator
 
     // Video player
-    implementation 'com.google.android.exoplayer:exoplayer:2.15.1'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.15.1'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.15.1'
-    implementation 'com.google.android.exoplayer:extension-ima:2.15.1'
+    implementation libs.exoplayer
+    implementation libs.exoplayer.core
+    implementation libs.exoplayer.ui
+    implementation libs.extension.ima
 }
