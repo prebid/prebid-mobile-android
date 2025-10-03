@@ -15,8 +15,8 @@ android {
         multiDexEnabled true
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     buildFeatures {
         dataBinding true
@@ -28,16 +28,16 @@ android {
 }
 
 dependencies {
-    implementation project(':PrebidMobile')
-    implementation project(':PrebidMobile-gamEventHandlers')
-    implementation project(':PrebidMobile-admobAdapters')
-    implementation project(':PrebidMobile-maxAdapters')
+   implementation project(':PrebidMobile')
+   implementation project(':PrebidMobile-gamEventHandlers')
+   implementation project(':PrebidMobile-admobAdapters')
+   implementation project(':PrebidMobile-maxAdapters')
 
-    // For testing staging releases
-//    implementation "org.prebid:prebid-mobile-sdk:$prebidSdkVersionName"
-//    implementation "org.prebid:prebid-mobile-sdk-gam-event-handlers:$prebidSdkVersionName"
-//    implementation "org.prebid:prebid-mobile-sdk-admob-adapters:$prebidSdkVersionName"
-//    implementation "org.prebid:prebid-mobile-sdk-max-adapters:$prebidSdkVersionName"
+    // For testing SNAPSHOT releases
+    // implementation "org.prebid:prebid-mobile-sdk:$prebidSdkVersionName-SNAPSHOT"
+    // implementation "org.prebid:prebid-mobile-sdk-gam-event-handlers:$prebidSdkVersionName-SNAPSHOT"
+    // implementation "org.prebid:prebid-mobile-sdk-admob-adapters:$prebidSdkVersionName-SNAPSHOT"
+    // implementation "org.prebid:prebid-mobile-sdk-max-adapters:$prebidSdkVersionName-SNAPSHOT"
 
     // Standard libraries
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
