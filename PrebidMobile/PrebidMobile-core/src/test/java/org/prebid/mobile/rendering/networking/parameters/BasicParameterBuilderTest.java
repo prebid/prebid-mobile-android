@@ -73,6 +73,7 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
+import org.prebid.mobile.rendering.video.vast.Ad;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -761,7 +762,85 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
-    public void testRenderingApiVideoParameters_empty() {
+    public void testRenderingApiVideoParameters_interstitial_empty() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(false);
+        configuration.setAdFormat(AdFormat.VAST);
+        configuration.addAdFormat(AdFormat.INTERSTITIAL);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+            configuration,
+            context.getResources(),
+            browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+        BidRequest bidRequest = adRequestInput.getBidRequest();
+        Imp imp = bidRequest.getImp().iterator().next();
+
+        Video video = imp.getVideo();
+        assertNotNull(video);
+        assertNull(video.w);
+        assertNull(video.h);
+        assertEquals(new Integer(5), video.placement);
+        assertEquals(new Integer(1), video.linearity);
+        assertEquals(new Integer(1), video.playbackend);
+        assertArrayEquals(new String[]{"video/mp4", "video/3gpp", "video/webm", "video/mkv"}, video.mimes);
+        assertArrayEquals(new int[]{2, 5}, video.protocols);
+        assertArrayEquals(new int[]{3}, video.delivery);
+
+        assertNull(video.minduration);
+        assertNull(video.maxduration);
+        assertNull(video.api);
+        assertNull(video.minbitrate);
+        assertNull(video.maxbitrate);
+        assertNull(video.playbackmethod);
+        assertNull(video.pos);
+        assertNull(video.startDelay);
+    }
+
+
+    @Test
+    public void testRenderingApiVideoParameters_interstitial_full() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(false);
+        configuration.setAdFormat(AdFormat.VAST);
+        configuration.addAdFormat(AdFormat.INTERSTITIAL);
+        configuration.setVideoParameters(createFullVideoParameters());
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+            configuration,
+            context.getResources(),
+            browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+        BidRequest bidRequest = adRequestInput.getBidRequest();
+        Imp imp = bidRequest.getImp().iterator().next();
+
+        Video video = imp.getVideo();
+        assertNotNull(video);
+        assertNotNull(video.w);
+        assertNotNull(video.h);
+        assertEquals(new Integer(5), video.placement);
+        assertEquals(new Integer(1), video.linearity);
+        assertEquals(new Integer(1), video.playbackend);
+        assertArrayEquals(new int[]{3}, video.delivery);
+        assertArrayEquals(new String[]{"video/mp4", "video/3gpp", "video/webm", "video/mkv"}, video.mimes);
+        assertArrayEquals(new int[]{2, 5}, video.protocols);
+
+        assertNull(video.minduration);
+        assertNull(video.maxduration);
+        assertNull(video.api);
+        assertNull(video.minbitrate);
+        assertNull(video.maxbitrate);
+        assertNull(video.playbackmethod);
+        assertNull(video.pos);
+        assertNull(video.startDelay);
+    }
+
+    @Test
+    public void testRenderingApiVideoParameters_nonInterstitial_empty() {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsOriginalAdUnit(false);
         configuration.setAdFormat(AdFormat.VAST);
@@ -799,7 +878,7 @@ public class BasicParameterBuilderTest {
 
 
     @Test
-    public void testRenderingApiVideoParameters_full() {
+    public void testRenderingApiVideoParameters_nonInterstitial_full() {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsOriginalAdUnit(false);
         configuration.setAdFormat(AdFormat.VAST);
@@ -820,7 +899,6 @@ public class BasicParameterBuilderTest {
         assertNotNull(video.w);
         assertNotNull(video.h);
         assertEquals(new Integer(5), video.placement);
-
         assertEquals(new Integer(1), video.linearity);
         assertEquals(new Integer(2), video.playbackend);
         assertArrayEquals(new int[]{3}, video.delivery);
@@ -1206,7 +1284,14 @@ public class BasicParameterBuilderTest {
         video.linearity = BasicParameterBuilder.VIDEO_LINEARITY_LINEAR;
 
         //Interstitial video specific values
-        video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Leaving Viewport or when Terminated by User
+        if (adConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
+            video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Video Completion or when Terminated by User
+        } else {
+            //Non-interstitial: could be 2 or 3, depending on playback end event
+            //2 - On Leaving Viewport or when Terminated by User
+            //3 - On Leaving Viewport Continues as a Floating/Slider Unit until Video Completion or when Terminated by User
+            video.playbackend = 2;
+        }
         video.delivery = new int[]{BasicParameterBuilder.VIDEO_DELIVERY_DOWNLOAD};
         video.pos = AdPosition.FULLSCREEN.getValue();
 
