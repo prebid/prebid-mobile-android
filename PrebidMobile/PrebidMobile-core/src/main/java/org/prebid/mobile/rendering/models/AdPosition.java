@@ -24,7 +24,13 @@ public enum AdPosition {
     UNDEFINED(-1),
     UNKNOWN(0),
     ABOVE_THE_FOLD(1),
+
+    /**
+     * @deprecated in the OpenRTB standard.
+     */
+    @Deprecated
     LOCKED(2),
+
     BELOW_THE_FOLD(3),
     HEADER(4),
     FOOTER(5),

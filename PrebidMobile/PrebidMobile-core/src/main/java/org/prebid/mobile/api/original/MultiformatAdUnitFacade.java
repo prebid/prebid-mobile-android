@@ -24,8 +24,6 @@ import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Internal AdUnit implementation that is used for PrebidAdUnit
@@ -76,9 +74,6 @@ class MultiformatAdUnitFacade extends AdUnit {
     private void setConfigurationBasedOnRequest(
             @NonNull PrebidRequest request
     ) {
-        if (request.isInterstitial()) {
-            configuration.setAdPosition(AdPosition.FULLSCREEN);
-        }
 
         BannerParameters bannerParameters = request.getBannerParameters();
         if (bannerParameters != null) {
@@ -123,6 +118,12 @@ class MultiformatAdUnitFacade extends AdUnit {
 
         String gpid = request.getGpid();
         configuration.setGpid(gpid);
+
+        if (request.isInterstitial()) {
+            configuration.setAdPosition(AdPosition.FULLSCREEN);
+        } else {
+            configuration.setAdPosition(request.getAdPosition());
+        }
     }
 
     @Nullable

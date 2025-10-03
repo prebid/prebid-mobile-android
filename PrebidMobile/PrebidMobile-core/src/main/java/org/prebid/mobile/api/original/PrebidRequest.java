@@ -4,10 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import org.prebid.mobile.BannerParameters;
 import org.prebid.mobile.NativeParameters;
 import org.prebid.mobile.VideoParameters;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import org.prebid.mobile.rendering.models.AdPosition;
 
 /**
  * Request parameters for {@link PrebidAdUnit}.
@@ -26,6 +23,9 @@ public class PrebidRequest {
 
     @Nullable
     private String gpid;
+
+    @Nullable
+    private AdPosition adPosition;
 
     public PrebidRequest() {
     }
@@ -82,5 +82,14 @@ public class PrebidRequest {
 
     public void setGpid(@Nullable String gpid) {
         this.gpid = gpid;
+    }
+
+    @Nullable
+    AdPosition getAdPosition() {
+        return adPosition;
+    }
+
+    public void setAdPosition(@Nullable AdPosition position) {
+        this.adPosition = position;
     }
 }
