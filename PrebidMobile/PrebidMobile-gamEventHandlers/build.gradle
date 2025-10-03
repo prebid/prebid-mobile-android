@@ -18,6 +18,4 @@ android {
 dependencies {
     implementation project(":PrebidMobile")
     implementation libs.google.play.services.ads
-
-    implementation 'androidx.annotation:annotation:1.9.1'
 }

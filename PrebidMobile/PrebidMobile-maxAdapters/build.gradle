@@ -5,8 +5,6 @@ apply from: '../tests.gradle'
 dependencies {
     implementation project(":PrebidMobile")
     implementation "com.applovin:applovin-sdk:13.1.0"
-
-    implementation 'androidx.annotation:annotation:1.9.1'
 }
 android {
     namespace "org.prebid.mobile.max.adapters"
