@@ -38,10 +38,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class BidResponse {
+
     private final static String TAG = BidResponse.class.getSimpleName();
+
     public static final String KEY_CACHE_ID = "hb_cache_id_local";
     public static final String KEY_RENDERER_NAME = "rendererName";
     public static final String KEY_RENDERER_VERSION = "rendererVersion";
+    public static final String TYPE_VIDEO = "video";
 
     // ID of the bid request to which this is a response
     private String id;
@@ -225,10 +228,14 @@ public class BidResponse {
 
     public boolean isVideo() {
         Bid bid = getWinningBid();
-        if (bid != null) {
-            return Utils.isVast(bid.getAdm());
+        if (bid == null) return false;
+
+        String type = bid.getType();
+        if (type != null && !type.isEmpty()) {
+            return type.equals(TYPE_VIDEO);
         }
-        return false;
+
+        return Utils.isVast(bid.getAdm());
     }
 
     public String getPreferredPluginRendererName() {

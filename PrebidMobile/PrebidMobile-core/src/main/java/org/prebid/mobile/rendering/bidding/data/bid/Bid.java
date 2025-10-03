@@ -18,8 +18,10 @@ package org.prebid.mobile.rendering.bidding.data.bid;
 
 
 import android.util.Base64;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.api.data.BidInfo;
@@ -130,6 +132,12 @@ public class Bid {
     // Advisory as to the number of seconds the bidder is willing to
     // wait between the auction and the actual impression
     private int exp;
+
+    /**
+     * Bid type determined by a bidder. JSON field: {@code [bid].ext.prebid.type}.
+     */
+    @Nullable
+    private String type;
 
     @Nullable
     private Map<String, String> events;
@@ -266,6 +274,11 @@ public class Bid {
         return events;
     }
 
+    @Nullable
+    public String getType() {
+        return type;
+    }
+
     public static Bid fromJSONObject(JSONObject jsonObject) {
         Bid bid = new Bid();
         if (jsonObject == null) {
@@ -302,11 +315,13 @@ public class Bid {
 
         JSONObject ext = jsonObject.optJSONObject("ext");
         if (ext != null) {
-            Prebid prebidObject = Prebid.fromJSONObject(ext.optJSONObject("prebid"));
+            JSONObject prebidJson = ext.optJSONObject("prebid");
+            Prebid prebidObject = Prebid.fromJSONObject(prebidJson);
             setEvents(bid, prebidObject);
             bid.prebid = prebidObject;
             bid.mobileSdkPassThrough = MobileSdkPassThrough.create(ext);
             bid.rewardedExt = RewardedExtParser.parse(ext);
+            bid.type = prebidObject.getType();
         }
 
         substituteMacros(bid);
