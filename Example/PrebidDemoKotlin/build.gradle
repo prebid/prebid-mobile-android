@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 android {
     namespace "org.prebid.mobile.prebidkotlindemo"
-    setCompileSdkVersion(34)
+    setCompileSdkVersion(35)
     setBuildToolsVersion("35.0.1")
     defaultConfig {
         minSdkVersion 23
@@ -58,10 +58,9 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // Video Player
-    implementation 'com.google.android.exoplayer:exoplayer:2.15.1'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.15.1'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.15.1'
-    implementation 'com.google.android.exoplayer:extension-ima:2.15.1'
+    implementation 'androidx.media3:media3-ui:1.6.1'
+    implementation 'androidx.media3:media3-exoplayer:1.6.1'
+    implementation 'androidx.media3:media3-exoplayer-ima:1.6.1'
 
     // Tests
     testImplementation 'junit:junit:4.13.2'
