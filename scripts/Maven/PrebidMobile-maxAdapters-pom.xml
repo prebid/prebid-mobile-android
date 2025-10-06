@@ -3,20 +3,15 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.prebid</groupId>
     <artifactId>prebid-mobile-sdk-max-adapters</artifactId>
-    <version>3.0.2</version>
-
+    <version>${revision}</version>
     <packaging>jar</packaging>
+
     <name>Prebid Mobile Android SDK</name>
     <description>Prebid Mobile</description>
     <url>https://www.prebid.org</url>
-
-    <scm>
-        <connection>scm:git:git@github.com:prebid/prebid-mobile-android.git</connection>
-        <developerConnection>scm:git:git@github.com:prebid/prebid-mobile-android.git</developerConnection>
-        <url>git@github.com:prebid/prebid-mobile-android.git</url>
-    </scm>
 
     <licenses>
         <license>
@@ -48,11 +43,17 @@
         </developer>
     </developers>
 
+    <scm>
+        <connection>scm:git:https://github.com/prebid/prebid-mobile-android.git</connection>
+        <developerConnection>scm:git:https://github.com/prebid/prebid-mobile-android.git</developerConnection>
+        <url>https://github.com/prebid/prebid-mobile-android</url>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>org.prebid</groupId>
             <artifactId>prebid-mobile-sdk</artifactId>
-            <version>3.0.2</version>
+            <version>${revision}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -62,4 +63,5 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+
 </project>
