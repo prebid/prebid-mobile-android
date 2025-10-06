@@ -4,7 +4,7 @@ apply from: '../tests.gradle'
 
 dependencies {
     implementation project(":PrebidMobile")
-    implementation "com.applovin:applovin-sdk:13.1.0"
+    implementation libs.applovin.sdk
 }
 android {
     namespace "org.prebid.mobile.max.adapters"

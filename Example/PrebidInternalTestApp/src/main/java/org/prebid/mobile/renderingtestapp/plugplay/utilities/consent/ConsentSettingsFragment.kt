@@ -47,5 +47,6 @@ class ConsentSettingsFragment : PreferenceFragmentCompat(), SharedPreferences.On
         getDefaultSharedPreference()?.unregisterOnSharedPreferenceChangeListener(this)
     }
 
-    private fun getDefaultSharedPreference() = PreferenceManager.getDefaultSharedPreferences(context)
+    private fun getDefaultSharedPreference() = PreferenceManager
+        .getDefaultSharedPreferences(requireContext())
 }

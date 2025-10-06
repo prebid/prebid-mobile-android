@@ -1,26 +1,26 @@
 dependencies {
     testImplementation project(':test-utils')
 
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.hamcrest:hamcrest-core:2.2'
-    testImplementation 'org.hamcrest:hamcrest-library:2.2'
-    testImplementation 'org.mockito:mockito-core:5.15.2'
-    testImplementation 'androidx.test:runner:1.4.0'
-    testImplementation 'androidx.test:rules:1.4.0'
+    testImplementation libs.junit
+    testImplementation libs.hamcrest.core
+    testImplementation libs.hamcrest.library
+    testImplementation libs.mockito.core
+    testImplementation libs.androidx.test.runner
+    testImplementation libs.androidx.test.rules
 
     // JSON comparators
-    testImplementation "com.fasterxml.jackson.core:jackson-databind:2.14.3"
-    testImplementation "org.apache.camel:camel-json-patch:3.22.2"
+    testImplementation libs.jackson.databind
+    testImplementation libs.apache.camel.json.patch
 
     testImplementation libs.robolectric
     testImplementation libs.shadows.httpclient
 
-    testImplementation 'org.assertj:assertj-core:1.7.0'
-    testImplementation 'org.skyscreamer:jsonassert:1.5.0'
-    testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
-    testImplementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    testImplementation libs.assertj.core
+    testImplementation libs.jsonassert
+    testImplementation libs.okhttp.mockwebserver
+    testImplementation libs.okhttp
 
-    testImplementation 'org.apache.commons:commons-lang3:3.7'
-    testImplementation 'org.json:json:20180813'
-    testImplementation 'com.google.code.gson:gson:2.8.6'
+    testImplementation libs.apache.commons.lang3
+    testImplementation libs.json
+    testImplementation libs.gson
 }
