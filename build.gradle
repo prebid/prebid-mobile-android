@@ -26,6 +26,11 @@ buildscript {
 allprojects {
     repositories {
         google()
+        maven {
+            name = "Central Portal Snapshots"
+            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+        }
+        mavenCentral()
         mavenCentral()
         maven { url 'https://maven.google.com' }
         maven { url 'https://jitpack.io' }
