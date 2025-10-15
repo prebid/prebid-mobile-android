@@ -12,7 +12,7 @@ Visit the [Prebid documentation](https://docs.prebid.org/prebid-mobile/pbm-api/a
 Easily include the Prebid Mobile SDK using Maven. Simply add this line to your gradle dependencies:
 
 ```
-implementation 'org.prebid:prebid-mobile-sdk:3.0.2'
+implementation 'org.prebid:prebid-mobile-sdk:3.1.0'
 ```
 
 ## Build from source
