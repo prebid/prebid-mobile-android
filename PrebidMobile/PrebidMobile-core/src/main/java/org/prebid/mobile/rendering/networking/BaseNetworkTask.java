@@ -51,7 +51,6 @@ public class BaseNetworkTask
     private static final String TAG = BaseNetworkTask.class.getSimpleName();
 
     public static final int TIMEOUT_DEFAULT = 2000;
-    public static final int SOCKET_TIMEOUT = 3000;
 
     public static final int MAX_REDIRECTS_COUNT = 5;
 
@@ -278,7 +277,7 @@ public class BaseNetworkTask
 
         connection.setConnectTimeout(PrebidMobile.getTimeoutMillis());
         if (!(this instanceof FileDownloadTask)) {
-            connection.setReadTimeout(SOCKET_TIMEOUT);
+            connection.setReadTimeout(PrebidMobile.getTimeoutMillis());
         }
 
         if ("POST".equals(param.requestType)) {
