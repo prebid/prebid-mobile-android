@@ -268,6 +268,7 @@ public class CreativeFactory {
             }
 
             creativeFactory.timeoutHandler.removeCallbacks(null);
+            creativeFactory.timeoutState = TimeoutState.FINISHED;
 
             creativeFactory.listener.onFailure(error);
         }
