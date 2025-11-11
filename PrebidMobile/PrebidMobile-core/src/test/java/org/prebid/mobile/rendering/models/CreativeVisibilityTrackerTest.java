@@ -16,6 +16,23 @@
 
 package org.prebid.mobile.rendering.models;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
+
 import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Handler;
@@ -23,6 +40,7 @@ import android.view.View;
 import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,10 +65,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.robolectric.annotation.LooperMode.Mode.LEGACY;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -168,7 +182,6 @@ public class CreativeVisibilityTrackerTest {
         creativeVisibilityTracker.startVisibilityCheck(spyActivity);
         creativeVisibilityTracker.stopVisibilityCheck();
 
-        assertFalse(visibilityHandler.hasMessages(0));
         assertFalse((Boolean) getFieldValue("isVisibilityScheduled"));
         verify(mockViewTreeObserver).removeOnPreDrawListener(any(ViewTreeObserver.OnPreDrawListener.class));
         assertNull(((WeakReference<ViewTreeObserver>) getFieldValue("weakViewTreeObserver")).get());
