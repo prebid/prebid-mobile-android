@@ -21,9 +21,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.ViewTreeObserver;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerResult;
@@ -61,6 +63,7 @@ public class CreativeVisibilityTracker {
     private VisibilityTrackerListener visibilityTrackerListener;
     private boolean proceedAfterImpTracking;
     private boolean isVisibilityScheduled;
+    private boolean visibilityTrackerStarted = false;
 
     public CreativeVisibilityTracker(
             @NonNull final View trackedView,
@@ -87,13 +90,15 @@ public class CreativeVisibilityTracker {
         };
 
         weakViewTreeObserver = new WeakReference<>(null);
+        scheduleManualTracker();
     }
 
     public CreativeVisibilityTracker(
         @NonNull
         final View trackedView,
         final Set<VisibilityTrackerOption> visibilityTrackerOptionSet,
-        boolean proceedAfterImpTracking) {
+        boolean proceedAfterImpTracking
+    ) {
         this(trackedView, visibilityTrackerOptionSet);
         this.proceedAfterImpTracking = proceedAfterImpTracking;
     }
@@ -101,7 +106,8 @@ public class CreativeVisibilityTracker {
     public CreativeVisibilityTracker(
         @NonNull
         final View trackedView,
-        final VisibilityTrackerOption visibilityTrackerOption) {
+        final VisibilityTrackerOption visibilityTrackerOption
+    ) {
         this(trackedView, Collections.singleton(visibilityTrackerOption));
     }
 
@@ -157,6 +163,14 @@ public class CreativeVisibilityTracker {
         setViewTreeObserver(context, trackedView.get());
     }
 
+    /**
+     * Used for interstitial cases, when the ad is opened in the new view hierarchy or received the new window focus.
+     */
+    public void restartVisibilityCheck() {
+        isVisibilityScheduled = false;
+        scheduleVisibilityCheck();
+    }
+
     public void stopVisibilityCheck() {
         visibilityHandler.removeCallbacksAndMessages(null);
         isVisibilityScheduled = false;
@@ -178,8 +192,25 @@ public class CreativeVisibilityTracker {
         visibilityHandler.postDelayed(visibilityRunnable, VISIBILITY_THROTTLE_MILLIS);
     }
 
+    /**
+     * Sometimes views are rendered before the visibility tracker is set, especially with Interstitial HTML ads.
+     * In this case, on-pre-draw-listener will not be called at all.
+     * So we need to trigger it manually to prevent unstarted visibility tracker.
+     */
+    private void scheduleManualTracker() {
+        Runnable runnable = () -> {
+            if (!visibilityTrackerStarted) {
+                onPreDrawListener.onPreDraw();
+            }
+        };
+        visibilityHandler.postDelayed(runnable, 200);
+    }
+
+
     private Runnable createVisibilityRunnable() {
         return () -> {
+            visibilityTrackerStarted = true;
+
             View trackedView = this.trackedView.get();
             if (trackedView == null) {
                 stopVisibilityCheck();
