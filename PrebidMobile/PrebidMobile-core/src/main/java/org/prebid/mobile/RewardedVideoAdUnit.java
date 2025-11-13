@@ -37,4 +37,8 @@ public class RewardedVideoAdUnit extends VideoBaseAdUnit {
         configuration.setPlacementType(PlacementType.INTERSTITIAL);
     }
 
+    public void activatePrebidImpressionTracker() {
+        this.activateInterstitialPrebidImpressionTracker = true;
+    }
+
 }
