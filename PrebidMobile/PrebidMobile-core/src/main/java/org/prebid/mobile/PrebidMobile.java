@@ -546,12 +546,14 @@ public class PrebidMobile {
      * LogLevel for logging control.c
      * NONE - no sdk logs.
      * ERROR - sdk logs with error level only.
+     * INFO - sdk logs with info level only.
      * WARN - sdk logs with warn level only.
      * DEBUG - sdk logs with debug level only. Noisy level.
      */
     public enum LogLevel {
         NONE(-1),
         DEBUG(3),
+        INFO(4),
         WARN(5),
         ERROR(6);
 

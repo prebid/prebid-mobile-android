@@ -16,15 +16,17 @@
 
 package org.prebid.mobile.addendum;
 
-class PbError {
+class PBCreativeScanResult {
 
     private final String domain = "com.prebidmobile.android";
     private final int code;
     private final String description;
+    private final int logLevel;
 
-    PbError(int code, String description) {
+    PBCreativeScanResult(int code, String description, int logLevel) {
         this.code = code;
         this.description = description;
+        this.logLevel = logLevel;
     }
 
     public final String getDomain() {
@@ -38,6 +40,9 @@ class PbError {
     public final String getDescription() {
         return description;
     }
+    public final int getLogLevel() {
+        return logLevel;
+    }
 
     @Override
     public int hashCode() {
@@ -47,11 +52,11 @@ class PbError {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PbError)) return false;
+        if (!(o instanceof PBCreativeScanResult)) return false;
 
-        PbError pbError = (PbError) o;
+        PBCreativeScanResult result = (PBCreativeScanResult) o;
 
-        return code == pbError.code;
+        return code == result.code;
     }
 
     @Override

@@ -147,6 +147,19 @@ public class LogUtil {
     }
 
     /**
+     * Prints information with set priority.
+     */
+    public static void print(int messagePriority, String message) {
+        if (message == null) {
+            return;
+        }
+
+        if (messagePriority >= getLogLevel()) {
+            logger.println(messagePriority, getTagWithBase(BASE_TAG), message);
+        }
+    }
+
+    /**
      * Prints information with set priority. Every tag
      */
     private static void print(int messagePriority, String tag, String message) {
