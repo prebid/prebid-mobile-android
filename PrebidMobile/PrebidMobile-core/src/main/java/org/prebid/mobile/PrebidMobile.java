@@ -106,6 +106,7 @@ public class PrebidMobile {
     private static boolean useCacheForReportingWithRenderingApi = false;
 
     private static int timeoutMillis = 2_000;
+    private static boolean isTimeoutModified = false;
 
     private static final String TAG = PrebidMobile.class.getSimpleName();
 
@@ -165,6 +166,11 @@ public class PrebidMobile {
      */
     public static void setTimeoutMillis(int timeoutMillis) {
         PrebidMobile.timeoutMillis = timeoutMillis;
+        PrebidMobile.isTimeoutModified = true;
+    }
+
+    public static boolean getTimeoutModified() {
+        return isTimeoutModified;
     }
 
     public static void setPrebidServerAccountId(String accountId) {
