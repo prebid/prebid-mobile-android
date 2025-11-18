@@ -16,9 +16,28 @@
 
 package org.prebid.mobile.rendering.models;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,9 +76,6 @@ import org.robolectric.annotation.Config;
 
 import java.lang.ref.WeakReference;
 import java.util.EnumSet;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -235,8 +251,7 @@ public class HTMLCreativeTest {
 
         htmlCreative.changeVisibilityTrackerState(true);
 
-        verify(mockCreativeVisibilityTracker, times(1)).stopVisibilityCheck();
-        verify(mockCreativeVisibilityTracker, times(1)).startVisibilityCheck(context);
+        verify(mockCreativeVisibilityTracker, times(1)).restartVisibilityCheck();
         verifyNoMoreInteractions(mockCreativeVisibilityTracker);
     }
 

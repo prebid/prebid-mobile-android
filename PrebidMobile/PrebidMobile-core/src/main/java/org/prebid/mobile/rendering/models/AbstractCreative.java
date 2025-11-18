@@ -18,7 +18,9 @@ package org.prebid.mobile.rendering.models;
 
 import android.content.Context;
 import android.view.View;
+
 import androidx.annotation.NonNull;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -230,10 +232,8 @@ public abstract class AbstractCreative {
 
         if (!adWebViewWindowFocus) {
             creativeVisibilityTracker.stopVisibilityCheck();
-        }
-        else {
-            creativeVisibilityTracker.stopVisibilityCheck();
-            creativeVisibilityTracker.startVisibilityCheck(contextReference.get());
+        } else {
+            creativeVisibilityTracker.restartVisibilityCheck();
         }
     }
 

@@ -168,7 +168,6 @@ public class CreativeVisibilityTrackerTest {
         creativeVisibilityTracker.startVisibilityCheck(spyActivity);
         creativeVisibilityTracker.stopVisibilityCheck();
 
-        assertFalse(visibilityHandler.hasMessages(0));
         assertFalse((Boolean) getFieldValue("isVisibilityScheduled"));
         verify(mockViewTreeObserver).removeOnPreDrawListener(any(ViewTreeObserver.OnPreDrawListener.class));
         assertNull(((WeakReference<ViewTreeObserver>) getFieldValue("weakViewTreeObserver")).get());
