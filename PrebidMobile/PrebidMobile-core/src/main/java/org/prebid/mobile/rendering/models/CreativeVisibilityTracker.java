@@ -21,11 +21,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.ViewTreeObserver;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerResult;
@@ -61,8 +59,8 @@ public class CreativeVisibilityTracker {
     @VisibleForTesting protected Runnable visibilityRunnable;
     private Handler visibilityHandler;
     private VisibilityTrackerListener visibilityTrackerListener;
-    private boolean proceedAfterImpTracking;
-    private boolean isVisibilityScheduled;
+    private boolean proceedAfterImpTracking = false;
+    private boolean isVisibilityScheduled = false;
     private boolean visibilityTrackerStarted = false;
 
     public CreativeVisibilityTracker(
@@ -97,8 +95,7 @@ public class CreativeVisibilityTracker {
         @NonNull
         final View trackedView,
         final Set<VisibilityTrackerOption> visibilityTrackerOptionSet,
-        boolean proceedAfterImpTracking
-    ) {
+        boolean proceedAfterImpTracking) {
         this(trackedView, visibilityTrackerOptionSet);
         this.proceedAfterImpTracking = proceedAfterImpTracking;
     }
@@ -106,8 +103,7 @@ public class CreativeVisibilityTracker {
     public CreativeVisibilityTracker(
         @NonNull
         final View trackedView,
-        final VisibilityTrackerOption visibilityTrackerOption
-    ) {
+        final VisibilityTrackerOption visibilityTrackerOption) {
         this(trackedView, Collections.singleton(visibilityTrackerOption));
     }
 
