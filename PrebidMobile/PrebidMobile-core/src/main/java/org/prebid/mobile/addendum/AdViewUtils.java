@@ -30,6 +30,7 @@ import androidx.annotation.Size;
 
 import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.PrebidMobile.LogLevel;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdListener;
 
@@ -159,7 +160,7 @@ public final class AdViewUtils {
     static void warnAndTriggerFailure(PbFindSizeError error, PbFindSizeListener handler) {
 
         String description = error.getDescription();
-        LogUtil.warning(description);
+        LogUtil.print(error.getLogLevel(), description);
 
         handler.failure(error);
     }
@@ -193,7 +194,7 @@ public final class AdViewUtils {
             int lastIndex = webViewList.size() - 1;
             iterateWebViewListAsync(webViewList, lastIndex, handler);
         } else {
-            warnAndTriggerFailure(PbFindSizeErrorFactory.getUnsupportedAndroidIpiError(currentAndroidApi, necessaryAndroidApi), handler);
+            warnAndTriggerFailure(PbFindSizeErrorFactory.getUnsupportedAndroidApiError(currentAndroidApi, necessaryAndroidApi), handler);
         }
     }
 
@@ -209,18 +210,18 @@ public final class AdViewUtils {
 
         webView.evaluateJavascript(INNER_HTML_SCRIPT, new ValueCallback<String>() {
 
-            private Set<Pair<WebView, PbFindSizeError>> errorSet = new LinkedHashSet<>();
+            private Set<Pair<WebView, PbFindSizeError>> resultSet = new LinkedHashSet<>();
 
-            private void processNextWebViewOrFail(PbFindSizeError error) {
+            private void processNextWebViewOrFail(PbFindSizeError result) {
 
-                errorSet.add(new Pair<>(webView, error));
+                resultSet.add(new Pair<>(webView, result));
 
                 int nextIndex = index - 1;
 
                 if (nextIndex >= 0) {
                     iterateWebViewListAsync(webViewList, nextIndex, handler);
                 } else {
-                    warnAndTriggerFailure(errorSet, handler);
+                    warnAndTriggerFailure(resultSet, handler);
                 }
             }
 
@@ -543,55 +544,59 @@ final class PbFindSizeErrorFactory {
     static final PbFindSizeError SIZE_UNPARSED = getSizeUnparsedError();
 
     private static PbFindSizeError getUnspecifiedError() {
-        return getError(UNSPECIFIED_CODE, "Unspecified error");
+        return getError(UNSPECIFIED_CODE, "Unspecified error", LogLevel.WARN.getValue());
     }
 
-    static PbFindSizeError getUnsupportedAndroidIpiError(int currentAndroidApi, int necessaryAndroidApi) {
-        return getError(UNSUPPORTED_ANDROID_IPI_CODE, "AndroidAPI:" + currentAndroidApi + " doesn't support the functionality. Minimum AndroidAPI is:" + necessaryAndroidApi);
+    static PbFindSizeError getUnsupportedAndroidApiError(int currentAndroidApi, int necessaryAndroidApi) {
+        return getError(
+                UNSUPPORTED_ANDROID_IPI_CODE,
+                "AndroidAPI:" + currentAndroidApi + " doesn't support the functionality. Minimum AndroidAPI is:" + necessaryAndroidApi,
+                LogLevel.WARN.getValue()
+        );
     }
 
-    static PbFindSizeError getCompositeFailureError(Set<Pair<WebView, PbFindSizeError>> errorSet) {
+    static PbFindSizeError getCompositeFailureError(Set<Pair<WebView, PbFindSizeError>> resultSet) {
         StringBuilder result = new StringBuilder();
         result.append("There is a set of errors:\n");
 
-        for (Pair<WebView, PbFindSizeError> webViewFindSizeError : errorSet) {
-
+        int logLevel = LogLevel.NONE.getValue();
+        for (Pair<WebView, PbFindSizeError> webViewFindSizeError : resultSet) {
+            logLevel = Integer.max(logLevel, webViewFindSizeError.second.getLogLevel());
             result.append("    WebView:").append(webViewFindSizeError.first)
                     .append(" errorCode:").append(webViewFindSizeError.second.getCode())
                     .append(" errorDescription:").append(webViewFindSizeError.second.getDescription())
                     .append("\n");
         }
 
-        return getError(COMPOSITE_FAILURE_CODE, result.toString());
+        return getError(COMPOSITE_FAILURE_CODE, result.toString(), logLevel);
     }
 
     //private zone
     private static PbFindSizeError getNoWebViewError() {
-        return getError(NO_WEBVIEW_CODE, "The view doesn't include WebView");
+        return getError(NO_WEBVIEW_CODE, "The view doesn't include WebView", LogLevel.WARN.getValue());
     }
 
     private static PbFindSizeError getWebViewFailedError() {
-        return getError(WEBVIEW_FAILED_CODE, "The view doesn't include WebView");
+        return getError(WEBVIEW_FAILED_CODE, "The view doesn't include WebView", LogLevel.WARN.getValue());
     }
 
     private static PbFindSizeError getNoHtmlError() {
-        return getError(NO_HTML_CODE, "The WebView doesn't have HTML");
+        return getError(NO_HTML_CODE, "The WebView doesn't have HTML", LogLevel.ERROR.getValue());
     }
 
     private static PbFindSizeError getNoSizeObjectError() {
-        return getError(NO_SIZE_OBJECT_CODE, "The HTML doesn't contain a size object");
+        return getError(NO_SIZE_OBJECT_CODE, "The HTML does not appear to be a Prebid Universal Creative, as it does not contain an hb_size snippet.", LogLevel.INFO.getValue());
     }
 
     private static PbFindSizeError getNoSizeValueError() {
-        return getError(NO_SIZE_VALUE_CODE, "The size object doesn't contain a value");
+        return getError(NO_SIZE_VALUE_CODE, "The size object doesn't contain a value", LogLevel.WARN.getValue());
     }
 
     private static PbFindSizeError getSizeUnparsedError() {
-        return getError(SIZE_UNPARSED_CODE, "The size value has a wrong format");
+        return getError(SIZE_UNPARSED_CODE, "The size value has a wrong format", LogLevel.WARN.getValue());
     }
 
-    private static PbFindSizeError getError(final int code, final String description) {
-
-        return new PbFindSizeError(code, description);
+    private static PbFindSizeError getError(final int code, final String description, final int logLevel) {
+        return new PbFindSizeError(code, description, logLevel);
     }
 }

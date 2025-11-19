@@ -16,10 +16,9 @@
 
 package org.prebid.mobile.addendum;
 
+public class PbFindSizeError extends PBCreativeScanResult {
 
-public final class PbFindSizeError extends PbError {
-
-    PbFindSizeError(int code, String description) {
-        super(code, description);
+    PbFindSizeError(int code, String description, int logLevel) {
+        super(code, description, logLevel);
     }
 }
