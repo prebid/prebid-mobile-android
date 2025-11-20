@@ -60,11 +60,11 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback im
         public void onAdLoaded(
                 @NonNull AdManagerInterstitialAd adManagerInterstitialAd
         ) {
-            listener.onEvent(AdEvent.LOADED);
-
             interstitialAd = adManagerInterstitialAd;
             interstitialAd.setFullScreenContentCallback(PublisherInterstitialAdWrapper.this);
             interstitialAd.setAppEventListener(PublisherInterstitialAdWrapper.this);
+
+            listener.onEvent(AdEvent.LOADED);
         }
 
         @Override
