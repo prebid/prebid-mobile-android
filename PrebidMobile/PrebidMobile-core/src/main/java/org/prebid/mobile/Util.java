@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -376,7 +377,7 @@ public class Util {
         try {
             Bundle bundle = (Bundle) Util.callMethodOnObject(object, "getCustomTargeting");
             if (bundle != null) {
-                String key = "hb_cache_id_local";
+                String key = BidResponse.KEY_CACHE_ID;
                 bundle.putString(key, cacheId);
                 addReservedKeys(key);
             }

@@ -33,6 +33,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile.LogLevel;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdListener;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -465,7 +466,7 @@ public final class AdViewUtils {
     private static void findNativeInGAMCustomTemplateAd(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
         String isPrebid = (String) callMethodOnObject(object, "getText", "isPrebid");
         if ("1".equals(isPrebid)) {
-            String cacheId = (String) callMethodOnObject(object, "getText", "hb_cache_id_local");
+            String cacheId = (String) callMethodOnObject(object, "getText", BidResponse.KEY_CACHE_ID);
             PrebidNativeAd ad = createPrebidNativeAd(cacheId, listener);
             if (ad != null) {
                 listener.onPrebidNativeLoaded(ad);
