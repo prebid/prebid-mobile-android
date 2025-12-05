@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
@@ -37,6 +38,7 @@ public class PrebidTest {
     public void tearDown(){
         PrebidMobile.setIncludeBidderKeysFlag(false);
         PrebidMobile.setIncludeWinnersFlag(false);
+        PrebidMobile.clearStoredBidResponses();
     }
     @Test
     public void whenFromJSONObjectAndJSONObjectPassed_ReturnParsedPrebid()
@@ -89,6 +91,35 @@ public class PrebidTest {
         AdUnitConfiguration config = new AdUnitConfiguration();
         config.setIsOriginalAdUnit(true);
         assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false, config).toString());
+    }
+
+    @Test
+    public void whenGetJsonObjectForImp_BidResponseEqualsExpected() throws JSONException {
+        final String configId = "test";
+        final AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setConfigId(configId);
+
+        JSONObject expected = new JSONObject();
+        StoredRequest storedRequest = new StoredRequest("test");
+        expected.put("storedrequest", storedRequest.toJSONObject());
+
+        PrebidMobile.addStoredBidResponse("bidderTest", "98765");
+        PrebidMobile.addStoredBidResponse("bidderTest2", "12345");
+
+        JSONArray storedbidresponse = new JSONArray();
+        JSONObject bidder1 = new JSONObject();
+        bidder1.put("bidder", "bidderTest");
+        bidder1.put("id", "98765");
+        storedbidresponse.put(bidder1);
+
+        JSONObject bidder2 = new JSONObject();
+        bidder2.put("bidder", "bidderTest2");
+        bidder2.put("id", "12345");
+        storedbidresponse.put(bidder2);
+
+        expected.put("storedbidresponse", storedbidresponse);
+
+        assertEquals(expected.toString(), Prebid.getJsonObjectForImp(adUnitConfiguration).toString());
     }
 
     @Test
