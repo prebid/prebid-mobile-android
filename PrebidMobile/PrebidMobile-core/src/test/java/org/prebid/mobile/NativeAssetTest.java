@@ -455,7 +455,7 @@ public class NativeAssetTest {
     }
 
     @Test
-    public void testNativeAssetData_json_lenSet() throws JSONException {
+    public void testNativeAssetData_json_lenSetNonNull() throws JSONException {
         final NativeDataAsset dataAsset = new NativeDataAsset();
         dataAsset.setLen(25);
         dataAsset.setRequired(true);
@@ -467,8 +467,20 @@ public class NativeAssetTest {
     }
 
     @Test
-    public void testNativeAssetData_json_lenUnset() throws JSONException {
+    public void testNativeAssetData_json_lenDefault() throws JSONException {
         final NativeDataAsset dataAsset = new NativeDataAsset();
+        dataAsset.setRequired(true);
+
+        final JSONObject json = dataAsset.getJsonObject(1);
+        final JSONObject dataJson = json.getJSONObject("data");
+        assertNotNull(dataJson);
+        assertTrue("Unexpected mapping to \"len\"", dataJson.isNull("len"));
+    }
+
+    @Test
+    public void testNativeAssetData_json_lenSetNull() throws JSONException {
+        final NativeDataAsset dataAsset = new NativeDataAsset();
+        dataAsset.setLen(null);
         dataAsset.setRequired(true);
 
         final JSONObject json = dataAsset.getJsonObject(1);
