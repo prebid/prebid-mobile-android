@@ -2,7 +2,9 @@ package org.prebid.mobile;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -285,7 +287,7 @@ public class NativeAssetTest {
         }
         dataAsset.setDataExt(dataExt);
 
-        assertEquals(25, dataAsset.getLen());
+        assertEquals(Integer.valueOf(25), dataAsset.getLen());
         assertEquals(true, dataAsset.isRequired());
 
         String value1 = "";
@@ -374,7 +376,7 @@ public class NativeAssetTest {
         }
         dataAsset.setDataExt(dataExt);
 
-        assertEquals(25, dataAsset.getLen());
+        assertEquals(Integer.valueOf(25), dataAsset.getLen());
         assertEquals(true, dataAsset.isRequired());
 
         String value1 = "";
@@ -452,5 +454,26 @@ public class NativeAssetTest {
         assertEquals(1, id); // 1 is the idCount that we have set while getting the JSON Object
     }
 
+    @Test
+    public void testNativeAssetData_json_lenSet() throws JSONException {
+        final NativeDataAsset dataAsset = new NativeDataAsset();
+        dataAsset.setLen(25);
+        dataAsset.setRequired(true);
 
+        final JSONObject json = dataAsset.getJsonObject(1);
+        final JSONObject dataJson = json.getJSONObject("data");
+        assertNotNull(dataJson);
+        assertEquals(25, dataJson.getInt("len"));
+    }
+
+    @Test
+    public void testNativeAssetData_json_lenUnset() throws JSONException {
+        final NativeDataAsset dataAsset = new NativeDataAsset();
+        dataAsset.setRequired(true);
+
+        final JSONObject json = dataAsset.getJsonObject(1);
+        final JSONObject dataJson = json.getJSONObject("data");
+        assertNotNull(dataJson);
+        assertTrue("Unexpected mapping to \"len\"", dataJson.isNull("len"));
+    }
 }
