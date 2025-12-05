@@ -455,7 +455,7 @@ public class NativeAssetTest {
     }
 
     @Test
-    public void testNativeAssetData_json_lenSetNonNull() throws JSONException {
+    public void testNativeDataAsset_json_lenSetNonNull() throws JSONException {
         final NativeDataAsset dataAsset = new NativeDataAsset();
         dataAsset.setLen(25);
         dataAsset.setRequired(true);
@@ -467,9 +467,8 @@ public class NativeAssetTest {
     }
 
     @Test
-    public void testNativeAssetData_json_lenDefault() throws JSONException {
+    public void testNativeDataAsset_json_lenDefault() throws JSONException {
         final NativeDataAsset dataAsset = new NativeDataAsset();
-        dataAsset.setRequired(true);
 
         final JSONObject json = dataAsset.getJsonObject(1);
         final JSONObject dataJson = json.getJSONObject("data");
@@ -478,10 +477,9 @@ public class NativeAssetTest {
     }
 
     @Test
-    public void testNativeAssetData_json_lenSetNull() throws JSONException {
+    public void testNativeDataAsset_json_lenSetNull() throws JSONException {
         final NativeDataAsset dataAsset = new NativeDataAsset();
         dataAsset.setLen(null);
-        dataAsset.setRequired(true);
 
         final JSONObject json = dataAsset.getJsonObject(1);
         final JSONObject dataJson = json.getJSONObject("data");
