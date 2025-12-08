@@ -104,6 +104,13 @@ public class MediationBannerAdUnitTest {
     }
 
     @Test
+    public void whenResumeRefresh_BidLoaderSetupsNewTimer() {
+        mediationBannerAdUnit.resumeRefresh();
+
+        verify(mockBidLoader, times(1)).setupRefreshTimer();
+    }
+
+    @Test
     public void setAdPosition_EqualsGetAdPosition() {
         mediationBannerAdUnit.setAdPosition(null);
         assertEquals(AdPosition.UNDEFINED, mediationBannerAdUnit.getAdPosition());

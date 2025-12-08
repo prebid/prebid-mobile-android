@@ -17,9 +17,7 @@
 package org.prebid.mobile.api.mediation;
 
 import android.content.Context;
-
 import androidx.annotation.NonNull;
-
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
@@ -122,6 +120,19 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         return adUnitConfig.getAdPosition();
     }
 
+    /**
+     * Resumes auto refresh if it was stopped.
+     */
+    public void resumeRefresh() {
+        if (bidLoader != null) {
+            bidLoader.setupRefreshTimer();
+        }
+    }
+
+    /**
+     * Stops automatic refreshing. Use this for better performance when the view is off‑screen or covered by another view.
+     * To start refreshing again, call {@link #resumeRefresh()}.
+     */
     public void stopRefresh() {
         if (bidLoader != null) {
             bidLoader.cancelRefresh();
