@@ -166,7 +166,6 @@ public final class AdBrowserActivity extends Activity
         initBrowserControls();
 
         RelativeLayout contentLayout = new RelativeLayout(this);
-        RelativeLayout.LayoutParams barLayoutParams = null;
         RelativeLayout.LayoutParams webViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT
         );
@@ -178,7 +177,6 @@ public final class AdBrowserActivity extends Activity
             webView.setWebViewClient(new AdBrowserActivityWebViewClient(AdBrowserActivity.this));
             webView.loadUrl(url);
 
-            barLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
             if (browserControls != null) {
                 browserControls.showNavigationControls();
             }
@@ -191,6 +189,7 @@ public final class AdBrowserActivity extends Activity
         }
 
         if (browserControls != null) {
+            RelativeLayout.LayoutParams barLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
             contentLayout.addView(browserControls, barLayoutParams);
         }
 
