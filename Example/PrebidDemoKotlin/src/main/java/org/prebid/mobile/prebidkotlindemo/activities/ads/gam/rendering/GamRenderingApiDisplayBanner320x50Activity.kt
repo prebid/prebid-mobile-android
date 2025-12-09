@@ -16,8 +16,11 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
+import android.util.Log
 import org.prebid.mobile.AdSize
+import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
+import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
@@ -42,6 +45,7 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
     private fun createAd() {
         val eventHandler = GamBannerEventHandler(this, AD_UNIT_ID, AdSize(WIDTH, HEIGHT))
         adView = BannerView(this, CONFIG_ID, eventHandler)
+        adView?.setBannerListener(createListener())
         setOpenRtbConfig()
         adWrapperView.addView(adView)
         adView?.setAutoRefreshDelay(refreshTimeSeconds)
@@ -51,6 +55,22 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
         adView?.destroy()
+    }
+
+    private fun createListener(): BannerViewListener = object : BannerViewListener {
+        override fun onAdLoaded(bannerView: BannerView?) {
+            Log.d(TAG, "Ad loaded")
+        }
+
+        override fun onAdFailed(bannerView: BannerView?, exception: AdException?) {
+            Log.e(TAG, "Ad failed: $exception")
+        }
+
+        override fun onAdDisplayed(bannerView: BannerView?) {}
+
+        override fun onAdClicked(bannerView: BannerView?) {}
+
+        override fun onAdClosed(bannerView: BannerView?) {}
     }
 
     /**
