@@ -16,19 +16,16 @@
 
 package org.prebid.mobile.api.rendering;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
@@ -58,8 +55,9 @@ import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
-import java.util.Map;
 import java.util.Set;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
  * Ad view for banner ad with rendering API.
@@ -517,6 +515,7 @@ public class BannerView extends FrameLayout {
 
     private void notifyErrorListener(AdException exception) {
         adFailed = true;
+        Log.d(TAG, "Ad failed listener: " + exception);
         if (bannerViewListener != null) {
             bannerViewListener.onAdFailed(BannerView.this, exception);
         }

@@ -17,6 +17,7 @@
 package org.prebid.mobile.api.rendering;
 
 import android.content.Context;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.AdSize;
@@ -157,6 +158,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
 
     @Override
     void notifyErrorListener(AdException exception) {
+        Log.d(TAG, "Ad failed listener: " + exception);
         if (adUnitEventsListener != null) {
             adUnitEventsListener.onAdFailed(InterstitialAdUnit.this, exception);
         }
