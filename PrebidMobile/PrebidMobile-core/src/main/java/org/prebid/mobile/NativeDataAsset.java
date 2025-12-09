@@ -1,5 +1,7 @@
 package org.prebid.mobile;
 
+import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -64,13 +66,15 @@ public class NativeDataAsset extends NativeAsset {
         this.dataType = dataType;
     }
 
-    private int len = -1;
+    @Nullable
+    private Integer len = null;
 
-    public int getLen() {
+    @Nullable
+    public Integer getLen() {
         return len;
     }
 
-    public void setLen(int len) {
+    public void setLen(@Nullable Integer len) {
         this.len = len;
     }
 
