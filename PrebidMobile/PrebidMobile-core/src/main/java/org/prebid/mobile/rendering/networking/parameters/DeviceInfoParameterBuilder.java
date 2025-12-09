@@ -58,6 +58,7 @@ public class DeviceInfoParameterBuilder extends ParameterBuilder {
             String advertisingId = AdvertisingIdManager.getAdvertisingId(ManagersResolver.getInstance().getUserConsentManager());
             if (Utils.isNotBlank(advertisingId)) {
                 device.ifa = advertisingId;
+                device.getExt().put("ifa_type", "dpid");
             }
 
             boolean tabletSize = deviceManager.isTablet();

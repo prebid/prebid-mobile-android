@@ -16,26 +16,19 @@
 
 package org.prebid.mobile.rendering.networking.urlBuilder;
 
-import static org.junit.Assert.assertNotEquals;
-import static org.robolectric.Shadows.shadowOf;
-
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.telephony.TelephonyManager;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
-import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
-import org.prebid.mobile.rendering.networking.parameters.AppInfoParameterBuilder;
-import org.prebid.mobile.rendering.networking.parameters.DeviceInfoParameterBuilder;
-import org.prebid.mobile.rendering.networking.parameters.GeoLocationParameterBuilder;
-import org.prebid.mobile.rendering.networking.parameters.NetworkParameterBuilder;
-import org.prebid.mobile.rendering.networking.parameters.ParameterBuilder;
+import org.prebid.mobile.rendering.networking.parameters.*;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.utils.helpers.AdvertisingIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AdvertisingIdManagerTest;
@@ -48,6 +41,9 @@ import org.robolectric.shadows.ShadowLocationManager;
 import org.robolectric.shadows.ShadowTelephonyManager;
 
 import java.util.ArrayList;
+
+import static org.junit.Assert.*;
+import static org.robolectric.Shadows.shadowOf;
 
 /**
  * These tests check that certain values in the BidRequest supplied by the publisher are
@@ -125,6 +121,40 @@ public class AutoDetectedOpenRtbTest {
         assertNotEquals(originalOpenRtbParams.getApp().bundle, newOpenRtbParams.getApp().bundle);
         assertNotEquals(originalOpenRtbParams.getDevice().ifa, newOpenRtbParams.getDevice().ifa);
         assertNotEquals(originalOpenRtbParams.getDevice().lmt, newOpenRtbParams.getDevice().lmt);
+    }
+
+    @Test
+    public void deviceBuilder_ifaSetter() throws JSONException {
+        originalOpenRtbParams.getDevice().ifa = "foo";
+        originalOpenRtbParams.getDevice().lmt = 0;
+
+        AdvertisingIdManager.AdvertisingId id = new AdvertisingIdManager.AdvertisingId("bar", true);
+        AdvertisingIdManagerTest.AdvertisingIdManagerReflections.setAdvertisingId(id);
+
+        paramBuilderArray.add(new DeviceInfoParameterBuilder(new AdUnitConfiguration()));
+        AdRequestInput newAdRequestInput = URLBuilder.buildParameters(paramBuilderArray, originalAdRequestInput);
+        BidRequest newOpenRtbParams = newAdRequestInput.getBidRequest();
+
+        assertNotEquals(originalOpenRtbParams.getDevice().ifa, newOpenRtbParams.getDevice().ifa);
+        JSONObject extJson = newOpenRtbParams.getDevice().getExt().getJsonObject();
+        assertEquals("dpid", extJson.getString("ifa_type"));
+    }
+
+    @Test
+    public void deviceBuilder_ifaTypeMustBeEmpty() throws JSONException {
+        originalOpenRtbParams.getDevice().ifa = "foo";
+        originalOpenRtbParams.getDevice().lmt = 0;
+
+        AdvertisingIdManager.AdvertisingId id = new AdvertisingIdManager.AdvertisingId(null, true);
+        AdvertisingIdManagerTest.AdvertisingIdManagerReflections.setAdvertisingId(id);
+
+        paramBuilderArray.add(new DeviceInfoParameterBuilder(new AdUnitConfiguration()));
+        AdRequestInput newAdRequestInput = URLBuilder.buildParameters(paramBuilderArray, originalAdRequestInput);
+        BidRequest newOpenRtbParams = newAdRequestInput.getBidRequest();
+
+        assertNotEquals(originalOpenRtbParams.getDevice().ifa, newOpenRtbParams.getDevice().ifa);
+        JSONObject extJson = newOpenRtbParams.getDevice().getExt().getJsonObject();
+        assertFalse(extJson.has("ifa_type"));
     }
 
     @Test
