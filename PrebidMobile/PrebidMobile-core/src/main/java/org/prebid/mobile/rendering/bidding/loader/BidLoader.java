@@ -16,10 +16,7 @@
 
 package org.prebid.mobile.rendering.bidding.loader;
 
-import static java.lang.Math.max;
-
 import androidx.annotation.NonNull;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidEventDelegate;
 import org.prebid.mobile.PrebidMobile;
@@ -37,6 +34,8 @@ import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static java.lang.Math.max;
 
 public class BidLoader {
 
@@ -58,7 +57,7 @@ public class BidLoader {
             currentlyLoading.set(false);
             BidResponse bidResponse = new BidResponse(response.responseString, adConfiguration);
             if (bidResponse.hasParseError()) {
-                failedToLoadBid(bidResponse.getParseError());
+                failedToLoadBid(new AdException(AdException.FAILED_TO_PARSE_RESPONSE, bidResponse.getParseError()));
                 return;
             }
             checkTmax(response, bidResponse);
@@ -77,7 +76,7 @@ public class BidLoader {
                 String msg,
                 long responseTime
         ) {
-            failedToLoadBid(msg);
+            failedToLoadBid(new AdException(AdException.FAILED_TO_LOAD_BIDS, msg));
         }
 
         @Override
@@ -85,7 +84,11 @@ public class BidLoader {
                 Exception e,
                 long responseTime
         ) {
-            failedToLoadBid(e.getMessage());
+            if (e instanceof AdException) {
+                failedToLoadBid((AdException) e);
+            } else {
+                failedToLoadBid(new AdException(AdException.FAILED_TO_LOAD_BIDS, e.getMessage()));
+            }
         }
     };
 
@@ -192,8 +195,8 @@ public class BidLoader {
         bidRequester.startAdRequest();
     }
 
-    private void failedToLoadBid(String msg) {
-        LogUtil.error(TAG, "Invalid bid response: " + msg);
+    private void failedToLoadBid(AdException exception) {
+        LogUtil.error(TAG, exception.getMessage());
         currentlyLoading.set(false);
 
         if (requestListener == null) {
@@ -203,7 +206,7 @@ public class BidLoader {
         }
 
         setupRefreshTimer();
-        requestListener.onError(new AdException(AdException.INTERNAL_ERROR, "Invalid bid response: " + msg));
+        requestListener.onError(exception);
     }
 
     private void checkTmax(
