@@ -16,34 +16,39 @@
 
 package org.prebid.mobile.api.exceptions;
 
+import androidx.annotation.NonNull;
+
 /**
  * Base error. Maintaining error description.
  */
 public class AdException extends Exception {
-    public static final String INVALID_REQUEST = "Invalid request";
 
-    public static final String INTERNAL_ERROR = "SDK internal error";
     public static final String INIT_ERROR = "Initialization failed";
+    public static final String FAILED_TO_LOAD_BIDS = "Failed to load bids";
+    public static final String FAILED_TO_PARSE_RESPONSE = "Failed to parse response";
+    public static final String NO_BIDS = "No bids";
     public static final String SERVER_ERROR = "Server error";
     public static final String THIRD_PARTY = "Third Party SDK";
+    public static final String INTERNAL_ERROR = "SDK internal error";
 
-    private String message;
+    private String msg;
 
-    public void setMessage(String msg) {
-        message = msg;
+
+    public AdException(String type, String message) {
+        msg = type + ": " + message;
     }
 
     /**
-     * Error description.
-     *
-     * @return description
+     * Root error message.
      */
     @Override
     public String getMessage() {
-        return message;
+        return msg;
     }
 
-    public AdException(String type, String message) {
-        setMessage(type + ": " + message);
+    @NonNull
+    @Override
+    public String toString() {
+        return "PrebidException: " + msg;
     }
 }
