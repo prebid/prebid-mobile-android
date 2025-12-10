@@ -336,4 +336,13 @@ public class PrebidDisplayView extends FrameLayout {
         adUnitConfiguration.setImpOrtbConfig(ortbConfig);
     }
 
+    @Nullable
+    public String getGlobalOrtbConfig() {
+        return adUnitConfiguration.getGlobalOrtbConfig();
+    }
+
+    public void setGlobalOrtbConfig(@Nullable String ortbConfig) {
+        adUnitConfiguration.setGlobalOrtbConfig(ortbConfig);
+    }
+
 }

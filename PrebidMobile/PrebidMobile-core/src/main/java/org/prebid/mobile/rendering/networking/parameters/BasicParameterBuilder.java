@@ -143,6 +143,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
     private void configureBidRequest(BidRequest bidRequest, String uuid) {
         bidRequest.setId(uuid);
         bidRequest.setImpOrtbConfig(adConfiguration.getImpOrtbConfig());
+        bidRequest.setGlobalOrtbConfig(adConfiguration.getGlobalOrtbConfig());
         boolean isVideo = adConfiguration.isAdType(AdFormat.VAST);
         String storedRequestId = PrebidMobile.getPrebidServerAccountId();
         String settingsId = PrebidMobile.getAuctionSettingsId();

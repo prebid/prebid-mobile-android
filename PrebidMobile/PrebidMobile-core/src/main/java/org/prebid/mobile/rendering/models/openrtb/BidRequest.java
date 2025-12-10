@@ -49,6 +49,8 @@ public class BidRequest extends BaseBid {
     private Source source = null;
     @Nullable
     private String impOrtbConfig;
+    @Nullable
+    private String globalOrtbConfig;
     private Ext ext = null;
 
     public JSONObject getJsonObject() throws JSONException {
@@ -78,6 +80,11 @@ public class BidRequest extends BaseBid {
         toJSON(jsonObject, "ext", ext != null ? ext.getJsonObject() : null);
         toJSON(jsonObject, "test", PrebidMobile.getPbsDebug() ? 1 : null);
         jsonObject = OpenRtbMerger.globalMerge(jsonObject, TargetingParams.getGlobalOrtbConfig());
+
+        // Ad unit unit level globalOrtbConfig should take precedence over TargetingParams.getGlobalOrtbConfig().
+        if (globalOrtbConfig != null) {
+            jsonObject = OpenRtbMerger.globalMerge(jsonObject, globalOrtbConfig);
+        }
         return jsonObject;
     }
 
@@ -177,6 +184,15 @@ public class BidRequest extends BaseBid {
 
     public void setImpOrtbConfig(@Nullable String impOrtbConfig) {
         this.impOrtbConfig = impOrtbConfig;
+    }
+
+    @Nullable
+    public String getGlobalOrtbConfig() {
+        return globalOrtbConfig;
+    }
+
+    public void setGlobalOrtbConfig(@Nullable String ortbConfig) {
+        this.globalOrtbConfig = ortbConfig;
     }
 
 }

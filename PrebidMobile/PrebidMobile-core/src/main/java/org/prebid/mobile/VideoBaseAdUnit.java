@@ -41,9 +41,4 @@ public abstract class VideoBaseAdUnit extends AdUnit {
         configuration.setVideoParameters(parameters);
     }
 
-    @Nullable
-    public String getImpOrtbConfig() { return configuration.getImpOrtbConfig(); }
-
-    public void setImpOrtbConfig(@Nullable String ortbConfig) { configuration.setImpOrtbConfig(ortbConfig);}
-
 }
