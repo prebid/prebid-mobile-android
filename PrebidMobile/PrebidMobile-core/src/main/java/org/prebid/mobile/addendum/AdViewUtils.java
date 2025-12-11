@@ -23,11 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
-
 import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile.LogLevel;
@@ -37,11 +35,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -121,7 +115,6 @@ public final class AdViewUtils {
                     //case: wait when webView.getContentHeight() >= expected height from HTML
                     //webView does not contain getContentWidth()
                     if (webViewContentHeight < expectedHeight) {
-                        LogUtil.debug("fixZoomIn" + " webViewContentHeight:" + webViewContentHeight);
                         contentHeightQueue.add(webViewContentHeight);
                         if (contentHeightQueue.isFull()) {
 
@@ -149,7 +142,7 @@ public final class AdViewUtils {
         //case: regulate scale because WebView.getSettings().setLoadWithOverviewMode() does not work
         int scale = (int) (webViewHeight / webViewContentHeight * 100 + 1);
 
-        LogUtil.debug("fixZoomIn WB Height:" + webViewHeight + " getContentHeight:" + webViewContentHeight + " scale:" + scale);
+        LogUtil.debug("Set WebView scale: " + scale + " (" + webViewHeight + ", " + webViewContentHeight + ")");
         webView.setInitialScale(scale);
     }
 
@@ -159,10 +152,8 @@ public final class AdViewUtils {
     }
 
     static void warnAndTriggerFailure(PbFindSizeError error, PbFindSizeListener handler) {
-
         String description = error.getDescription();
         LogUtil.print(error.getLogLevel(), description);
-
         handler.failure(error);
     }
 
@@ -190,8 +181,6 @@ public final class AdViewUtils {
         int necessaryAndroidApi = Build.VERSION_CODES.KITKAT;
 
         if (currentAndroidApi >= necessaryAndroidApi) {
-            LogUtil.debug("webViewList size:" + webViewList.size());
-
             int lastIndex = webViewList.size() - 1;
             iterateWebViewListAsync(webViewList, lastIndex, handler);
         } else {
@@ -558,15 +547,14 @@ final class PbFindSizeErrorFactory {
 
     static PbFindSizeError getCompositeFailureError(Set<Pair<WebView, PbFindSizeError>> resultSet) {
         StringBuilder result = new StringBuilder();
-        result.append("There is a set of errors:\n");
+        result.append("Detected issues: ");
 
         int logLevel = LogLevel.NONE.getValue();
         for (Pair<WebView, PbFindSizeError> webViewFindSizeError : resultSet) {
             logLevel = Integer.max(logLevel, webViewFindSizeError.second.getLogLevel());
-            result.append("    WebView:").append(webViewFindSizeError.first)
-                    .append(" errorCode:").append(webViewFindSizeError.second.getCode())
-                    .append(" errorDescription:").append(webViewFindSizeError.second.getDescription())
-                    .append("\n");
+            result.append(" Code:").append(webViewFindSizeError.second.getCode())
+                    .append(" Description:").append(webViewFindSizeError.second.getDescription())
+                    .append("; ");
         }
 
         return getError(COMPOSITE_FAILURE_CODE, result.toString(), logLevel);
@@ -586,7 +574,7 @@ final class PbFindSizeErrorFactory {
     }
 
     private static PbFindSizeError getNoSizeObjectError() {
-        return getError(NO_SIZE_OBJECT_CODE, "The HTML does not appear to be a Prebid Universal Creative, as it does not contain an hb_size snippet.", LogLevel.INFO.getValue());
+        return getError(NO_SIZE_OBJECT_CODE, "The HTML does not appear to be a Prebid Universal Creative, as it does not contain an hb_size snippet.", LogLevel.DEBUG.getValue());
     }
 
     private static PbFindSizeError getNoSizeValueError() {

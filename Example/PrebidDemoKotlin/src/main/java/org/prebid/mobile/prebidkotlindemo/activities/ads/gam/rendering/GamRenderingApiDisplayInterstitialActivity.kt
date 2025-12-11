@@ -16,6 +16,7 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
+import android.util.Log
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
@@ -41,16 +42,7 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
     private fun createAd() {
         val eventHandler = GamInterstitialEventHandler(this, AD_UNIT_ID)
         adUnit = InterstitialAdUnit(this, CONFIG_ID, eventHandler)
-        adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
-            override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
-                adUnit?.show()
-            }
-
-            override fun onAdDisplayed(interstitialAdUnit: InterstitialAdUnit?) {}
-            override fun onAdFailed(interstitialAdUnit: InterstitialAdUnit?, exception: AdException?) {}
-            override fun onAdClicked(interstitialAdUnit: InterstitialAdUnit?) {}
-            override fun onAdClosed(interstitialAdUnit: InterstitialAdUnit?) {}
-        })
+        adUnit?.setInterstitialAdUnitListener(createListener(adUnit))
         adUnit?.loadAd()
     }
 
@@ -59,5 +51,21 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
         super.onDestroy()
         adUnit?.destroy()
     }
+
+
+    private fun createListener(adUnit: InterstitialAdUnit?): InterstitialAdUnitListener =
+        object : InterstitialAdUnitListener {
+            override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
+                adUnit?.show()
+            }
+
+            override fun onAdFailed(interstitialAdUnit: InterstitialAdUnit?, exception: AdException?) {
+                Log.e(TAG, "Ad failed: $exception")
+            }
+
+            override fun onAdDisplayed(interstitialAdUnit: InterstitialAdUnit?) {}
+            override fun onAdClicked(interstitialAdUnit: InterstitialAdUnit?) {}
+            override fun onAdClosed(interstitialAdUnit: InterstitialAdUnit?) {}
+        }
 
 }

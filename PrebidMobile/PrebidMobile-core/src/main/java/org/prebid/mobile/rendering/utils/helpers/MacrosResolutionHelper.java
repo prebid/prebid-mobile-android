@@ -72,7 +72,6 @@ public class MacrosResolutionHelper {
 
     private static String replace(String macros, String input, String replacement) {
         if (input == null || input.isEmpty()) {
-            LogUtil.error(TAG, "replace: Failed. Input string is null or empty.");
             return "";
         }
 

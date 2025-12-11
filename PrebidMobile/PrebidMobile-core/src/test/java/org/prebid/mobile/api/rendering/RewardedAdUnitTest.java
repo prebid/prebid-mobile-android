@@ -231,12 +231,12 @@ public class RewardedAdUnitTest {
 
     @Test
     public void onFailedAndNoWinnerBid_AdStatusReadyForLoadNotifyErrorListener() {
-        final AdException exception = new AdException(AdException.INTERNAL_ERROR, "Test");
+        final AdException exception = new AdException(AdException.INTERNAL_ERROR, "GAM error");
         final RewardedVideoEventListener eventListener = getEventListener();
 
         eventListener.onAdFailed(exception);
 
-        verify(mockRewardedAdUnitListener, times(1)).onAdFailed(rewardedAdUnit, exception);
+        verify(mockRewardedAdUnitListener, times(1)).onAdFailed(rewardedAdUnit, new AdException(AdException.NO_BIDS, "GAM status: \"SDK internal error: GAM error\". Prebid status: \"SDK internal error: Unknown exception\""));
         assertEquals(READY_FOR_LOAD, rewardedAdUnit.getAdUnitState());
     }
 

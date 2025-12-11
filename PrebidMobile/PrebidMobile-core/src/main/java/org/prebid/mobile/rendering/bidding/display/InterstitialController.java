@@ -50,7 +50,7 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
                 InterstitialView interstitialView,
                 AdDetails adDetails
         ) {
-            LogUtil.debug(TAG, "onAdLoaded");
+            LogUtil.debug(TAG, "Event: onAdLoaded");
             if (listener != null) {
                 listener.onInterstitialReadyForDisplay();
             }
@@ -61,7 +61,7 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
                 InterstitialView interstitialView,
                 AdException error
         ) {
-            LogUtil.debug(TAG, "onAdFailed");
+            LogUtil.debug(TAG, "Event: onAdFailed");
             if (listener != null) {
                 listener.onInterstitialFailedToLoad(error);
             }
@@ -69,7 +69,7 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
 
         @Override
         public void onAdDisplayed(InterstitialView interstitialView) {
-            LogUtil.debug(TAG, "onAdDisplayed");
+            LogUtil.debug(TAG, "Event: onAdDisplayed");
             if (listener != null) {
                 listener.onInterstitialDisplayed();
             }
@@ -81,7 +81,7 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
 
         @Override
         public void onAdClicked(InterstitialView interstitialView) {
-            LogUtil.debug(TAG, "onAdClicked");
+            LogUtil.debug(TAG, "Event: onAdClicked");
             if (listener != null) {
                 listener.onInterstitialClicked();
             }
@@ -94,7 +94,7 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
 
         @Override
         public void onAdClosed(InterstitialView interstitialView) {
-            LogUtil.debug(TAG, "onAdClosed");
+            LogUtil.debug(TAG, "Event: onAdClosed");
             if (listener != null) {
                 listener.onInterstitialClosed();
 

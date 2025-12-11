@@ -16,6 +16,7 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
+import android.util.Log
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
@@ -49,8 +50,11 @@ class GamRenderingApiVideoInterstitialActivity : BaseAdActivity() {
                 adUnit?.show()
             }
 
+            override fun onAdFailed(adUnit: InterstitialAdUnit?, exception: AdException?) {
+                Log.e(TAG, "Ad failed: $exception")
+            }
+
             override fun onAdDisplayed(adUnit: InterstitialAdUnit?) {}
-            override fun onAdFailed(adUnit: InterstitialAdUnit?, exception: AdException?) {}
             override fun onAdClicked(adUnit: InterstitialAdUnit?) {}
             override fun onAdClosed(adUnit: InterstitialAdUnit?) {}
         })

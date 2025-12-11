@@ -61,3 +61,7 @@ captures/
 
 # Applovin Max Ad Review plugin
 .safedk/
+
+# Kotlin
+.kotlin
+.responses

@@ -18,11 +18,11 @@ package org.prebid.mobile.rendering.views.webview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.webview.AdWebViewClient.AdAssetsLoadedListener;
 import org.prebid.mobile.rendering.views.webview.mraid.MraidWebViewClient;
@@ -135,7 +135,7 @@ public class AdWebView extends WebView {
 
             int scaleInPercent = (int) (initialScale / factor * 100);
             setInitialScale(scaleInPercent);
-            Log.d(TAG, "Using custom WebView scale: " + scaleInPercent);
+            LogUtil.debug(TAG, "Using custom WebView scale: " + scaleInPercent);
         }
     }
 

@@ -21,7 +21,6 @@ import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -107,8 +106,6 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     @Override
     public void creativeInterstitialDidClose(AbstractCreative creative) {
-        LogUtil.debug(TAG, "creativeInterstitialDidClose");
-
         Transaction currentTransaction = transactionManager.getCurrentTransaction();
         if (creative.isDisplay() && creative.isEndCard()) {
 
@@ -160,8 +157,6 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     @Override
     public void creativeDidComplete(AbstractCreative creative) {
-        LogUtil.debug(TAG, "creativeDidComplete");
-
         // NOTE: This is currently hard-wired to work for video + end card only
         //       To truly support continuous ads in a queue, there would need to be significant changes
         //       in the display layer logic
@@ -189,7 +184,6 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     public void hide() {
         if (currentCreative == null) {
-            LogUtil.warning(TAG, "Can not hide a null creative");
             return;
         }
 
@@ -448,7 +442,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
         if (adViewListener != null && (currentCreative != null && isAutoDisplayOnLoad())) {
             show();
         } else {
-            LogUtil.info(TAG, "AdViewManager - Ad will be displayed when show is called");
+            LogUtil.debug(TAG, "Ad will be displayed when show is called");
         }
     }
 

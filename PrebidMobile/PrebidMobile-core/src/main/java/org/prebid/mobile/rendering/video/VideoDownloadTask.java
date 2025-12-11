@@ -56,8 +56,7 @@ public class VideoDownloadTask extends FileDownloadTask {
 
     @Override
     public GetUrlResult sendRequest(GetUrlParams param) throws Exception {
-        LogUtil.debug(TAG, "url: " + param.url);
-        LogUtil.debug(TAG, "queryParams: " + param.queryParams);
+        LogUtil.debug(TAG, "Sending request to the URL: : " + param.url);
 
         return createResult(param);
     }

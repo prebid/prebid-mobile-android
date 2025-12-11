@@ -21,12 +21,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -438,7 +435,7 @@ public class PrebidNativeAd {
 
         @Override
         public void onCacheExpired() {
-            Log.e(TAG, "onCacheExpired");
+            LogUtil.error(TAG, "Cache expired");
             WeakReference<View> weakReference = ad.registeredView;
             if (weakReference == null) return;
 

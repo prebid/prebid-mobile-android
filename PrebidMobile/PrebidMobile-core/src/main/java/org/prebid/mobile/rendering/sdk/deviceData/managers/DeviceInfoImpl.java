@@ -16,11 +16,6 @@
 
 package org.prebid.mobile.rendering.sdk.deviceData.managers;
 
-import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
-import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
-
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.ContentResolver;
@@ -35,11 +30,8 @@ import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.WindowManager;
-
 import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.sdk.BaseManager;
@@ -49,16 +41,11 @@ import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+
+import static android.content.pm.ActivityInfo.*;
 
 public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
 
@@ -236,7 +223,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
                 ExternalViewerUtils.startExternalVideoPlayer(context, url);
             }
         } else {
-            Log.e(TAG, "Can't play video as context is null");
+            LogUtil.error(TAG, "Can't play video as context is null");
         }
     }
 

@@ -384,7 +384,7 @@ public class MraidResize {
             if (closeView instanceof ImageView) {
                 ((ImageView) closeView).setImageResource(resource);
             } else {
-                Log.e(TAG, "Close button isn't ImageView");
+                LogUtil.error(TAG, "Close button isn't ImageView");
             }
         });
     }

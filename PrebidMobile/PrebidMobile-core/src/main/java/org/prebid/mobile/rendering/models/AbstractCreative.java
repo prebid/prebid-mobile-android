@@ -18,9 +18,7 @@ package org.prebid.mobile.rendering.models;
 
 import android.content.Context;
 import android.view.View;
-
 import androidx.annotation.NonNull;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -122,7 +120,6 @@ public abstract class AbstractCreative {
      * @return Whether the creative is playing
      */
     public boolean isPlaying() {
-        LogUtil.debug(TAG, "isPlaying(): Returning default value: false");
         return false;
     }
 

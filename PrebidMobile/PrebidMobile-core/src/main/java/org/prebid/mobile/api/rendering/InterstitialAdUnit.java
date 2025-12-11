@@ -31,6 +31,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler;
 import org.prebid.mobile.rendering.bidding.interfaces.StandaloneInterstitialEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
+import org.prebid.mobile.rendering.utils.helpers.RenderingExceptionParser;
 
 import java.util.EnumSet;
 
@@ -157,6 +158,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
 
     @Override
     void notifyErrorListener(AdException exception) {
+        LogUtil.debug(TAG, "Ad failed listener: " + exception);
         if (adUnitEventsListener != null) {
             adUnitEventsListener.onAdFailed(InterstitialAdUnit.this, exception);
         }
@@ -196,12 +198,10 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         return new InterstitialEventListener() {
             @Override
             public void onPrebidSdkWin() {
-                if (isBidInvalid()) {
+                AdException parsedException = RenderingExceptionParser.getPrebidException(getBidResponse(), prebidException);
+                if (parsedException != null) {
                     changeInterstitialAdUnitState(READY_FOR_LOAD);
-                    notifyErrorListener(new AdException(
-                        AdException.INTERNAL_ERROR,
-                        "WinnerBid is null when executing onPrebidSdkWin."
-                    ));
+                    notifyErrorListener(parsedException);
                     return;
                 }
 
@@ -215,10 +215,13 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
             }
 
             @Override
-            public void onAdFailed(AdException exception) {
-                if (isBidInvalid()) {
+            public void onAdFailed(AdException gamException) {
+                boolean prebidAlsoWithoutAd = RenderingExceptionParser.isBidInvalid(getBidResponse());
+                if (prebidAlsoWithoutAd) {
+                    AdException parsedException = RenderingExceptionParser.getPrebidException(getBidResponse(), prebidException);
+                    String prebidStatus = parsedException != null ? parsedException.getMessage() : "Unknown";
+                    notifyErrorListener(new AdException(AdException.NO_BIDS, "GAM status: \"" + gamException.getMessage() + "\". Prebid status: \"" + prebidStatus + "\""));
                     changeInterstitialAdUnitState(READY_FOR_LOAD);
-                    notifyErrorListener(exception);
                     return;
                 }
 

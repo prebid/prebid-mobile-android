@@ -16,21 +16,16 @@
 
 package org.prebid.mobile;
 
-import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
-import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
-
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.view.View;
-
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-
 import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.BidInfo;
@@ -47,8 +42,9 @@ import java.lang.ref.WeakReference;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
 
 /**
  * Base ad unit for the original API.
@@ -130,6 +126,7 @@ public abstract class AdUnit {
      * @param listener callback when operation is completed (success or fail)
      */
     public void fetchDemand(Object adObject, @NonNull OnCompleteListener listener) {
+        LogUtil.debug(TAG, "Fetch demand called");
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
             LogUtil.error("Empty account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
@@ -151,6 +148,7 @@ public abstract class AdUnit {
         HashSet<AdSize> sizes = configuration.getSizes();
         for (AdSize size : sizes) {
             if (size.getWidth() < 0 || size.getHeight() < 0) {
+                LogUtil.error("Invalid size: " + size);
                 listener.onComplete(ResultCode.INVALID_SIZE);
                 return;
             }
@@ -162,6 +160,7 @@ public abstract class AdUnit {
             if (conMgr != null && context.checkCallingOrSelfPermission("android.permission.ACCESS_NETWORK_STATE") == PackageManager.PERMISSION_GRANTED) {
                 NetworkInfo activeNetworkInfo = conMgr.getActiveNetworkInfo();
                 if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+                    LogUtil.debug("No network connection available.");
                     listener.onComplete(ResultCode.NETWORK_ERROR);
                     return;
                 }
@@ -263,6 +262,8 @@ public abstract class AdUnit {
                 bidResponse = response;
 
                 HashMap<String, String> keywords = response.getTargeting();
+                LogUtil.debug(TAG, "Bid response received successfully: " + keywords);
+
                 Util.apply(keywords, adObject);
                 originalListener.onComplete(ResultCode.SUCCESS);
 
@@ -271,6 +272,7 @@ public abstract class AdUnit {
 
             @Override
             public void onError(AdException exception) {
+                LogUtil.error(TAG, "Bid response error: " + exception);
                 bidResponse = null;
 
                 Util.apply(null, adObject);

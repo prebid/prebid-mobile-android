@@ -21,9 +21,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-
 import androidx.annotation.Nullable;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -173,17 +171,17 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
         }
 
         if (!firstQuartile && completionPercentage >= 25) {
-            LogUtil.debug(TAG, "firstQuartile: " + completionPercentage);
+            LogUtil.debug(TAG, "First quartile: " + completionPercentage);
             firstQuartile = true;
             trackEventListener.onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
         }
         if (!midpoint && completionPercentage >= 50) {
-            LogUtil.debug(TAG, "midpoint: " + completionPercentage);
+            LogUtil.debug(TAG, "Midpoint: " + completionPercentage);
             midpoint = true;
             trackEventListener.onEvent(VideoAdEvent.Event.AD_MIDPOINT);
         }
         if (!thirdQuartile && completionPercentage >= 75) {
-            LogUtil.debug(TAG, "thirdQuartile: " + completionPercentage);
+            LogUtil.debug(TAG, "Third quartile: " + completionPercentage);
             thirdQuartile = true;
             trackEventListener.onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
         }

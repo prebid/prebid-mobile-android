@@ -63,7 +63,6 @@ public class ViewExposureChecker {
         boolean visitParent = visitParent(((ViewGroup) view.getParent()), view);
         boolean collapseBoundingBox = collapseBoundingBox();
 
-        LogUtil.verbose(TAG, "exposure: visitParent " + visitParent + " collapseBox " + collapseBoundingBox);
         boolean potentiallyExposed = visitParent && collapseBoundingBox;
         if (!potentiallyExposed) {
             return zeroExposure;
