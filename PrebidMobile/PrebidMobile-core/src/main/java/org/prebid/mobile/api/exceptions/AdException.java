@@ -18,6 +18,8 @@ package org.prebid.mobile.api.exceptions;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
 /**
  * Base error. Maintaining error description.
  */
@@ -51,4 +53,17 @@ public class AdException extends Exception {
     public String toString() {
         return "PrebidException: " + msg;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        AdException that = (AdException) o;
+        return Objects.equals(msg, that.msg);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(msg);
+    }
+
 }
