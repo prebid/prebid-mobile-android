@@ -26,6 +26,8 @@ import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposureChecker;
 
+import java.util.Objects;
+
 import static org.prebid.mobile.rendering.models.ntv.NativeEventTracker.EventType.IMPRESSION;
 import static org.prebid.mobile.rendering.models.ntv.NativeEventTracker.EventType.OMID;
 
@@ -37,6 +39,9 @@ public class VisibilityChecker {
     private final ViewExposureChecker viewExposureChecker;
 
     private final Rect clipRect = new Rect();
+
+    @Nullable
+    private ViewExposure lastExposure;
 
     public VisibilityChecker(final VisibilityTrackerOption visibilityTrackerOption) {
         this.visibilityTrackerOption = visibilityTrackerOption;
@@ -133,7 +138,10 @@ public class VisibilityChecker {
         }
 
         ViewExposure exposure = viewExposureChecker.exposure(view);
-        LogUtil.verbose(TAG, exposure != null ? exposure.toString() : "null exposure");
+        if (!Objects.equals(lastExposure, exposure)) {
+            LogUtil.verbose(TAG, exposure != null ? exposure.toString() : "null exposure");
+            lastExposure = exposure;
+        }
         return exposure;
     }
 

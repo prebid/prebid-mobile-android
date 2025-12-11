@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
 import android.view.View;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -107,7 +106,6 @@ public class InterstitialView extends BaseAdView {
 
         @Override
         public void creativeInterstitialClosed() {
-            LogUtil.debug(TAG, "interstitialAdClosed");
             handleActionClose();
         }
     };

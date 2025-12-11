@@ -84,13 +84,14 @@ public class BaseNetworkTask
             return;
         }
         if (responseHandler == null) {
-            LogUtil.debug(TAG, "No ResponseHandler on: may be a tracking event");
             destroy();
             return;
         }
 
         //For debugging purposes. Helps in client issues, if any.
-        LogUtil.debug(TAG, "Response: " + urlResult.responseString);
+        if (urlResult.responseString != null) {
+            LogUtil.debug(TAG, "Response body: " + urlResult.responseString);
+        }
 
         long stop = System.currentTimeMillis();
         long delta = stop - start;
@@ -141,7 +142,9 @@ public class BaseNetworkTask
             LogUtil.error(TAG, "url is empty. Set url in PrebidMobile (PrebidRenderingSettings).");
         }
         LogUtil.debug(TAG, "Sending request to the URL: " + param.url);
-        LogUtil.debug(TAG, "Body: " + param.queryParams);
+        if (param.queryParams != null) {
+            LogUtil.debug(TAG, "Request body: " + param.queryParams);
+        }
 
         int responseCode = 0;
         connection = setHttpURLConnectionProperty(param);

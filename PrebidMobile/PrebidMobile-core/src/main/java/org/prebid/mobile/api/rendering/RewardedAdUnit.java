@@ -17,7 +17,6 @@
 package org.prebid.mobile.api.rendering;
 
 import android.content.Context;
-import android.util.Log;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
@@ -176,7 +175,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
     @Override
     void notifyErrorListener(AdException exception) {
-        Log.d(TAG, "Ad failed listener: " + exception);
+        LogUtil.debug(TAG, "Ad failed listener: " + exception);
         if (userListener != null) {
             userListener.onAdFailed(RewardedAdUnit.this, exception);
         }

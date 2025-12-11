@@ -19,7 +19,6 @@ package org.prebid.mobile.api.rendering;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -526,7 +525,7 @@ public class BannerView extends FrameLayout {
 
     private void notifyErrorListener(AdException exception) {
         adFailed = true;
-        Log.d(TAG, "Ad failed listener: " + exception);
+        LogUtil.debug(TAG, "Ad failed listener: " + exception);
         if (bannerViewListener != null) {
             bannerViewListener.onAdFailed(BannerView.this, exception);
         }

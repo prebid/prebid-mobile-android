@@ -17,14 +17,11 @@
 package org.prebid.mobile;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.Patterns;
 import android.webkit.URLUtil;
-
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import org.prebid.mobile.LogUtil.PrebidLogger;
 import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
@@ -391,7 +388,7 @@ public class PrebidMobile {
         }
 
         if (!Patterns.WEB_URL.matcher(url).matches()) {
-            Log.e(TAG, "Can't set custom /status endpoint, it is not valid.");
+            LogUtil.error(TAG, "Can't set custom /status endpoint, it is not valid.");
             return;
         }
 

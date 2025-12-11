@@ -55,7 +55,9 @@ public class TrackingManager {
 
     public void fireEventTrackingImpressionURLs(ArrayList<String> impressionUrls) {
         for (String url : impressionUrls) {
-            ServerConnection.fireAndForgetImpressionUrl(url);
+            if (url != null) {
+                ServerConnection.fireAndForgetImpressionUrl(url);
+            }
         }
     }
 }

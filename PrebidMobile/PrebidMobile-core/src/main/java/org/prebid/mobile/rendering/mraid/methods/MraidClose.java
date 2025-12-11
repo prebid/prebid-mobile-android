@@ -63,7 +63,6 @@ public class MraidClose {
                 WebViewBase webViewBase = this.webViewBase;
 
                 if (isContainerStateInvalid(state)) {
-                    LogUtil.debug(TAG, "closeThroughJS: Skipping. Wrong container state: " + state);
                     return;
                 }
 
