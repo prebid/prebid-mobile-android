@@ -232,11 +232,6 @@ public class NativeAdUnit extends AdUnit {
         return nativeConfiguration;
     }
 
-    @Nullable
-    public String getImpOrtbConfig() {return configuration.getImpOrtbConfig();}
-
-    public void setImpOrtbConfig(@Nullable String ortbConfig) {configuration.setImpOrtbConfig(ortbConfig);}
-
     private void notifyWinEvent(BidResponse response) {
         if (response == null) return;
 
