@@ -276,12 +276,12 @@ public class InterstitialAdUnitTest {
 
     @Test
     public void onFailedAndNoWinnerBid_AdStatusReadyForLoadNotifyErrorListener() {
-        final AdException exception = new AdException(AdException.INTERNAL_ERROR, "Test");
+        final AdException exception = new AdException(AdException.INTERNAL_ERROR, "GAM error");
         final InterstitialEventListener eventListener = getEventListener();
 
         eventListener.onAdFailed(exception);
 
-        verify(mockInterstitialAdUnitListener, times(1)).onAdFailed(interstitialAdUnit, exception);
+        verify(mockInterstitialAdUnitListener, times(1)).onAdFailed(interstitialAdUnit, new AdException(AdException.NO_BIDS, "GAM status: \"SDK internal error: GAM error\". Prebid status: \"SDK internal error: Unknown exception\""));
         assertEquals(READY_FOR_LOAD, interstitialAdUnit.getAdUnitState());
     }
 

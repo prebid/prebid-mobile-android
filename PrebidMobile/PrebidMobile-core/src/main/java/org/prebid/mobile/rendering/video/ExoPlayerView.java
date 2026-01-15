@@ -19,20 +19,13 @@ package org.prebid.mobile.rendering.video;
 import android.content.Context;
 import android.net.Uri;
 import android.widget.RelativeLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.PlaybackException;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.*;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -106,7 +99,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     @Override
     public void start(float initialVolume) {
-        LogUtil.debug(TAG, "start() called");
+        LogUtil.debug(TAG, "Called start");
         initLayout();
         initPlayer(initialVolume);
         preparePlayer(true);
@@ -147,14 +140,14 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     @Override
     public void resume() {
-        LogUtil.debug(TAG, "resume() called");
+        LogUtil.debug(TAG, "Called resume");
         preparePlayer(false);
         videoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_RESUME);
     }
 
     @Override
     public void pause() {
-        LogUtil.debug(TAG, "pause() called");
+        LogUtil.debug(TAG, "Called pause");
         if (player != null) {
             player.stop();
             videoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_PAUSE);
@@ -169,7 +162,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     @Override
     public void destroy() {
-        LogUtil.debug(TAG, "destroy() called");
+        LogUtil.debug(TAG, "Called destroy");
         killUpdateTask();
         if (player != null) {
             player.stop();
@@ -257,7 +250,6 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
     }
 
     private void killUpdateTask() {
-        LogUtil.debug(TAG, "killUpdateTask() called");
         if (adViewProgressUpdateTask != null) {
             adViewProgressUpdateTask.cancel(true);
             adViewProgressUpdateTask = null;

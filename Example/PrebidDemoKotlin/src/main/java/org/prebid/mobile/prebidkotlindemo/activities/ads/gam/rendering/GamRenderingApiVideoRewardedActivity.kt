@@ -48,12 +48,15 @@ class GamRenderingApiVideoRewardedActivity : BaseAdActivity() {
                 adUnit?.show()
             }
 
+            override fun onAdFailed(rewardedAdUnit: RewardedAdUnit?, exception: AdException?) {
+                Log.e(TAG, "Ad failed: $exception")
+            }
+
             override fun onAdDisplayed(rewardedAdUnit: RewardedAdUnit?) {}
-            override fun onAdFailed(rewardedAdUnit: RewardedAdUnit?, exception: AdException?) {}
             override fun onAdClicked(rewardedAdUnit: RewardedAdUnit?) {}
             override fun onAdClosed(rewardedAdUnit: RewardedAdUnit?) {}
             override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?, reward: Reward?) {
-                Log.d("AdExample", "User earned reward: $reward")
+                Log.d(TAG, "User earned reward: $reward")
             }
         })
         adUnit?.loadAd()

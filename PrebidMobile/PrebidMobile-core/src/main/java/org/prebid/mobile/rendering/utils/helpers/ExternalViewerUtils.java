@@ -23,13 +23,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.util.Log;
 import android.webkit.URLUtil;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.listeners.OnBrowserActionResultListener;
 import org.prebid.mobile.rendering.listeners.OnBrowserActionResultListener.BrowserActionResult;
@@ -53,13 +51,13 @@ public class ExternalViewerUtils {
         @Nullable Intent intent
     ) {
         if (context == null || intent == null) {
-            Log.e(TAG, "Can't start activity!");
+            LogUtil.error(TAG, "Can't start activity!");
             return;
         }
 
         boolean contextCanNotRunNewActivity = !(context instanceof Activity);
         if (contextCanNotRunNewActivity) {
-            Log.d(TAG, "Context is not Activity type. Intent flag FLAG_ACTIVITY_NEW_TASK added.");
+            LogUtil.debug(TAG, "Context is not Activity type. Intent flag FLAG_ACTIVITY_NEW_TASK added.");
             boolean isRelease = !BuildConfig.DEBUG;
             if (isRelease) {
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);

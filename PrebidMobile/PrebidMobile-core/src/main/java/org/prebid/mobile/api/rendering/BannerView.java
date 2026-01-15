@@ -16,19 +16,15 @@
 
 package org.prebid.mobile.api.rendering;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
@@ -55,11 +51,13 @@ import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
+import org.prebid.mobile.rendering.utils.helpers.RenderingExceptionParser;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
-import java.util.Map;
 import java.util.Set;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
  * Ad view for banner ad with rendering API.
@@ -76,11 +74,14 @@ public class BannerView extends FrameLayout {
     private DisplayView displayView;
     private BidLoader bidLoader;
     private BidResponse bidResponse;
+    private AdException prebidException;
 
     private final ScreenStateReceiver screenStateReceiver = new ScreenStateReceiver();
 
-    @Nullable private BannerViewListener bannerViewListener;
-    @Nullable private BannerVideoListener bannerVideoListener;
+    @Nullable
+    private BannerViewListener bannerViewListener;
+    @Nullable
+    private BannerVideoListener bannerVideoListener;
 
     private int refreshIntervalSec = 0;
 
@@ -170,6 +171,7 @@ public class BannerView extends FrameLayout {
         @Override
         public void onFetchCompleted(BidResponse response) {
             bidResponse = response;
+            prebidException = null;
 
             isPrimaryAdServerRequestInProgress = true;
             eventHandler.requestAdWithBid(getWinnerBid());
@@ -178,6 +180,8 @@ public class BannerView extends FrameLayout {
         @Override
         public void onError(AdException exception) {
             bidResponse = null;
+            prebidException = exception;
+
             eventHandler.requestAdWithBid(null);
         }
     };
@@ -187,11 +191,9 @@ public class BannerView extends FrameLayout {
         public void onPrebidSdkWin() {
             markPrimaryAdRequestFinished();
 
-            if (isBidInvalid()) {
-                notifyErrorListener(new AdException(
-                        AdException.INTERNAL_ERROR,
-                        "WinnerBid is null when executing onPrebidSdkWin."
-                ));
+            AdException parsedException = RenderingExceptionParser.getPrebidException(bidResponse, prebidException);
+            if (parsedException != null) {
+                notifyErrorListener(parsedException);
                 return;
             }
 
@@ -206,12 +208,18 @@ public class BannerView extends FrameLayout {
             displayAdServerView(view);
         }
 
+        /**
+         * Called only when third-party SDK (GAM) failed to load ad.
+         */
         @Override
-        public void onAdFailed(AdException exception) {
+        public void onAdFailed(AdException gamException) {
             markPrimaryAdRequestFinished();
 
-            if (isBidInvalid()) {
-                notifyErrorListener(exception);
+            boolean prebidAlsoWithoutAd = RenderingExceptionParser.isBidInvalid(bidResponse);
+            if (prebidAlsoWithoutAd) {
+                AdException parsedException = RenderingExceptionParser.getPrebidException(bidResponse, prebidException);
+                String prebidStatus = parsedException != null ? parsedException.getMessage() : "Unknown";
+                notifyErrorListener(new AdException(AdException.NO_BIDS, "GAM status: \"" + gamException.getMessage() + "\". Prebid status: \"" + prebidStatus + "\""));
                 return;
             }
 
@@ -517,13 +525,10 @@ public class BannerView extends FrameLayout {
 
     private void notifyErrorListener(AdException exception) {
         adFailed = true;
+        LogUtil.debug(TAG, "Ad failed listener: " + exception);
         if (bannerViewListener != null) {
             bannerViewListener.onAdFailed(BannerView.this, exception);
         }
-    }
-
-    private boolean isBidInvalid() {
-        return bidResponse == null || bidResponse.getWinningBid() == null;
     }
 
     public BidResponse getBidResponse() {

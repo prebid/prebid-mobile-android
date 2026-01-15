@@ -17,10 +17,8 @@
 package org.prebid.mobile.rendering.networking;
 
 import android.os.AsyncTask;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-
 import org.apache.http.conn.ConnectTimeoutException;
 import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.LogUtil;
@@ -29,17 +27,8 @@ import org.prebid.mobile.rendering.loading.FileDownloadTask;
 import org.prebid.mobile.rendering.networking.exception.BaseExceptionHolder;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.*;
+import java.net.*;
 import java.util.Locale;
 import java.util.Map;
 
@@ -95,13 +84,14 @@ public class BaseNetworkTask
             return;
         }
         if (responseHandler == null) {
-            LogUtil.debug(TAG, "No ResponseHandler on: may be a tracking event");
             destroy();
             return;
         }
 
         //For debugging purposes. Helps in client issues, if any.
-        LogUtil.debug(TAG, "Result: " + urlResult.responseString);
+        if (urlResult.responseString != null) {
+            LogUtil.debug(TAG, "Response body: " + urlResult.responseString);
+        }
 
         long stop = System.currentTimeMillis();
         long delta = stop - start;
@@ -151,8 +141,10 @@ public class BaseNetworkTask
         if (param.url.isEmpty()) {
             LogUtil.error(TAG, "url is empty. Set url in PrebidMobile (PrebidRenderingSettings).");
         }
-        LogUtil.debug(TAG, "url: " + param.url);
-        LogUtil.debug(TAG, "queryParams: " + param.queryParams);
+        LogUtil.debug(TAG, "Sending request to the URL: " + param.url);
+        if (param.queryParams != null) {
+            LogUtil.debug(TAG, "Request body: " + param.queryParams);
+        }
 
         int responseCode = 0;
         connection = setHttpURLConnectionProperty(param);

@@ -68,7 +68,7 @@ public class VideoCreativeModel extends CreativeModel {
 
         trackingManager.fireEventTrackingURLs(urls);
 
-        LogUtil.info(TAG, "Video event '" + videoEvent.name() + "' was fired with urls: " + urls.toString());
+        LogUtil.debug(TAG, "Video event '" + videoEvent.name() + "' was fired with urls: " + urls.toString());
     }
 
     public void trackPlayerStateChange(InternalPlayerState changedPlayerState) {

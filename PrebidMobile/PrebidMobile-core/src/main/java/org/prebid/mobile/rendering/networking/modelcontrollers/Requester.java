@@ -19,25 +19,15 @@ package org.prebid.mobile.rendering.networking.modelcontrollers;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
-import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
-import org.prebid.mobile.rendering.networking.parameters.AppInfoParameterBuilder;
-import org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder;
-import org.prebid.mobile.rendering.networking.parameters.DeviceInfoParameterBuilder;
-import org.prebid.mobile.rendering.networking.parameters.GeoLocationParameterBuilder;
-import org.prebid.mobile.rendering.networking.parameters.NetworkParameterBuilder;
-import org.prebid.mobile.rendering.networking.parameters.ParameterBuilder;
-import org.prebid.mobile.rendering.networking.parameters.UserConsentParameterBuilder;
-import org.prebid.mobile.rendering.networking.parameters.UserParameters;
+import org.prebid.mobile.rendering.networking.parameters.*;
 import org.prebid.mobile.rendering.networking.urlBuilder.PathBuilderBase;
 import org.prebid.mobile.rendering.networking.urlBuilder.URLBuilder;
 import org.prebid.mobile.rendering.networking.urlBuilder.URLComponents;
@@ -124,10 +114,8 @@ public abstract class Requester {
     protected void getAdId() {
         final Context context = PrebidContextHolder.getContext();
         if (context == null) {
-            sendAdException(
-                "Context is null",
-                "Context is null. Can't continue with ad request"
-            );
+            LogUtil.warning(TAG, "Context is null");
+            sendAdException(new AdException(AdException.INIT_ERROR, "Context is null"));
             return;
         }
         makeAdRequest();
@@ -136,11 +124,9 @@ public abstract class Requester {
 
     protected abstract PathBuilderBase getPathBuilder();
 
-    private void sendAdException(String logMsg, String exceptionMsg) {
-        LogUtil.warning(TAG, logMsg);
-        AdException adException = new AdException(AdException.INIT_ERROR, exceptionMsg);
+    private void sendAdException(AdException exception) {
         if (adResponseCallBack != null) {
-            adResponseCallBack.onErrorWithException(adException, 0);
+            adResponseCallBack.onErrorWithException(exception, 0);
         }
     }
 
@@ -148,20 +134,16 @@ public abstract class Requester {
         // Check if app has internet permissions
         DeviceInfoManager deviceManager = ManagersResolver.getInstance().getDeviceManager();
         if (deviceManager == null || !deviceManager.isPermissionGranted("android.permission.INTERNET")) {
-            sendAdException(
-                "Either Prebid DeviceManager is not initialized or android.permission.INTERNET is not specified. Please check",
-                "Internet permission not granted"
-            );
+            LogUtil.warning(TAG, "Internet permission is not defined");
+            sendAdException(new AdException(AdException.FAILED_TO_LOAD_BIDS, "android.permission.INTERNET is not specified. Please check the manifest."));
             return;
         }
 
         // Check if device is connected to the internet
         ConnectionInfoManager connectionInfoManager = ManagersResolver.getInstance().getNetworkManager();
         if (connectionInfoManager == null || connectionInfoManager.getConnectionType() == UserParameters.ConnectionType.OFFLINE) {
-            sendAdException(
-                "Either Prebid networkManager is not initialized or Device is offline. Please check the internet connection",
-                "No internet connection detected"
-            );
+            LogUtil.warning("Please check the internet connection. Either Prebid networkManager is not initialized or Device is offline.");
+            sendAdException(new AdException(AdException.FAILED_TO_LOAD_BIDS, "No internet connection detected"));
             return;
         }
 

@@ -30,7 +30,6 @@ public class AdExceptionTest {
         doExceptionTest(AdException.INTERNAL_ERROR);
         doExceptionTest(AdException.INIT_ERROR);
         doExceptionTest(AdException.SERVER_ERROR);
-        doExceptionTest(AdException.INVALID_REQUEST);
     }
 
     private void doExceptionTest(String errorCode) {

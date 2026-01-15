@@ -83,17 +83,15 @@ public class AdWebViewClient extends WebViewClient {
     @Override
     public void onPageFinished(WebView view, String url) {
         if (view == null) {
-            LogUtil.error(TAG, "onPageFinished failed, WebView is null");
             return;
         }
-        LogUtil.debug(TAG, "onPageFinished: " + view);
+        LogUtil.debug(TAG, "Loading of WebView page finished");
         try {
 
             adAssetsLoadedListener.adAssetsLoaded();
 
             view.setBackgroundColor(Color.TRANSPARENT);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LogUtil.error(TAG, "onPageFinished failed for url: " + url + " : " + Log.getStackTraceString(e));
         }
     }

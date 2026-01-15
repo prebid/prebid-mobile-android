@@ -181,14 +181,14 @@ public class InterstitialVideo extends AdBaseDialog {
     }
 
     public void pauseVideo() {
-        LogUtil.debug(TAG, "pauseVideo");
+        LogUtil.debug(TAG, "Action: pauseVideo");
         videoPaused = true;
         stopTimer();
         stopCountDownTimer();
     }
 
     public void resumeVideo() {
-        LogUtil.debug(TAG, "resumeVideo");
+        LogUtil.debug(TAG, "Action: resumeVideo");
         videoPaused = false;
         if (getRemainingTimerTimeInMs() != AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED && getRemainingTimerTimeInMs() > 500L) {
             scheduleShowCloseBtnTask(adViewContainer, getRemainingTimerTimeInMs());
@@ -216,7 +216,6 @@ public class InterstitialVideo extends AdBaseDialog {
     }
 
     public void close() {
-        LogUtil.debug(TAG, "closeableAdContainer -  onClose()");
         cancel();
 
         //IMPORTANT: call interstitialClosed() so it sends back to the adViewContainer to reimplant after closing an ad.

@@ -18,10 +18,8 @@ package org.prebid.mobile.rendering.bidding.data.bid;
 
 import android.content.Context;
 import android.util.Pair;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -177,7 +175,7 @@ public class BidResponse {
         }
         catch (JSONException e) {
             hasParseError = true;
-            parseError = "Failed to parse JSON String: " + e.getMessage();
+            parseError = "Failed to parse JSON string: " + e.getMessage();
             LogUtil.error(TAG, parseError);
         }
     }

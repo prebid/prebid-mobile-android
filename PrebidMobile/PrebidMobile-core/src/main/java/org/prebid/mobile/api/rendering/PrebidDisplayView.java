@@ -19,10 +19,8 @@ package org.prebid.mobile.api.rendering;
 import android.content.Context;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -31,7 +29,6 @@ import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.models.AdDetails;
-import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.rendering.utils.broadcast.local.EventForwardingLocalBroadcastReceiver;
 import org.prebid.mobile.rendering.utils.constants.IntentActions;
 import org.prebid.mobile.rendering.views.AdViewManager;
@@ -244,70 +241,70 @@ public class PrebidDisplayView extends FrameLayout {
     }
 
     private void notifyListenerError(AdException e) {
-        LogUtil.debug(TAG, "onAdFailed");
+        LogUtil.debug(TAG, "Event called: onAdFailed");
         if (displayViewListener != null) {
             displayViewListener.onAdFailed(e);
         }
     }
 
     private void notifyListenerClicked() {
-        LogUtil.debug(TAG, "onAdClicked");
+        LogUtil.debug(TAG, "Event called: onAdClicked");
         if (displayViewListener != null) {
             displayViewListener.onAdClicked();
         }
     }
 
     private void notifyListenerClose() {
-        LogUtil.debug(TAG, "onAdClosed");
+        LogUtil.debug(TAG, "Event called: onAdClosed");
         if (displayViewListener != null) {
             displayViewListener.onAdClosed();
         }
     }
 
     private void notifyListenerDisplayed() {
-        LogUtil.debug(TAG, "onAdDisplayed");
+        LogUtil.debug(TAG, "Event called: onAdDisplayed");
         if (displayViewListener != null) {
             displayViewListener.onAdDisplayed();
         }
     }
 
     private void notifyListenerLoaded() {
-        LogUtil.debug(TAG, "onAdLoaded");
+        LogUtil.debug(TAG, "Event called: onAdLoaded");
         if (displayViewListener != null) {
             displayViewListener.onAdLoaded();
         }
     }
 
     private void notifyVideoPaused() {
-        LogUtil.debug(TAG, "onVideoPaused");
+        LogUtil.debug(TAG, "Event called: onVideoPaused");
         if (displayVideoListener != null) {
             displayVideoListener.onVideoPaused();
         }
     }
 
     private void notifyVideoResumed() {
-        LogUtil.debug(TAG, "onVideoResumed");
+        LogUtil.debug(TAG, "Event called: onVideoResumed");
         if (displayVideoListener != null) {
             displayVideoListener.onVideoResumed();
         }
     }
 
     private void notifyVideoMuted() {
-        LogUtil.debug(TAG, "onVideoMuted");
+        LogUtil.debug(TAG, "Event called: onVideoMuted");
         if (displayVideoListener != null) {
             displayVideoListener.onVideoMuted();
         }
     }
 
     private void notifyVideoUnMuted() {
-        LogUtil.debug(TAG, "onVideoUnMuted");
+        LogUtil.debug(TAG, "Event called: onVideoUnMuted");
         if (displayVideoListener != null) {
             displayVideoListener.onVideoUnMuted();
         }
     }
 
     private void notifyVideoCompleted() {
-        LogUtil.debug(TAG, "onVideoCompleted");
+        LogUtil.debug(TAG, "Event called: onVideoCompleted");
         if (displayVideoListener != null) {
             displayVideoListener.onVideoCompleted();
         }
