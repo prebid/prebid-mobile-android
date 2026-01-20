@@ -199,12 +199,6 @@ public class PrebidDisplayView extends FrameLayout {
     }
 
     @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-
-        destroy();
-    }
-
     public void destroy() {
         adUnitConfiguration = null;
         displayViewListener = null;
