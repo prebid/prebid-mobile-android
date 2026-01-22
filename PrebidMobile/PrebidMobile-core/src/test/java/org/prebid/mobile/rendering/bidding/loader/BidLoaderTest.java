@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -162,8 +163,9 @@ public class BidLoaderTest {
 
         ArgumentCaptor<JSONObject> requestCaptor = ArgumentCaptor.forClass(JSONObject.class);
         ArgumentCaptor<JSONObject> responseCaptor = ArgumentCaptor.forClass(JSONObject.class);
-        verify(mockEventDelegate).onBidResponse(requestCaptor.capture(), responseCaptor.capture());
-
+        // wait (up to 1000 ms) for async call from background thread to call the mock
+        verify(mockEventDelegate, timeout(1000))
+                .onBidResponse(requestCaptor.capture(), responseCaptor.capture());
         String request = requestCaptor.getValue().toString();
         assertEquals(testRequest.toString(), request);
         String response = responseCaptor.getValue().toString();

@@ -549,6 +549,20 @@ public class BannerView extends FrameLayout {
         adUnitConfig.setImpOrtbConfig(ortbConfig);
     }
 
+    @Nullable
+    public String getGlobalOrtbConfig() {
+        return adUnitConfig.getGlobalOrtbConfig();
+    }
+
+    /**
+     * Sets the global OpenRTB configuration string for the ad unit. It takes precedence over `Targeting.setGlobalOrtbConfig`.
+     * Expected format: {@code "{"new_field": "value"}"}.
+     * @param ortbConfig The global OpenRTB JSON configuration string to set. Can be `null` to clear the configuration.
+     */
+    public void setGlobalOrtbConfig(@Nullable String ortbConfig) {
+        adUnitConfig.setGlobalOrtbConfig(ortbConfig);
+    }
+
     //region ==================== HelperMethods for Unit Tests. Should be used only in tests
     @VisibleForTesting
     final void setBidResponse(BidResponse response) {

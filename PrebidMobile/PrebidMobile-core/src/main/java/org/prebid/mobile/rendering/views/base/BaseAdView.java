@@ -141,4 +141,13 @@ public abstract class BaseAdView extends FrameLayout {
         adViewManager.getAdConfiguration().setImpOrtbConfig(ortbConfig);
     }
 
+    @Nullable
+    public String getGlobalOrtbConfig() {
+        return adViewManager.getAdConfiguration().getGlobalOrtbConfig();
+    }
+
+    public void setGlobalOrtbConfig(@Nullable String ortbConfig) {
+        adViewManager.getAdConfiguration().setGlobalOrtbConfig(ortbConfig);
+    }
+
 }
