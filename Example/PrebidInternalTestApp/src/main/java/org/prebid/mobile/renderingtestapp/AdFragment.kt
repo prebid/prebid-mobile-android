@@ -40,7 +40,7 @@ import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 abstract class AdFragment : BaseFragment() {
 
     companion object {
-        private val TAG = AdFragment::class.simpleName
+        val TAG = AdFragment::class.simpleName
 
         const val CONFIGURATOR_REQUEST_CODE = 0
 

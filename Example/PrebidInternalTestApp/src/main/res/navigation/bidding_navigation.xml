@@ -36,6 +36,24 @@
             app:popUpTo="@+id/headerBiddingFragment" />
 
         <action
+            android:id="@+id/action_header_bidding_to_in_app_banner_reusable"
+            app:destination="@id/navigation_in_app_banner_reusable"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_banner_recycler_view"
+            app:destination="@id/navigation_in_app_banner_recycler_view"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
             android:id="@+id/action_header_bidding_to_in_app_banner_plugin_event_listener"
             app:destination="@id/navigation_in_app_banner_plugin_event_listener"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -575,6 +593,16 @@
         android:id="@+id/navigation_in_app_banner"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannerFragment"
         android:label="In-App Banner" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_banner_reusable"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannerReusableFragment"
+        android:label="In-App Banner Reusable" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_banner_recycler_view"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannerRecyclerViewFragment"
+        android:label="In-App Banner Reusable" />
 
     <fragment
         android:id="@+id/navigation_in_app_banner_plugin_event_listener"

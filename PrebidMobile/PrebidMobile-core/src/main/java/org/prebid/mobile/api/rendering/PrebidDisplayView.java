@@ -39,7 +39,7 @@ import org.prebid.mobile.rendering.views.video.VideoViewListener;
 /**
  * Internal view renderer for plugin renderer.
  */
-public class PrebidDisplayView extends FrameLayout {
+public class PrebidDisplayView extends FrameLayout implements PrebidDestroyable {
 
     private final static String TAG = DisplayView.class.getSimpleName();
     private static final String CONTENT_DESCRIPTION_AD_VIEW = "adView";
@@ -199,12 +199,6 @@ public class PrebidDisplayView extends FrameLayout {
     }
 
     @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-
-        destroy();
-    }
-
     public void destroy() {
         adUnitConfiguration = null;
         displayViewListener = null;
