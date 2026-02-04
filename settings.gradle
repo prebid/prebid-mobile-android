@@ -8,7 +8,8 @@ include ':PrebidMobile',
         // Prebid Demo apps
         ':PrebidDemoJava',
         ':PrebidDemoKotlin',
-        ':PrebidInternalTestApp'
+        ':PrebidInternalTestApp',
+        ':PrebidNextGenDemo'
         // Other
 //        ':DrPrebid'
 
@@ -24,5 +25,6 @@ project(':test-utils').projectDir = new File('PrebidMobile/test-utils')
 project(':PrebidDemoJava').projectDir = new File('Example/PrebidDemoJava')
 project(':PrebidDemoKotlin').projectDir = new File('Example/PrebidDemoKotlin')
 project(':PrebidInternalTestApp').projectDir = new File('Example/PrebidInternalTestApp')
+project(':PrebidNextGenDemo').projectDir = new File('Example/PrebidNextGenDemo')
 
 //project(':DrPrebid').projectDir = new File('tools/drprebid')

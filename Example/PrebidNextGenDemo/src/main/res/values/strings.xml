@@ -1,0 +1,35 @@
+<resources>
+
+    <string name="app_name">Prebid Next Gen SDK Demo</string>
+
+    <string name="integration_kind">Integration Kind</string>
+    <string name="ad_format">Ad Format</string>
+    <string name="refresh_time_sec">Refresh Time Seconds</string>
+
+    <string name="search">Search</string>
+    <string name="settings">Settings</string>
+    <string name="settings_text">Demonstration of Prebid SDK customization in the Demo App will be introduced soon.</string>
+
+    <string name="gam_original_display_banner_320x50">GAM (Original API) Display Banner 320x50</string>
+    <string name="gam_original_display_banner_300x250">GAM (Original API) Display Banner 300x250</string>
+    <string name="gam_original_display_banner_multi_size">GAM (Original API) Display Banner Multi-size</string>
+    <string name="gam_original_video_banner">GAM (Original API) Video Banner</string>
+    <string name="gam_original_multiformat_banner">GAM (Original API) Multiformat Banner</string>
+    <string name="gam_original_multiformat_banner_video_native_in_app">GAM (Original API) Multiformat Banner + Video + Native In App</string>
+    <string name="gam_original_multiformat_banner_video_native_styles">GAM (Original API) Multiformat Banner + Video + Native Styles</string>
+    <string name="gam_original_display_interstitial">GAM (Original API) Display Interstitial</string>
+    <string name="gam_original_video_interstitial">GAM (Original API) Video Interstitial</string>
+    <string name="gam_original_multiformat_interstitial">GAM (Original API) Multiformat Interstitial</string>
+    <string name="gam_original_video_rewarded">GAM (Original API) Video Rewarded</string>
+    <string name="gam_original_video_in_stream">GAM (Original API) Video In-Stream</string>
+    <string name="gam_original_native_in_app">GAM (Original API) Native In-App</string>
+    <string name="gam_original_native_styles">GAM (Original API) Native Styles</string>
+
+    <string name="gam_rendering_display_banner_320x50">GAM (Rendering API) Display Banner 320x50</string>
+    <string name="gam_rendering_display_interstitial">GAM (Rendering API) Display Interstitial</string>
+    <string name="gam_rendering_video_banner">GAM (Rendering API) Video Banner</string>
+    <string name="gam_rendering_video_interstitial">GAM (Rendering API) Video Interstitial</string>
+    <string name="gam_rendering_video_rewarded">GAM (Rendering API) Video Rewarded</string>
+    <string name="gam_rendering_native">GAM (Rendering API) Native</string>
+
+</resources>

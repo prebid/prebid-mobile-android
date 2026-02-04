@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="org.prebid.mobile.prebidnextgendemo.activities.MainActivity">
+
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="0dp">
+
+            <TextView
+                android:id="@+id/tvIntegrationKind"
+                android:layout_width="136dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="@string/integration_kind" />
+
+            <Spinner
+                android:id="@+id/spinnerIntegrationKind"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:minWidth="128dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="0dp">
+
+            <TextView
+                android:id="@+id/tvAdFormat"
+                android:layout_width="136dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="@string/ad_format" />
+
+            <Spinner
+                android:id="@+id/spinnerAdType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:minWidth="128dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="0dp"
+            android:background="@color/gray" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAdTypes"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+</layout>

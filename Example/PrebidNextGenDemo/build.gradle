@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    namespace "org.prebid.mobile.prebidnextgendemo"
+    setCompileSdkVersion(34)
+    setBuildToolsVersion("35.0.1")
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0.0"
+        applicationId "org.prebid.mobile.prebidnextgendemo"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+    buildFeatures {
+        dataBinding true
+    }
+    // Fix for Exoplayer Problem
+    packagingOptions {
+        exclude("META-INF/*.kotlin_module")
+    }
+}
+
+dependencies {
+   implementation project(':PrebidMobile')
+
+    // For testing SNAPSHOT releases
+    // implementation "org.prebid:prebid-mobile-sdk:$prebidSdkVersionName-SNAPSHOT"
+
+    // Standard libraries
+    implementation libs.kotlin.stdlib
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.preference.ktx
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.lifecycle.viewmodel.ktx
+
+    // Advertisement
+    implementation libs.google.next.gen.sdk
+
+    // Image Downloader
+    implementation libs.glide
+
+    // Multidex
+    implementation libs.androidx.multidex
+
+    // Video Player
+    implementation libs.exoplayer
+    implementation libs.exoplayer.core
+    implementation libs.exoplayer.ui
+    implementation libs.extension.ima
+
+    // Tests
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+    androidTestImplementation libs.androidx.uiautomator
+}
