@@ -88,7 +88,7 @@ class OriginalApiNativeInAppActivity : BaseAdActivity() {
     }
 
     private fun inflatePrebidNativeAd(ad: PrebidNativeAd, wrapper: ViewGroup) {
-        val nativeContainer = View.inflate(wrapper.context, R.layout.layout_native, null)
+        val nativeContainer = View.inflate(wrapper.context, R.layout.prebid_layout_native, null)
 
         val icon = nativeContainer.findViewById<ImageView>(R.id.imgIcon)
         ImageUtils.download(ad.iconUrl, icon)
