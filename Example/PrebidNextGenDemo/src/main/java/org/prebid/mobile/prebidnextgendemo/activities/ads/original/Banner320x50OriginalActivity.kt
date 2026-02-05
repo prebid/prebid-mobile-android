@@ -16,17 +16,19 @@
 package org.prebid.mobile.prebidnextgendemo.activities.ads.original
 
 import android.os.Bundle
+import android.util.Log
 import com.google.android.libraries.ads.mobile.sdk.banner.AdSize
 import com.google.android.libraries.ads.mobile.sdk.banner.AdView
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAd
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest
 import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback
+import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
 import org.prebid.mobile.BannerAdUnit
 import org.prebid.mobile.BannerParameters
 import org.prebid.mobile.Signals
 import org.prebid.mobile.prebidnextgendemo.activities.BaseAdActivity
 
-class Banner320x50Activity : BaseAdActivity() {
+class Banner320x50OriginalActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_banner"
@@ -63,7 +65,12 @@ class Banner320x50Activity : BaseAdActivity() {
 
         adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
         adUnit?.fetchDemand(adRequestBuilder) {
-            adView.loadAd(adRequestBuilder.build(), object : AdLoadCallback<BannerAd> {})
+            adView.loadAd(adRequestBuilder.build(), object : AdLoadCallback<BannerAd> {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    super.onAdFailedToLoad(adError)
+                    Log.e("NEXT", "Ad failed to load: $adError")
+                }
+            })
         }
     }
 
