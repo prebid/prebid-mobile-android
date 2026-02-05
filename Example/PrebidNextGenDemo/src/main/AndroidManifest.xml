@@ -63,6 +63,7 @@
         <activity
             android:name=".activities.ads.original.OriginalApiMultiformatBannerVideoNativeInAppActivity"
             android:exported="true" />
+        <activity android:name="org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiNativeStylesActivity" />
     </application>
 
 </manifest>
