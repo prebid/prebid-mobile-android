@@ -69,6 +69,9 @@
         <activity
             android:name=".activities.ads.original.OriginalApiVideoBannerActivity"
             android:exported="true" />
+        <activity
+            android:name=".activities.ads.original.OriginalApiMultiformatInterstitialActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
