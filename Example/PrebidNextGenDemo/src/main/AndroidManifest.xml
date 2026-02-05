@@ -72,6 +72,9 @@
         <activity
             android:name=".activities.ads.original.OriginalApiMultiformatInterstitialActivity"
             android:exported="true" />
+        <activity
+            android:name=".activities.ads.original.OriginalApiMultiformatBannerVideoNativeStylesActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

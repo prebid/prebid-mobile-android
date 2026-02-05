@@ -6,6 +6,7 @@ import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiDi
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiDisplayInterstitialActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiMultiformatBannerActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiMultiformatBannerVideoNativeInAppActivity
+import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiMultiformatBannerVideoNativeStylesActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiMultiformatInterstitialActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiNativeInAppActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiNativeStylesActivity
@@ -83,6 +84,12 @@ object TestCaseRepository {
             AdFormat.MULTIFORMAT,
             IntegrationKind.GAM_ORIGINAL,
             OriginalApiMultiformatBannerVideoNativeInAppActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_multiformat_banner_video_native_styles,
+            AdFormat.MULTIFORMAT,
+            IntegrationKind.GAM_ORIGINAL,
+            OriginalApiMultiformatBannerVideoNativeStylesActivity::class.java,
         )
     )
 
