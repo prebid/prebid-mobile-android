@@ -39,6 +39,9 @@
             android:name=".activities.SettingsActivity"
             android:exported="true" />
 
+        <activity
+            android:name=".activities.ads.original.Banner320x50Activity"
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -51,6 +51,8 @@ public class Util {
     static final String AD_MANAGER_REQUEST_BUILDER_CLASS_V20 = "com.google.android.gms.ads.admanager.AdManagerAdRequest$Builder";
     static final String APPLOVIN_MAX_NATIVE_AD_LOADER = "com.applovin.mediation.nativeAds.MaxNativeAdLoader";
     static final String ANDROID_OS_BUNDLE = "android.os.Bundle";
+    static final String NEXT_GEN_SDK_BANNER_REQUEST_BUILDER_CLASS = "com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest$Builder";
+    static final String NEXT_GEN_SDK_REQUEST_BUILDER_CLASS = "com.google.android.libraries.ads.mobile.sdk.common.AdRequest$Builder";
 
     public static final String APPLOVIN_MAX_RESPONSE_ID_KEY = "PrebidMaxMediationAdapterExtraResponseId";
     public static final String APPLOVIN_MAX_KEYWORDS_KEY = "PrebidMaxMediationAdapterExtraKeywordsId";
@@ -322,28 +324,38 @@ public class Util {
 
     static boolean supportedAdObject(Object adObj) {
         if (adObj == null) return false;
-        if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS)
-                || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)
-                || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)
-                || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS_V20)
-                || adObj.getClass() == getClassFromString(ANDROID_OS_BUNDLE)
-                || adObj.getClass() == getClassFromString(APPLOVIN_MAX_NATIVE_AD_LOADER)
-                || adObj.getClass() == HashMap.class)
+        Class<?> adObjClass = adObj.getClass();
+        if (adObjClass == getClassFromString(AD_MANAGER_REQUEST_CLASS)
+                || adObjClass == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)
+                || adObjClass == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)
+                || adObjClass == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS_V20)
+                || adObjClass == getClassFromString(ANDROID_OS_BUNDLE)
+                || adObjClass == getClassFromString(APPLOVIN_MAX_NATIVE_AD_LOADER)
+                || isNextGenSdkRequestBuilderClass(adObjClass)
+                || adObjClass == HashMap.class)
             return true;
         return false;
     }
 
+    private static boolean isNextGenSdkRequestBuilderClass(Class<?> adObjClass) {
+        return adObjClass == getClassFromString(NEXT_GEN_SDK_REQUEST_BUILDER_CLASS)
+                || adObjClass == getClassFromString(NEXT_GEN_SDK_BANNER_REQUEST_BUILDER_CLASS);
+    }
+
     public static void apply(HashMap<String, String> bids, Object adObj) {
         if (adObj == null) return;
-        if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
+        Class<?> adObjClass = adObj.getClass();
+        if (adObjClass == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
             handleAdManagerCustomTargeting(bids, adObj);
-        } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS_V20)) {
+        } else if (adObjClass == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS_V20)) {
             handleAdManagerBuilderCustomTargeting(bids, adObj);
-        } else if (adObj.getClass() == getClassFromString(ANDROID_OS_BUNDLE)) {
+        } else if (adObjClass == getClassFromString(ANDROID_OS_BUNDLE)) {
             handleAndroidBundleCustomTargeting(bids, adObj);
-        } else if (adObj.getClass() == getClassFromString(APPLOVIN_MAX_NATIVE_AD_LOADER)) {
+        } else if (adObjClass == getClassFromString(APPLOVIN_MAX_NATIVE_AD_LOADER)) {
             handleApplovinMaxCustomTargeting(adObj, bids);
-        } else if (adObj.getClass() == HashMap.class) {
+        } else if (isNextGenSdkRequestBuilderClass(adObjClass)) {
+            handleNextGenSdkTargeting(bids, adObj);
+        } else if (adObjClass == HashMap.class) {
             if (bids != null && !bids.isEmpty()) {
                 HashMap map = ((HashMap) adObj);
                 map.clear();
@@ -357,13 +369,16 @@ public class Util {
             Object adObject
     ) {
         if (adObject == null) return;
-        if (adObject.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObject.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
+        Class<?> adObjClass = adObject.getClass();
+        if (adObjClass == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObject.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
             setCacheIdToGamManager(cacheId, adObject);
-        } else if (adObject.getClass() == getClassFromString(ANDROID_OS_BUNDLE)) {
+        } else if (adObjClass == getClassFromString(ANDROID_OS_BUNDLE)) {
             Bundle adBundle = (Bundle) adObject;
             adBundle.putString(NativeAdUnit.BUNDLE_KEY_CACHE_ID, cacheId);
-        } else if (adObject.getClass() == getClassFromString(APPLOVIN_MAX_NATIVE_AD_LOADER)) {
+        } else if (adObjClass == getClassFromString(APPLOVIN_MAX_NATIVE_AD_LOADER)) {
             setApplovinMaxLocalParameters(adObject, cacheId);
+        } else if (isNextGenSdkRequestBuilderClass(adObjClass)) {
+            setCacheIdToNextGenSdk(cacheId, adObject);
         }
     }
 
@@ -396,6 +411,24 @@ public class Util {
             HashMap<String, String> bids
     ) {
         setLocalParamsToMax(adObject, APPLOVIN_MAX_KEYWORDS_KEY, bids);
+    }
+
+    private static void handleNextGenSdkTargeting(HashMap<String, String> bids, Object builder) {
+        Set<Map.Entry<String, String>> entries = bids.entrySet();
+        for (Map.Entry<String, String> entry: entries) {
+            Util.callMethodOnObject(builder, "putCustomTargeting", entry.getKey(), entry.getValue());
+        }
+    }
+
+    private static void setCacheIdToNextGenSdk(
+            String cacheId,
+            Object object
+    ) {
+        if (cacheId == null) {
+            return;
+        }
+        String key = BidResponse.KEY_CACHE_ID;
+        Util.callMethodOnObject(object, "putCustomTargeting", key, cacheId);
     }
 
     private static void setLocalParamsToMax(
