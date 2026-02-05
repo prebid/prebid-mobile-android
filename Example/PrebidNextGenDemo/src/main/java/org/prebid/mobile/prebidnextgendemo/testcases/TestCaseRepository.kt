@@ -1,10 +1,11 @@
 package org.prebid.mobile.prebidnextgendemo.testcases
 
 import org.prebid.mobile.prebidnextgendemo.R
-import org.prebid.mobile.prebidnextgendemo.activities.ads.original.Banner320x50OriginalApiActivity
-import org.prebid.mobile.prebidnextgendemo.activities.ads.original.DisplayInterstitialOriginalApiActivity
-import org.prebid.mobile.prebidnextgendemo.activities.ads.original.NativeInAppOriginalApiActivity
-import org.prebid.mobile.prebidnextgendemo.activities.ads.original.VideoRewardedOriginalApiActivity
+import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiBanner320x50Activity
+import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiDisplayBannerMultiSizeActivity
+import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiDisplayInterstitialActivity
+import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiNativeInAppActivity
+import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiVideoRewardedActivity
 
 object TestCaseRepository {
 
@@ -15,25 +16,31 @@ object TestCaseRepository {
             R.string.gam_original_display_banner_320x50,
             AdFormat.DISPLAY_BANNER,
             IntegrationKind.GAM_ORIGINAL,
-            Banner320x50OriginalApiActivity::class.java,
+            OriginalApiBanner320x50Activity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_display_banner_multi_size,
+            AdFormat.DISPLAY_BANNER,
+            IntegrationKind.GAM_ORIGINAL,
+            OriginalApiDisplayBannerMultiSizeActivity::class.java
         ),
         TestCase(
             R.string.gam_original_display_interstitial,
             AdFormat.DISPLAY_INTERSTITIAL,
             IntegrationKind.GAM_ORIGINAL,
-            DisplayInterstitialOriginalApiActivity::class.java,
+            OriginalApiDisplayInterstitialActivity::class.java,
         ),
         TestCase(
             R.string.gam_original_video_rewarded,
             AdFormat.VIDEO_REWARDED,
             IntegrationKind.GAM_ORIGINAL,
-            VideoRewardedOriginalApiActivity::class.java,
+            OriginalApiVideoRewardedActivity::class.java,
         ),
         TestCase(
             R.string.gam_original_native_in_app,
             AdFormat.NATIVE,
             IntegrationKind.GAM_ORIGINAL,
-            NativeInAppOriginalApiActivity::class.java,
+            OriginalApiNativeInAppActivity::class.java,
         )
     )
 

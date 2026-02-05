@@ -28,7 +28,7 @@ import org.prebid.mobile.BannerParameters
 import org.prebid.mobile.Signals
 import org.prebid.mobile.prebidnextgendemo.activities.BaseAdActivity
 
-class Banner320x50OriginalApiActivity : BaseAdActivity() {
+class OriginalApiBanner320x50Activity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_banner"
@@ -48,7 +48,7 @@ class Banner320x50OriginalApiActivity : BaseAdActivity() {
 
     private fun createAd() {
         val adView = AdView(this)
-        val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, 320)
+        val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, WIDTH)
         val adRequestBuilder = BannerAdRequest.Builder(AD_UNIT_ID, adSize)
 
         adWrapperView.addView(adView)

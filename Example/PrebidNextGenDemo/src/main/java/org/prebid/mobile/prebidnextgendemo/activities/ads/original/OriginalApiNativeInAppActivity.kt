@@ -47,7 +47,7 @@ import org.prebid.mobile.prebidnextgendemo.R
 import org.prebid.mobile.prebidnextgendemo.activities.BaseAdActivity
 import org.prebid.mobile.prebidnextgendemo.utils.ImageUtils
 
-class NativeInAppOriginalApiActivity : BaseAdActivity() {
+class OriginalApiNativeInAppActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/apollo_custom_template_native_ad_unit"
@@ -128,7 +128,7 @@ class NativeInAppOriginalApiActivity : BaseAdActivity() {
                 AdViewUtils.findNative(customNativeAd, object : PrebidNativeAdListener {
                     override fun onPrebidNativeLoaded(ad: PrebidNativeAd) {
 
-                        // 6. Render native ad
+                        // 6. Render native ad. Start on main thread
                         lifecycleScope.launch(Dispatchers.Main) {
                             inflatePrebidNativeAd(ad, wrapper)
                         }

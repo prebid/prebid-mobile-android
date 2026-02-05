@@ -24,7 +24,7 @@ import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAd
 import org.prebid.mobile.InterstitialAdUnit
 import org.prebid.mobile.prebidnextgendemo.activities.BaseAdActivity
 
-class DisplayInterstitialOriginalApiActivity : BaseAdActivity() {
+class OriginalApiDisplayInterstitialActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-display-interstitial"
@@ -57,7 +57,7 @@ class DisplayInterstitialOriginalApiActivity : BaseAdActivity() {
                 object : AdLoadCallback<InterstitialAd> {
                     override fun onAdLoaded(ad: InterstitialAd) {
                         super.onAdLoaded(ad)
-                        ad.show(this@DisplayInterstitialOriginalApiActivity)
+                        ad.show(this@OriginalApiDisplayInterstitialActivity)
                     }
 
                     override fun onAdFailedToLoad(adError: LoadAdError) {

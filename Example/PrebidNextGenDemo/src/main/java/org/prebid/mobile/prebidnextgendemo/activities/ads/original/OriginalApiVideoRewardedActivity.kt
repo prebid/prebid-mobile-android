@@ -11,7 +11,7 @@ import org.prebid.mobile.Signals
 import org.prebid.mobile.VideoParameters
 import org.prebid.mobile.prebidnextgendemo.activities.BaseAdActivity
 
-class VideoRewardedOriginalApiActivity : BaseAdActivity() {
+class OriginalApiVideoRewardedActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-video-interstitial"
@@ -44,7 +44,7 @@ class VideoRewardedOriginalApiActivity : BaseAdActivity() {
                 object : AdLoadCallback<RewardedAd> {
                     override fun onAdLoaded(ad: RewardedAd) {
                         super.onAdLoaded(ad)
-                        ad.show(this@VideoRewardedOriginalApiActivity) { _ -> }
+                        ad.show(this@OriginalApiVideoRewardedActivity) { _ -> }
                     }
 
                     override fun onAdFailedToLoad(adError: LoadAdError) {

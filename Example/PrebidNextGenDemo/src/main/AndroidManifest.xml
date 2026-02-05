@@ -40,16 +40,19 @@
             android:exported="true" />
 
         <activity
-            android:name=".activities.ads.original.Banner320x50OriginalApiActivity"
+            android:name=".activities.ads.original.OriginalApiBanner320x50Activity"
             android:exported="true" />
         <activity
-            android:name=".activities.ads.original.DisplayInterstitialOriginalApiActivity"
+            android:name=".activities.ads.original.OriginalApiDisplayBannerMultiSizeActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.ads.original.VideoRewardedOriginalApiActivity"
+            android:name=".activities.ads.original.OriginalApiDisplayInterstitialActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.ads.original.NativeInAppOriginalApiActivity"
+            android:name=".activities.ads.original.OriginalApiVideoRewardedActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.original.OriginalApiNativeInAppActivity"
             android:exported="true" />
     </application>
 
