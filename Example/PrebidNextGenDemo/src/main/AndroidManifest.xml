@@ -40,10 +40,13 @@
             android:exported="true" />
 
         <activity
-            android:name=".activities.ads.original.Banner320x50OriginalActivity"
+            android:name=".activities.ads.original.Banner320x50OriginalApiActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.ads.original.DisplayInterstitialOriginalActivity"
+            android:name=".activities.ads.original.DisplayInterstitialOriginalApiActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.original.VideoRewardedOriginalApiActivity"
             android:exported="true" />
     </application>
 

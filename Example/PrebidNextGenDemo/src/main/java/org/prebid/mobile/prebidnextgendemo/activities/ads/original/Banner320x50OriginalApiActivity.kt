@@ -28,7 +28,7 @@ import org.prebid.mobile.BannerParameters
 import org.prebid.mobile.Signals
 import org.prebid.mobile.prebidnextgendemo.activities.BaseAdActivity
 
-class Banner320x50OriginalActivity : BaseAdActivity() {
+class Banner320x50OriginalApiActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_banner"
