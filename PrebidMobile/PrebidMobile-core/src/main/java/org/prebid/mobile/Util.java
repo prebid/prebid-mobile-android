@@ -51,8 +51,8 @@ public class Util {
     static final String AD_MANAGER_REQUEST_BUILDER_CLASS_V20 = "com.google.android.gms.ads.admanager.AdManagerAdRequest$Builder";
     static final String APPLOVIN_MAX_NATIVE_AD_LOADER = "com.applovin.mediation.nativeAds.MaxNativeAdLoader";
     static final String ANDROID_OS_BUNDLE = "android.os.Bundle";
-    static final String NEXT_GEN_SDK_BANNER_REQUEST_BUILDER_CLASS = "com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest$Builder";
-    static final String NEXT_GEN_SDK_REQUEST_BUILDER_CLASS = "com.google.android.libraries.ads.mobile.sdk.common.AdRequest$Builder";
+    static final String NEXT_GEN_SDK_BASE_REQUEST_BUILDER_CLASS = "com.google.android.libraries.ads.mobile.sdk.common.BaseAdRequestBuilder";
+
 
     public static final String APPLOVIN_MAX_RESPONSE_ID_KEY = "PrebidMaxMediationAdapterExtraResponseId";
     public static final String APPLOVIN_MAX_KEYWORDS_KEY = "PrebidMaxMediationAdapterExtraKeywordsId";
@@ -338,8 +338,11 @@ public class Util {
     }
 
     private static boolean isNextGenSdkRequestBuilderClass(Class<?> adObjClass) {
-        return adObjClass == getClassFromString(NEXT_GEN_SDK_REQUEST_BUILDER_CLASS)
-                || adObjClass == getClassFromString(NEXT_GEN_SDK_BANNER_REQUEST_BUILDER_CLASS);
+        Class<?> baseBuilder = getClassFromString(NEXT_GEN_SDK_BASE_REQUEST_BUILDER_CLASS);
+        if (baseBuilder != null) {
+            return baseBuilder.isAssignableFrom(adObjClass);
+        }
+        return false;
     }
 
     public static void apply(HashMap<String, String> bids, Object adObj) {

@@ -3,6 +3,7 @@ package org.prebid.mobile.prebidnextgendemo.testcases
 import org.prebid.mobile.prebidnextgendemo.R
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.Banner320x50OriginalApiActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.DisplayInterstitialOriginalApiActivity
+import org.prebid.mobile.prebidnextgendemo.activities.ads.original.NativeInAppOriginalApiActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.VideoRewardedOriginalApiActivity
 
 object TestCaseRepository {
@@ -27,6 +28,12 @@ object TestCaseRepository {
             AdFormat.VIDEO_REWARDED,
             IntegrationKind.GAM_ORIGINAL,
             VideoRewardedOriginalApiActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_native_in_app,
+            AdFormat.NATIVE,
+            IntegrationKind.GAM_ORIGINAL,
+            NativeInAppOriginalApiActivity::class.java,
         )
     )
 
