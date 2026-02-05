@@ -6,6 +6,7 @@ import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiDi
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiDisplayInterstitialActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiMultiformatBannerActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiNativeInAppActivity
+import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiVideoInterstitialActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiVideoRewardedActivity
 
 object TestCaseRepository {
@@ -36,6 +37,12 @@ object TestCaseRepository {
             AdFormat.DISPLAY_INTERSTITIAL,
             IntegrationKind.GAM_ORIGINAL,
             OriginalApiDisplayInterstitialActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_video_interstitial,
+            AdFormat.VIDEO_INTERSTITIAL,
+            IntegrationKind.GAM_ORIGINAL,
+            OriginalApiVideoInterstitialActivity::class.java,
         ),
         TestCase(
             R.string.gam_original_video_rewarded,
