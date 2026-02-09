@@ -1,0 +1,26 @@
+apply from: '../android.gradle'
+apply from: '../publisher.gradle'
+apply from: '../tests.gradle'
+apply plugin: 'kotlin-android'
+
+android {
+    namespace "org.prebid.mobile.eventhandlers"
+    defaultConfig {
+        minSdkVersion 23
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+    testOptions {
+        unitTests.all {
+            jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
+            systemProperty 'robolectric.invokedynamic.enable', 'false'
+        }
+    }
+}
+
+dependencies {
+    implementation project(":PrebidMobile")
+    implementation libs.google.next.gen.sdk
+    implementation libs.kotlin.stdlib
+}

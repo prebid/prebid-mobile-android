@@ -13,6 +13,7 @@ import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiNa
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiVideoBannerActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiVideoInterstitialActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiVideoRewardedActivity
+import org.prebid.mobile.prebidnextgendemo.activities.ads.rendering.RenderingApiDisplayBanner320x50Activity
 
 object TestCaseRepository {
 
@@ -23,7 +24,7 @@ object TestCaseRepository {
             R.string.gam_original_display_banner_320x50,
             AdFormat.DISPLAY_BANNER,
             IntegrationKind.GAM_ORIGINAL,
-            OriginalApiBanner320x50Activity::class.java,
+            OriginalApiBanner320x50Activity::class.java
         ),
         TestCase(
             R.string.gam_original_display_banner_multi_size,
@@ -35,61 +36,67 @@ object TestCaseRepository {
             R.string.gam_original_video_banner,
             AdFormat.VIDEO_BANNER,
             IntegrationKind.GAM_ORIGINAL,
-            OriginalApiVideoBannerActivity::class.java,
+            OriginalApiVideoBannerActivity::class.java
         ),
         TestCase(
             R.string.gam_original_multiformat_banner,
             AdFormat.MULTIFORMAT,
             IntegrationKind.GAM_ORIGINAL,
-            OriginalApiMultiformatBannerActivity::class.java,
+            OriginalApiMultiformatBannerActivity::class.java
         ),
         TestCase(
             R.string.gam_original_display_interstitial,
             AdFormat.DISPLAY_INTERSTITIAL,
             IntegrationKind.GAM_ORIGINAL,
-            OriginalApiDisplayInterstitialActivity::class.java,
+            OriginalApiDisplayInterstitialActivity::class.java
         ),
         TestCase(
             R.string.gam_original_video_interstitial,
             AdFormat.VIDEO_INTERSTITIAL,
             IntegrationKind.GAM_ORIGINAL,
-            OriginalApiVideoInterstitialActivity::class.java,
+            OriginalApiVideoInterstitialActivity::class.java
         ),
         TestCase(
             R.string.gam_original_video_rewarded,
             AdFormat.VIDEO_REWARDED,
             IntegrationKind.GAM_ORIGINAL,
-            OriginalApiVideoRewardedActivity::class.java,
+            OriginalApiVideoRewardedActivity::class.java
         ),
         TestCase(
             R.string.gam_original_multiformat_interstitial,
             AdFormat.MULTIFORMAT,
             IntegrationKind.GAM_ORIGINAL,
-            OriginalApiMultiformatInterstitialActivity::class.java,
+            OriginalApiMultiformatInterstitialActivity::class.java
         ),
         TestCase(
             R.string.gam_original_native_in_app,
             AdFormat.NATIVE,
             IntegrationKind.GAM_ORIGINAL,
-            OriginalApiNativeInAppActivity::class.java,
+            OriginalApiNativeInAppActivity::class.java
         ),
         TestCase(
             R.string.gam_original_native_styles,
             AdFormat.NATIVE,
             IntegrationKind.GAM_ORIGINAL,
-            OriginalApiNativeStylesActivity::class.java,
+            OriginalApiNativeStylesActivity::class.java
         ),
         TestCase(
             R.string.gam_original_multiformat_banner_video_native_in_app,
             AdFormat.MULTIFORMAT,
             IntegrationKind.GAM_ORIGINAL,
-            OriginalApiMultiformatBannerVideoNativeInAppActivity::class.java,
+            OriginalApiMultiformatBannerVideoNativeInAppActivity::class.java
         ),
         TestCase(
             R.string.gam_original_multiformat_banner_video_native_styles,
             AdFormat.MULTIFORMAT,
             IntegrationKind.GAM_ORIGINAL,
-            OriginalApiMultiformatBannerVideoNativeStylesActivity::class.java,
+            OriginalApiMultiformatBannerVideoNativeStylesActivity::class.java
+        ),
+        TestCase(
+            R.string.gam_rendering_display_banner_320x50,
+            AdFormat.DISPLAY_BANNER,
+            IntegrationKind.GAM_RENDERING,
+            RenderingApiDisplayBanner320x50Activity::class.java
         )
     )
 

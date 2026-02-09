@@ -31,7 +31,8 @@ android {
 }
 
 dependencies {
-   implementation project(':PrebidMobile')
+    implementation project(':PrebidMobile')
+    implementation project(':PrebidMobile-nextEventHandlers')
 
     // For testing SNAPSHOT releases
     // implementation "org.prebid:prebid-mobile-sdk:$prebidSdkVersionName-SNAPSHOT"
