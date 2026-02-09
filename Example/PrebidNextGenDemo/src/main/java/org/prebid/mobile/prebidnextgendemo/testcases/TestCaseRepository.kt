@@ -15,6 +15,7 @@ import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiVi
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiVideoRewardedActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.rendering.RenderingApiDisplayBanner320x50Activity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.rendering.RenderingApiDisplayInterstitialActivity
+import org.prebid.mobile.prebidnextgendemo.activities.ads.rendering.RenderingApiVideoRewardedActivity
 
 object TestCaseRepository {
 
@@ -103,7 +104,13 @@ object TestCaseRepository {
             R.string.gam_rendering_display_interstitial,
             AdFormat.DISPLAY_INTERSTITIAL,
             IntegrationKind.GAM_RENDERING,
-            RenderingApiDisplayInterstitialActivity::class.java,
+            RenderingApiDisplayInterstitialActivity::class.java
+        ),
+        TestCase(
+            R.string.gam_rendering_video_rewarded,
+            AdFormat.VIDEO_REWARDED,
+            IntegrationKind.GAM_RENDERING,
+            RenderingApiVideoRewardedActivity::class.java
         )
     )
 

@@ -81,6 +81,9 @@
         <activity
             android:name="org.prebid.mobile.prebidnextgendemo.activities.ads.rendering.RenderingApiDisplayInterstitialActivity"
             android:exported="true" />
+        <activity
+            android:name="org.prebid.mobile.prebidnextgendemo.activities.ads.rendering.RenderingApiVideoRewardedActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
