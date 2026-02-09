@@ -15,6 +15,9 @@ import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiVi
 import org.prebid.mobile.prebidnextgendemo.activities.ads.original.OriginalApiVideoRewardedActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.rendering.RenderingApiDisplayBanner320x50Activity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.rendering.RenderingApiDisplayInterstitialActivity
+import org.prebid.mobile.prebidnextgendemo.activities.ads.rendering.RenderingApiNativeActivity
+import org.prebid.mobile.prebidnextgendemo.activities.ads.rendering.RenderingApiVideoBannerActivity
+import org.prebid.mobile.prebidnextgendemo.activities.ads.rendering.RenderingApiVideoInterstitialActivity
 import org.prebid.mobile.prebidnextgendemo.activities.ads.rendering.RenderingApiVideoRewardedActivity
 
 object TestCaseRepository {
@@ -101,16 +104,34 @@ object TestCaseRepository {
             RenderingApiDisplayBanner320x50Activity::class.java
         ),
         TestCase(
+            R.string.gam_rendering_video_banner,
+            AdFormat.VIDEO_BANNER,
+            IntegrationKind.GAM_RENDERING,
+            RenderingApiVideoBannerActivity::class.java
+        ),
+        TestCase(
             R.string.gam_rendering_display_interstitial,
             AdFormat.DISPLAY_INTERSTITIAL,
             IntegrationKind.GAM_RENDERING,
             RenderingApiDisplayInterstitialActivity::class.java
         ),
         TestCase(
+            R.string.gam_rendering_video_interstitial,
+            AdFormat.VIDEO_INTERSTITIAL,
+            IntegrationKind.GAM_RENDERING,
+            RenderingApiVideoInterstitialActivity::class.java
+        ),
+        TestCase(
             R.string.gam_rendering_video_rewarded,
             AdFormat.VIDEO_REWARDED,
             IntegrationKind.GAM_RENDERING,
             RenderingApiVideoRewardedActivity::class.java
+        ),
+        TestCase(
+            R.string.gam_rendering_native,
+            AdFormat.NATIVE,
+            IntegrationKind.GAM_RENDERING,
+            RenderingApiNativeActivity::class.java
         )
     )
 
