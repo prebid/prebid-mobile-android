@@ -39,13 +39,16 @@ import com.google.android.libraries.ads.mobile.sdk.banner.AdSize as NextSize
  * To achieve safe integration between various Next-Gen SDK versions we have to wrap all PublisherAdView method execution in try / catch.
  * This class instance should be created via newInstance method, which will catch any potential exception on PublisherAdView / PublisherAdViewWrapper instance creation
  */
-class AdViewWrapper private constructor(
+internal class AdViewWrapper private constructor(
     context: Context,
     private val nextAdUnit: String,
     private val listener: NextAdEventListener,
     adSizes: List<AdSize>,
 ) : AdLoadCallback<BannerAd>, BannerAdEventCallback {
-    private val adView: AdView = AdView(context)
+
+    private val adView: AdView by lazy {
+        AdView(context)
+    }
     private var ad: BannerAd? = null
     private val nextSizes = adSizes.toNextAdSizes()
 
@@ -57,18 +60,13 @@ class AdViewWrapper private constructor(
             adUnitId: String,
             eventListener: NextAdEventListener,
             adSizes: List<AdSize>,
-        ): AdViewWrapper? {
-            try {
-                return AdViewWrapper(
-                    context,
-                    adUnitId,
-                    eventListener,
-                    adSizes
-                )
-            } catch (throwable: Throwable) {
-                LogUtil.error(TAG, Log.getStackTraceString(throwable))
-            }
-            return null
+        ): AdViewWrapper {
+            return AdViewWrapper(
+                context,
+                adUnitId,
+                eventListener,
+                adSizes
+            )
         }
     }
 

@@ -78,6 +78,9 @@
         <activity
             android:name=".activities.ads.rendering.RenderingApiDisplayBanner320x50Activity"
             android:exported="true" />
+        <activity
+            android:name="org.prebid.mobile.prebidnextgendemo.activities.ads.rendering.RenderingApiDisplayInterstitialActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

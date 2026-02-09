@@ -22,7 +22,7 @@ import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAd
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.NativeAdUnit
 
-object Utils {
+internal object Utils {
     private val TAG: String = Utils::class.java.getSimpleName()
     private val RESERVED_KEYS: HashSet<String?> = HashSet()
     private const val KEY_IS_PREBID_CREATIVE = "isPrebid"
