@@ -54,7 +54,7 @@ public interface PrebidMobilePluginRenderer {
 
     /**
      * Creates and returns Banner View for a given Bid Response.
-     * Returns nil in the case of an internal error.
+     * Returns null in the case of an internal error.
      * <br>
      * Don't forget to clean resources in {@link android.view.View#onDetachedFromWindow()}.
      */
@@ -68,7 +68,7 @@ public interface PrebidMobilePluginRenderer {
 
     /**
      * Creates and returns an implementation of PrebidMobileInterstitialControllerInterface for a given bid response
-     * Returns nil in the case of an internal error
+     * Returns null in the case of an internal error
      */
     PrebidMobileInterstitialControllerInterface createInterstitialController(
             @NonNull Context context,

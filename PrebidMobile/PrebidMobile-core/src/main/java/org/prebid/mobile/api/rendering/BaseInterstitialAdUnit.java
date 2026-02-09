@@ -138,6 +138,20 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     @Nullable
+    public String getGlobalOrtbConfig() {
+        return config.getGlobalOrtbConfig();
+    }
+
+    /**
+     * Sets the global OpenRTB configuration string for the ad unit. It takes precedence over `Targeting.setGlobalOrtbConfig`.
+     * Expected format: {@code "{"new_field": "value"}"}.
+     * @param ortbConfig The global OpenRTB JSON configuration string to set. Can be `null` to clear the configuration.
+     */
+    public void setGlobalOrtbConfig(@Nullable String ortbConfig) {
+        config.setGlobalOrtbConfig(ortbConfig);
+    }
+
+    @Nullable
     public String getPbAdSlot() {
         return config.getPbAdSlot();
     }
