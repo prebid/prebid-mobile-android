@@ -56,21 +56,17 @@ class NextBannerEventHandler(
 
     private var isExpectingAppEvent = false
 
-    //region ==================== NextAdEventListener Implementation
     override fun onEvent(adEvent: AdEvent) {
         when (adEvent) {
-            AdEvent.APP_EVENT_RECEIVED -> handleAppEvent()
-            AdEvent.CLOSED -> bannerEventListener?.onAdClosed()
-            AdEvent.FAILED -> handleAdFailure(adEvent.errorCode)
-            AdEvent.CLICKED -> bannerEventListener?.onAdClicked()
-            AdEvent.LOADED -> primaryAdReceived()
+            is AdEvent.AppEvent -> handleAppEvent()
+            is AdEvent.Closed -> bannerEventListener?.onAdClosed()
+            is AdEvent.Failed -> handleAdFailure(adEvent.errorCode)
+            is AdEvent.Clicked -> bannerEventListener?.onAdClicked()
+            is AdEvent.Loaded -> primaryAdReceived()
             else -> {}
         }
     }
 
-    //endregion ==================== NextAdEventListener Implementation
-
-    //region ==================== EventHandler Implementation
     override fun getAdSizeArray(): Array<AdSize?> {
         if (adSizes.isEmpty()) {
             return arrayOfNulls(0)
@@ -125,8 +121,7 @@ class NextBannerEventHandler(
         destroyViews()
     }
 
-    //endregion ==================== EventHandler Implementation
-    private fun createPublisherAdView(): AdViewWrapper? {
+    private fun createPublisherAdView(): AdViewWrapper {
         return AdViewWrapper.newInstance(applicationContext, adUnitId, this, adSizes)
     }
 

@@ -38,7 +38,7 @@ internal class InterstitialAdWrapper(
         interstitialAd = ad
         interstitialAd?.adEventCallback = this
         CoroutineScope(Dispatchers.Main).launch {
-            listener.onEvent(AdEvent.LOADED)
+            listener.onEvent(AdEvent.Loaded())
         }
     }
 
@@ -49,8 +49,7 @@ internal class InterstitialAdWrapper(
     }
 
     private fun notifyErrorListener(code: Int) {
-        val adEvent = AdEvent.FAILED
-        adEvent.errorCode = code
+        val adEvent = AdEvent.Failed(code)
 
         CoroutineScope(Dispatchers.Main).launch {
             listener.onEvent(adEvent)
@@ -61,7 +60,7 @@ internal class InterstitialAdWrapper(
         super.onAppEvent(name, data)
         if (Constants.APP_EVENT == name) {
             CoroutineScope(Dispatchers.Main).launch {
-                listener.onEvent(AdEvent.APP_EVENT_RECEIVED)
+                listener.onEvent(AdEvent.AppEvent())
             }
         }
     }
@@ -69,14 +68,14 @@ internal class InterstitialAdWrapper(
     override fun onAdClicked() {
         super.onAdClicked()
         CoroutineScope(Dispatchers.Main).launch {
-            listener.onEvent(AdEvent.CLICKED)
+            listener.onEvent(AdEvent.Clicked())
         }
     }
 
     override fun onAdDismissedFullScreenContent() {
         super.onAdDismissedFullScreenContent()
         CoroutineScope(Dispatchers.Main).launch {
-            listener.onEvent(AdEvent.CLOSED)
+            listener.onEvent(AdEvent.Closed())
         }
     }
 
@@ -89,7 +88,7 @@ internal class InterstitialAdWrapper(
     override fun onAdShowedFullScreenContent() {
         super.onAdShowedFullScreenContent()
         CoroutineScope(Dispatchers.Main).launch {
-            listener.onEvent(AdEvent.DISPLAYED)
+            listener.onEvent(AdEvent.Displayed())
         }
     }
 

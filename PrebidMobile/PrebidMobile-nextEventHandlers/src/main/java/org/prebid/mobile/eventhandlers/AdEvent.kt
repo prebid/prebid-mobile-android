@@ -18,12 +18,12 @@ package org.prebid.mobile.eventhandlers
 /**
  * Ad event.
  */
-enum class AdEvent(var errorCode: Int = -1) {
-    APP_EVENT_RECEIVED,
-    LOADED,
-    CLOSED,
-    CLICKED,
-    DISPLAYED,
-    REWARD_EARNED,
-    FAILED;
+sealed class AdEvent() {
+    class AppEvent() : AdEvent()
+    class Loaded() : AdEvent()
+    class Closed() : AdEvent()
+    class Clicked() : AdEvent()
+    class Displayed() : AdEvent()
+    class Reward() : AdEvent()
+    class Failed(val errorCode: Int = -1) : AdEvent()
 }

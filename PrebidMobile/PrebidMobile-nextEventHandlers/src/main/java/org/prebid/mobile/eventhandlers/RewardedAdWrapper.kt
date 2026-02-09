@@ -37,9 +37,9 @@ internal class RewardedAdWrapper(
         rewardedAd = ad
         rewardedAd?.adEventCallback = this
         CoroutineScope(Dispatchers.Main).launch {
-            listener.onEvent(AdEvent.LOADED)
+            listener.onEvent(AdEvent.Loaded())
             if (metadataContainsAdEvent()) {
-                listener.onEvent(AdEvent.APP_EVENT_RECEIVED)
+                listener.onEvent(AdEvent.AppEvent())
             }
         }
     }
@@ -68,8 +68,7 @@ internal class RewardedAdWrapper(
     }
 
     private fun notifyErrorListener(errorCode: Int) {
-        val adEvent = AdEvent.FAILED
-        adEvent.errorCode = errorCode
+        val adEvent = AdEvent.Failed(errorCode)
 
         CoroutineScope(Dispatchers.Main).launch {
             listener.onEvent(adEvent)
@@ -84,21 +83,21 @@ internal class RewardedAdWrapper(
     override fun onAdShowedFullScreenContent() {
         super.onAdShowedFullScreenContent()
         CoroutineScope(Dispatchers.Main).launch {
-            listener.onEvent(AdEvent.DISPLAYED)
+            listener.onEvent(AdEvent.Displayed())
         }
     }
 
     override fun onAdDismissedFullScreenContent() {
         super.onAdDismissedFullScreenContent()
         CoroutineScope(Dispatchers.Main).launch {
-            listener.onEvent(AdEvent.CLOSED)
+            listener.onEvent(AdEvent.Closed())
         }
     }
 
     override fun onUserEarnedReward(reward: RewardItem) {
         CoroutineScope(Dispatchers.Main).launch {
-            listener.onEvent(AdEvent.REWARD_EARNED)
-            listener.onEvent(AdEvent.CLOSED)
+            listener.onEvent(AdEvent.Reward())
+            listener.onEvent(AdEvent.Closed())
         }
     }
 

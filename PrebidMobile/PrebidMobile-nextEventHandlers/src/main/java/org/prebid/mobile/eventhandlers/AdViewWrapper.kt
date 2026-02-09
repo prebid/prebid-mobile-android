@@ -70,39 +70,32 @@ internal class AdViewWrapper private constructor(
         }
     }
 
-    //region ==================== BannerAdEventCallback Implementation
-
     override fun onAppEvent(name: String, data: String?) {
         if (Constants.APP_EVENT == name) {
             CoroutineScope(Dispatchers.Main).launch {
-                listener.onEvent(AdEvent.APP_EVENT_RECEIVED)
+                listener.onEvent(AdEvent.AppEvent())
             }
-
         }
     }
 
     override fun onAdClicked() {
         super.onAdClicked()
         CoroutineScope(Dispatchers.Main).launch {
-            listener.onEvent(AdEvent.CLICKED)
+            listener.onEvent(AdEvent.Clicked())
         }
     }
 
     override fun onAdDismissedFullScreenContent() {
         super.onAdDismissedFullScreenContent()
         CoroutineScope(Dispatchers.Main).launch {
-            listener.onEvent(AdEvent.CLOSED)
+            listener.onEvent(AdEvent.Closed())
         }
     }
-    //endregion ==================== BannerAdEventCallback Implementation
 
-    //region ==================== AdLoadCallback Implementation
     override fun onAdFailedToLoad(adError: LoadAdError) {
         super.onAdFailedToLoad(adError)
         CoroutineScope(Dispatchers.Main).launch {
-            val adEvent = AdEvent.FAILED
-            //TODO check codes
-            adEvent.errorCode = adError.code.value
+            val adEvent = AdEvent.Failed(adError.code.value)
 
             listener.onEvent(adEvent)
         }
@@ -113,11 +106,10 @@ internal class AdViewWrapper private constructor(
         this.ad = ad
         this.ad?.adEventCallback = this
         CoroutineScope(Dispatchers.Main).launch {
-            listener.onEvent(AdEvent.LOADED)
+            listener.onEvent(AdEvent.Loaded())
         }
     }
 
-    //endregion ==================== AdLoadCallback Implementation
     fun loadAd(bid: Bid?) {
         try {
             val adRequestBuilder = BannerAdRequest.Builder(nextAdUnit, nextSizes)

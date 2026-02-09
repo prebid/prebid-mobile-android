@@ -39,12 +39,12 @@ class NextRewardedEventHandler(
 
     override fun onEvent(adEvent: AdEvent) {
         when (adEvent) {
-            AdEvent.APP_EVENT_RECEIVED -> handleAppEvent()
-            AdEvent.LOADED -> primaryAdReceived()
-            AdEvent.DISPLAYED -> listener?.onAdDisplayed()
-            AdEvent.CLOSED -> listener?.onAdClosed()
-            AdEvent.FAILED -> notifyErrorListener(adEvent.errorCode)
-            AdEvent.REWARD_EARNED -> listener?.onUserEarnedReward()
+            is AdEvent.AppEvent -> handleAppEvent()
+            is AdEvent.Loaded -> primaryAdReceived()
+            is AdEvent.Displayed -> listener?.onAdDisplayed()
+            is AdEvent.Closed -> listener?.onAdClosed()
+            is AdEvent.Failed -> notifyErrorListener(adEvent.errorCode)
+            is AdEvent.Reward -> listener?.onUserEarnedReward()
             else -> {}
         }
     }

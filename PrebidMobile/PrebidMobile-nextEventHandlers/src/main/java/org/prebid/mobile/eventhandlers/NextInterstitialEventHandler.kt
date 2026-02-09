@@ -33,11 +33,11 @@ class NextInterstitialEventHandler(activity: Activity, private val adUnitId: Str
 
     override fun onEvent(adEvent: AdEvent) {
         when (adEvent) {
-            AdEvent.APP_EVENT_RECEIVED -> handleAppEvent()
-            AdEvent.LOADED -> primaryAdReceived()
-            AdEvent.CLOSED -> eventListener?.onAdClosed()
-            AdEvent.DISPLAYED -> eventListener?.onAdDisplayed()
-            AdEvent.FAILED -> handleAdFailure(adEvent.errorCode)
+            is AdEvent.AppEvent -> handleAppEvent()
+            is AdEvent.Loaded -> primaryAdReceived()
+            is AdEvent.Closed -> eventListener?.onAdClosed()
+            is AdEvent.Displayed -> eventListener?.onAdDisplayed()
+            is AdEvent.Failed -> handleAdFailure(adEvent.errorCode)
             else -> {}
         }
     }
@@ -95,7 +95,6 @@ class NextInterstitialEventHandler(activity: Activity, private val adUnitId: Str
     }
 
     private fun handleAdFailure(errorCode: Int) {
-        // TODO: Review error codes
         when (errorCode) {
             Constants.ERROR_CODE_INTERNAL_ERROR -> eventListener?.onAdFailed(
                 AdException(
