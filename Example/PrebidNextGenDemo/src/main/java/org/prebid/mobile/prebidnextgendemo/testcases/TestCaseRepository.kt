@@ -26,111 +26,111 @@ object TestCaseRepository {
 
     fun getList() = arrayListOf(
         TestCase(
-            R.string.gam_original_display_banner_320x50,
+            R.string.original_display_banner_320x50,
             AdFormat.DISPLAY_BANNER,
-            IntegrationKind.GAM_ORIGINAL,
+            IntegrationKind.ORIGINAL,
             OriginalApiBanner320x50Activity::class.java
         ),
         TestCase(
-            R.string.gam_original_display_banner_multi_size,
+            R.string.original_display_banner_multi_size,
             AdFormat.DISPLAY_BANNER,
-            IntegrationKind.GAM_ORIGINAL,
+            IntegrationKind.ORIGINAL,
             OriginalApiDisplayBannerMultiSizeActivity::class.java
         ),
         TestCase(
-            R.string.gam_original_video_banner,
+            R.string.original_video_banner,
             AdFormat.VIDEO_BANNER,
-            IntegrationKind.GAM_ORIGINAL,
+            IntegrationKind.ORIGINAL,
             OriginalApiVideoBannerActivity::class.java
         ),
         TestCase(
-            R.string.gam_original_multiformat_banner,
+            R.string.original_multiformat_banner,
             AdFormat.MULTIFORMAT,
-            IntegrationKind.GAM_ORIGINAL,
+            IntegrationKind.ORIGINAL,
             OriginalApiMultiformatBannerActivity::class.java
         ),
         TestCase(
-            R.string.gam_original_display_interstitial,
+            R.string.original_display_interstitial,
             AdFormat.DISPLAY_INTERSTITIAL,
-            IntegrationKind.GAM_ORIGINAL,
+            IntegrationKind.ORIGINAL,
             OriginalApiDisplayInterstitialActivity::class.java
         ),
         TestCase(
-            R.string.gam_original_video_interstitial,
+            R.string.original_video_interstitial,
             AdFormat.VIDEO_INTERSTITIAL,
-            IntegrationKind.GAM_ORIGINAL,
+            IntegrationKind.ORIGINAL,
             OriginalApiVideoInterstitialActivity::class.java
         ),
         TestCase(
-            R.string.gam_original_video_rewarded,
+            R.string.original_video_rewarded,
             AdFormat.VIDEO_REWARDED,
-            IntegrationKind.GAM_ORIGINAL,
+            IntegrationKind.ORIGINAL,
             OriginalApiVideoRewardedActivity::class.java
         ),
         TestCase(
-            R.string.gam_original_multiformat_interstitial,
+            R.string.original_multiformat_interstitial,
             AdFormat.MULTIFORMAT,
-            IntegrationKind.GAM_ORIGINAL,
+            IntegrationKind.ORIGINAL,
             OriginalApiMultiformatInterstitialActivity::class.java
         ),
         TestCase(
-            R.string.gam_original_native_in_app,
+            R.string.original_native_in_app,
             AdFormat.NATIVE,
-            IntegrationKind.GAM_ORIGINAL,
+            IntegrationKind.ORIGINAL,
             OriginalApiNativeInAppActivity::class.java
         ),
         TestCase(
-            R.string.gam_original_native_styles,
+            R.string.original_native_styles,
             AdFormat.NATIVE,
-            IntegrationKind.GAM_ORIGINAL,
+            IntegrationKind.ORIGINAL,
             OriginalApiNativeStylesActivity::class.java
         ),
         TestCase(
-            R.string.gam_original_multiformat_banner_video_native_in_app,
+            R.string.original_multiformat_banner_video_native_in_app,
             AdFormat.MULTIFORMAT,
-            IntegrationKind.GAM_ORIGINAL,
+            IntegrationKind.ORIGINAL,
             OriginalApiMultiformatBannerVideoNativeInAppActivity::class.java
         ),
         TestCase(
-            R.string.gam_original_multiformat_banner_video_native_styles,
+            R.string.original_multiformat_banner_video_native_styles,
             AdFormat.MULTIFORMAT,
-            IntegrationKind.GAM_ORIGINAL,
+            IntegrationKind.ORIGINAL,
             OriginalApiMultiformatBannerVideoNativeStylesActivity::class.java
         ),
         TestCase(
-            R.string.gam_rendering_display_banner_320x50,
+            R.string.rendering_display_banner_320x50,
             AdFormat.DISPLAY_BANNER,
-            IntegrationKind.GAM_RENDERING,
+            IntegrationKind.RENDERING,
             RenderingApiDisplayBanner320x50Activity::class.java
         ),
         TestCase(
-            R.string.gam_rendering_video_banner,
+            R.string.rendering_video_banner,
             AdFormat.VIDEO_BANNER,
-            IntegrationKind.GAM_RENDERING,
+            IntegrationKind.RENDERING,
             RenderingApiVideoBannerActivity::class.java
         ),
         TestCase(
-            R.string.gam_rendering_display_interstitial,
+            R.string.rendering_display_interstitial,
             AdFormat.DISPLAY_INTERSTITIAL,
-            IntegrationKind.GAM_RENDERING,
+            IntegrationKind.RENDERING,
             RenderingApiDisplayInterstitialActivity::class.java
         ),
         TestCase(
-            R.string.gam_rendering_video_interstitial,
+            R.string.rendering_video_interstitial,
             AdFormat.VIDEO_INTERSTITIAL,
-            IntegrationKind.GAM_RENDERING,
+            IntegrationKind.RENDERING,
             RenderingApiVideoInterstitialActivity::class.java
         ),
         TestCase(
-            R.string.gam_rendering_video_rewarded,
+            R.string.rendering_video_rewarded,
             AdFormat.VIDEO_REWARDED,
-            IntegrationKind.GAM_RENDERING,
+            IntegrationKind.RENDERING,
             RenderingApiVideoRewardedActivity::class.java
         ),
         TestCase(
-            R.string.gam_rendering_native,
+            R.string.rendering_native,
             AdFormat.NATIVE,
-            IntegrationKind.GAM_RENDERING,
+            IntegrationKind.RENDERING,
             RenderingApiNativeActivity::class.java
         )
     )

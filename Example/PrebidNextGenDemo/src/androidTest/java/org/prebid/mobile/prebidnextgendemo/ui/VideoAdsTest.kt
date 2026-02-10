@@ -1,0 +1,121 @@
+package org.prebid.mobile.prebidnextgendemo.ui
+
+import androidx.annotation.StringRes
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.BySelector
+import androidx.test.uiautomator.Until
+import junit.framework.TestCase.assertNotNull
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.prebid.mobile.prebidnextgendemo.R
+import org.prebid.mobile.prebidnextgendemo.testcases.AdFormat
+import org.prebid.mobile.prebidnextgendemo.testcases.IntegrationKind
+import org.prebid.mobile.prebidnextgendemo.testcases.TestCase
+import java.util.regex.Pattern
+
+@RunWith(Parameterized::class)
+class VideoAdsTest(
+    @StringRes private val testCaseTitleId: Int,
+    private val testCaseName: String,
+) : BaseAdsTest() {
+
+    companion object {
+        @JvmStatic
+        @Parameterized.Parameters(name = "{1}")
+        fun arguments() = listOf(
+            arrayOf(R.string.original_video_rewarded, "Original API Video Rewarded"),
+            arrayOf(R.string.rendering_video_banner, "Video Banner"),
+            arrayOf(R.string.rendering_video_rewarded, "Rendering API Video Rewarded")
+        )
+    }
+
+    @Test
+    fun test() {
+        testAd(testCaseTitleId)
+    }
+
+    override fun checkAd(testCase: TestCase) {
+        when (testCase.adFormat) {
+            AdFormat.VIDEO_BANNER -> checkVideoBannerAd()
+            AdFormat.VIDEO_REWARDED -> checkVideoRewardedAd(testCase)
+            AdFormat.VIDEO_INTERSTITIAL -> checkVideoInterstitialAd()
+            else -> {
+                throw IllegalArgumentException("TestCase not supported for ${testCase.adFormat.description}")
+            }
+        }
+    }
+
+    private fun checkVideoInterstitialAd() {
+        val ad = By.res(packageName, "exo_subtitles")
+        val endCard = By.clazz(Pattern.compile(".*PrebidWebViewInterstitial"))
+        val closeButton = By.res(packageName, "iv_close_interstitial")
+        val skipButton = By.res(packageName, "iv_skip")
+
+        val findAd = device.wait(Until.findObject(ad), timeout)
+        assertNotNull(findAd)
+
+        val findSkipButton = device.wait(Until.findObject(skipButton), timeout * 3)
+        assertNotNull(findSkipButton)
+        findSkipButton.click()
+
+        val findEndCard = device.wait(Until.findObject(endCard), timeout)
+        if (findEndCard == null) {
+            val endCardCloseButtonPattern = By.clazz(".*ImageView".toPattern())
+            val endCardButton = device.wait(Until.findObject(endCardCloseButtonPattern), timeout)
+            assertNotNull(endCardButton)
+        }
+
+        val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
+        assertNotNull(findCloseButton)
+        findCloseButton.click()
+        Thread.sleep(1000)
+        device.pressBack()
+    }
+
+    private fun checkVideoBannerAd() {
+        val ad = By.res(packageName, "exo_subtitles")
+        val volumeButton = By.clazz("android.widget.ImageView")
+
+        val findAd = device.wait(Until.findObject(ad), timeout)
+        assertNotNull(findAd)
+        val findVolumeButton = device.wait(Until.findObject(volumeButton), timeout)
+        assertNotNull(findVolumeButton)
+        device.pressBack()
+    }
+
+    private fun checkVideoRewardedAd(testCase: TestCase) {
+        val ad: BySelector
+        val endCard: BySelector
+        val closeButton: BySelector
+        if (testCase.integrationKind == IntegrationKind.ORIGINAL) {
+            ad = By.res("video_container")
+            endCard = By.text("recycling_300x250")
+            closeButton = By.clazz("android.widget.Button")
+        } else {
+            ad = By.res(packageName, "exo_subtitles")
+            endCard = By.clazz(Pattern.compile(".*PrebidWebViewInterstitial"))
+            closeButton = By.res(packageName, "iv_close_interstitial")
+        }
+        val findAd = device.wait(Until.findObject(ad), timeout * 3)
+        if (findAd == null) {
+            val pattern = By.clazz("""com\.google\.android\.gms\.ads\.internal.*""".toPattern())
+            val adCheck = device.wait(Until.findObject(pattern), timeout)
+            assertNotNull(adCheck)
+        }
+
+        val findEndCard = device.wait(Until.findObject(endCard), timeout * 3)
+        if (findEndCard == null && testCase.integrationKind != IntegrationKind.ORIGINAL) {
+            val endCardCloseButtonPattern = By.clazz(".*ImageView".toPattern())
+            val endCardButton = device.wait(Until.findObject(endCardCloseButtonPattern), timeout)
+            assertNotNull(endCardButton)
+        }
+
+        val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
+        assertNotNull(findCloseButton)
+        findCloseButton.click()
+        Thread.sleep(1000)
+        device.pressBack()
+    }
+
+}

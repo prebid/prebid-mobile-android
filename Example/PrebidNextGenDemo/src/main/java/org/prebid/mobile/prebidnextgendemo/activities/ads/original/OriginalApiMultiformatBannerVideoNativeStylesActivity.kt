@@ -63,11 +63,11 @@ class OriginalApiMultiformatBannerVideoNativeStylesActivity : BaseAdActivity() {
             listOf(AdSize.FLUID, AdSize.BANNER, AdSize.MEDIUM_RECTANGLE)
         )
         prebidAdUnit?.fetchDemand(requestBuilder, prebidRequest) {
-            loadGam(requestBuilder.build())
+            loadAd(requestBuilder.build())
         }
     }
 
-    private fun loadGam(request: BannerAdRequest) {
+    private fun loadAd(request: BannerAdRequest) {
         // 4. Load an ad
         val adView = AdView(this)
         adView.loadAd(request, object : AdLoadCallback<BannerAd> {
