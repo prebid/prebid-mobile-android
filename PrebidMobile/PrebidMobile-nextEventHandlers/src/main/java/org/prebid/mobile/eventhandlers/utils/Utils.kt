@@ -15,31 +15,15 @@
  */
 package org.prebid.mobile.eventhandlers.utils
 
-import android.os.Bundle
 import com.google.android.libraries.ads.mobile.sdk.common.BaseAdRequestBuilder
 import com.google.android.libraries.ads.mobile.sdk.nativead.CustomNativeAd
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAd
 import org.prebid.mobile.LogUtil
-import org.prebid.mobile.NativeAdUnit
 
 internal object Utils {
     private val TAG: String = Utils::class.java.getSimpleName()
-    private val RESERVED_KEYS: HashSet<String?> = HashSet()
+    internal val RESERVED_KEYS: HashSet<String?> = HashSet()
     private const val KEY_IS_PREBID_CREATIVE = "isPrebid"
-
-    fun prepare(builder: BaseAdRequestBuilder<*>, extras: Bundle) {
-        val keywords: MutableMap<String, String> = HashMap()
-        for (key in extras.keySet()) {
-            val value = extras.get(key)
-            if (value is String) {
-                if (key != NativeAdUnit.BUNDLE_KEY_CACHE_ID) {
-                    keywords[key] = value
-                }
-            }
-        }
-
-        handleCustomTargetingUpdate(builder, keywords)
-    }
 
     fun handleCustomTargetingUpdate(
         builder: BaseAdRequestBuilder<*>,
@@ -56,13 +40,13 @@ internal object Utils {
         }
     }
 
-    fun didPrebidWin(unifiedNativeAd: NativeAd): Boolean {
-        val body = unifiedNativeAd.body
+    fun didPrebidWin(unifiedNativeAd: NativeAd?): Boolean {
+        val body = unifiedNativeAd?.body
         return KEY_IS_PREBID_CREATIVE == body
     }
 
-    fun didPrebidWin(ad: CustomNativeAd): Boolean {
-        val isPrebidValue: CharSequence? = ad.getText(KEY_IS_PREBID_CREATIVE)
+    fun didPrebidWin(ad: CustomNativeAd?): Boolean {
+        val isPrebidValue: CharSequence? = ad?.getText(KEY_IS_PREBID_CREATIVE)
 
         return isPrebidValue != null && "1".contentEquals(isPrebidValue)
     }

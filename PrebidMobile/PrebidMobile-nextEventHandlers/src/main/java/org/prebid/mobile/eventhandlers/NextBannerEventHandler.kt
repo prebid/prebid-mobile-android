@@ -121,7 +121,7 @@ class NextBannerEventHandler(
         destroyViews()
     }
 
-    private fun createPublisherAdView(): AdViewWrapper {
+    private fun createPublisherAdView(): AdViewWrapper? {
         return AdViewWrapper.newInstance(applicationContext, adUnitId, this, adSizes)
     }
 

@@ -24,6 +24,7 @@ import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdEventCallback
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest
 import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,11 +45,10 @@ internal class AdViewWrapper private constructor(
     private val nextAdUnit: String,
     private val listener: NextAdEventListener,
     adSizes: List<AdSize>,
+    private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
 ) : AdLoadCallback<BannerAd>, BannerAdEventCallback {
 
-    private val adView: AdView by lazy {
-        AdView(context)
-    }
+    private val adView: AdView = AdView(context)
     private var ad: BannerAd? = null
     private val nextSizes = adSizes.toNextAdSizes()
 
@@ -60,19 +60,26 @@ internal class AdViewWrapper private constructor(
             adUnitId: String,
             eventListener: NextAdEventListener,
             adSizes: List<AdSize>,
-        ): AdViewWrapper {
-            return AdViewWrapper(
-                context,
-                adUnitId,
-                eventListener,
-                adSizes
-            )
+            mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
+        ): AdViewWrapper? {
+            try {
+                return AdViewWrapper(
+                    context,
+                    adUnitId,
+                    eventListener,
+                    adSizes,
+                    mainDispatcher
+                )
+            } catch (e: Throwable) {
+                LogUtil.error(TAG, "Failed to create AdViewWrapper", e)
+                return null
+            }
         }
     }
 
     override fun onAppEvent(name: String, data: String?) {
         if (Constants.APP_EVENT == name) {
-            CoroutineScope(Dispatchers.Main).launch {
+            CoroutineScope(mainDispatcher).launch {
                 listener.onEvent(AdEvent.AppEvent())
             }
         }
@@ -80,21 +87,21 @@ internal class AdViewWrapper private constructor(
 
     override fun onAdClicked() {
         super.onAdClicked()
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(mainDispatcher).launch {
             listener.onEvent(AdEvent.Clicked())
         }
     }
 
     override fun onAdDismissedFullScreenContent() {
         super.onAdDismissedFullScreenContent()
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(mainDispatcher).launch {
             listener.onEvent(AdEvent.Closed())
         }
     }
 
     override fun onAdFailedToLoad(adError: LoadAdError) {
         super.onAdFailedToLoad(adError)
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(mainDispatcher).launch {
             val adEvent = AdEvent.Failed(adError.code.value)
 
             listener.onEvent(adEvent)

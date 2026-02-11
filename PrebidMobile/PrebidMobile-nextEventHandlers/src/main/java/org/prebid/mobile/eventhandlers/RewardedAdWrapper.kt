@@ -10,6 +10,7 @@ import com.google.android.libraries.ads.mobile.sdk.rewarded.OnUserEarnedRewardLi
 import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardItem
 import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAd
 import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAdEventCallback
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,6 +25,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.Bid
 internal class RewardedAdWrapper(
     private val adUnitId: String,
     private val listener: NextAdEventListener,
+    private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
 ) : AdLoadCallback<RewardedAd>, RewardedAdEventCallback, OnUserEarnedRewardListener {
     companion object {
         private val TAG: String = RewardedAdWrapper::class.java.getSimpleName()
@@ -36,7 +38,7 @@ internal class RewardedAdWrapper(
         super.onAdLoaded(ad)
         rewardedAd = ad
         rewardedAd?.adEventCallback = this
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(mainDispatcher).launch {
             listener.onEvent(AdEvent.Loaded())
             if (metadataContainsAdEvent()) {
                 listener.onEvent(AdEvent.AppEvent())
@@ -70,7 +72,7 @@ internal class RewardedAdWrapper(
     private fun notifyErrorListener(errorCode: Int) {
         val adEvent = AdEvent.Failed(errorCode)
 
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(mainDispatcher).launch {
             listener.onEvent(adEvent)
         }
     }
@@ -82,20 +84,20 @@ internal class RewardedAdWrapper(
 
     override fun onAdShowedFullScreenContent() {
         super.onAdShowedFullScreenContent()
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(mainDispatcher).launch {
             listener.onEvent(AdEvent.Displayed())
         }
     }
 
     override fun onAdDismissedFullScreenContent() {
         super.onAdDismissedFullScreenContent()
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(mainDispatcher).launch {
             listener.onEvent(AdEvent.Closed())
         }
     }
 
     override fun onUserEarnedReward(reward: RewardItem) {
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(mainDispatcher).launch {
             listener.onEvent(AdEvent.Reward())
             listener.onEvent(AdEvent.Closed())
         }
