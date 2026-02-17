@@ -107,6 +107,49 @@ public class PrebidNativeAdTest {
         }
     }
 
+    @Test
+    public void nativeAdWithWrapperParser() {
+        PrebidNativeAd nativeAd = nativeAdFromFile("PrebidNativeAdTest/FullWithNativeWrapper.json");
+
+        assertNotNull(nativeAd);
+
+        assertEquals("OpenX (Title)", nativeAd.getTitle());
+        assertEquals("https://www.saashub.com/images/app/service_logos/5/1df363c9a850/large.png?1525414023", nativeAd.getIconUrl());
+        assertEquals("https://ssl-i.cdn.openx.com/mobile/demo-creatives/mobile-demo-banner-640x100.png", nativeAd.getImageUrl());
+        assertEquals("Click here to visit our site!", nativeAd.getCallToAction());
+        assertEquals("Learn all about this awesome story of someone using out OpenX SDK.", nativeAd.getDescription());
+        assertEquals("OpenX (Brand)", nativeAd.getSponsoredBy());
+        assertEquals("https://www.openx.com/", nativeAd.getClickUrl());
+
+        ArrayList<NativeData> dataList = nativeAd.getDataList();
+        assertEquals(5, dataList.size());
+        assertThat(dataList, hasItem(new NativeData(NativeData.Type.SPONSORED_BY, "OpenX (Brand)")));
+        assertThat(dataList, hasItem(new NativeData(NativeData.Type.DESCRIPTION, "Learn all about this awesome story of someone using out OpenX SDK.")));
+        assertThat(dataList, hasItem(new NativeData(NativeData.Type.CALL_TO_ACTION, "Click here to visit our site!")));
+        assertThat(dataList, hasItem(new NativeData(500, "Sample value")));
+        assertThat(dataList, hasItem(new NativeData(0, "Sample value 2")));
+
+        ArrayList<NativeTitle> titlesList = nativeAd.getTitles();
+        assertEquals(1, titlesList.size());
+        assertThat(titlesList, hasItem(new NativeTitle("OpenX (Title)")));
+
+        ArrayList<NativeImage> imagesList = nativeAd.getImages();
+        assertEquals(4, imagesList.size());
+        assertThat(imagesList, hasItem(new NativeImage(NativeImage.Type.ICON, "https://www.saashub.com/images/app/service_logos/5/1df363c9a850/large.png?1525414023")));
+        assertThat(imagesList, hasItem(new NativeImage(NativeImage.Type.MAIN_IMAGE, "https://ssl-i.cdn.openx.com/mobile/demo-creatives/mobile-demo-banner-640x100.png")));
+        assertThat(imagesList, hasItem(new NativeImage(500, "https://test.com/test.png")));
+        assertThat(imagesList, hasItem(new NativeImage(0, "https://test2.com/test.png")));
+
+        for (NativeImage image : imagesList) {
+            if (image.getType() == NativeImage.Type.CUSTOM) {
+                if (image.getUrl().equals("https://test.com/test.png")) {
+                    assertEquals(500, image.getTypeNumber());
+                } else if (image.getUrl().equals("https://test2.com/test.png")) {
+                    assertEquals(0, image.getTypeNumber());
+                }
+            }
+        }
+    }
 
     private PrebidNativeAd nativeAdFromFile(String path) {
         String resource = ResourceUtils.convertResourceToString(path);
