@@ -377,6 +377,7 @@ public final class AdViewUtils {
 
     @Nullable
     static String findCacheId(String html) {
+        if (html == null) return null;
         Pattern pattern = Pattern.compile(CACHE_ID_REGEX);
         Matcher matcher = pattern.matcher(html);
 
