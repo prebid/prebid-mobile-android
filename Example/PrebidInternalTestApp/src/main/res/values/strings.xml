@@ -83,6 +83,8 @@
     <!--In-App Titles-->
     <string name="demo_bidding_in_app_banner_320_50">Banner 320x50 (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_events">Banner 320x50 Events (In-App)</string>
+    <string name="demo_bidding_in_app_banner_320_50_reusable">Banner 320x50 Scrollable Reusable (In-App)</string>
+    <string name="demo_bidding_in_app_banner_320_50_recycler_view">Banner 320x50 Recycler view (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_custom_renderer">Banner 320x50 [Custom Renderer] (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_custom_renderer_plugin_event_listener">Banner 320x50 [Custom Renderer, PluginEventListener] (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_no_bids">Banner 320x50 [noBids] (In-App)</string>

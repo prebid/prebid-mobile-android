@@ -436,6 +436,129 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
+    public void setOrtbConfigForAllLevels_mergedInRequest() throws JSONException {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        String impORTB = """
+        {
+           "id": "imp1",
+           "native": { "request": "placeholder" }
+        }
+        """;
+        String globalAdUnitORTB = """
+        {
+           "imp": [{"id": "global_ad_unit_imp", "banner": {"format": [{"w": 300, "h": 250}]}}]
+        }
+        """;
+        String globalORTB = """
+        {
+           "imp": [{"id": "global_imp", "banner": {"format": [{"w": 320, "h": 50}]}}]
+        }
+        """;
+
+        adConfiguration.setImpOrtbConfig(impORTB);
+        adConfiguration.setGlobalOrtbConfig(globalAdUnitORTB);
+        TargetingParams.setGlobalOrtbConfig(globalORTB);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+                adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        BidRequest actualBidRequest = adRequestInput.getBidRequest();
+
+        try {
+            JSONArray imps = actualBidRequest.getJsonObject().getJSONArray("imp");
+
+            int bannersCount = 0;
+            int nativeCount = 0;
+
+            for (int i = 0; i < imps.length(); i++) {
+                JSONObject imp = imps.getJSONObject(i);
+
+                if (imp.has("banner")) bannersCount++;
+                if (imp.has("native")) {
+                    nativeCount++;
+                    assertEquals("imp1", imp.get("id"));
+                }
+            }
+
+            assertEquals(3, imps.length());
+            assertEquals(2, bannersCount);
+            assertEquals(1, nativeCount);
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void setGlobalOrtbConfigs_adUnitLevelTakesPrecedence() throws JSONException {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+
+        String globalORTB = """
+        {
+            "user": {
+                "id": "12345",
+                "ext": {
+                    "otherField": "globalValue"
+                }
+            },
+            "ext": {
+                "prebid": {
+                    "sharedField": "globalSharedValue",
+                    "globalConfig": "globalValue"
+                }
+            }
+        }
+        """;
+
+        String globalAdUnitORTB = """
+        {
+            "user": {
+                "id": "98765",
+                "ext": {
+                    "otherField": "adUnitValue"
+                }
+            },
+            "ext": {
+                "prebid": {
+                    "sharedField": "adUnitSharedValue"
+                }
+            }
+        }
+        """;
+
+        adConfiguration.setGlobalOrtbConfig(globalAdUnitORTB);
+        TargetingParams.setGlobalOrtbConfig(globalORTB);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+                adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        BidRequest actualBidRequest = adRequestInput.getBidRequest();
+
+        try {
+            JSONObject object = actualBidRequest.getJsonObject();
+            JSONObject prebid = object.getJSONObject("ext").getJSONObject("prebid");
+            assertEquals("adUnitSharedValue", prebid.getString("sharedField"));
+            assertEquals("globalValue", prebid.getString("globalConfig"));
+
+            JSONObject user = object.getJSONObject("user");
+            JSONObject userExt = user.getJSONObject("ext");
+            assertEquals("98765", user.get("id"));
+            assertEquals("adUnitValue", userExt.get("otherField"));
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
     public void whenAppendParametersAndBInterstitialType_ImpWithValidBannerObject()
     throws JSONException {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();

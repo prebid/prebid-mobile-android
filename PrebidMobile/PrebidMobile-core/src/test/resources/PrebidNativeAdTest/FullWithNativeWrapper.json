@@ -1,0 +1,62 @@
+{
+  "id": "5f6bec03-a3ae-4084-b2ae-dedfb0ac01ff",
+  "impid": "PrebidMobile",
+  "price": 0.11259999999999999,
+  "adm": "{\"native\":{\"assets\":[{\"required\":1,\"data\":{\"value\":\"Sample value 2\"}},{\"required\":1,\"data\":{\"type\":500,\"value\":\"Sample value\"}},{\"required\":1,\"img\":{\"type\":500,\"url\":\"https://test.com/test.png\"}},{\"required\":1,\"img\":{\"url\":\"https://test2.com/test.png\"}},{\"required\":1,\"title\":{\"text\":\"OpenX (Title)\"}},{\"required\":1,\"img\":{\"type\":1,\"url\":\"https:\/\/www.saashub.com\/images\/app\/service_logos\/5\/1df363c9a850\/large.png?1525414023\"}},{\"required\":1,\"img\":{\"type\":3,\"url\":\"https:\/\/ssl-i.cdn.openx.com\/mobile\/demo-creatives\/mobile-demo-banner-640x100.png\"}},{\"required\":1,\"data\":{\"type\":1,\"value\":\"OpenX (Brand)\"}},{\"required\":1,\"data\":{\"type\":2,\"value\":\"Learn all about this awesome story of someone using out OpenX SDK.\"}},{\"required\":1,\"data\":{\"type\":12,\"value\":\"Click here to visit our site!\"}}],\"link\":{\"url\":\"https:\/\/www.openx.com\/\"},\"eventtrackers\":[{\"event\":555,\"method\":2,\"url\":\"https:\/\/s3-us-west-2.amazonaws.com\/omsdk-files\/compliance-js\/omid-validation-verification-script-v1.js\",\"ext\":{\"vendorKey\":\"iabtechlab.com-omid\",\"verification_parameters\":\"iabtechlab-Openx\"}}]}}",
+  "adid": "test-ad-id-12345",
+  "adomain": [
+    "openx.com"
+  ],
+  "crid": "test-creative-id-1",
+  "w": 300,
+  "h": 250,
+  "ext": {
+    "ad_ox_cats": [
+      2
+    ],
+    "agency_id": "agency_10",
+    "brand_id": "brand_10",
+    "buyer_id": "buyer_10",
+    "matching_ad_id": {
+      "campaign_id": 1,
+      "creative_id": 3,
+      "placement_id": 2
+    },
+    "next_highest_bid_price": 0.099,
+    "prebid": {
+      "cache": {
+        "key": "",
+        "url": "",
+        "bids": {
+          "url": "prebid.qa.openx.net\/cache?uuid=feb0b9c0-7064-4dd4-8607-bef8a41f7a2c",
+          "cacheId": "feb0b9c0-7064-4dd4-8607-bef8a41f7a2c"
+        }
+      },
+      "targeting": {
+        "hb_bidder": "openx",
+        "hb_bidder_openx": "openx",
+        "hb_cache_host": "prebid.qa.openx.net",
+        "hb_cache_host_openx": "prebid.qa.openx.net",
+        "hb_cache_id": "feb0b9c0-7064-4dd4-8607-bef8a41f7a2c",
+        "hb_cache_id_openx": "feb0b9c0-7064-4dd4-8607-bef8a41f7a2c",
+        "hb_cache_path": "\/cache",
+        "hb_cache_path_openx": "\/cache",
+        "hb_env": "mobile-app",
+        "hb_env_openx": "mobile-app",
+        "hb_pb": "0.10",
+        "hb_pb_openx": "0.10",
+        "hb_size": "300x250",
+        "hb_size_openx": "300x250"
+      },
+      "type": "banner",
+      "video": {
+        "duration": 0,
+        "primary_category": ""
+      },
+      "events": {
+        "win": "https:\/\/prebid.qa.openx.net\/\/event?t=win&b=5f6bec03-a3ae-4084-b2ae-dedfb0ac01ff&a=b4eb1475-4e3d-4186-97b7-25b6a6cf8618&bidder=openx&ts=1643899069308",
+        "imp": "https:\/\/prebid.qa.openx.net\/\/event?t=imp&b=5f6bec03-a3ae-4084-b2ae-dedfb0ac01ff&a=b4eb1475-4e3d-4186-97b7-25b6a6cf8618&bidder=openx&ts=1643899069308"
+      }
+    }
+  }
+}

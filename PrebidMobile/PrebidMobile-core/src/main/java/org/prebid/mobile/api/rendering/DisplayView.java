@@ -19,10 +19,9 @@ package org.prebid.mobile.api.rendering;
 import android.content.Context;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -86,9 +85,13 @@ public class DisplayView extends FrameLayout {
     }
 
     public void destroy() {
+        LogUtil.debug("Destroying view");
         adUnitConfiguration = null;
         displayViewListener = null;
         displayVideoListener = null;
+        if (adView != null && adView instanceof PrebidDestroyable) {
+            ((PrebidDestroyable) adView).destroy();
+        }
     }
 
     @Nullable
@@ -98,5 +101,14 @@ public class DisplayView extends FrameLayout {
 
     public void setImpOrtbConfig(@Nullable String ortbConfig) {
         adUnitConfiguration.setImpOrtbConfig(ortbConfig);
+    }
+
+    @Nullable
+    public String getGlobalOrtbConfig() {
+        return adUnitConfiguration.getGlobalOrtbConfig();
+    }
+
+    public void setGlobalOrtbConfig(@Nullable String ortbConfig) {
+        adUnitConfiguration.setGlobalOrtbConfig(ortbConfig);
     }
 }
