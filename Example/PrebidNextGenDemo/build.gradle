@@ -2,15 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    namespace "org.prebid.mobile.prebidkotlindemo"
+    namespace "org.prebid.mobile.prebidnextgendemo"
     setCompileSdkVersion(34)
     setBuildToolsVersion("35.0.1")
     defaultConfig {
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 34
         versionCode 1
         versionName "1.0.0"
-        applicationId "org.prebid.mobile.prebidkotlindemo"
+        applicationId "org.prebid.mobile.prebidnextgendemo"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -31,16 +31,11 @@ android {
 }
 
 dependencies {
-   implementation project(':PrebidMobile')
-   implementation project(':PrebidMobile-gamEventHandlers')
-   implementation project(':PrebidMobile-admobAdapters')
-   implementation project(':PrebidMobile-maxAdapters')
+    implementation project(':PrebidMobile')
+    implementation project(':PrebidMobile-nextEventHandlers')
 
     // For testing SNAPSHOT releases
     // implementation "org.prebid:prebid-mobile-sdk:$prebidSdkVersionName-SNAPSHOT"
-    // implementation "org.prebid:prebid-mobile-sdk-gam-event-handlers:$prebidSdkVersionName-SNAPSHOT"
-    // implementation "org.prebid:prebid-mobile-sdk-admob-adapters:$prebidSdkVersionName-SNAPSHOT"
-    // implementation "org.prebid:prebid-mobile-sdk-max-adapters:$prebidSdkVersionName-SNAPSHOT"
 
     // Standard libraries
     implementation libs.kotlin.stdlib
@@ -50,9 +45,7 @@ dependencies {
     implementation libs.androidx.lifecycle.viewmodel.ktx
 
     // Advertisement
-    implementation libs.google.play.services.ads
-    implementation libs.applovin.sdk
-    implementation libs.google.play.services.ads.identifier // For Applovin Max
+    implementation libs.google.next.gen.sdk
 
     // Image Downloader
     implementation libs.glide

@@ -1,0 +1,35 @@
+<resources>
+
+    <string name="app_name">Prebid Next Gen SDK Demo</string>
+
+    <string name="integration_kind">Integration Kind</string>
+    <string name="ad_format">Ad Format</string>
+    <string name="refresh_time_sec">Refresh Time Seconds</string>
+
+    <string name="search">Search</string>
+    <string name="settings">Settings</string>
+    <string name="settings_text">Demonstration of Prebid SDK customization in the Demo App will be introduced soon.</string>
+
+    <string name="original_display_banner_320x50">Original API - Display Banner 320x50</string>
+    <string name="original_display_banner_300x250">Original API - Display Banner 300x250</string>
+    <string name="original_display_banner_multi_size">Original API - Display Banner Multi-size</string>
+    <string name="original_video_banner">Original API - Video Banner</string>
+    <string name="original_multiformat_banner">Original API - Multiformat Banner</string>
+    <string name="original_multiformat_banner_video_native_in_app">Original API - Multiformat Banner + Video + Native In App</string>
+    <string name="original_multiformat_banner_video_native_styles">Original API - Multiformat Banner + Video + Native Styles</string>
+    <string name="original_display_interstitial">Original API - Display Interstitial</string>
+    <string name="original_video_interstitial">Original API - Video Interstitial</string>
+    <string name="original_multiformat_interstitial">Original API - Multiformat Interstitial</string>
+    <string name="original_video_rewarded">Original API - Video Rewarded</string>
+    <string name="original_video_in_stream">Original API - Video In-Stream</string>
+    <string name="original_native_in_app">Original API - Native In-App</string>
+    <string name="original_native_styles">Original API - Native Styles</string>
+
+    <string name="rendering_display_banner_320x50">Rendering API - Display Banner 320x50</string>
+    <string name="rendering_display_interstitial">Rendering API - Display Interstitial</string>
+    <string name="rendering_video_banner">Rendering API - Video Banner</string>
+    <string name="rendering_video_interstitial">Rendering API - Video Interstitial</string>
+    <string name="rendering_video_rewarded">Rendering API - Video Rewarded</string>
+    <string name="rendering_native">Rendering API - Native</string>
+
+</resources>
