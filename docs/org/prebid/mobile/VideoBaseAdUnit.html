@@ -107,17 +107,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getImpOrtbConfig()" class="member-name-link">getImpOrtbConfig</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="VideoParameters.html" title="class in org.prebid.mobile">VideoParameters</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getVideoParameters()" class="member-name-link">getVideoParameters</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="VideoParameters.html" title="class in org.prebid.mobile">VideoParameters</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getVideoParameters()" class="member-name-link">getVideoParameters</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setImpOrtbConfig(java.lang.String)" class="member-name-link">setImpOrtbConfig</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ortbConfig)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets imp level OpenRTB config JSON string that will be merged with the original imp object in the bid request.</div>
-</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setVideoParameters(org.prebid.mobile.VideoParameters)" class="member-name-link">setVideoParameters</a><wbr>(<a href="VideoParameters.html" title="class in org.prebid.mobile">VideoParameters</a>&nbsp;parameters)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -126,7 +118,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-org.prebid.mobile.AdUnit">Methods inherited from class&nbsp;org.prebid.mobile.<a href="AdUnit.html" title="class in org.prebid.mobile">AdUnit</a></h3>
-<code><a href="AdUnit.html#activatePrebidImpressionTracker(android.view.View)">activatePrebidImpressionTracker</a>, <a href="AdUnit.html#convertToResultCode(org.prebid.mobile.api.exceptions.AdException)">convertToResultCode</a>, <a href="AdUnit.html#createBidListener(org.prebid.mobile.OnCompleteListener)">createBidListener</a>, <a href="AdUnit.html#destroy()">destroy</a>, <a href="AdUnit.html#fetchDemand(java.lang.Object,org.prebid.mobile.OnCompleteListener)">fetchDemand</a>, <a href="AdUnit.html#fetchDemand(org.prebid.mobile.api.original.OnFetchDemandResult)">fetchDemand</a>, <a href="AdUnit.html#getConfiguration()">getConfiguration</a>, <a href="AdUnit.html#getGpid()">getGpid</a>, <a href="AdUnit.html#getPbAdSlot()">getPbAdSlot</a>, <a href="AdUnit.html#resumeAutoRefresh()">resumeAutoRefresh</a>, <a href="AdUnit.html#setAutoRefreshInterval(int)">setAutoRefreshInterval</a>, <a href="AdUnit.html#setGpid(java.lang.String)">setGpid</a>, <a href="AdUnit.html#setPbAdSlot(java.lang.String)">setPbAdSlot</a>, <a href="AdUnit.html#stopAutoRefresh()">stopAutoRefresh</a></code></div>
+<code><a href="AdUnit.html#activatePrebidImpressionTracker(android.view.View)">activatePrebidImpressionTracker</a>, <a href="AdUnit.html#convertToResultCode(org.prebid.mobile.api.exceptions.AdException)">convertToResultCode</a>, <a href="AdUnit.html#createBidListener(org.prebid.mobile.OnCompleteListener)">createBidListener</a>, <a href="AdUnit.html#destroy()">destroy</a>, <a href="AdUnit.html#fetchDemand(java.lang.Object,org.prebid.mobile.OnCompleteListener)">fetchDemand</a>, <a href="AdUnit.html#fetchDemand(org.prebid.mobile.api.original.OnFetchDemandResult)">fetchDemand</a>, <a href="AdUnit.html#getConfiguration()">getConfiguration</a>, <a href="AdUnit.html#getGlobalOrtbConfig()">getGlobalOrtbConfig</a>, <a href="AdUnit.html#getGpid()">getGpid</a>, <a href="AdUnit.html#getImpOrtbConfig()">getImpOrtbConfig</a>, <a href="AdUnit.html#getPbAdSlot()">getPbAdSlot</a>, <a href="AdUnit.html#resumeAutoRefresh()">resumeAutoRefresh</a>, <a href="AdUnit.html#setAutoRefreshInterval(int)">setAutoRefreshInterval</a>, <a href="AdUnit.html#setGlobalOrtbConfig(java.lang.String)">setGlobalOrtbConfig</a>, <a href="AdUnit.html#setGpid(java.lang.String)">setGpid</a>, <a href="AdUnit.html#setImpOrtbConfig(java.lang.String)">setImpOrtbConfig</a>, <a href="AdUnit.html#setPbAdSlot(java.lang.String)">setPbAdSlot</a>, <a href="AdUnit.html#stopAutoRefresh()">stopAutoRefresh</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -151,31 +143,6 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setVideoParameters(org.prebid.mobile.VideoParameters)">
 <h3>setVideoParameters</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setVideoParameters</span><wbr><span class="parameters">(<a href="VideoParameters.html" title="class in org.prebid.mobile">VideoParameters</a>&nbsp;parameters)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="getImpOrtbConfig()">
-<h3>getImpOrtbConfig</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getImpOrtbConfig</span>()</div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code><a href="AdUnit.html#getImpOrtbConfig()">getImpOrtbConfig</a></code>&nbsp;in class&nbsp;<code><a href="AdUnit.html" title="class in org.prebid.mobile">AdUnit</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setImpOrtbConfig(java.lang.String)">
-<h3>setImpOrtbConfig</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setImpOrtbConfig</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ortbConfig)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="AdUnit.html#setImpOrtbConfig(java.lang.String)">AdUnit</a></code></span></div>
-<div class="block">Sets imp level OpenRTB config JSON string that will be merged with the original imp object in the bid request.
- Expected format: <code>"{"new_field": "value"}"</code>.</div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code><a href="AdUnit.html#setImpOrtbConfig(java.lang.String)">setImpOrtbConfig</a></code>&nbsp;in class&nbsp;<code><a href="AdUnit.html" title="class in org.prebid.mobile">AdUnit</a></code></dd>
-<dt>Parameters:</dt>
-<dd><code>ortbConfig</code> - JSON config string.</dd>
-</dl>
 </section>
 </li>
 </ul>

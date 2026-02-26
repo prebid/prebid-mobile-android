@@ -459,7 +459,7 @@ loadScripts(document, 'script');</script>
 <dt><a href="org/prebid/mobile/api/rendering/pluginrenderer/PrebidMobilePluginRenderer.html#createInterstitialController(android.content.Context,InterstitialControllerListener,AdUnitConfiguration,BidResponse)" class="member-name-link">createInterstitialController(Context, InterstitialControllerListener, AdUnitConfiguration, BidResponse)</a> - Method in interface org.prebid.mobile.api.rendering.pluginrenderer.<a href="org/prebid/mobile/api/rendering/pluginrenderer/PrebidMobilePluginRenderer.html" title="interface in org.prebid.mobile.api.rendering.pluginrenderer">PrebidMobilePluginRenderer</a></dt>
 <dd>
 <div class="block">Creates and returns an implementation of PrebidMobileInterstitialControllerInterface for a given bid response
- Returns nil in the case of an internal error</div>
+ Returns null in the case of an internal error</div>
 </dd>
 <dt><a href="org/prebid/mobile/api/rendering/PrebidRenderer.html#createInterstitialController(android.content.Context,InterstitialControllerListener,AdUnitConfiguration,BidResponse)" class="member-name-link">createInterstitialController(Context, InterstitialControllerListener, AdUnitConfiguration, BidResponse)</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/PrebidRenderer.html" title="class in org.prebid.mobile.api.rendering">PrebidRenderer</a></dt>
 <dd>&nbsp;</dd>
@@ -558,6 +558,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/api/rendering/InterstitialView.html#destroy()" class="member-name-link">destroy()</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/InterstitialView.html" title="class in org.prebid.mobile.api.rendering">InterstitialView</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/api/rendering/PrebidDestroyable.html#destroy()" class="member-name-link">destroy()</a> - Method in interface org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/PrebidDestroyable.html" title="interface in org.prebid.mobile.api.rendering">PrebidDestroyable</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/api/rendering/PrebidDisplayView.html#destroy()" class="member-name-link">destroy()</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/PrebidDisplayView.html" title="class in org.prebid.mobile.api.rendering">PrebidDisplayView</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/api/rendering/PrebidMobileInterstitialControllerInterface.html#destroy()" class="member-name-link">destroy()</a> - Method in interface org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/PrebidMobileInterstitialControllerInterface.html" title="interface in org.prebid.mobile.api.rendering">PrebidMobileInterstitialControllerInterface</a></dt>
@@ -610,6 +612,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Initiates on Entering Viewport with Sound On</div>
 </dd>
 <dt><a href="org/prebid/mobile/AdSize.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/AdSize.html" title="class in org.prebid.mobile">AdSize</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/api/exceptions/AdException.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in exception org.prebid.mobile.api.exceptions.<a href="org/prebid/mobile/api/exceptions/AdException.html" title="class in org.prebid.mobile.api.exceptions">AdException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/DataObject.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/DataObject.html" title="class in org.prebid.mobile">DataObject</a></dt>
 <dd>&nbsp;</dd>
@@ -689,6 +693,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="org/prebid/mobile/api/data/InitializationStatus.html#FAILED" class="member-name-link">FAILED</a> - Enum constant in enum class org.prebid.mobile.api.data.<a href="org/prebid/mobile/api/data/InitializationStatus.html" title="enum class in org.prebid.mobile.api.data">InitializationStatus</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/eventhandlers/AdEvent.html#FAILED" class="member-name-link">FAILED</a> - Enum constant in enum class org.prebid.mobile.eventhandlers.<a href="org/prebid/mobile/eventhandlers/AdEvent.html" title="enum class in org.prebid.mobile.eventhandlers">AdEvent</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/api/exceptions/AdException.html#FAILED_TO_LOAD_BIDS" class="member-name-link">FAILED_TO_LOAD_BIDS</a> - Static variable in exception org.prebid.mobile.api.exceptions.<a href="org/prebid/mobile/api/exceptions/AdException.html" title="class in org.prebid.mobile.api.exceptions">AdException</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/api/exceptions/AdException.html#FAILED_TO_PARSE_RESPONSE" class="member-name-link">FAILED_TO_PARSE_RESPONSE</a> - Static variable in exception org.prebid.mobile.api.exceptions.<a href="org/prebid/mobile/api/exceptions/AdException.html" title="class in org.prebid.mobile.api.exceptions">AdException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/api/original/PrebidAdUnit.html#fetchDemand(java.lang.Object,org.prebid.mobile.api.original.PrebidRequest,org.prebid.mobile.api.original.OnFetchDemandResult)" class="member-name-link">fetchDemand(Object, PrebidRequest, OnFetchDemandResult)</a> - Method in class org.prebid.mobile.api.original.<a href="org/prebid/mobile/api/original/PrebidAdUnit.html" title="class in org.prebid.mobile.api.original">PrebidAdUnit</a></dt>
 <dd>
@@ -932,6 +940,16 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="org/prebid/mobile/ContentObject.html#getGenre()" class="member-name-link">getGenre()</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/ContentObject.html" title="class in org.prebid.mobile">ContentObject</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/AdUnit.html#getGlobalOrtbConfig()" class="member-name-link">getGlobalOrtbConfig()</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/AdUnit.html" title="class in org.prebid.mobile">AdUnit</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#getGlobalOrtbConfig()" class="member-name-link">getGlobalOrtbConfig()</a> - Method in class org.prebid.mobile.api.mediation.<a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html" title="class in org.prebid.mobile.api.mediation">MediationBaseAdUnit</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/api/rendering/BannerView.html#getGlobalOrtbConfig()" class="member-name-link">getGlobalOrtbConfig()</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/BannerView.html" title="class in org.prebid.mobile.api.rendering">BannerView</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#getGlobalOrtbConfig()" class="member-name-link">getGlobalOrtbConfig()</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html" title="class in org.prebid.mobile.api.rendering">BaseInterstitialAdUnit</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/api/rendering/DisplayView.html#getGlobalOrtbConfig()" class="member-name-link">getGlobalOrtbConfig()</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/DisplayView.html" title="class in org.prebid.mobile.api.rendering">DisplayView</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/TargetingParams.html#getGlobalOrtbConfig()" class="member-name-link">getGlobalOrtbConfig()</a> - Static method in class org.prebid.mobile.<a href="org/prebid/mobile/TargetingParams.html" title="class in org.prebid.mobile">TargetingParams</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/AdUnit.html#getGpid()" class="member-name-link">getGpid()</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/AdUnit.html" title="class in org.prebid.mobile">AdUnit</a></dt>
@@ -991,12 +1009,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#getImpOrtbConfig()" class="member-name-link">getImpOrtbConfig()</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html" title="class in org.prebid.mobile.api.rendering">BaseInterstitialAdUnit</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/api/rendering/DisplayView.html#getImpOrtbConfig()" class="member-name-link">getImpOrtbConfig()</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/DisplayView.html" title="class in org.prebid.mobile.api.rendering">DisplayView</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="org/prebid/mobile/api/rendering/PrebidDisplayView.html#getImpOrtbConfig()" class="member-name-link">getImpOrtbConfig()</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/PrebidDisplayView.html" title="class in org.prebid.mobile.api.rendering">PrebidDisplayView</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="org/prebid/mobile/NativeAdUnit.html#getImpOrtbConfig()" class="member-name-link">getImpOrtbConfig()</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/NativeAdUnit.html" title="class in org.prebid.mobile">NativeAdUnit</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="org/prebid/mobile/VideoBaseAdUnit.html#getImpOrtbConfig()" class="member-name-link">getImpOrtbConfig()</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/VideoBaseAdUnit.html" title="class in org.prebid.mobile">VideoBaseAdUnit</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/PrebidMobile.html#getIncludeBidderKeysFlag()" class="member-name-link">getIncludeBidderKeysFlag()</a> - Static method in class org.prebid.mobile.<a href="org/prebid/mobile/PrebidMobile.html" title="class in org.prebid.mobile">PrebidMobile</a></dt>
 <dd>
@@ -1066,7 +1078,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/api/exceptions/AdException.html#getMessage()" class="member-name-link">getMessage()</a> - Method in exception org.prebid.mobile.api.exceptions.<a href="org/prebid/mobile/api/exceptions/AdException.html" title="class in org.prebid.mobile.api.exceptions">AdException</a></dt>
 <dd>
-<div class="block">Error description.</div>
+<div class="block">Root error message.</div>
 </dd>
 <dt><a href="org/prebid/mobile/NativeEventTracker.html#getMethods()" class="member-name-link">getMethods()</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/NativeEventTracker.html" title="class in org.prebid.mobile">NativeEventTracker</a></dt>
 <dd>&nbsp;</dd>
@@ -1303,6 +1315,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/AdSize.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/AdSize.html" title="class in org.prebid.mobile">AdSize</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/api/exceptions/AdException.html#hashCode()" class="member-name-link">hashCode()</a> - Method in exception org.prebid.mobile.api.exceptions.<a href="org/prebid/mobile/api/exceptions/AdException.html" title="class in org.prebid.mobile.api.exceptions">AdException</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/DataObject.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/DataObject.html" title="class in org.prebid.mobile">DataObject</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/DataObject.SegmentObject.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/DataObject.SegmentObject.html" title="class in org.prebid.mobile">DataObject.SegmentObject</a></dt>
@@ -1528,8 +1542,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Check @<a href="org/prebid/mobile/api/original/PrebidRequest.html" title="class in org.prebid.mobile.api.original"><code>PrebidRequest</code></a> object that you put into fetchDemand().</div>
 </dd>
-<dt><a href="org/prebid/mobile/api/exceptions/AdException.html#INVALID_REQUEST" class="member-name-link">INVALID_REQUEST</a> - Static variable in exception org.prebid.mobile.api.exceptions.<a href="org/prebid/mobile/api/exceptions/AdException.html" title="class in org.prebid.mobile.api.exceptions">AdException</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/api/data/FetchDemandResult.html#INVALID_SIZE" class="member-name-link">INVALID_SIZE</a> - Enum constant in enum class org.prebid.mobile.api.data.<a href="org/prebid/mobile/api/data/FetchDemandResult.html" title="enum class in org.prebid.mobile.api.data">FetchDemandResult</a></dt>
 <dd>
 <div class="block">Size is invalid or missing</div>
@@ -1538,8 +1550,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">For banner view, we don't support multi-size request</div>
 </dd>
-<dt><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#isBidInvalid()" class="member-name-link">isBidInvalid()</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html" title="class in org.prebid.mobile.api.rendering">BaseInterstitialAdUnit</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/SharedNetworkManager.html#isConnected(android.content.Context)" class="member-name-link">isConnected(Context)</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/SharedNetworkManager.html" title="class in org.prebid.mobile">SharedNetworkManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#isLoaded()" class="member-name-link">isLoaded()</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html" title="class in org.prebid.mobile.api.rendering">BaseInterstitialAdUnit</a></dt>
@@ -1863,6 +1873,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">No bids available from demand source</div>
 </dd>
+<dt><a href="org/prebid/mobile/api/exceptions/AdException.html#NO_BIDS" class="member-name-link">NO_BIDS</a> - Static variable in exception org.prebid.mobile.api.exceptions.<a href="org/prebid/mobile/api/exceptions/AdException.html" title="class in org.prebid.mobile.api.exceptions">AdException</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/api/data/FetchDemandResult.html#NO_BIDS_MESSAGE" class="member-name-link">NO_BIDS_MESSAGE</a> - Static variable in enum class org.prebid.mobile.api.data.<a href="org/prebid/mobile/api/data/FetchDemandResult.html" title="enum class in org.prebid.mobile.api.data">FetchDemandResult</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/Signals.Plcmt.html#NoContent" class="member-name-link">NoContent</a> - Static variable in class org.prebid.mobile.<a href="org/prebid/mobile/Signals.Plcmt.html" title="class in org.prebid.mobile">Signals.Plcmt</a></dt>
@@ -2021,8 +2033,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="org/prebid/mobile/api/rendering/InterstitialView.html#onConfigurationChanged(android.content.res.Configuration)" class="member-name-link">onConfigurationChanged(Configuration)</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/InterstitialView.html" title="class in org.prebid.mobile.api.rendering">InterstitialView</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/applovin/mediation/adapters/PrebidMaxMediationAdapter.html#onDestroy()" class="member-name-link">onDestroy()</a> - Method in class com.applovin.mediation.adapters.<a href="com/applovin/mediation/adapters/PrebidMaxMediationAdapter.html" title="class in com.applovin.mediation.adapters">PrebidMaxMediationAdapter</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="org/prebid/mobile/api/rendering/PrebidDisplayView.html#onDetachedFromWindow()" class="member-name-link">onDetachedFromWindow()</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/PrebidDisplayView.html" title="class in org.prebid.mobile.api.rendering">PrebidDisplayView</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#onErrorReceived(org.prebid.mobile.api.exceptions.AdException)" class="member-name-link">onErrorReceived(AdException)</a> - Method in class org.prebid.mobile.api.mediation.<a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html" title="class in org.prebid.mobile.api.mediation">MediationBaseAdUnit</a></dt>
 <dd>&nbsp;</dd>
@@ -2208,6 +2218,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="org/prebid/mobile/admob/PrebidBaseAdapter.html#%3Cinit%3E()" class="member-name-link">PrebidBaseAdapter()</a> - Constructor for class org.prebid.mobile.admob.<a href="org/prebid/mobile/admob/PrebidBaseAdapter.html" title="class in org.prebid.mobile.admob">PrebidBaseAdapter</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/api/rendering/PrebidDestroyable.html" class="type-name-link" title="interface in org.prebid.mobile.api.rendering">PrebidDestroyable</a> - Interface in <a href="org/prebid/mobile/api/rendering/package-summary.html">org.prebid.mobile.api.rendering</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/api/rendering/PrebidDisplayView.html" class="type-name-link" title="class in org.prebid.mobile.api.rendering">PrebidDisplayView</a> - Class in <a href="org/prebid/mobile/api/rendering/package-summary.html">org.prebid.mobile.api.rendering</a></dt>
 <dd>
 <div class="block">Internal view renderer for plugin renderer.</div>
@@ -2217,6 +2229,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="org/prebid/mobile/api/rendering/PrebidDisplayView.html#%3Cinit%3E(android.content.Context,DisplayViewListener,DisplayVideoListener,AdUnitConfiguration,java.lang.String)" class="member-name-link">PrebidDisplayView(Context, DisplayViewListener, DisplayVideoListener, AdUnitConfiguration, String)</a> - Constructor for class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/PrebidDisplayView.html" title="class in org.prebid.mobile.api.rendering">PrebidDisplayView</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/PrebidEventDelegate.html" class="type-name-link" title="interface in org.prebid.mobile">PrebidEventDelegate</a> - Interface in <a href="org/prebid/mobile/package-summary.html">org.prebid.mobile</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#prebidException" class="member-name-link">prebidException</a> - Variable in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html" title="class in org.prebid.mobile.api.rendering">BaseInterstitialAdUnit</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/admob/PrebidInterstitialAdapter.html" class="type-name-link" title="class in org.prebid.mobile.admob">PrebidInterstitialAdapter</a> - Class in <a href="org/prebid/mobile/admob/package-summary.html">org.prebid.mobile.admob</a></dt>
 <dd>
@@ -2396,6 +2410,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="org/prebid/mobile/api/original/PrebidAdUnit.html#resumeAutoRefresh()" class="member-name-link">resumeAutoRefresh()</a> - Method in class org.prebid.mobile.api.original.<a href="org/prebid/mobile/api/original/PrebidAdUnit.html" title="class in org.prebid.mobile.api.original">PrebidAdUnit</a></dt>
 <dd>
 <div class="block">Resumes auto refresh interval after stopping.</div>
+</dd>
+<dt><a href="org/prebid/mobile/api/mediation/MediationBannerAdUnit.html#resumeRefresh()" class="member-name-link">resumeRefresh()</a> - Method in class org.prebid.mobile.api.mediation.<a href="org/prebid/mobile/api/mediation/MediationBannerAdUnit.html" title="class in org.prebid.mobile.api.mediation">MediationBannerAdUnit</a></dt>
+<dd>
+<div class="block">Resumes auto refresh if it was stopped.</div>
 </dd>
 <dt><a href="org/prebid/mobile/eventhandlers/AdEvent.html#REWARD_EARNED" class="member-name-link">REWARD_EARNED</a> - Enum constant in enum class org.prebid.mobile.eventhandlers.<a href="org/prebid/mobile/eventhandlers/AdEvent.html" title="enum class in org.prebid.mobile.eventhandlers">AdEvent</a></dt>
 <dd>&nbsp;</dd>
@@ -2646,6 +2664,24 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="org/prebid/mobile/ContentObject.html#setGenre(java.lang.String)" class="member-name-link">setGenre(String)</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/ContentObject.html" title="class in org.prebid.mobile">ContentObject</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/AdUnit.html#setGlobalOrtbConfig(java.lang.String)" class="member-name-link">setGlobalOrtbConfig(String)</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/AdUnit.html" title="class in org.prebid.mobile">AdUnit</a></dt>
+<dd>
+<div class="block">Sets the global OpenRTB configuration string for the ad unit.</div>
+</dd>
+<dt><a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html#setGlobalOrtbConfig(java.lang.String)" class="member-name-link">setGlobalOrtbConfig(String)</a> - Method in class org.prebid.mobile.api.mediation.<a href="org/prebid/mobile/api/mediation/MediationBaseAdUnit.html" title="class in org.prebid.mobile.api.mediation">MediationBaseAdUnit</a></dt>
+<dd>
+<div class="block">Sets the global OpenRTB configuration string for the ad unit.</div>
+</dd>
+<dt><a href="org/prebid/mobile/api/rendering/BannerView.html#setGlobalOrtbConfig(java.lang.String)" class="member-name-link">setGlobalOrtbConfig(String)</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/BannerView.html" title="class in org.prebid.mobile.api.rendering">BannerView</a></dt>
+<dd>
+<div class="block">Sets the global OpenRTB configuration string for the ad unit.</div>
+</dd>
+<dt><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#setGlobalOrtbConfig(java.lang.String)" class="member-name-link">setGlobalOrtbConfig(String)</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html" title="class in org.prebid.mobile.api.rendering">BaseInterstitialAdUnit</a></dt>
+<dd>
+<div class="block">Sets the global OpenRTB configuration string for the ad unit.</div>
+</dd>
+<dt><a href="org/prebid/mobile/api/rendering/DisplayView.html#setGlobalOrtbConfig(java.lang.String)" class="member-name-link">setGlobalOrtbConfig(String)</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/DisplayView.html" title="class in org.prebid.mobile.api.rendering">DisplayView</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/TargetingParams.html#setGlobalOrtbConfig(java.lang.String)" class="member-name-link">setGlobalOrtbConfig(String)</a> - Static method in class org.prebid.mobile.<a href="org/prebid/mobile/TargetingParams.html" title="class in org.prebid.mobile">TargetingParams</a></dt>
 <dd>
 <div class="block">Sets global OpenRTB JSON string for merging with the original request.</div>
@@ -2704,12 +2740,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="org/prebid/mobile/api/rendering/DisplayView.html#setImpOrtbConfig(java.lang.String)" class="member-name-link">setImpOrtbConfig(String)</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/DisplayView.html" title="class in org.prebid.mobile.api.rendering">DisplayView</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="org/prebid/mobile/api/rendering/PrebidDisplayView.html#setImpOrtbConfig(java.lang.String)" class="member-name-link">setImpOrtbConfig(String)</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/PrebidDisplayView.html" title="class in org.prebid.mobile.api.rendering">PrebidDisplayView</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="org/prebid/mobile/NativeAdUnit.html#setImpOrtbConfig(java.lang.String)" class="member-name-link">setImpOrtbConfig(String)</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/NativeAdUnit.html" title="class in org.prebid.mobile">NativeAdUnit</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="org/prebid/mobile/VideoBaseAdUnit.html#setImpOrtbConfig(java.lang.String)" class="member-name-link">setImpOrtbConfig(String)</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/VideoBaseAdUnit.html" title="class in org.prebid.mobile">VideoBaseAdUnit</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/PrebidMobile.html#setIncludeBidderKeysFlag(boolean)" class="member-name-link">setIncludeBidderKeysFlag(boolean)</a> - Static method in class org.prebid.mobile.<a href="org/prebid/mobile/PrebidMobile.html" title="class in org.prebid.mobile">PrebidMobile</a></dt>
 <dd>
 <div class="block">Sets 'includebidderkeys' parameter for ad request to receive additional info about bidders.</div>
@@ -2748,7 +2778,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/ContentObject.html#setLanguage(java.lang.String)" class="member-name-link">setLanguage(String)</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/ContentObject.html" title="class in org.prebid.mobile">ContentObject</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="org/prebid/mobile/NativeDataAsset.html#setLen(int)" class="member-name-link">setLen(int)</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/NativeDataAsset.html" title="class in org.prebid.mobile">NativeDataAsset</a></dt>
+<dt><a href="org/prebid/mobile/NativeDataAsset.html#setLen(java.lang.Integer)" class="member-name-link">setLen(Integer)</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/NativeDataAsset.html" title="class in org.prebid.mobile">NativeDataAsset</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/NativeTitleAsset.html#setLength(int)" class="member-name-link">setLength(int)</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/NativeTitleAsset.html" title="class in org.prebid.mobile">NativeTitleAsset</a></dt>
 <dd>&nbsp;</dd>
@@ -2781,8 +2811,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets max video duration.</div>
 </dd>
 <dt><a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html#setMaxVideoDuration(int)" class="member-name-link">setMaxVideoDuration(int)</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/BaseInterstitialAdUnit.html" title="class in org.prebid.mobile.api.rendering">BaseInterstitialAdUnit</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="org/prebid/mobile/api/exceptions/AdException.html#setMessage(java.lang.String)" class="member-name-link">setMessage(String)</a> - Method in exception org.prebid.mobile.api.exceptions.<a href="org/prebid/mobile/api/exceptions/AdException.html" title="class in org.prebid.mobile.api.exceptions">AdException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/VideoParameters.html#setMinBitrate(java.lang.Integer)" class="member-name-link">setMinBitrate(Integer)</a> - Method in class org.prebid.mobile.<a href="org/prebid/mobile/VideoParameters.html" title="class in org.prebid.mobile">VideoParameters</a></dt>
 <dd>&nbsp;</dd>
@@ -3109,7 +3137,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Stops auto refresh interval.</div>
 </dd>
 <dt><a href="org/prebid/mobile/api/mediation/MediationBannerAdUnit.html#stopRefresh()" class="member-name-link">stopRefresh()</a> - Method in class org.prebid.mobile.api.mediation.<a href="org/prebid/mobile/api/mediation/MediationBannerAdUnit.html" title="class in org.prebid.mobile.api.mediation">MediationBannerAdUnit</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stops automatic refreshing.</div>
+</dd>
 <dt><a href="org/prebid/mobile/api/rendering/BannerView.html#stopRefresh()" class="member-name-link">stopRefresh()</a> - Method in class org.prebid.mobile.api.rendering.<a href="org/prebid/mobile/api/rendering/BannerView.html" title="class in org.prebid.mobile.api.rendering">BannerView</a></dt>
 <dd>
 <div class="block">Cancels BidLoader refresh timer.</div>
@@ -3171,6 +3201,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="org/prebid/mobile/api/data/Position.html#TOP_LEFT" class="member-name-link">TOP_LEFT</a> - Enum constant in enum class org.prebid.mobile.api.data.<a href="org/prebid/mobile/api/data/Position.html" title="enum class in org.prebid.mobile.api.data">Position</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/api/data/Position.html#TOP_RIGHT" class="member-name-link">TOP_RIGHT</a> - Enum constant in enum class org.prebid.mobile.api.data.<a href="org/prebid/mobile/api/data/Position.html" title="enum class in org.prebid.mobile.api.data">Position</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/prebid/mobile/api/exceptions/AdException.html#toString()" class="member-name-link">toString()</a> - Method in exception org.prebid.mobile.api.exceptions.<a href="org/prebid/mobile/api/exceptions/AdException.html" title="class in org.prebid.mobile.api.exceptions">AdException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/prebid/mobile/eventhandlers/GamBannerEventHandler.html#trackImpression()" class="member-name-link">trackImpression()</a> - Method in class org.prebid.mobile.eventhandlers.<a href="org/prebid/mobile/eventhandlers/GamBannerEventHandler.html" title="class in org.prebid.mobile.eventhandlers">GamBannerEventHandler</a></dt>
 <dd>&nbsp;</dd>
