@@ -19,9 +19,11 @@ package org.prebid.mobile;
 import android.content.Context;
 import android.util.Patterns;
 import android.webkit.URLUtil;
+
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.LogUtil.PrebidLogger;
 import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
@@ -86,6 +88,11 @@ public class PrebidMobile {
      * Tested Google SDK version.
      */
     public static final String TESTED_GOOGLE_SDK_VERSION = "25.0.0";
+
+    /**
+     * Tested Google Next-Gen SDK version.
+     */
+    public static final String TESTED_GOOGLE_NEXT_GEN_SDK_VERSION = "0.23.0";
 
     private static LogLevel logLevel = LogLevel.NONE;
     @Nullable

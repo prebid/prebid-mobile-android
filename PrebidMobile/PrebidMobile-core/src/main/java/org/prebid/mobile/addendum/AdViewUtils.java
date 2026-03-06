@@ -23,9 +23,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
+
 import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile.LogLevel;
@@ -35,7 +37,11 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,6 +63,7 @@ public final class AdViewUtils {
     private static final String GAM_VIEW_CLASS_2 = "com.google.android.gms.ads.admanager.AdManagerAdView";
     private static final String GAM_CUSTOM_TEMPLATE_AD_CLASS = "com.google.android.gms.ads.formats.NativeCustomTemplateAd";
     private static final String GAM_CUSTOM_TEMPLATE_AD_CLASS_2 = "com.google.android.gms.ads.nativead.NativeCustomFormatAd";
+    private static final String NEXT_CUSTOM_TEMPLATE_AD_CLASS = "com.google.android.libraries.ads.mobile.sdk.nativead.CustomNativeAd";
 
     private AdViewUtils() {
     }
@@ -436,7 +443,7 @@ public final class AdViewUtils {
         if (GAM_VIEW_CLASS.equals(objectClassName) || GAM_VIEW_CLASS_2.equals(objectClassName)) {
             View adView = (View) object;
             findNativeInGAMPublisherAdView(adView, listener);
-        } else if (implementsInterface(object, GAM_CUSTOM_TEMPLATE_AD_CLASS) || implementsInterface(object, GAM_CUSTOM_TEMPLATE_AD_CLASS_2)) {
+        } else if (implementsInterface(object, GAM_CUSTOM_TEMPLATE_AD_CLASS) || implementsInterface(object, GAM_CUSTOM_TEMPLATE_AD_CLASS_2) || implementsInterface(object, NEXT_CUSTOM_TEMPLATE_AD_CLASS)) {
             findNativeInGAMCustomTemplateAd(object, listener);
         } else {
             listener.onPrebidNativeNotFound();
