@@ -75,6 +75,7 @@ public class CreativeModel {
 
     //all - resolved rc url of an ad
     private String clickUrl;
+    private String clickTrackingUrl;
 
     private String tracking;
     private String targetUrl;
@@ -240,6 +241,14 @@ public class CreativeModel {
 
     public void setClickUrl(String clickUrl) {
         this.clickUrl = clickUrl;
+    }
+
+    public String getClickTrackingUrl() {
+        return clickTrackingUrl;
+    }
+
+    public void setClickTrackingUrl(String clickTrackingUrl) {
+        this.clickTrackingUrl = clickTrackingUrl;
     }
 
     public String getTracking() {

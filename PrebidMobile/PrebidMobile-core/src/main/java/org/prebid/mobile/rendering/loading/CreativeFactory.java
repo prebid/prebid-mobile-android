@@ -19,7 +19,6 @@ package org.prebid.mobile.rendering.loading;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
 import android.util.Log;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
@@ -139,8 +138,8 @@ public class CreativeFactory {
             creativeModel.registerTrackingEvent(TrackingEvent.Events.IMPRESSION, impressionUrls);
 
             ArrayList<String> clickUrls = new ArrayList<>();
-            if (Utils.isNotBlank(creativeModel.getClickUrl())) {
-                clickUrls.add(creativeModel.getClickUrl());
+            if (Utils.isNotBlank(creativeModel.getClickTrackingUrl())) {
+                clickUrls.add(creativeModel.getClickTrackingUrl());
             }
             creativeModel.registerTrackingEvent(TrackingEvent.Events.CLICK, clickUrls);
         }
