@@ -348,9 +348,9 @@ public class Util {
     public static void apply(HashMap<String, String> bids, Object adObj) {
         if (adObj == null) return;
         Class<?> adObjClass = adObj.getClass();
-        if (adObjClass == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
+        if (adObjClass == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObjClass == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
             handleAdManagerCustomTargeting(bids, adObj);
-        } else if (adObjClass == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS_V20)) {
+        } else if (adObjClass == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS) || adObjClass == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS_V20)) {
             handleAdManagerBuilderCustomTargeting(bids, adObj);
         } else if (adObjClass == getClassFromString(ANDROID_OS_BUNDLE)) {
             handleAndroidBundleCustomTargeting(bids, adObj);
@@ -373,7 +373,7 @@ public class Util {
     ) {
         if (adObject == null) return;
         Class<?> adObjClass = adObject.getClass();
-        if (adObjClass == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObject.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
+        if (adObjClass == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObjClass == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
             setCacheIdToGamManager(cacheId, adObject);
         } else if (adObjClass == getClassFromString(ANDROID_OS_BUNDLE)) {
             Bundle adBundle = (Bundle) adObject;
