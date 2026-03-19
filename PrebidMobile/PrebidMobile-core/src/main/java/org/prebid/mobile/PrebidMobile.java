@@ -87,7 +87,7 @@ public class PrebidMobile {
     /**
      * Tested Google SDK version.
      */
-    public static final String TESTED_GOOGLE_SDK_VERSION = "24.9.0";
+    public static final String TESTED_GOOGLE_SDK_VERSION = "25.1.0";
 
     /**
      * Tested Google Next-Gen SDK version.
@@ -529,7 +529,7 @@ public class PrebidMobile {
      * This allows the SDK to collect some statistical data.
      * The provided delegate will be stored as a weak reference so you need to store reference to it.
      *
-     * @param eventDelegate the instance of {@link PrebidEventDelegate} to handle events from the SDK. 
+     * @param eventDelegate the instance of {@link PrebidEventDelegate} to handle events from the SDK.
      *                      Can be null to clear the existing delegate.
      */
     public static void setEventDelegate(@Nullable PrebidEventDelegate eventDelegate) {

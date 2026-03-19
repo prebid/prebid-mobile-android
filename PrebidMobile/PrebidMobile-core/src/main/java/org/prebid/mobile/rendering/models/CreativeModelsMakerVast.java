@@ -30,8 +30,8 @@ import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.video.OmEventTracker;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
-import org.prebid.mobile.rendering.video.vast.Tracking;
 import org.prebid.mobile.rendering.video.vast.*;
+import org.prebid.mobile.rendering.video.vast.Tracking;
 
 import java.util.ArrayList;
 
@@ -197,8 +197,11 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
                 }
 
                 if (companionAd.getCompanionClickTracking() != null) {
+                    String clickTrackingUrl = companionAd.getCompanionClickTracking().getValue();
+                    endCardModel.setClickTrackingUrl(clickTrackingUrl);
+
                     clickTrackingUrls = new ArrayList<>();
-                    clickTrackingUrls.add(companionAd.getCompanionClickTracking().getValue());
+                    clickTrackingUrls.add(clickTrackingUrl);
                     endCardModel.registerTrackingEvent(TrackingEvent.Events.CLICK, clickTrackingUrls);
                 }
 
