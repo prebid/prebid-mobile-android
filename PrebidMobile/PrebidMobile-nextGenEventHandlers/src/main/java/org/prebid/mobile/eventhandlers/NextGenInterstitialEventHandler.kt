@@ -171,9 +171,7 @@ class NextGenInterstitialEventHandler(activity: Activity, private val adUnitId: 
     }
 
     private fun initPublisherInterstitialAd() {
-        if (requestInterstitial != null) {
-            requestInterstitial = null
-        }
+        requestInterstitial = null
 
         val activity = activityWeakReference.get()
         if (activity == null) {

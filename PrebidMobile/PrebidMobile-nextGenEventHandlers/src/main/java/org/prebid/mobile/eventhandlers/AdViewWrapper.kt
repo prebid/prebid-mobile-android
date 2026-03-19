@@ -112,7 +112,7 @@ internal class AdViewWrapper private constructor(
         super.onAdLoaded(ad)
         this.ad = ad
         this.ad?.adEventCallback = this
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(mainDispatcher).launch {
             listener.onEvent(AdEvent.Loaded())
         }
     }

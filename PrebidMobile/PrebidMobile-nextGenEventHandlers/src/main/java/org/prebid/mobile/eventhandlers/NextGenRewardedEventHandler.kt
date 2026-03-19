@@ -60,6 +60,7 @@ class NextGenRewardedEventHandler(
             is AdEvent.Closed -> listener?.onAdClosed()
             is AdEvent.Failed -> notifyErrorListener(adEvent.errorCode)
             is AdEvent.Reward -> listener?.onUserEarnedReward()
+            is AdEvent.Clicked -> listener?.onAdClicked()
             else -> {}
         }
     }

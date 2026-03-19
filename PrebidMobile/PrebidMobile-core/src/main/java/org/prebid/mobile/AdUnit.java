@@ -16,16 +16,21 @@
 
 package org.prebid.mobile;
 
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
+
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.view.View;
+
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
 import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.BidInfo;
@@ -42,9 +47,6 @@ import java.lang.ref.WeakReference;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-
-import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
-import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
 
 /**
  * Base ad unit for the original API.
@@ -261,7 +263,7 @@ public abstract class AdUnit {
     }
 
     /**
-     * Sets the global OpenRTB configuration string for the ad unit. It takes precedence over `Targeting.setGlobalOrtbConfig`.
+     * Sets the global OpenRTB configuration string for the ad unit. It takes precedence over `TargetingParams.setGlobalOrtbConfig`.
      * Expected format: {@code "{"new_field": "value"}"}.
      * @param ortbConfig The global OpenRTB JSON configuration string to set. Can be `null` to clear the configuration.
      */

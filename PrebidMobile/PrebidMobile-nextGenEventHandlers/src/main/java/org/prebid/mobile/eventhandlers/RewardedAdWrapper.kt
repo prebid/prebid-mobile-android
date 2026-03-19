@@ -79,7 +79,15 @@ internal class RewardedAdWrapper(
 
     override fun onAdFailedToShowFullScreenContent(fullScreenContentError: FullScreenContentError) {
         super.onAdFailedToShowFullScreenContent(fullScreenContentError)
+        rewardedAd = null
         notifyErrorListener(fullScreenContentError.code.value)
+    }
+
+    override fun onAdClicked() {
+        super.onAdClicked()
+        CoroutineScope(mainDispatcher).launch {
+            listener.onEvent(AdEvent.Clicked())
+        }
     }
 
     override fun onAdShowedFullScreenContent() {

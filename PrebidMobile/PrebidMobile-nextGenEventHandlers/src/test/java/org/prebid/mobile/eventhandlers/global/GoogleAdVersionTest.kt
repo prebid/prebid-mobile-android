@@ -17,7 +17,7 @@ class GoogleAdVersionTest {
         Assert.assertEquals(
             "Google Next-Gen SDK was updated to " + currentVersion + "! " +
                 "Please test Prebid SDK with the new version, resolve compilation problems, rewrite deprecated code. " +
-                "After testing you must update PrebidMobile.TESTED_GOOGLE_SDK_VERSION " +
+                "After testing you must update PrebidMobile.TESTED_GOOGLE_NEXT_GEN_SDK_VERSION " +
                 "and also update version in publishing XML files (scripts/Maven/*.xml.)",
             currentVersion,
             PrebidMobile.TESTED_GOOGLE_NEXT_GEN_SDK_VERSION
