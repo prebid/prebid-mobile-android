@@ -6,11 +6,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.ads.VersionInfo;
 import com.google.android.gms.ads.mediation.Adapter;
 import com.google.android.gms.ads.mediation.InitializationCompleteCallback;
 import com.google.android.gms.ads.mediation.MediationAdConfiguration;
 import com.google.android.gms.ads.mediation.MediationConfiguration;
+import com.google.android.gms.ads.mediation.VersionInfo;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.ParametersMatcher;
