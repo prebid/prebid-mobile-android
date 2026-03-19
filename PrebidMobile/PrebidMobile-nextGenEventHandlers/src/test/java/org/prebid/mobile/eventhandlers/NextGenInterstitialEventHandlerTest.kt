@@ -37,8 +37,8 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [24])
-class NextInterstitialEventHandlerTest {
-    private lateinit var eventHandler: NextInterstitialEventHandler
+class NextGenInterstitialEventHandlerTest {
+    private lateinit var eventHandler: NextGenInterstitialEventHandler
 
     @Mock
     private lateinit var mockEventListener: InterstitialEventListener
@@ -52,7 +52,7 @@ class NextInterstitialEventHandlerTest {
 
         val activity = Robolectric.buildActivity(Activity::class.java).get()
 
-        eventHandler = NextInterstitialEventHandler(activity, GAM_AD_UNIT_ID)
+        eventHandler = NextGenInterstitialEventHandler(activity, GAM_AD_UNIT_ID)
         eventHandler.setInterstitialEventListener(mockEventListener)
     }
 
@@ -106,7 +106,7 @@ class NextInterstitialEventHandlerTest {
     @Throws(Exception::class)
     fun onNextAdLoadedAppEventNotExpectedAndRequestInterstitialNotNull_NotifyEventListenerOnAdServerWin() {
         val publisherInterstitialAd = Mockito.mock(InterstitialAdWrapper::class.java)
-        WhiteBox.field(NextInterstitialEventHandler::class.java, "requestInterstitial")
+        WhiteBox.field(NextGenInterstitialEventHandler::class.java, "requestInterstitial")
             .set(eventHandler, publisherInterstitialAd)
 
         eventHandler.onEvent(AdEvent.Loaded())
@@ -117,7 +117,7 @@ class NextInterstitialEventHandlerTest {
     @Test
     @Throws(Exception::class)
     fun onAppEventTimeout_NotifyBannerEventOnAdServerWin() {
-        WhiteBox.method(NextInterstitialEventHandler::class.java, "handleAppEventTimeout")
+        WhiteBox.method(NextGenInterstitialEventHandler::class.java, "handleAppEventTimeout")
             .invoke(eventHandler)
 
         Mockito.verify(mockEventListener, Mockito.times(1)).onAdServerWin()
@@ -127,7 +127,7 @@ class NextInterstitialEventHandlerTest {
     @Throws(IllegalAccessException::class)
     fun destroy_CancelTimer() {
         // by default apEventHandler is null if not scheduled
-        WhiteBox.field(NextInterstitialEventHandler::class.java, "appEventHandler")
+        WhiteBox.field(NextGenInterstitialEventHandler::class.java, "appEventHandler")
             .set(eventHandler, mockAppEventHandler)
 
         eventHandler.destroy()

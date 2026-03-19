@@ -15,6 +15,6 @@
  */
 package org.prebid.mobile.eventhandlers
 
-internal interface NextAdEventListener {
+internal interface NextGenAdEventListener {
     fun onEvent(adEvent: AdEvent)
 }

@@ -38,11 +38,11 @@ import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener
  *  @param adUnitId    AdUnitId.
  *  @param adSizes     ad sizes for banner.
  */
-class NextBannerEventHandler(
+class NextGenBannerEventHandler(
     context: Context,
     private val adUnitId: String,
     vararg adSizes: AdSize,
-) : BannerEventHandler, NextAdEventListener {
+) : BannerEventHandler, NextGenAdEventListener {
     private val applicationContext: Context = context.applicationContext
     private val adSizes: List<AdSize> = listOf(*adSizes)
 
@@ -248,7 +248,7 @@ class NextBannerEventHandler(
     }
 
     companion object {
-        private val TAG: String = NextBannerEventHandler::class.java.getSimpleName()
+        private val TAG: String = NextGenBannerEventHandler::class.java.getSimpleName()
 
         private const val TIMEOUT_APP_EVENT_MS: Long = 600
 

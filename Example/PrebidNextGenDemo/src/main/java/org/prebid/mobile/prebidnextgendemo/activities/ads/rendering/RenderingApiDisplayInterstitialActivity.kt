@@ -20,7 +20,7 @@ import android.util.Log
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
-import org.prebid.mobile.eventhandlers.NextInterstitialEventHandler
+import org.prebid.mobile.eventhandlers.NextGenInterstitialEventHandler
 import org.prebid.mobile.prebidnextgendemo.activities.BaseAdActivity
 
 class RenderingApiDisplayInterstitialActivity : BaseAdActivity() {
@@ -40,7 +40,7 @@ class RenderingApiDisplayInterstitialActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val eventHandler = NextInterstitialEventHandler(this, AD_UNIT_ID)
+        val eventHandler = NextGenInterstitialEventHandler(this, AD_UNIT_ID)
         adUnit = InterstitialAdUnit(this, CONFIG_ID, eventHandler)
         adUnit?.setInterstitialAdUnitListener(createListener(adUnit))
         adUnit?.loadAd()

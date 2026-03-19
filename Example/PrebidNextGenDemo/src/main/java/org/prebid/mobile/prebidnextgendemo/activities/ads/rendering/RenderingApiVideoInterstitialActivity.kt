@@ -21,7 +21,7 @@ import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
-import org.prebid.mobile.eventhandlers.NextInterstitialEventHandler
+import org.prebid.mobile.eventhandlers.NextGenInterstitialEventHandler
 import org.prebid.mobile.prebidnextgendemo.activities.BaseAdActivity
 import java.util.EnumSet
 
@@ -42,7 +42,7 @@ class RenderingApiVideoInterstitialActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val eventHandler = NextInterstitialEventHandler(this, AD_UNIT_ID)
+        val eventHandler = NextGenInterstitialEventHandler(this, AD_UNIT_ID)
         adUnit = InterstitialAdUnit(this, CONFIG_ID, EnumSet.of(AdUnitFormat.VIDEO), eventHandler)
         adUnit?.setInterstitialAdUnitListener(object :
             InterstitialAdUnitListener {

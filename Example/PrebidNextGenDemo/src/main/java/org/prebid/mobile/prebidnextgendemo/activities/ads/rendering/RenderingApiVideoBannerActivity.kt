@@ -22,7 +22,7 @@ import org.prebid.mobile.api.data.VideoPlacementType
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener
-import org.prebid.mobile.eventhandlers.NextBannerEventHandler
+import org.prebid.mobile.eventhandlers.NextGenBannerEventHandler
 import org.prebid.mobile.prebidnextgendemo.activities.BaseAdActivity
 
 
@@ -45,7 +45,7 @@ class RenderingApiVideoBannerActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val eventHandler = NextBannerEventHandler(this, AD_UNIT_ID, AdSize(WIDTH, HEIGHT))
+        val eventHandler = NextGenBannerEventHandler(this, AD_UNIT_ID, AdSize(WIDTH, HEIGHT))
         adView = BannerView(this, CONFIG_ID, eventHandler)
         adView?.setAutoRefreshDelay(refreshTimeSeconds)
         adView?.setBannerListener(createListener())

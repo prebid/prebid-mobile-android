@@ -40,8 +40,8 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [24])
-class NextBannerEventHandlerTest {
-    private lateinit var bannerEventHandler: NextBannerEventHandler
+class NextGenBannerEventHandlerTest {
+    private lateinit var bannerEventHandler: NextGenBannerEventHandler
 
     @Mock
     private val mockBannerEventListener: BannerEventListener? = null
@@ -55,7 +55,7 @@ class NextBannerEventHandlerTest {
 
         val context: Context = Robolectric.buildActivity<Activity>(Activity::class.java).get()
 
-        bannerEventHandler = NextBannerEventHandler(context, GAM_AD_UNIT_ID, AD_SIZE)
+        bannerEventHandler = NextGenBannerEventHandler(context, GAM_AD_UNIT_ID, AD_SIZE)
         bannerEventHandler.setBannerEventListener(mockBannerEventListener!!)
     }
 
@@ -116,7 +116,7 @@ class NextBannerEventHandlerTest {
         val mockView = Mockito.mock(View::class.java)
         Mockito.`when`(mockPublisherAdView.view).thenReturn(mockView)
 
-        WhiteBox.field(NextBannerEventHandler::class.java, "requestBanner")
+        WhiteBox.field(NextGenBannerEventHandler::class.java, "requestBanner")
             .set(bannerEventHandler, mockPublisherAdView)
 
         bannerEventHandler.onEvent(AdEvent.Loaded())
@@ -128,7 +128,7 @@ class NextBannerEventHandlerTest {
     @Test
     @Throws(Exception::class)
     fun onAppEventTimeout_NotifyBannerEventOnAdServerWin() {
-        WhiteBox.method(NextBannerEventHandler::class.java, "handleAppEventTimeout")
+        WhiteBox.method(NextGenBannerEventHandler::class.java, "handleAppEventTimeout")
             .invoke(bannerEventHandler)
 
         Mockito.verify<BannerEventListener>(mockBannerEventListener, Mockito.times(1))
@@ -139,7 +139,7 @@ class NextBannerEventHandlerTest {
     @Throws(IllegalAccessException::class)
     fun destroy_CancelTimer() {
         // by default apEventHandler is null if not scheduled
-        WhiteBox.field(NextBannerEventHandler::class.java, "appEventHandler")
+        WhiteBox.field(NextGenBannerEventHandler::class.java, "appEventHandler")
             .set(bannerEventHandler, mockAppEventHandler)
 
         bannerEventHandler.destroy()

@@ -51,7 +51,7 @@ class AdViewWrapperTest {
     private lateinit var adViewWrapper: AdViewWrapper
 
     @Mock
-    internal lateinit var mockListener: NextAdEventListener
+    internal lateinit var mockListener: NextGenAdEventListener
 
     private val testDispatcher = StandardTestDispatcher()
 

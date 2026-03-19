@@ -24,7 +24,7 @@ import java.lang.ref.WeakReference
 internal class InterstitialAdWrapper(
     activity: Activity,
     private val adUnit: String,
-    private val listener: NextAdEventListener,
+    private val listener: NextGenAdEventListener,
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
 ) : AdLoadCallback<InterstitialAd>, InterstitialAdEventCallback {
 

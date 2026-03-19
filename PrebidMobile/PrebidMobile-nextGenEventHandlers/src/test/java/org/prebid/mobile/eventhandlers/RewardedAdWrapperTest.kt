@@ -48,7 +48,7 @@ class RewardedAdWrapperTest {
     private lateinit var rewardedAdWrapper: RewardedAdWrapper
 
     @Mock
-    internal lateinit var mockListener: NextAdEventListener
+    internal lateinit var mockListener: NextGenAdEventListener
 
     @Rule
     @JvmField
@@ -95,7 +95,7 @@ class RewardedAdWrapperTest {
     }
 
     @Test
-    fun onGamAdClosed_NotifyEventCloseListener() = runTest {
+    fun onNextAdClosed_NotifyEventCloseListener() = runTest {
         rewardedAdWrapper.onAdDismissedFullScreenContent()
         advanceUntilIdle()
 
@@ -104,7 +104,7 @@ class RewardedAdWrapperTest {
     }
 
     @Test
-    fun onGamAdFailedToLoad_NotifyEventErrorListener() = runTest {
+    fun onNextAdFailedToLoad_NotifyEventErrorListener() = runTest {
         val wantedNumberOfInvocations = 10
 
         for (i in 0..<wantedNumberOfInvocations) {
@@ -118,7 +118,7 @@ class RewardedAdWrapperTest {
     }
 
     @Test
-    fun onGamAdOpened_NotifyBannerEventDisplayListener() = runTest {
+    fun onNextAdOpened_NotifyEventDisplayListener() = runTest {
         rewardedAdWrapper.onAdShowedFullScreenContent()
         advanceUntilIdle()
 
@@ -126,7 +126,7 @@ class RewardedAdWrapperTest {
     }
 
     @Test
-    fun onGamAdLoadedAppEventExpected_ScheduleAppEventHandler() = runTest {
+    fun onNextAdLoadedAppEventExpected_ScheduleAppEventHandler() = runTest {
         rewardedAdWrapper.onAdLoaded(Mockito.mock(RewardedAd::class.java))
         advanceUntilIdle()
 

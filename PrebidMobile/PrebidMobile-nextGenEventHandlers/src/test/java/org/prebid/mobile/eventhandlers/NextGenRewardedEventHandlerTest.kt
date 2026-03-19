@@ -37,8 +37,8 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [24])
-class NextRewardedEventHandlerTest {
-    private lateinit var eventHandler: NextRewardedEventHandler
+class NextGenRewardedEventHandlerTest {
+    private lateinit var eventHandler: NextGenRewardedEventHandler
     private lateinit var activity: Activity
 
     @Mock
@@ -53,7 +53,7 @@ class NextRewardedEventHandlerTest {
 
         activity = Robolectric.buildActivity(Activity::class.java).get()
 
-        eventHandler = NextRewardedEventHandler(activity, GAM_AD_UNIT_ID)
+        eventHandler = NextGenRewardedEventHandler(activity, GAM_AD_UNIT_ID)
         eventHandler.setRewardedEventListener(mockEventListener)
     }
 
@@ -67,7 +67,7 @@ class NextRewardedEventHandlerTest {
         spyEventHandler.onEvent(AdEvent.AppEvent())
 
         val isExpectingAppEvent = (WhiteBox.field(
-            NextRewardedEventHandler::class.java,
+            NextGenRewardedEventHandler::class.java,
             "isExpectingAppEvent"
         ).get(spyEventHandler) as Boolean)
 
@@ -77,7 +77,7 @@ class NextRewardedEventHandlerTest {
     }
 
     @Test
-    fun onGamAdClosed_NotifyEventCloseListener() {
+    fun onNextAdClosed_NotifyEventCloseListener() {
         eventHandler.onEvent(AdEvent.Closed())
 
         Mockito.verify(mockEventListener, Mockito.times(1))
@@ -85,7 +85,7 @@ class NextRewardedEventHandlerTest {
     }
 
     @Test
-    fun onGamAdFailedToLoad_NotifyEventErrorListener() {
+    fun onNextAdFailedToLoad_NotifyEventErrorListener() {
         val wantedNumberOfInvocations = 10
 
         for (i in 0..<wantedNumberOfInvocations) {
@@ -99,7 +99,7 @@ class NextRewardedEventHandlerTest {
     }
 
     @Test
-    fun onGamAdOpened_NotifyBannerEventDisplayListener() {
+    fun onNextAdOpened_NotifyEventDisplayListener() {
         eventHandler.onEvent(Displayed())
 
         Mockito.verify(mockEventListener, Mockito.times(1))
@@ -107,7 +107,7 @@ class NextRewardedEventHandlerTest {
     }
 
     @Test
-    fun onGamAdLoadedAppEventExpected_ScheduleAppEventHandler() {
+    fun onNextAdLoadedAppEventExpected_ScheduleAppEventHandler() {
         changeExpectingAppEventStatus(true)
 
         eventHandler.onEvent(AdEvent.Loaded())
@@ -117,10 +117,10 @@ class NextRewardedEventHandlerTest {
 
     @Test
     @Throws(Exception::class)
-    fun onGamAdLoadedAppEventNotExpectedAndRequestInterstitialNotNull_NotifyEventListenerOnAdServerWin() {
+    fun onNextAdLoadedAppEventNotExpectedAndRequestInterstitialNotNull_NotifyEventListenerOnAdServerWin() {
         val publisherInterstitialAd =
             Mockito.mock(RewardedAdWrapper::class.java)
-        WhiteBox.field(NextRewardedEventHandler::class.java, "rewardedAd")
+        WhiteBox.field(NextGenRewardedEventHandler::class.java, "rewardedAd")
             .set(eventHandler, publisherInterstitialAd)
 
         eventHandler.onEvent(AdEvent.Loaded())
@@ -132,7 +132,7 @@ class NextRewardedEventHandlerTest {
     @Test
     @Throws(Exception::class)
     fun onAppEventTimeout_NotifyBannerEventOnAdServerWin() {
-        WhiteBox.method(NextRewardedEventHandler::class.java, "handleAppEventTimeout")
+        WhiteBox.method(NextGenRewardedEventHandler::class.java, "handleAppEventTimeout")
             .invoke(eventHandler)
 
         Mockito.verify(mockEventListener, Mockito.times(1))
@@ -143,7 +143,7 @@ class NextRewardedEventHandlerTest {
     @Throws(IllegalAccessException::class)
     fun destroy_CancelTimer() {
         // by default apEventHandler is null if not scheduled
-        WhiteBox.field(NextRewardedEventHandler::class.java, "appEventHandler")
+        WhiteBox.field(NextGenRewardedEventHandler::class.java, "appEventHandler")
             .set(eventHandler, mockAppEventHandler)
 
         eventHandler.destroy()

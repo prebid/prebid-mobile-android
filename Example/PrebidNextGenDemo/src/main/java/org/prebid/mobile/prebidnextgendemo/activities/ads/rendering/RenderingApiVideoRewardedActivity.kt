@@ -20,7 +20,7 @@ import android.util.Log
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.RewardedAdUnit
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener
-import org.prebid.mobile.eventhandlers.NextRewardedEventHandler
+import org.prebid.mobile.eventhandlers.NextGenRewardedEventHandler
 import org.prebid.mobile.prebidnextgendemo.activities.BaseAdActivity
 import org.prebid.mobile.rendering.interstitial.rewarded.Reward
 
@@ -41,7 +41,7 @@ class RenderingApiVideoRewardedActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val eventHandler = NextRewardedEventHandler(this, AD_UNIT_ID)
+        val eventHandler = NextGenRewardedEventHandler(this, AD_UNIT_ID)
         adUnit = RewardedAdUnit(this, CONFIG_ID, eventHandler)
         adUnit?.setRewardedAdUnitListener(object : RewardedAdUnitListener {
             override fun onAdLoaded(rewardedAdUnit: RewardedAdUnit?) {

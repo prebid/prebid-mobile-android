@@ -46,7 +46,7 @@ class InterstitialAdWrapperTest {
     private lateinit var interstitialAdWrapper: InterstitialAdWrapper
 
     @Mock
-    internal lateinit var mockListener: NextAdEventListener
+    internal lateinit var mockListener: NextGenAdEventListener
     private val testDispatcher = StandardTestDispatcher()
 
     @Before

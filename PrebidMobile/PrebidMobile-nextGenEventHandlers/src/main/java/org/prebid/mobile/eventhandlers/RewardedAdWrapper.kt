@@ -20,11 +20,11 @@ import org.prebid.mobile.eventhandlers.utils.Utils
 import org.prebid.mobile.rendering.bidding.data.bid.Bid
 
 /**
- * Internal wrapper of rewarded ad from GAM SDK.
+ * Internal wrapper of rewarded ad from Next-Gen SDK.
  */
 internal class RewardedAdWrapper(
     private val adUnitId: String,
-    private val listener: NextAdEventListener,
+    private val listener: NextGenAdEventListener,
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
 ) : AdLoadCallback<RewardedAd>, RewardedAdEventCallback, OnUserEarnedRewardListener {
     companion object {

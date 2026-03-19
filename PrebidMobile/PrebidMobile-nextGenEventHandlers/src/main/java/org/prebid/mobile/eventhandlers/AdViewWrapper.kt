@@ -43,7 +43,7 @@ import com.google.android.libraries.ads.mobile.sdk.banner.AdSize as NextSize
 internal class AdViewWrapper private constructor(
     context: Context,
     private val nextAdUnit: String,
-    private val listener: NextAdEventListener,
+    private val listener: NextGenAdEventListener,
     adSizes: List<AdSize>,
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
 ) : AdLoadCallback<BannerAd>, BannerAdEventCallback {
@@ -58,7 +58,7 @@ internal class AdViewWrapper private constructor(
         fun newInstance(
             context: Context,
             adUnitId: String,
-            eventListener: NextAdEventListener,
+            eventListener: NextGenAdEventListener,
             adSizes: List<AdSize>,
             mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
         ): AdViewWrapper? {
