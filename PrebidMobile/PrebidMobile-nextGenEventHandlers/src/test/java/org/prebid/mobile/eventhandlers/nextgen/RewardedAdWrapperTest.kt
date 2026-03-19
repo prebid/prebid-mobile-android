@@ -17,6 +17,7 @@ package org.prebid.mobile.eventhandlers.nextgen
 
 import android.os.Bundle
 import com.google.android.libraries.ads.mobile.sdk.common.FullScreenContentError
+import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
 import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardItem
 import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAd
 import kotlinx.coroutines.Dispatchers
@@ -105,7 +106,7 @@ class RewardedAdWrapperTest {
     }
 
     @Test
-    fun onNextAdFailedToLoad_NotifyEventErrorListener() = runTest {
+    fun onNextAdFailedToShowFullScreenContent_NotifyEventErrorListener() = runTest {
         val wantedNumberOfInvocations = 10
 
         for (i in 0..<wantedNumberOfInvocations) {
@@ -116,6 +117,52 @@ class RewardedAdWrapperTest {
         advanceUntilIdle()
         Mockito.verify(mockListener, Mockito.times(wantedNumberOfInvocations))
             .onEvent(AdEvent.Failed())
+    }
+
+    @Test
+    fun onNextAdFailedToLoad_NotifyErrorListener() = runTest {
+        val loadAdError = LoadAdError(LoadAdError.ErrorCode.INTERNAL_ERROR, "", null)
+        rewardedAdWrapper.onAdFailedToLoad(loadAdError)
+        advanceUntilIdle()
+
+        Mockito.verify(mockListener, Mockito.times(1)).onEvent(AdEvent.Failed())
+    }
+
+    @Test
+    fun onAdFailedToShowFullScreenContent_NullifiesAd_IsLoadedReturnsFalse() = runTest {
+        rewardedAdWrapper.onAdLoaded(Mockito.mock(RewardedAd::class.java))
+        Assert.assertTrue(rewardedAdWrapper.isLoaded())
+
+        val adError =
+            FullScreenContentError(FullScreenContentError.ErrorCode.INTERNAL_ERROR, "", null)
+        rewardedAdWrapper.onAdFailedToShowFullScreenContent(adError)
+
+        Assert.assertFalse(rewardedAdWrapper.isLoaded())
+    }
+
+    @Test
+    fun onNextAdClicked_NotifyEventClickedListener() = runTest {
+        rewardedAdWrapper.onAdClicked()
+        advanceUntilIdle()
+
+        Mockito.verify(mockListener, Mockito.times(1)).onEvent(AdEvent.Clicked())
+    }
+
+    @Test
+    fun onUserEarnedReward_AlsoNotifyClosedEvent() = runTest {
+        rewardedAdWrapper.onUserEarnedReward(Mockito.mock(RewardItem::class.java))
+        advanceUntilIdle()
+
+        Mockito.verify(mockListener, Mockito.times(1)).onEvent(AdEvent.Closed())
+    }
+
+    @Test
+    fun destroy_CancelsScope_PendingLaunchesNotExecuted() = runTest {
+        rewardedAdWrapper.destroy()
+        rewardedAdWrapper.onAdClicked()
+        advanceUntilIdle()
+
+        Mockito.verifyNoInteractions(mockListener)
     }
 
     @Test

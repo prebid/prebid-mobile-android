@@ -131,6 +131,15 @@ class AdViewWrapperTest {
     }
 
     @Test
+    fun destroy_CancelsScope_PendingLaunchesNotExecuted() = runTest {
+        adViewWrapper.destroy()
+        adViewWrapper.onAdClicked()
+        advanceUntilIdle()
+
+        Mockito.verifyNoInteractions(mockListener)
+    }
+
+    @Test
     @Throws(IllegalAccessException::class)
     fun getView_ReturnNextView() {
         val activity = Robolectric.buildActivity(Activity::class.java).create().get()

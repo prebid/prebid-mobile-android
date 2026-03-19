@@ -17,6 +17,7 @@ package org.prebid.mobile.eventhandlers.nextgen
 
 import android.app.Activity
 import com.google.android.libraries.ads.mobile.sdk.common.FullScreenContentError
+import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
 import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -90,7 +91,7 @@ class InterstitialAdWrapperTest {
     }
 
     @Test
-    fun onNextAdFailedToLoad_NotifyEventErrorListener() = runTest {
+    fun onNextAdFailedToShowFullScreenContent_NotifyEventErrorListener() = runTest {
         val wantedNumberOfInvocations = 10
 
         for (i in 0..<wantedNumberOfInvocations) {
@@ -101,6 +102,23 @@ class InterstitialAdWrapperTest {
         advanceUntilIdle()
         Mockito.verify(mockListener, Mockito.times(wantedNumberOfInvocations))
             .onEvent(AdEvent.Failed())
+    }
+
+    @Test
+    fun onNextAdFailedToLoad_NotifyErrorListener() = runTest {
+        val loadAdError = LoadAdError(LoadAdError.ErrorCode.INTERNAL_ERROR, "", null)
+        interstitialAdWrapper.onAdFailedToLoad(loadAdError)
+        advanceUntilIdle()
+
+        Mockito.verify(mockListener, Mockito.times(1)).onEvent(AdEvent.Failed())
+    }
+
+    @Test
+    fun onNextAdClicked_NotifyEventClickedListener() = runTest {
+        interstitialAdWrapper.onAdClicked()
+        advanceUntilIdle()
+
+        Mockito.verify(mockListener, Mockito.times(1)).onEvent(AdEvent.Clicked())
     }
 
     @Test
@@ -124,5 +142,21 @@ class InterstitialAdWrapperTest {
     @Test
     fun isLoaded_adIsNull_ReturnFalse() {
         Assert.assertFalse(interstitialAdWrapper.isLoaded())
+    }
+
+    @Test
+    fun isLoaded_adIsNonNull_ReturnTrue() {
+        interstitialAdWrapper.onAdLoaded(Mockito.mock(InterstitialAd::class.java))
+
+        Assert.assertTrue(interstitialAdWrapper.isLoaded())
+    }
+
+    @Test
+    fun destroy_CancelsScope_PendingLaunchesNotExecuted() = runTest {
+        interstitialAdWrapper.destroy()
+        interstitialAdWrapper.onAdClicked()
+        advanceUntilIdle()
+
+        Mockito.verifyNoInteractions(mockListener)
     }
 }

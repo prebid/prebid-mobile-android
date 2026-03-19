@@ -167,6 +167,14 @@ class NextGenBannerEventHandlerTest {
         Assert.assertFalse(expectingAppEventStatus)
     }
 
+    @Test
+    fun onAppEventNotExpected_DoNothing() {
+        // isExpectingAppEvent is false by default
+        bannerEventHandler.onEvent(AdEvent.AppEvent())
+
+        Mockito.verifyNoInteractions(mockBannerEventListener)
+    }
+
     private fun changeExpectingAppEventStatus(status: Boolean) {
         WhiteBox.setInternalState(bannerEventHandler, "isExpectingAppEvent", status)
     }

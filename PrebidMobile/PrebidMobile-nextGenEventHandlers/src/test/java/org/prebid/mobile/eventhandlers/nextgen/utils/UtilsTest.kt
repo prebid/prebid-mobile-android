@@ -16,6 +16,7 @@
 package org.prebid.mobile.eventhandlers.nextgen.utils
 
 import android.os.Bundle
+import com.google.android.libraries.ads.mobile.sdk.common.BaseAdRequestBuilder
 import com.google.android.libraries.ads.mobile.sdk.nativead.CustomNativeAd
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAd
 import org.junit.After
@@ -65,11 +66,40 @@ class UtilsTest {
         var ad: NativeAd? = null
         Assert.assertFalse(didPrebidWin(ad))
 
-
         ad = Mockito.mock(NativeAd::class.java)
         Mockito.`when`<String?>(ad.body).thenReturn("")
 
         Assert.assertFalse(didPrebidWin(ad))
+    }
+
+    @Test
+    fun didPrebidWin_unifiedAd_adContainsEvents_ReturnTrue() {
+        val ad = Mockito.mock(NativeAd::class.java)
+        Mockito.`when`<String?>(ad.body).thenReturn(KEY_IS_PREBID)
+
+        Assert.assertTrue(didPrebidWin(ad))
+    }
+
+    @Test
+    fun handleCustomTargetingUpdate_emptyKeywords_DoNothing() {
+        val mockBuilder = Mockito.mock(BaseAdRequestBuilder::class.java)
+
+        Utils.handleCustomTargetingUpdate(mockBuilder, mutableMapOf())
+
+        Mockito.verifyNoInteractions(mockBuilder)
+        Assert.assertTrue(Utils.RESERVED_KEYS.isEmpty())
+    }
+
+    @Test
+    fun handleCustomTargetingUpdate_nonEmptyKeywords_AddsReservedKeysAndCallsTargeting() {
+        val mockBuilder = Mockito.mock(BaseAdRequestBuilder::class.java)
+        val keywords = mutableMapOf("key1" to "value1", "key2" to "value2")
+
+        Utils.handleCustomTargetingUpdate(mockBuilder, keywords)
+
+        Mockito.verify(mockBuilder).putCustomTargeting("key1", "value1")
+        Mockito.verify(mockBuilder).putCustomTargeting("key2", "value2")
+        Assert.assertTrue(Utils.RESERVED_KEYS.containsAll(listOf("key1", "key2")))
     }
 
     @Test

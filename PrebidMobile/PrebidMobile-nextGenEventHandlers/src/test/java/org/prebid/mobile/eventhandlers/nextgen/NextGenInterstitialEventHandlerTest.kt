@@ -87,7 +87,7 @@ class NextGenInterstitialEventHandlerTest {
     }
 
     @Test
-    fun onNextAdOpened_NotifyBannerEventDisplayListener() {
+    fun onNextAdOpened_NotifyEventDisplayListener() {
         eventHandler.onEvent(Displayed())
 
         Mockito.verify(mockEventListener, Mockito.times(1)).onAdDisplayed()
@@ -116,7 +116,7 @@ class NextGenInterstitialEventHandlerTest {
 
     @Test
     @Throws(Exception::class)
-    fun onAppEventTimeout_NotifyBannerEventOnAdServerWin() {
+    fun onAppEventTimeout_NotifyEventListenerOnAdServerWin() {
         WhiteBox.method(NextGenInterstitialEventHandler::class.java, "handleAppEventTimeout")
             .invoke(eventHandler)
 
@@ -159,6 +159,29 @@ class NextGenInterstitialEventHandlerTest {
         eventHandler.show()
 
         Mockito.verify(mockEventListener).onAdFailed(ArgumentMatchers.any(AdException::class.java))
+    }
+
+    @Test
+    fun onAppEventNotExpected_DoNothing() {
+        // isExpectingAppEvent is false by default
+        eventHandler.onEvent(AdEvent.AppEvent())
+
+        Mockito.verifyNoInteractions(mockEventListener)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun onNextAdLoadedAppEventExpected_SkipIfAlreadyScheduled() {
+        changeExpectingAppEventStatus(true)
+        WhiteBox.field(NextGenInterstitialEventHandler::class.java, "appEventHandler")
+            .set(eventHandler, mockAppEventHandler)
+
+        eventHandler.onEvent(AdEvent.Loaded())
+
+        // Timer must not be replaced and listener must not be called
+        val handler = WhiteBox.getInternalState<Handler>(eventHandler, "appEventHandler")
+        Assert.assertEquals(mockAppEventHandler, handler)
+        Mockito.verifyNoInteractions(mockEventListener)
     }
 
     private fun changeExpectingAppEventStatus(status: Boolean) {

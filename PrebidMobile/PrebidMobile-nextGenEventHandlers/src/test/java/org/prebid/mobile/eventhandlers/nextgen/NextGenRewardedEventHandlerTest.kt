@@ -131,7 +131,7 @@ class NextGenRewardedEventHandlerTest {
 
     @Test
     @Throws(Exception::class)
-    fun onAppEventTimeout_NotifyBannerEventOnAdServerWin() {
+    fun onAppEventTimeout_NotifyEventListenerOnAdServerWin() {
         WhiteBox.method(NextGenRewardedEventHandler::class.java, "handleAppEventTimeout")
             .invoke(eventHandler)
 
@@ -178,6 +178,28 @@ class NextGenRewardedEventHandlerTest {
 
         Mockito.verify(mockEventListener)
             .onAdFailed(ArgumentMatchers.any(AdException::class.java))
+    }
+
+    @Test
+    fun onAppEventNotExpected_DoNothing() {
+        // isExpectingAppEvent is false by default
+        eventHandler.onEvent(AdEvent.AppEvent())
+
+        Mockito.verifyNoInteractions(mockEventListener)
+    }
+
+    @Test
+    fun onNextAdReward_NotifyUserEarnedReward() {
+        eventHandler.onEvent(AdEvent.Reward())
+
+        Mockito.verify(mockEventListener, Mockito.times(1)).onUserEarnedReward()
+    }
+
+    @Test
+    fun onNextAdClicked_NotifyAdClicked() {
+        eventHandler.onEvent(AdEvent.Clicked())
+
+        Mockito.verify(mockEventListener, Mockito.times(1)).onAdClicked()
     }
 
     private fun changeExpectingAppEventStatus(status: Boolean) {
