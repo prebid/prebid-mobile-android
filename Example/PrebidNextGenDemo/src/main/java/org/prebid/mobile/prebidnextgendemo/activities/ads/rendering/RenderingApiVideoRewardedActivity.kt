@@ -20,7 +20,7 @@ import android.util.Log
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.RewardedAdUnit
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener
-import org.prebid.mobile.eventhandlers.NextGenRewardedEventHandler
+import org.prebid.mobile.eventhandlers.nextgen.NextGenRewardedEventHandler
 import org.prebid.mobile.prebidnextgendemo.activities.BaseAdActivity
 import org.prebid.mobile.rendering.interstitial.rewarded.Reward
 

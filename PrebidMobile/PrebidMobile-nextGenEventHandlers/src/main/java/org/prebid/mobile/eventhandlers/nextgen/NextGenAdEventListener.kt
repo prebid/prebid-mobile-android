@@ -13,17 +13,8 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.prebid.mobile.eventhandlers.global
+package org.prebid.mobile.eventhandlers.nextgen
 
-internal object Constants {
-    /**
-     * For every winning bid, a Next-Gen SDK gives callback with below key via AppEventListener (from
-     * Next-Gen SDK). This key can be changed at GAM's line item.
-     */
-    const val APP_EVENT: String = "PrebidAppEvent"
-
-    const val ERROR_CODE_INTERNAL_ERROR: Int = 0
-    const val ERROR_CODE_INVALID_REQUEST: Int = 1
-    const val ERROR_CODE_NETWORK_ERROR: Int = 2
-    const val ERROR_CODE_NO_FILL: Int = 3
+internal interface NextGenAdEventListener {
+    fun onEvent(adEvent: AdEvent)
 }

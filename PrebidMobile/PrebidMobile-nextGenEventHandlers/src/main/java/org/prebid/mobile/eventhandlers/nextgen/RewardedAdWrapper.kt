@@ -1,4 +1,4 @@
-package org.prebid.mobile.eventhandlers
+package org.prebid.mobile.eventhandlers.nextgen
 
 import android.app.Activity
 import android.util.Log
@@ -15,8 +15,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.prebid.mobile.LogUtil
-import org.prebid.mobile.eventhandlers.global.Constants
-import org.prebid.mobile.eventhandlers.utils.Utils
+import org.prebid.mobile.eventhandlers.nextgen.global.Constants
+import org.prebid.mobile.eventhandlers.nextgen.utils.Utils
 import org.prebid.mobile.rendering.bidding.data.bid.Bid
 
 /**
@@ -105,6 +105,7 @@ internal class RewardedAdWrapper(
     }
 
     override fun onUserEarnedReward(reward: RewardItem) {
+        Log.d(TAG, "Reward earned")
         CoroutineScope(mainDispatcher).launch {
             listener.onEvent(AdEvent.Reward())
             listener.onEvent(AdEvent.Closed())

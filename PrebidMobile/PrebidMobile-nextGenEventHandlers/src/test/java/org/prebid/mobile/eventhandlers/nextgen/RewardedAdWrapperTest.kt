@@ -13,11 +13,12 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.prebid.mobile.eventhandlers
+package org.prebid.mobile.eventhandlers.nextgen
 
-import android.app.Activity
+import android.os.Bundle
 import com.google.android.libraries.ads.mobile.sdk.common.FullScreenContentError
-import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAd
+import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardItem
+import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -28,34 +29,38 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.prebid.mobile.eventhandlers.AdEvent.Displayed
-import org.prebid.mobile.eventhandlers.global.Constants
-import org.robolectric.Robolectric
+import org.mockito.junit.MockitoJUnit
+import org.mockito.junit.MockitoRule
+import org.prebid.mobile.eventhandlers.nextgen.AdEvent.Displayed
+import org.prebid.mobile.eventhandlers.nextgen.global.Constants.APP_EVENT
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [24])
-class InterstitialAdWrapperTest {
-    private lateinit var interstitialAdWrapper: InterstitialAdWrapper
+class RewardedAdWrapperTest {
+    private lateinit var rewardedAdWrapper: RewardedAdWrapper
 
     @Mock
     internal lateinit var mockListener: NextGenAdEventListener
+
+    @Rule
+    @JvmField
+    var rule: MockitoRule = MockitoJUnit.rule()
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
         Dispatchers.setMain(testDispatcher)
-        val context = Robolectric.buildActivity(Activity::class.java).create().get()
-
-        interstitialAdWrapper = InterstitialAdWrapper(context, "123", mockListener, testDispatcher)
+        rewardedAdWrapper = RewardedAdWrapper("123", mockListener, testDispatcher)
     }
 
     @After
@@ -64,8 +69,13 @@ class InterstitialAdWrapperTest {
     }
 
     @Test
-    fun onAppEvent_WithValidNameAndExpectedAppEvent_NotifyAppEventListener() = runTest {
-        interstitialAdWrapper.onAppEvent(Constants.APP_EVENT, "")
+    fun onAdMetadataChanged_WithMetadataContainsAdEvent_NotifyAppEventListener() = runTest {
+        val mockRewardedAd = Mockito.mock(RewardedAd::class.java)
+        val bundle = Bundle()
+        bundle.putString(RewardedAdWrapper.KEY_METADATA, APP_EVENT)
+        Mockito.`when`(mockRewardedAd.getAdMetadata()).thenReturn(bundle)
+
+        rewardedAdWrapper.onAdLoaded(mockRewardedAd)
         advanceUntilIdle()
 
         Mockito.verify(mockListener, Mockito.times(1))
@@ -73,16 +83,21 @@ class InterstitialAdWrapperTest {
     }
 
     @Test
-    fun onAppEvent_WithInvalidNameAndExpectedAppEvent_DoNothing() = runTest {
-        interstitialAdWrapper.onAppEvent("test", "")
+    fun onAdMetadataChangedMetadata_ContainsNoAdEvent_DoNothing() = runTest {
+        val mockRewardedAd = Mockito.mock(RewardedAd::class.java)
+        val bundle = Bundle()
+        Mockito.`when`(mockRewardedAd.getAdMetadata()).thenReturn(bundle)
+
+        rewardedAdWrapper.onAdLoaded(mockRewardedAd)
         advanceUntilIdle()
 
-        Mockito.verifyNoInteractions(mockListener)
+        Mockito.verify(mockListener, Mockito.times(0))
+            .onEvent(AdEvent.AppEvent())
     }
 
     @Test
     fun onNextAdClosed_NotifyEventCloseListener() = runTest {
-        interstitialAdWrapper.onAdDismissedFullScreenContent()
+        rewardedAdWrapper.onAdDismissedFullScreenContent()
         advanceUntilIdle()
 
         Mockito.verify(mockListener, Mockito.times(1))
@@ -96,7 +111,7 @@ class InterstitialAdWrapperTest {
         for (i in 0..<wantedNumberOfInvocations) {
             val adError =
                 FullScreenContentError(FullScreenContentError.ErrorCode.INTERNAL_ERROR, "", null)
-            interstitialAdWrapper.onAdFailedToShowFullScreenContent(adError)
+            rewardedAdWrapper.onAdFailedToShowFullScreenContent(adError)
         }
         advanceUntilIdle()
         Mockito.verify(mockListener, Mockito.times(wantedNumberOfInvocations))
@@ -104,17 +119,16 @@ class InterstitialAdWrapperTest {
     }
 
     @Test
-    fun onNextAdOpened_NotifyEventDisplayedListener() = runTest {
-        interstitialAdWrapper.onAdShowedFullScreenContent()
+    fun onNextAdOpened_NotifyEventDisplayListener() = runTest {
+        rewardedAdWrapper.onAdShowedFullScreenContent()
         advanceUntilIdle()
 
         Mockito.verify(mockListener, Mockito.times(1)).onEvent(Displayed())
     }
 
     @Test
-    fun onNextAdLoadedAppEventExpected_NotifyLoadedListener() = runTest {
-        val mock = Mockito.mock(InterstitialAd::class.java)
-        interstitialAdWrapper.onAdLoaded(mock)
+    fun onNextAdLoadedAppEventExpected_ScheduleAppEventHandler() = runTest {
+        rewardedAdWrapper.onAdLoaded(Mockito.mock(RewardedAd::class.java))
         advanceUntilIdle()
 
         Mockito.verify(mockListener, Mockito.times(1))
@@ -122,7 +136,22 @@ class InterstitialAdWrapperTest {
     }
 
     @Test
+    fun onUserEarnedReward_NotifyRewardEvent() = runTest {
+        rewardedAdWrapper.onUserEarnedReward(Mockito.mock(RewardItem::class.java))
+        advanceUntilIdle()
+
+        Mockito.verify(mockListener, Mockito.times(1)).onEvent(AdEvent.Reward())
+    }
+
+    @Test
     fun isLoaded_adIsNull_ReturnFalse() {
-        Assert.assertFalse(interstitialAdWrapper.isLoaded())
+        Assert.assertFalse(rewardedAdWrapper.isLoaded())
+    }
+
+    @Test
+    fun isLoaded_adIsNonNull_ReturnTrue() {
+        rewardedAdWrapper.onAdLoaded(Mockito.mock(RewardedAd::class.java))
+
+        Assert.assertTrue(rewardedAdWrapper.isLoaded())
     }
 }

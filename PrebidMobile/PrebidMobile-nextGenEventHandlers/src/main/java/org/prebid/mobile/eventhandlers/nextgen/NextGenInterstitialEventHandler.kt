@@ -13,40 +13,34 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.prebid.mobile.eventhandlers
+package org.prebid.mobile.eventhandlers.nextgen
 
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
-import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardItem
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.api.exceptions.AdException
-import org.prebid.mobile.eventhandlers.global.Constants
+import org.prebid.mobile.eventhandlers.nextgen.global.Constants
 import org.prebid.mobile.rendering.bidding.data.bid.Bid
-import org.prebid.mobile.rendering.bidding.interfaces.RewardedEventHandler
-import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener
-import org.prebid.mobile.rendering.interstitial.rewarded.Reward
+import org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler
+import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener
 import java.lang.ref.WeakReference
 
 /**
- * Rewarded event handler for communication between Prebid rendering API and the Next-Gen SDK.
- * @param activity    Android activity
- * @param adUnitId    the GAM ad unit id for the rewarded ad unit
+ * Interstitial event handler for communication between Prebid rendering API and the Next-Gen SDK.
  */
-class NextGenRewardedEventHandler(
-    activity: Activity,
-    private var adUnitId: String,
-) : RewardedEventHandler, NextGenAdEventListener {
+class NextGenInterstitialEventHandler(activity: Activity, private val adUnitId: String) :
+    NextGenAdEventListener, InterstitialEventHandler {
 
     companion object {
-        private val TAG: String = NextGenRewardedEventHandler::class.java.getSimpleName()
+        private val TAG: String = NextGenInterstitialEventHandler::class.java.getSimpleName()
         private const val TIMEOUT_APP_EVENT_MS: Long = 600
     }
 
-    private var rewardedAd: RewardedAdWrapper? = null
+    private var requestInterstitial: InterstitialAdWrapper? = null
     private val activityWeakReference = WeakReference(activity)
 
-    private var listener: RewardedVideoEventListener? = null
+    private var eventListener: InterstitialEventListener? = null
     private var appEventHandler: Handler? = null
 
     private var isExpectingAppEvent = false
@@ -56,11 +50,9 @@ class NextGenRewardedEventHandler(
         when (adEvent) {
             is AdEvent.AppEvent -> handleAppEvent()
             is AdEvent.Loaded -> primaryAdReceived()
-            is AdEvent.Displayed -> listener?.onAdDisplayed()
-            is AdEvent.Closed -> listener?.onAdClosed()
-            is AdEvent.Failed -> notifyErrorListener(adEvent.errorCode)
-            is AdEvent.Reward -> listener?.onUserEarnedReward()
-            is AdEvent.Clicked -> listener?.onAdClicked()
+            is AdEvent.Closed -> eventListener?.onAdClosed()
+            is AdEvent.Displayed -> eventListener?.onAdDisplayed()
+            is AdEvent.Failed -> handleAdFailure(adEvent.errorCode)
             else -> {}
         }
     }
@@ -77,7 +69,7 @@ class NextGenRewardedEventHandler(
         cancelTimer()
         isExpectingAppEvent = false
         didNotifiedBidWin = true
-        listener?.onPrebidSdkWin()
+        eventListener?.onPrebidSdkWin()
     }
 
     private fun cancelTimer() {
@@ -97,7 +89,7 @@ class NextGenRewardedEventHandler(
 
             scheduleTimer()
         } else if (!didNotifiedBidWin) {
-            listener?.onAdServerWin(getRewardItem())
+            eventListener?.onAdServerWin()
         }
     }
 
@@ -106,52 +98,48 @@ class NextGenRewardedEventHandler(
 
         appEventHandler = Handler(Looper.getMainLooper())
         appEventHandler?.postDelayed(
-            { handleAppEventTimeout() },
+            { this.handleAppEventTimeout() },
             TIMEOUT_APP_EVENT_MS
         )
-    }
-
-    private fun getRewardItem(): RewardItem? {
-        return rewardedAd?.getRewardItem()
     }
 
     private fun handleAppEventTimeout() {
         cancelTimer()
         isExpectingAppEvent = false
-        listener?.onAdServerWin(getRewardItem())
+        eventListener?.onAdServerWin()
     }
 
-    private fun notifyErrorListener(errorCode: Int) {
+    private fun handleAdFailure(errorCode: Int) {
         when (errorCode) {
-            Constants.ERROR_CODE_INTERNAL_ERROR -> listener?.onAdFailed(
+            Constants.ERROR_CODE_INTERNAL_ERROR -> eventListener?.onAdFailed(
                 AdException(
                     AdException.THIRD_PARTY,
                     "Next-Gen SDK encountered an internal error."
                 )
             )
 
-            Constants.ERROR_CODE_INVALID_REQUEST -> listener?.onAdFailed(
+            Constants.ERROR_CODE_INVALID_REQUEST -> eventListener?.onAdFailed(
                 AdException(
                     AdException.THIRD_PARTY,
                     "Next-Gen SDK - invalid request error."
                 )
             )
 
-            Constants.ERROR_CODE_NETWORK_ERROR -> listener?.onAdFailed(
+            Constants.ERROR_CODE_NETWORK_ERROR -> eventListener?.onAdFailed(
                 AdException(
                     AdException.THIRD_PARTY,
                     "Next-Gen SDK - network error."
                 )
             )
 
-            Constants.ERROR_CODE_NO_FILL -> listener?.onAdFailed(
+            Constants.ERROR_CODE_NO_FILL -> eventListener?.onAdFailed(
                 AdException(
                     AdException.THIRD_PARTY,
                     "Next-Gen SDK - no fill."
                 )
             )
 
-            else -> listener?.onAdFailed(
+            else -> eventListener?.onAdFailed(
                 AdException(
                     AdException.THIRD_PARTY,
                     "Next-Gen SDK - failed with errorCode: $errorCode"
@@ -160,39 +148,49 @@ class NextGenRewardedEventHandler(
         }
     }
 
-    override fun setRewardedEventListener(listener: RewardedVideoEventListener) {
-        this.listener = listener
+    override fun setInterstitialEventListener(interstitialEventListener: InterstitialEventListener?) {
+        eventListener = interstitialEventListener
     }
 
     override fun requestAdWithBid(bid: Bid?) {
         isExpectingAppEvent = false
         didNotifiedBidWin = false
 
-        initPublisherRewardedAd()
+        initPublisherInterstitialAd()
 
-        if (bid != null && bid.getPrice() > 0) {
+        if (bid != null && bid.price > 0) {
             isExpectingAppEvent = true
         }
 
-        if (rewardedAd == null) {
-            notifyErrorListener(Constants.ERROR_CODE_INTERNAL_ERROR)
+        if (requestInterstitial == null) {
+            handleAdFailure(Constants.ERROR_CODE_INTERNAL_ERROR)
             return
         }
 
-        rewardedAd?.loadAd(bid)
+        requestInterstitial?.loadAd(bid)
     }
 
-    private fun initPublisherRewardedAd() {
-        rewardedAd = RewardedAdWrapper(adUnitId, this)
+    private fun initPublisherInterstitialAd() {
+        requestInterstitial = null
+
+        val activity = activityWeakReference.get()
+        if (activity == null) {
+            LogUtil.error(TAG, "Activity is null")
+            return
+        }
+
+        requestInterstitial = InterstitialAdWrapper(
+            activity,
+            adUnitId,
+            this
+        )
     }
 
     override fun show() {
-        if (rewardedAd?.isLoaded() == true) {
-            activityWeakReference.get()?.let {
-                rewardedAd?.show(it)
-            }
+        if (requestInterstitial?.isLoaded() == true) {
+            requestInterstitial?.show()
         } else {
-            listener?.onAdFailed(
+            eventListener?.onAdFailed(
                 AdException(
                     AdException.THIRD_PARTY,
                     "Next-Gen SDK - failed to display ad."
@@ -205,11 +203,5 @@ class NextGenRewardedEventHandler(
 
     override fun destroy() {
         cancelTimer()
-    }
-
-    override fun getReward(): Reward? {
-        val rewardItem = getRewardItem() ?: return null
-
-        return Reward(rewardItem.type, rewardItem.amount, null)
     }
 }

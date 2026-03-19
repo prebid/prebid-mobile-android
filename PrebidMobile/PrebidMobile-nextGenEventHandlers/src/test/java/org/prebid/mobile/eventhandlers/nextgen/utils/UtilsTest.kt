@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.prebid.mobile.eventhandlers.utils
+package org.prebid.mobile.eventhandlers.nextgen.utils
 
 import android.os.Bundle
 import com.google.android.libraries.ads.mobile.sdk.nativead.CustomNativeAd
@@ -25,7 +25,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.prebid.mobile.CacheManager
 import org.prebid.mobile.NativeAdUnit
-import org.prebid.mobile.eventhandlers.utils.Utils.didPrebidWin
+import org.prebid.mobile.eventhandlers.nextgen.utils.Utils.didPrebidWin
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -63,7 +63,7 @@ class UtilsTest {
     @Test
     fun didPrebidWin_unifiedAd_adIsNullOrNoEvents_ReturnFalse() {
         var ad: NativeAd? = null
-        Assert.assertFalse(Utils.didPrebidWin(ad))
+        Assert.assertFalse(didPrebidWin(ad))
 
 
         ad = Mockito.mock(NativeAd::class.java)

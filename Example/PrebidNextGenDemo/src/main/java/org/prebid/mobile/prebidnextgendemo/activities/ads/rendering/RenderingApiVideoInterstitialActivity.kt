@@ -21,7 +21,7 @@ import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
-import org.prebid.mobile.eventhandlers.NextGenInterstitialEventHandler
+import org.prebid.mobile.eventhandlers.nextgen.NextGenInterstitialEventHandler
 import org.prebid.mobile.prebidnextgendemo.activities.BaseAdActivity
 import java.util.EnumSet
 

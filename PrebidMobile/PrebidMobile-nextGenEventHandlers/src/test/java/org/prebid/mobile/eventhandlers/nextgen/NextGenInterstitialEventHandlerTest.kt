@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.prebid.mobile.eventhandlers
+package org.prebid.mobile.eventhandlers.nextgen
 
 import android.app.Activity
 import android.os.Handler
@@ -26,10 +26,10 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.prebid.mobile.api.exceptions.AdException
-import org.prebid.mobile.eventhandlers.AdEvent.Displayed
+import org.prebid.mobile.eventhandlers.nextgen.AdEvent.Displayed
 import org.prebid.mobile.rendering.bidding.data.bid.Bid
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid
-import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener
+import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener
 import org.prebid.mobile.test.utils.WhiteBox
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
@@ -37,12 +37,11 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [24])
-class NextGenRewardedEventHandlerTest {
-    private lateinit var eventHandler: NextGenRewardedEventHandler
-    private lateinit var activity: Activity
+class NextGenInterstitialEventHandlerTest {
+    private lateinit var eventHandler: NextGenInterstitialEventHandler
 
     @Mock
-    private lateinit var mockEventListener: RewardedVideoEventListener
+    private lateinit var mockEventListener: InterstitialEventListener
 
     @Mock
     private lateinit var mockAppEventHandler: Handler
@@ -51,37 +50,27 @@ class NextGenRewardedEventHandlerTest {
     fun setup() {
         MockitoAnnotations.initMocks(this)
 
-        activity = Robolectric.buildActivity(Activity::class.java).get()
+        val activity = Robolectric.buildActivity(Activity::class.java).get()
 
-        eventHandler = NextGenRewardedEventHandler(activity, GAM_AD_UNIT_ID)
-        eventHandler.setRewardedEventListener(mockEventListener)
+        eventHandler = NextGenInterstitialEventHandler(activity, GAM_AD_UNIT_ID)
+        eventHandler.setInterstitialEventListener(mockEventListener)
     }
 
     @Test
-    @Throws(Exception::class)
-    fun onAdMetadataChangedWithMetadataContainsAdEvent_HandleAppEvent() {
+    fun onAppEventWithValidNameAndExpectedAppEvent_HandleAppEvent() {
         changeExpectingAppEventStatus(true)
 
-        val spyEventHandler = Mockito.spy(eventHandler)
+        eventHandler.onEvent(AdEvent.AppEvent())
 
-        spyEventHandler.onEvent(AdEvent.AppEvent())
-
-        val isExpectingAppEvent = (WhiteBox.field(
-            NextGenRewardedEventHandler::class.java,
-            "isExpectingAppEvent"
-        ).get(spyEventHandler) as Boolean)
-
-        Mockito.verify(mockEventListener, Mockito.times(1))
-            .onPrebidSdkWin()
-        Assert.assertFalse(isExpectingAppEvent)
+        Mockito.verify(mockEventListener, Mockito.times(1)).onPrebidSdkWin()
+        Assert.assertFalse(this.expectingAppEventStatus)
     }
 
     @Test
     fun onNextAdClosed_NotifyEventCloseListener() {
         eventHandler.onEvent(AdEvent.Closed())
 
-        Mockito.verify(mockEventListener, Mockito.times(1))
-            .onAdClosed()
+        Mockito.verify(mockEventListener, Mockito.times(1)).onAdClosed()
     }
 
     @Test
@@ -93,17 +82,15 @@ class NextGenRewardedEventHandlerTest {
             eventHandler.onEvent(adEvent)
         }
         Mockito.verify(
-            mockEventListener,
-            Mockito.times(wantedNumberOfInvocations)
+            mockEventListener, Mockito.times(wantedNumberOfInvocations)
         ).onAdFailed(ArgumentMatchers.any(AdException::class.java))
     }
 
     @Test
-    fun onNextAdOpened_NotifyEventDisplayListener() {
+    fun onNextAdOpened_NotifyBannerEventDisplayListener() {
         eventHandler.onEvent(Displayed())
 
-        Mockito.verify(mockEventListener, Mockito.times(1))
-            .onAdDisplayed()
+        Mockito.verify(mockEventListener, Mockito.times(1)).onAdDisplayed()
     }
 
     @Test
@@ -118,46 +105,41 @@ class NextGenRewardedEventHandlerTest {
     @Test
     @Throws(Exception::class)
     fun onNextAdLoadedAppEventNotExpectedAndRequestInterstitialNotNull_NotifyEventListenerOnAdServerWin() {
-        val publisherInterstitialAd =
-            Mockito.mock(RewardedAdWrapper::class.java)
-        WhiteBox.field(NextGenRewardedEventHandler::class.java, "rewardedAd")
+        val publisherInterstitialAd = Mockito.mock(InterstitialAdWrapper::class.java)
+        WhiteBox.field(NextGenInterstitialEventHandler::class.java, "requestInterstitial")
             .set(eventHandler, publisherInterstitialAd)
 
         eventHandler.onEvent(AdEvent.Loaded())
 
-        Mockito.verify(mockEventListener, Mockito.times(1))
-            .onAdServerWin(ArgumentMatchers.any<Any?>())
+        Mockito.verify(mockEventListener, Mockito.times(1)).onAdServerWin()
     }
 
     @Test
     @Throws(Exception::class)
     fun onAppEventTimeout_NotifyBannerEventOnAdServerWin() {
-        WhiteBox.method(NextGenRewardedEventHandler::class.java, "handleAppEventTimeout")
+        WhiteBox.method(NextGenInterstitialEventHandler::class.java, "handleAppEventTimeout")
             .invoke(eventHandler)
 
-        Mockito.verify(mockEventListener, Mockito.times(1))
-            .onAdServerWin(ArgumentMatchers.any<Any?>())
+        Mockito.verify(mockEventListener, Mockito.times(1)).onAdServerWin()
     }
 
     @Test
     @Throws(IllegalAccessException::class)
     fun destroy_CancelTimer() {
         // by default apEventHandler is null if not scheduled
-        WhiteBox.field(NextGenRewardedEventHandler::class.java, "appEventHandler")
+        WhiteBox.field(NextGenInterstitialEventHandler::class.java, "appEventHandler")
             .set(eventHandler, mockAppEventHandler)
 
         eventHandler.destroy()
 
-        Mockito.verify(mockAppEventHandler, Mockito.times(1))
-            .removeCallbacksAndMessages(null)
+        Mockito.verify(mockAppEventHandler, Mockito.times(1)).removeCallbacksAndMessages(null)
     }
 
     @Test
     fun requestAdWithDifferentBids_VerifyAdStatus() {
         val mockBid = Mockito.mock(Bid::class.java)
         val mockPrebid = Mockito.mock(Prebid::class.java)
-        Mockito.`when`(mockPrebid.targeting)
-            .thenReturn(HashMap<String?, String?>())
+        Mockito.`when`(mockPrebid.targeting).thenReturn(HashMap<String?, String?>())
 
         Mockito.`when`(mockBid.getPrebid()).thenReturn(mockPrebid)
         Mockito.`when`(mockBid.price).thenReturn(0.2)
@@ -174,10 +156,9 @@ class NextGenRewardedEventHandlerTest {
 
     @Test
     fun showWhenEmbeddedInterstitialIsNull_NotifyEventErrorListener() {
-        eventHandler!!.show()
+        eventHandler.show()
 
-        Mockito.verify(mockEventListener)
-            .onAdFailed(ArgumentMatchers.any(AdException::class.java))
+        Mockito.verify(mockEventListener).onAdFailed(ArgumentMatchers.any(AdException::class.java))
     }
 
     private fun changeExpectingAppEventStatus(status: Boolean) {
@@ -186,8 +167,7 @@ class NextGenRewardedEventHandlerTest {
 
     private val expectingAppEventStatus: Boolean
         get() = WhiteBox.getInternalState(
-            eventHandler,
-            "isExpectingAppEvent"
+            eventHandler, "isExpectingAppEvent"
         )
 
     companion object {

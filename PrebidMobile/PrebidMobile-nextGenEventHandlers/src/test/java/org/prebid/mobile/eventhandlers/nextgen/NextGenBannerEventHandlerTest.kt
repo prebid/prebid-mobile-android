@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.prebid.mobile.eventhandlers
+package org.prebid.mobile.eventhandlers.nextgen
 
 import android.app.Activity
 import android.content.Context
@@ -29,7 +29,7 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.exceptions.AdException
-import org.prebid.mobile.eventhandlers.AdEvent.Clicked
+import org.prebid.mobile.eventhandlers.nextgen.AdEvent.Clicked
 import org.prebid.mobile.rendering.bidding.data.bid.Bid
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener

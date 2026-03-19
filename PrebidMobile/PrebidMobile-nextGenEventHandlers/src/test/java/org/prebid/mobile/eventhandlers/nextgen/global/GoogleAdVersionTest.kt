@@ -1,4 +1,4 @@
-package org.prebid.mobile.eventhandlers.global
+package org.prebid.mobile.eventhandlers.nextgen.global
 
 import com.google.android.libraries.ads.mobile.sdk.MobileAds
 import org.junit.Assert

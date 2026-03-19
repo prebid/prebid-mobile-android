@@ -4,7 +4,7 @@ apply from: '../tests.gradle'
 apply plugin: 'kotlin-android'
 
 android {
-    namespace "org.prebid.mobile.eventhandlers"
+    namespace "org.prebid.mobile.eventhandlers.nextgen"
     defaultConfig {
         minSdkVersion 24
     }

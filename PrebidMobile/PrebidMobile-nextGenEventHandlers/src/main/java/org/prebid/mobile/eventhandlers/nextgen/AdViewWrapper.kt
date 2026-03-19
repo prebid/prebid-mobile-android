@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.prebid.mobile.eventhandlers
+package org.prebid.mobile.eventhandlers.nextgen
 
 import android.content.Context
 import android.util.Log
@@ -30,8 +30,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.LogUtil
-import org.prebid.mobile.eventhandlers.global.Constants
-import org.prebid.mobile.eventhandlers.utils.Utils
+import org.prebid.mobile.eventhandlers.nextgen.global.Constants
+import org.prebid.mobile.eventhandlers.nextgen.utils.Utils
 import org.prebid.mobile.rendering.bidding.data.bid.Bid
 import com.google.android.libraries.ads.mobile.sdk.banner.AdSize as NextSize
 

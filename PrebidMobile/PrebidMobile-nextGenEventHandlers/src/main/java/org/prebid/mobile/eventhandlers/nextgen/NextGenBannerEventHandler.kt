@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.prebid.mobile.eventhandlers
+package org.prebid.mobile.eventhandlers.nextgen
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -22,7 +22,7 @@ import android.os.Looper
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.api.exceptions.AdException
-import org.prebid.mobile.eventhandlers.global.Constants
+import org.prebid.mobile.eventhandlers.nextgen.global.Constants
 import org.prebid.mobile.rendering.bidding.data.bid.Bid
 import org.prebid.mobile.rendering.bidding.interfaces.BannerEventHandler
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener

@@ -1,4 +1,4 @@
-package org.prebid.mobile.eventhandlers
+package org.prebid.mobile.eventhandlers.nextgen
 
 import android.app.Activity
 import android.util.Log
@@ -13,8 +13,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.prebid.mobile.LogUtil
-import org.prebid.mobile.eventhandlers.global.Constants
-import org.prebid.mobile.eventhandlers.utils.Utils
+import org.prebid.mobile.eventhandlers.nextgen.global.Constants
+import org.prebid.mobile.eventhandlers.nextgen.utils.Utils
 import org.prebid.mobile.rendering.bidding.data.bid.Bid
 import java.lang.ref.WeakReference
 
