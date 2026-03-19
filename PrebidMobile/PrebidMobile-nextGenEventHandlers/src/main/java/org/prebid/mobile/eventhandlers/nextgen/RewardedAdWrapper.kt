@@ -13,6 +13,8 @@ import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAdEventCallb
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.eventhandlers.nextgen.global.Constants
@@ -32,13 +34,14 @@ internal class RewardedAdWrapper(
         const val KEY_METADATA: String = "AdTitle"
     }
 
+    private val scope = CoroutineScope(mainDispatcher + SupervisorJob())
     private var rewardedAd: RewardedAd? = null
 
     override fun onAdLoaded(ad: RewardedAd) {
         super.onAdLoaded(ad)
         rewardedAd = ad
         rewardedAd?.adEventCallback = this
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(AdEvent.Loaded())
             if (metadataContainsAdEvent()) {
                 listener.onEvent(AdEvent.AppEvent())
@@ -72,7 +75,7 @@ internal class RewardedAdWrapper(
     private fun notifyErrorListener(errorCode: Int) {
         val adEvent = AdEvent.Failed(errorCode)
 
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(adEvent)
         }
     }
@@ -85,28 +88,28 @@ internal class RewardedAdWrapper(
 
     override fun onAdClicked() {
         super.onAdClicked()
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(AdEvent.Clicked())
         }
     }
 
     override fun onAdShowedFullScreenContent() {
         super.onAdShowedFullScreenContent()
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(AdEvent.Displayed())
         }
     }
 
     override fun onAdDismissedFullScreenContent() {
         super.onAdDismissedFullScreenContent()
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(AdEvent.Closed())
         }
     }
 
     override fun onUserEarnedReward(reward: RewardItem) {
         Log.d(TAG, "Reward earned")
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(AdEvent.Reward())
             listener.onEvent(AdEvent.Closed())
         }
@@ -142,6 +145,10 @@ internal class RewardedAdWrapper(
         } catch (throwable: Throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(throwable))
         }
+    }
+
+    fun destroy() {
+        scope.cancel()
     }
 
     fun getRewardItem(): RewardItem? {

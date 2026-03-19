@@ -27,6 +27,8 @@ import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.LogUtil
@@ -51,6 +53,7 @@ internal class AdViewWrapper private constructor(
     private val adView: AdView = AdView(context)
     private var ad: BannerAd? = null
     private val nextSizes = adSizes.toNextAdSizes()
+    private val scope = CoroutineScope(mainDispatcher + SupervisorJob())
 
     companion object {
         private val TAG: String = AdViewWrapper::class.java.getSimpleName()
@@ -79,7 +82,7 @@ internal class AdViewWrapper private constructor(
 
     override fun onAppEvent(name: String, data: String?) {
         if (Constants.APP_EVENT == name) {
-            CoroutineScope(mainDispatcher).launch {
+            scope.launch {
                 listener.onEvent(AdEvent.AppEvent())
             }
         }
@@ -87,21 +90,21 @@ internal class AdViewWrapper private constructor(
 
     override fun onAdClicked() {
         super.onAdClicked()
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(AdEvent.Clicked())
         }
     }
 
     override fun onAdDismissedFullScreenContent() {
         super.onAdDismissedFullScreenContent()
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(AdEvent.Closed())
         }
     }
 
     override fun onAdFailedToLoad(adError: LoadAdError) {
         super.onAdFailedToLoad(adError)
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             val adEvent = AdEvent.Failed(adError.code.value)
 
             listener.onEvent(adEvent)
@@ -112,7 +115,7 @@ internal class AdViewWrapper private constructor(
         super.onAdLoaded(ad)
         this.ad = ad
         this.ad?.adEventCallback = this
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(AdEvent.Loaded())
         }
     }
@@ -141,6 +144,7 @@ internal class AdViewWrapper private constructor(
     }
 
     fun destroy() {
+        scope.cancel()
         try {
             adView.destroy()
         } catch (throwable: Throwable) {

@@ -203,5 +203,6 @@ class NextGenInterstitialEventHandler(activity: Activity, private val adUnitId: 
 
     override fun destroy() {
         cancelTimer()
+        requestInterstitial?.destroy()
     }
 }

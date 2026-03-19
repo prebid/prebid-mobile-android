@@ -11,6 +11,8 @@ import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAdEv
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.eventhandlers.nextgen.global.Constants
@@ -32,6 +34,7 @@ internal class InterstitialAdWrapper(
         private val TAG: String = InterstitialAdWrapper::class.java.getSimpleName()
     }
 
+    private val scope = CoroutineScope(mainDispatcher + SupervisorJob())
     private var interstitialAd: InterstitialAd? = null
     private val activityWeakReference: WeakReference<Activity> = WeakReference(activity)
 
@@ -39,7 +42,7 @@ internal class InterstitialAdWrapper(
         super.onAdLoaded(ad)
         interstitialAd = ad
         interstitialAd?.adEventCallback = this
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(AdEvent.Loaded())
         }
     }
@@ -53,7 +56,7 @@ internal class InterstitialAdWrapper(
     private fun notifyErrorListener(code: Int) {
         val adEvent = AdEvent.Failed(code)
 
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(adEvent)
         }
     }
@@ -61,7 +64,7 @@ internal class InterstitialAdWrapper(
     override fun onAppEvent(name: String, data: String?) {
         super.onAppEvent(name, data)
         if (Constants.APP_EVENT == name) {
-            CoroutineScope(mainDispatcher).launch {
+            scope.launch {
                 listener.onEvent(AdEvent.AppEvent())
             }
         }
@@ -69,14 +72,14 @@ internal class InterstitialAdWrapper(
 
     override fun onAdClicked() {
         super.onAdClicked()
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(AdEvent.Clicked())
         }
     }
 
     override fun onAdDismissedFullScreenContent() {
         super.onAdDismissedFullScreenContent()
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(AdEvent.Closed())
         }
     }
@@ -89,7 +92,7 @@ internal class InterstitialAdWrapper(
 
     override fun onAdShowedFullScreenContent() {
         super.onAdShowedFullScreenContent()
-        CoroutineScope(mainDispatcher).launch {
+        scope.launch {
             listener.onEvent(AdEvent.Displayed())
         }
     }
@@ -128,6 +131,10 @@ internal class InterstitialAdWrapper(
         } catch (e: Throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(e))
         }
+    }
+
+    fun destroy() {
+        scope.cancel()
     }
 
     fun isLoaded() = interstitialAd != null

@@ -205,6 +205,7 @@ class NextGenRewardedEventHandler(
 
     override fun destroy() {
         cancelTimer()
+        rewardedAd?.destroy()
     }
 
     override fun getReward(): Reward? {
