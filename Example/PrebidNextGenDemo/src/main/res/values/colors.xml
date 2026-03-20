@@ -9,4 +9,7 @@
     <color name="background">#fff</color>
     <color name="background_inverse">#000</color>
     <color name="gray">#969696</color>
+
+    <color name="event_disabled">#888888</color>
+    <color name="event_enabled">#005a9a</color>
 </resources>

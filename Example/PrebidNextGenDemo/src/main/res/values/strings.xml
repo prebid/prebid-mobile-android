@@ -32,4 +32,21 @@
     <string name="rendering_video_rewarded">Rendering API - Video Rewarded</string>
     <string name="rendering_native">Rendering API - Native</string>
 
+    <string name="rendering_display_banner_320x50_no_bids">Rendering API - Display Banner 320x50 [noBids, GAM Ad]</string>
+    <string name="rendering_video_banner_no_bids">Rendering API - Video Banner [noBids, GAM Ad]</string>
+    <string name="rendering_display_interstitial_no_bids">Rendering API - Display Interstitial [noBids, GAM Ad]</string>
+    <string name="rendering_video_interstitial_no_bids">Rendering API - Video Interstitial [noBids, GAM Ad]</string>
+    <string name="rendering_video_rewarded_no_bids">Rendering API - Video Rewarded [noBids, GAM Ad]</string>
+    <string name="rendering_native_no_bids">Rendering API - Native [noBids, GAM Ad]</string>
+
+    <string name="event_ad_loaded">onAdLoaded called</string>
+    <string name="event_ad_displayed">onAdDisplayed called</string>
+    <string name="event_ad_failed">onAdFailed called</string>
+    <string name="event_ad_clicked">onAdClicked called</string>
+    <string name="event_ad_closed">onAdClosed called</string>
+    <string name="event_user_earned_reward">onUserEarnedReward called</string>
+    <string name="event_counter">%1$d ( %2$s )</string>
+    <string name="event_counter_default">0 ( 0 )</string>
+    <string name="event_counter_delimiter">-</string>
+
 </resources>

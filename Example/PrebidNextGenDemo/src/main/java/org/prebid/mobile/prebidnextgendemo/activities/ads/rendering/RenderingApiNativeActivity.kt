@@ -70,20 +70,29 @@ class RenderingApiNativeActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        adUnit = configureNativeAdUnit()
-        val builder = NativeAdRequest.Builder(
-            AD_UNIT_ID,
-            listOf(NativeAdType.NATIVE, NativeAdType.CUSTOM_NATIVE, NativeAdType.BANNER)
-        )
-            .setCustomFormatIds(listOf(CUSTOM_FORMAT_ID))
-            .setAdSize(AdSize.BANNER)
+        val adUnitId = intent.getStringExtra(EXTRA_AD_UNIT_ID) ?: AD_UNIT_ID
+        val configId = intent.getStringExtra(EXTRA_CONFIG_ID) ?: CONFIG_ID
+        val customFormatId = intent.getStringExtra(EXTRA_CUSTOM_FORMAT_ID)
+        adUnit = configureNativeAdUnit(configId)
+        val builder = if (customFormatId != null) {
+            createCustomFormatRequest(adUnitId, customFormatId)
+        } else {
+            createNativeRequest(adUnitId)
+        }
         adUnit?.fetchDemand(builder) {
             loadAd(builder.build())
         }
     }
 
-    private fun configureNativeAdUnit(): NativeAdUnit {
-        val adUnit = NativeAdUnit(CONFIG_ID)
+    private fun createCustomFormatRequest(adUnitId: String, customFormatId: String) =
+        NativeAdRequest.Builder(adUnitId, listOf(NativeAdType.CUSTOM_NATIVE))
+            .setCustomFormatIds(listOf(customFormatId))
+
+    private fun createNativeRequest(adUnitId: String) =
+        NativeAdRequest.Builder(adUnitId, listOf(NativeAdType.NATIVE, NativeAdType.BANNER))
+
+    private fun configureNativeAdUnit(configId: String = CONFIG_ID): NativeAdUnit {
+        val adUnit = NativeAdUnit(configId)
         adUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC)
         adUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED)
         adUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL)

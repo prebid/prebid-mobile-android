@@ -5,6 +5,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.libraries.ads.mobile.sdk.banner.AdSize
 import com.google.android.libraries.ads.mobile.sdk.banner.AdView
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAd
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdEventCallback
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest
 import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +59,18 @@ class OriginalApiVideoBannerActivity : BaseAdActivity() {
             adView.loadAd(requestBuilder.build(), object : AdLoadCallback<BannerAd> {
                 override fun onAdLoaded(ad: BannerAd) {
                     super.onAdLoaded(ad)
+                    events.loaded(true)
+                    ad.adEventCallback = object : BannerAdEventCallback {
+                        override fun onAdClicked() {
+                            super.onAdClicked()
+                            events.clicked(true)
+                        }
+
+                        override fun onAdImpression() {
+                            super.onAdImpression()
+                            events.displayed(true)
+                        }
+                    }
                     lifecycleScope.launch(Dispatchers.Main) {
                         // 6. Adjust ad view size
                         AdViewUtils.findPrebidCreativeSize(adView, object : PbFindSizeListener {

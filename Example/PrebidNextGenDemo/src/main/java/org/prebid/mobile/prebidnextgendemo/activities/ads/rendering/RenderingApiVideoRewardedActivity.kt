@@ -41,22 +41,36 @@ class RenderingApiVideoRewardedActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val eventHandler = NextGenRewardedEventHandler(this, AD_UNIT_ID)
-        adUnit = RewardedAdUnit(this, CONFIG_ID, eventHandler)
+        val adUnitId = intent.getStringExtra(EXTRA_AD_UNIT_ID) ?: AD_UNIT_ID
+        val configId = intent.getStringExtra(EXTRA_CONFIG_ID) ?: CONFIG_ID
+        val eventHandler = NextGenRewardedEventHandler(this, adUnitId)
+        adUnit = RewardedAdUnit(this, configId, eventHandler)
         adUnit?.setRewardedAdUnitListener(object : RewardedAdUnitListener {
             override fun onAdLoaded(rewardedAdUnit: RewardedAdUnit?) {
+                events.loaded(true)
                 adUnit?.show()
             }
 
             override fun onAdFailed(rewardedAdUnit: RewardedAdUnit?, exception: AdException?) {
                 Log.e(TAG, "Ad failed: $exception")
+                events.failed(true)
             }
 
-            override fun onAdDisplayed(rewardedAdUnit: RewardedAdUnit?) {}
-            override fun onAdClicked(rewardedAdUnit: RewardedAdUnit?) {}
-            override fun onAdClosed(rewardedAdUnit: RewardedAdUnit?) {}
+            override fun onAdDisplayed(rewardedAdUnit: RewardedAdUnit?) {
+                events.displayed(true)
+            }
+
+            override fun onAdClicked(rewardedAdUnit: RewardedAdUnit?) {
+                events.clicked(true)
+            }
+
+            override fun onAdClosed(rewardedAdUnit: RewardedAdUnit?) {
+                events.closed(true)
+            }
+
             override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?, reward: Reward?) {
                 Log.d(TAG, "User earned reward: $reward")
+                events.userEarnedReward(true)
             }
         })
         adUnit?.loadAd()

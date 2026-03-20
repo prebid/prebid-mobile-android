@@ -21,6 +21,7 @@ import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback
 import com.google.android.libraries.ads.mobile.sdk.common.AdRequest
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
 import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAd
+import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAdEventCallback
 import org.prebid.mobile.InterstitialAdUnit
 import org.prebid.mobile.prebidnextgendemo.activities.BaseAdActivity
 
@@ -57,12 +58,30 @@ class OriginalApiDisplayInterstitialActivity : BaseAdActivity() {
                 object : AdLoadCallback<InterstitialAd> {
                     override fun onAdLoaded(ad: InterstitialAd) {
                         super.onAdLoaded(ad)
+                        events.loaded(true)
+                        ad.adEventCallback = object : InterstitialAdEventCallback {
+                            override fun onAdClicked() {
+                                super.onAdClicked()
+                                events.clicked(true)
+                            }
+
+                            override fun onAdShowedFullScreenContent() {
+                                super.onAdShowedFullScreenContent()
+                                events.displayed(true)
+                            }
+
+                            override fun onAdDismissedFullScreenContent() {
+                                super.onAdDismissedFullScreenContent()
+                                events.closed(true)
+                            }
+                        }
                         ad.show(this@OriginalApiDisplayInterstitialActivity)
                     }
 
                     override fun onAdFailedToLoad(adError: LoadAdError) {
                         super.onAdFailedToLoad(adError)
                         Log.e("NEXT", "Ad failed to load: $adError")
+                        events.failed(true)
                     }
                 })
         }

@@ -90,6 +90,7 @@ class OriginalApiMultiformatBannerVideoNativeInAppActivity : BaseAdActivity() {
             override fun onNativeAdLoaded(nativeAd: NativeAd) {
                 super.onNativeAdLoaded(nativeAd)
                 Log.d(TAG, "Unified native loaded")
+                events.loaded(true)
                 lifecycleScope.launch(Dispatchers.Main) {
                     showNativeAd(nativeAd, adWrapperView)
                 }
@@ -98,6 +99,7 @@ class OriginalApiMultiformatBannerVideoNativeInAppActivity : BaseAdActivity() {
             override fun onCustomNativeAdLoaded(customNativeAd: CustomNativeAd) {
                 super.onCustomNativeAdLoaded(customNativeAd)
                 Log.d(TAG, "Custom ad loaded")
+                events.loaded(true)
                 lifecycleScope.launch(Dispatchers.Main) {
                     showPrebidNativeAd(customNativeAd)
                 }
@@ -106,6 +108,7 @@ class OriginalApiMultiformatBannerVideoNativeInAppActivity : BaseAdActivity() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 super.onAdFailedToLoad(adError)
                 Log.d(TAG, "Ad failed $adError")
+                events.failed(true)
                 lifecycleScope.launch(Dispatchers.Main) {
                     Toast.makeText(
                         applicationContext,
@@ -123,6 +126,7 @@ class OriginalApiMultiformatBannerVideoNativeInAppActivity : BaseAdActivity() {
             override fun onBannerAdLoaded(bannerAd: BannerAd) {
                 super.onBannerAdLoaded(bannerAd)
                 Log.d(TAG, "Banner ad loaded")
+                events.loaded(true)
                 lifecycleScope.launch(Dispatchers.Main) {
                     showBannerAd(bannerAd)
                 }

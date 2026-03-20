@@ -31,7 +31,11 @@ import com.google.android.gms.ads.MobileAds
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidnextgendemo.R
 import org.prebid.mobile.prebidnextgendemo.databinding.ActivityMainBinding
-import org.prebid.mobile.prebidnextgendemo.testcases.*
+import org.prebid.mobile.prebidnextgendemo.testcases.AdFormat
+import org.prebid.mobile.prebidnextgendemo.testcases.IntegrationKind
+import org.prebid.mobile.prebidnextgendemo.testcases.TestCase
+import org.prebid.mobile.prebidnextgendemo.testcases.TestCaseAdapter
+import org.prebid.mobile.prebidnextgendemo.testcases.TestCaseRepository
 import org.prebid.mobile.prebidnextgendemo.utils.Settings
 
 class MainActivity : AppCompatActivity() {
@@ -151,7 +155,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun showAd(testCase: TestCase) {
         TestCaseRepository.lastTestCase = testCase
-        startActivity(Intent(this, testCase.activity))
+        val intent = Intent(this, testCase.activity)
+        testCase.extras?.let { intent.putExtras(it) }
+        startActivity(intent)
     }
 
 }

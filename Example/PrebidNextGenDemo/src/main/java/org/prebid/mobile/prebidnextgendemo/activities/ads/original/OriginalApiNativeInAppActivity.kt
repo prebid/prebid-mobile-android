@@ -119,12 +119,18 @@ class OriginalApiNativeInAppActivity : BaseAdActivity() {
             override fun onNativeAdLoaded(nativeAd: NativeAd) {
                 super.onNativeAdLoaded(nativeAd)
                 Log.d(TAG, "Unified native loaded")
+                lifecycleScope.launch(Dispatchers.Main) {
+                    events.loaded(true)
+                }
                 unifiedNativeAd = nativeAd
             }
 
             override fun onCustomNativeAdLoaded(customNativeAd: CustomNativeAd) {
                 super.onCustomNativeAdLoaded(customNativeAd)
                 Log.d(TAG, "Custom ad loaded")
+                lifecycleScope.launch(Dispatchers.Main) {
+                    events.loaded(true)
+                }
                 AdViewUtils.findNative(customNativeAd, object : PrebidNativeAdListener {
                     override fun onPrebidNativeLoaded(ad: PrebidNativeAd) {
 
@@ -147,6 +153,9 @@ class OriginalApiNativeInAppActivity : BaseAdActivity() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 super.onAdFailedToLoad(adError)
                 Log.d(TAG, "Ad failed $adError")
+                lifecycleScope.launch(Dispatchers.Main) {
+                    events.failed(true)
+                }
             }
 
             override fun onAdLoadingCompleted() {
@@ -157,6 +166,7 @@ class OriginalApiNativeInAppActivity : BaseAdActivity() {
             override fun onBannerAdLoaded(bannerAd: BannerAd) {
                 super.onBannerAdLoaded(bannerAd)
                 Log.d(TAG, "Banner ad loaded")
+                events.loaded(true)
             }
         }
         NativeAdLoader.load(request, adCallback)

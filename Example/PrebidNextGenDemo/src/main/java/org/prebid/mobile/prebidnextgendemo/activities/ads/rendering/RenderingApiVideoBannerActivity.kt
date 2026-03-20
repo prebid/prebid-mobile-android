@@ -45,8 +45,12 @@ class RenderingApiVideoBannerActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val eventHandler = NextGenBannerEventHandler(this, AD_UNIT_ID, AdSize(WIDTH, HEIGHT))
-        adView = BannerView(this, CONFIG_ID, eventHandler)
+        val adUnitId = intent.getStringExtra(EXTRA_AD_UNIT_ID) ?: AD_UNIT_ID
+        val configId = intent.getStringExtra(EXTRA_CONFIG_ID) ?: CONFIG_ID
+        val width = intent.getIntExtra(EXTRA_WIDTH, WIDTH)
+        val height = intent.getIntExtra(EXTRA_HEIGHT, HEIGHT)
+        val eventHandler = NextGenBannerEventHandler(this, adUnitId, AdSize(width, height))
+        adView = BannerView(this, configId, eventHandler)
         adView?.setAutoRefreshDelay(refreshTimeSeconds)
         adView?.setBannerListener(createListener())
 
@@ -65,20 +69,25 @@ class RenderingApiVideoBannerActivity : BaseAdActivity() {
     private fun createListener(): BannerViewListener = object : BannerViewListener {
         override fun onAdLoaded(bannerView: BannerView?) {
             Log.d(TAG, "Ad loaded")
+            events.loaded(true)
         }
 
-        override fun onAdFailed(
-            bannerView: BannerView?,
-            exception: AdException?,
-        ) {
+        override fun onAdFailed(bannerView: BannerView?, exception: AdException?) {
             Log.e(TAG, "Ad failed: $exception")
+            events.failed(true)
         }
 
-        override fun onAdDisplayed(bannerView: BannerView?) {}
+        override fun onAdDisplayed(bannerView: BannerView?) {
+            events.displayed(true)
+        }
 
-        override fun onAdClicked(bannerView: BannerView?) {}
+        override fun onAdClicked(bannerView: BannerView?) {
+            events.clicked(true)
+        }
 
-        override fun onAdClosed(bannerView: BannerView?) {}
+        override fun onAdClosed(bannerView: BannerView?) {
+            events.closed(true)
+        }
     }
 
 }

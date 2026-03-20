@@ -20,6 +20,7 @@ import android.util.Log
 import com.google.android.libraries.ads.mobile.sdk.banner.AdSize
 import com.google.android.libraries.ads.mobile.sdk.banner.AdView
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAd
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdEventCallback
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest
 import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
@@ -66,9 +67,26 @@ class OriginalApiBanner320x50Activity : BaseAdActivity() {
         adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
         adUnit?.fetchDemand(adRequestBuilder) {
             adView.loadAd(adRequestBuilder.build(), object : AdLoadCallback<BannerAd> {
+                override fun onAdLoaded(ad: BannerAd) {
+                    super.onAdLoaded(ad)
+                    events.loaded(true)
+                    ad.adEventCallback = object : BannerAdEventCallback {
+                        override fun onAdClicked() {
+                            super.onAdClicked()
+                            events.clicked(true)
+                        }
+
+                        override fun onAdImpression() {
+                            super.onAdImpression()
+                            events.displayed(true)
+                        }
+                    }
+                }
+
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     super.onAdFailedToLoad(adError)
                     Log.e("NEXT", "Ad failed to load: $adError")
+                    events.failed(true)
                 }
             })
         }

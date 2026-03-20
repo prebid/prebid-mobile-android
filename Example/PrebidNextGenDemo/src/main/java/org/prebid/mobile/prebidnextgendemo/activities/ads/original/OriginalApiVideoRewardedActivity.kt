@@ -6,6 +6,7 @@ import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback
 import com.google.android.libraries.ads.mobile.sdk.common.AdRequest
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
 import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAd
+import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAdEventCallback
 import org.prebid.mobile.RewardedVideoAdUnit
 import org.prebid.mobile.Signals
 import org.prebid.mobile.VideoParameters
@@ -44,12 +45,32 @@ class OriginalApiVideoRewardedActivity : BaseAdActivity() {
                 object : AdLoadCallback<RewardedAd> {
                     override fun onAdLoaded(ad: RewardedAd) {
                         super.onAdLoaded(ad)
-                        ad.show(this@OriginalApiVideoRewardedActivity) { _ -> }
+                        events.loaded(true)
+                        ad.adEventCallback = object : RewardedAdEventCallback {
+                            override fun onAdClicked() {
+                                super.onAdClicked()
+                                events.clicked(true)
+                            }
+
+                            override fun onAdShowedFullScreenContent() {
+                                super.onAdShowedFullScreenContent()
+                                events.displayed(true)
+                            }
+
+                            override fun onAdDismissedFullScreenContent() {
+                                super.onAdDismissedFullScreenContent()
+                                events.closed(true)
+                            }
+                        }
+                        ad.show(this@OriginalApiVideoRewardedActivity) { _ ->
+                            events.userEarnedReward(true)
+                        }
                     }
 
                     override fun onAdFailedToLoad(adError: LoadAdError) {
                         super.onAdFailedToLoad(adError)
                         Log.e("NEXT", "Ad failed to load: $adError")
+                        events.failed(true)
                     }
                 }
             )

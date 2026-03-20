@@ -42,21 +42,32 @@ class RenderingApiVideoInterstitialActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val eventHandler = NextGenInterstitialEventHandler(this, AD_UNIT_ID)
-        adUnit = InterstitialAdUnit(this, CONFIG_ID, EnumSet.of(AdUnitFormat.VIDEO), eventHandler)
-        adUnit?.setInterstitialAdUnitListener(object :
-            InterstitialAdUnitListener {
+        val adUnitId = intent.getStringExtra(EXTRA_AD_UNIT_ID) ?: AD_UNIT_ID
+        val configId = intent.getStringExtra(EXTRA_CONFIG_ID) ?: CONFIG_ID
+        val eventHandler = NextGenInterstitialEventHandler(this, adUnitId)
+        adUnit = InterstitialAdUnit(this, configId, EnumSet.of(AdUnitFormat.VIDEO), eventHandler)
+        adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
             override fun onAdLoaded(adUnit: InterstitialAdUnit?) {
+                events.loaded(true)
                 adUnit?.show()
             }
 
             override fun onAdFailed(adUnit: InterstitialAdUnit?, exception: AdException?) {
                 Log.e(TAG, "Ad failed: $exception")
+                events.failed(true)
             }
 
-            override fun onAdDisplayed(adUnit: InterstitialAdUnit?) {}
-            override fun onAdClicked(adUnit: InterstitialAdUnit?) {}
-            override fun onAdClosed(adUnit: InterstitialAdUnit?) {}
+            override fun onAdDisplayed(adUnit: InterstitialAdUnit?) {
+                events.displayed(true)
+            }
+
+            override fun onAdClicked(adUnit: InterstitialAdUnit?) {
+                events.clicked(true)
+            }
+
+            override fun onAdClosed(adUnit: InterstitialAdUnit?) {
+                events.closed(true)
+            }
         })
         adUnit?.loadAd()
     }

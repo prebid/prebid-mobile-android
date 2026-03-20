@@ -22,6 +22,7 @@ import com.google.android.libraries.ads.mobile.sdk.banner.AdSize
 
 import com.google.android.libraries.ads.mobile.sdk.banner.AdView
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAd
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdEventCallback
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest
 import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
@@ -74,6 +75,18 @@ class OriginalApiDisplayBannerMultiSizeActivity : BaseAdActivity() {
                 override fun onAdLoaded(ad: BannerAd) {
                     super.onAdLoaded(ad)
                     Log.d(TAG, "Ad loaded.")
+                    events.loaded(true)
+                    ad.adEventCallback = object : BannerAdEventCallback {
+                        override fun onAdClicked() {
+                            super.onAdClicked()
+                            events.clicked(true)
+                        }
+
+                        override fun onAdImpression() {
+                            super.onAdImpression()
+                            events.displayed(true)
+                        }
+                    }
                     // Resize the banner. Start on main thread
                     lifecycleScope.launch(Dispatchers.Main) {
                         AdViewUtils.findPrebidCreativeSize(
@@ -94,6 +107,7 @@ class OriginalApiDisplayBannerMultiSizeActivity : BaseAdActivity() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     super.onAdFailedToLoad(adError)
                     Log.e(TAG, "Ad failed to load: $adError")
+                    events.failed(true)
                 }
             })
         }

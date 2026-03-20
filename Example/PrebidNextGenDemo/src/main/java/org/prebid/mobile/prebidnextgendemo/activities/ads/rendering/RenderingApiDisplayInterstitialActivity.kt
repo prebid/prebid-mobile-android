@@ -40,8 +40,10 @@ class RenderingApiDisplayInterstitialActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val eventHandler = NextGenInterstitialEventHandler(this, AD_UNIT_ID)
-        adUnit = InterstitialAdUnit(this, CONFIG_ID, eventHandler)
+        val adUnitId = intent.getStringExtra(EXTRA_AD_UNIT_ID) ?: AD_UNIT_ID
+        val configId = intent.getStringExtra(EXTRA_CONFIG_ID) ?: CONFIG_ID
+        val eventHandler = NextGenInterstitialEventHandler(this, adUnitId)
+        adUnit = InterstitialAdUnit(this, configId, eventHandler)
         adUnit?.setInterstitialAdUnitListener(createListener(adUnit))
         adUnit?.loadAd()
     }
@@ -56,6 +58,7 @@ class RenderingApiDisplayInterstitialActivity : BaseAdActivity() {
     private fun createListener(adUnit: InterstitialAdUnit?): InterstitialAdUnitListener =
         object : InterstitialAdUnitListener {
             override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
+                events.loaded(true)
                 adUnit?.show()
             }
 
@@ -64,11 +67,20 @@ class RenderingApiDisplayInterstitialActivity : BaseAdActivity() {
                 exception: AdException?,
             ) {
                 Log.e(TAG, "Ad failed: $exception")
+                events.failed(true)
             }
 
-            override fun onAdDisplayed(interstitialAdUnit: InterstitialAdUnit?) {}
-            override fun onAdClicked(interstitialAdUnit: InterstitialAdUnit?) {}
-            override fun onAdClosed(interstitialAdUnit: InterstitialAdUnit?) {}
+            override fun onAdDisplayed(interstitialAdUnit: InterstitialAdUnit?) {
+                events.displayed(true)
+            }
+
+            override fun onAdClicked(interstitialAdUnit: InterstitialAdUnit?) {
+                events.clicked(true)
+            }
+
+            override fun onAdClosed(interstitialAdUnit: InterstitialAdUnit?) {
+                events.closed(true)
+            }
         }
 
 }
