@@ -182,7 +182,7 @@ object TestCaseRepository {
             IntegrationKind.RENDERING,
             RenderingApiDisplayInterstitialActivity::class.java,
             extrasOf(
-                adUnitId = "/21808260008/prebid_oxb_320x480_html_interstitial_static",
+                adUnitId = "ca-app-pub-3940256099942544/1033173712",
                 configId = NO_BIDS_CONFIG_ID
             )
         ),
@@ -192,7 +192,7 @@ object TestCaseRepository {
             IntegrationKind.RENDERING,
             RenderingApiVideoInterstitialActivity::class.java,
             extrasOf(
-                adUnitId = "/21808260008/prebid_oxb_320x480_interstitial_video_static",
+                adUnitId = "ca-app-pub-3940256099942544/1033173712",
                 configId = NO_BIDS_CONFIG_ID
             )
         ),
@@ -202,21 +202,10 @@ object TestCaseRepository {
             IntegrationKind.RENDERING,
             RenderingApiVideoRewardedActivity::class.java,
             extrasOf(
-                adUnitId = "/21808260008/prebid_oxb_rewarded_video_static",
+                adUnitId = "ca-app-pub-3940256099942544/5224354917",
                 configId = NO_BIDS_CONFIG_ID
             )
         ),
-        TestCase(
-            R.string.rendering_native_no_bids,
-            AdFormat.NATIVE,
-            IntegrationKind.RENDERING,
-            RenderingApiNativeActivity::class.java,
-            extrasOf(
-                adUnitId = "/21808260008/apollo_custom_template_native_ad_unit",
-                configId = NO_BIDS_CONFIG_ID,
-                customFormatId = "11982639"
-            )
-        )
     )
 
 }
