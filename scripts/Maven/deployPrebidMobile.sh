@@ -255,8 +255,8 @@ function setupGPG() {
 setupGPG
 
 # Deploy each module one-by-one
-modules=("PrebidMobile-core" "PrebidMobile" "PrebidMobile-gamEventHandlers" "PrebidMobile-admobAdapters" "PrebidMobile-maxAdapters")
-extensions=("aar" "jar" "jar" "jar" "jar")
+modules=("PrebidMobile-core" "PrebidMobile" "PrebidMobile-gamEventHandlers" "PrebidMobile-admobAdapters" "PrebidMobile-maxAdapters" "PrebidMobile-nextGenEventHandlers")
+extensions=("aar" "jar" "jar" "jar" "jar" "jar")
 
 for n in ${!modules[@]}; do
   echo -e "\n"

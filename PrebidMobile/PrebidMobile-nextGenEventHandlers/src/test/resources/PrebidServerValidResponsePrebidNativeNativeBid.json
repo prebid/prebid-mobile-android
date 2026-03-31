@@ -1,0 +1,52 @@
+{
+  "id": "7173185194483475730",
+  "impid": "PrebidMobile",
+  "price": 0.05,
+  "adm": "{\"ver\":\"1.2\",\"assets\":[{\"id\":1,\"img\":{\"type\":1,\"url\":\"https://vcdn.adnxs.com/p/creative-image/be/53/27/49/be532749-1ede-4655-91c9-3d6d07081fb6.png\",\"w\":40,\"h\":40,\"ext\":{\"appnexus\":{\"prevent_crop\":0}}}},{\"id\":2,\"img\":{\"type\":3,\"url\":\"https://vcdn.adnxs.com/p/creative-image/7e/71/90/27/7e719027-80ef-4664-9b6d-a763da4cea4e.png\",\"w\":300,\"h\":250,\"ext\":{\"appnexus\":{\"prevent_crop\":0}}}},{\"title\":{\"text\":\"This is an RTB ad\"}},{\"id\":3,\"data\":{\"type\":1,\"value\":\"AppNexus\"}},{\"id\":4,\"data\":{\"type\":2,\"value\":\"The industry is trending native. Just see this ad as an example. Contact AppNexus for more!\"}},{\"id\":5,\"data\":{\"type\":12,\"value\":\"More\"}}],\"link\":{\"url\":\"https://nym1-ib.adnxs.com/click?mpmZmZmZqT-amZmZmZmpPwAAAAAAAOA_mpmZmZmZqT-amZmZmZmpP4EkLa07cRAgexGpayTDlwXglLNfAAAAAHu99gBuJwAAbicAAAIAAACRL6wJ-MwcAAAAAABVU0QAVVNEAAEAAQDILwAAAAABAgMCAAAAAMYAbiVURQAAAAA./bcr=AAAAAAAA8D8=/pp=${AUCTION_PRICE}/cnd=%21lhPSWQi4reMWEJHfsE0Y-JlzIAQoADGamZmZmZmpPzoJTllNMjo0MzE3QOsoSQAAAAAAAPA_UQAAAAAAAAAAWQAAAAAAAAAAYQAAAAAAAAAAaQAAAAAAAAAAcQAAAAAAAAAAeAA./cca=MTAwOTQjTllNMjo0MzE3/bn=86737/clickenc=http%3A%2F%2Fappnexus.com\"},\"jstracker\":\"\\u003cscript type=\\\"text/javascript\\\" async=\\\"true\\\" src=\\\"https://cdn.adnxs.com/v/app/201/trk.js#app;vk=appnexus.com-omid;tv=app-native-23hs;dom_id=%native_dom_id%;st=2;d=1x1;vc=iab;vid_ccr=1;tag_id=16170363;cb=https%3A%2F%2Fnym1-ib.adnxs.com%2Fvevent%3Fan_audit%3D0%26e%3DwqT_3QKuCsAuBQAAAwDWAAUBCOCpzv0FEIHJtOm6p5yIIBj7oqTdxuTwywUqNgmamZmZmZmpPxGaAQgQmak_GQAFAQjgPyERGwApEQkAMQUauADgPzD7-toHOO5OQO5OSAJQkd-wTVj4mXNgAGjI34wBeNGlBYABAYoBA1VTRJIBAQbwRpgBAaABAagBAbABALgBAsABA8gBAtABANgBAOABAPABAIoCPHVmKCdhJywgMzM5MzUyMCwgMTYwNTYwNDU3Nik7dWYoJ3InARQYMjI3OTMxMwELGR_w7ZIC3QMhQkZMSVhBaTRyZU1XRUpIZnNFMFlBQ0Q0bVhNd0FEZ0FRQVJJN2s1US1fcmFCMWdBWVBNR2FBQndBSGdBZ0FFQWlBRUFrQUVBbUFFQW9BRUJxQUVEc0FFQXVRRjFxdzFzbXBtcFA4RUJkYXNOYkpxWnFUX0pBYmZpVnl2TDhQOF8yUUVBQUFBQUFBRHdQLUFCQVBVQkFBQUFBSmdDQUtBQ0FMVUNBQUFBQUwwQ0FBQUFBT0FDQU9nQ0FQZ0NBSUFEQVpnREFib0RDVTVaVFRJNk5ETXhOLUFENnlpSUJBQ1FCQUNZQkFIQkIFPQkBCHlRUQkJAQEUTmdFQVBFEYUsQUFBQ0lCZDBocVFVAQ0JmAg3RUYBCgkBCERCQh0_AHkVKAxBQUFOMigAAFouKADwQDRBV0lKX0FGNHYzeEFfZ0Y4SV9QQVlJR0ExVlRSSWdHQUpBR0FaZ0dBS0VHbXBtWm1abVpxVC1vQmdHeUJpUUpBAWAJAQBSCQcFAQBaBQYJAQBoCQcBAUBDNEJnby6aAokBIWxoUFNXUTbhATAtSmx6SUFRb0FER2FtBWtYbXBQem9KVGxsTk1qbzBNekUzUU9zb1MR6QxQQV9VEQwMQUFBVx0MAFkdDABhHQwAYx0M8GFlQUEu2AIA4ALKqE2AAwCIAwGQAwCYAxSgAwGqAwDAA-CoAcgDANIDMAgQEiQ1ZWU4NTNjOS1iNWFmLTQ1MjYtYWY5ZS0wNDk5NmI0MGVjOTUYASIEZHBpZNIDKggKEiQ1ZYozAPC8ANgDAOADAOgDAvgDAIAEAJIECS9vcGVucnRiMpgEAKgEoSuyBAwIABAAGAAgADAAOAC4BADABADIBADSBA8xMDA5NCNOWU0yOjQzMTfaBAIIAeAEAPAEkd-wTYIFIG9yZy5wcmViaWQubW9iaWxlLnByZWJpZGphdmFkZW1viAUBmAUAoAX___________8BqgUkYTdjZjY4Y2MtNjI0NS00NjViLTk3YzctM2JmMjI0Nzc1MGUywAUAyQUAhUQU8D_SBQkJBQt0AAAA2AUB4AUB8AUB-gUECAAQAJAGAZgGALgGAMEGAR8wAADwP9AG1jPaBhYKEAkRGQFcEAAYAOAGDPIGAggAgAcBiAcAoAdBugcOAUgAGA3-JEAAyAfRpQXSBw0VcwE3LNoHBggAEAAYAOAHAA..%26s%3D5544269b5bf8747ef7438bc78b3490b885531252;ts=1605604576;cet=0;cecb=\\\"\\u003e\\u003c/script\\u003e\",\"eventtrackers\":[{\"event\":1,\"method\":1,\"url\":\"https://nym1-ib.adnxs.com/it?an_audit=0\\u0026e=wqT_3QKuCsAuBQAAAwDWAAUBCOCpzv0FEIHJtOm6p5yIIBj7oqTdxuTwywUqNgmamZmZmZmpPxGaAQgQmak_GQAFAQjgPyERGwApEQkAMQUauADgPzD7-toHOO5OQO5OSAJQkd-wTVj4mXNgAGjI34wBeNGlBYABAYoBA1VTRJIBAQbwRpgBAaABAagBAbABALgBAsABA8gBAtABANgBAOABAPABAIoCPHVmKCdhJywgMzM5MzUyMCwgMTYwNTYwNDU3Nik7dWYoJ3InARQYMjI3OTMxMwELGR_w7ZIC3QMhQkZMSVhBaTRyZU1XRUpIZnNFMFlBQ0Q0bVhNd0FEZ0FRQVJJN2s1US1fcmFCMWdBWVBNR2FBQndBSGdBZ0FFQWlBRUFrQUVBbUFFQW9BRUJxQUVEc0FFQXVRRjFxdzFzbXBtcFA4RUJkYXNOYkpxWnFUX0pBYmZpVnl2TDhQOF8yUUVBQUFBQUFBRHdQLUFCQVBVQkFBQUFBSmdDQUtBQ0FMVUNBQUFBQUwwQ0FBQUFBT0FDQU9nQ0FQZ0NBSUFEQVpnREFib0RDVTVaVFRJNk5ETXhOLUFENnlpSUJBQ1FCQUNZQkFIQkIFPQkBCHlRUQkJAQEUTmdFQVBFEYUsQUFBQ0lCZDBocVFVAQ0JmAg3RUYBCgkBCERCQh0_AHkVKAxBQUFOMigAAFouKADwQDRBV0lKX0FGNHYzeEFfZ0Y4SV9QQVlJR0ExVlRSSWdHQUpBR0FaZ0dBS0VHbXBtWm1abVpxVC1vQmdHeUJpUUpBAWAJAQBSCQcFAQBaBQYJAQBoCQcBAUBDNEJnby6aAokBIWxoUFNXUTbhATAtSmx6SUFRb0FER2FtBWtYbXBQem9KVGxsTk1qbzBNekUzUU9zb1MR6QxQQV9VEQwMQUFBVx0MAFkdDABhHQwAYx0M8GFlQUEu2AIA4ALKqE2AAwCIAwGQAwCYAxSgAwGqAwDAA-CoAcgDANIDMAgQEiQ1ZWU4NTNjOS1iNWFmLTQ1MjYtYWY5ZS0wNDk5NmI0MGVjOTUYASIEZHBpZNIDKggKEiQ1ZYozAPC8ANgDAOADAOgDAvgDAIAEAJIECS9vcGVucnRiMpgEAKgEoSuyBAwIABAAGAAgADAAOAC4BADABADIBADSBA8xMDA5NCNOWU0yOjQzMTfaBAIIAeAEAPAEkd-wTYIFIG9yZy5wcmViaWQubW9iaWxlLnByZWJpZGphdmFkZW1viAUBmAUAoAX___________8BqgUkYTdjZjY4Y2MtNjI0NS00NjViLTk3YzctM2JmMjI0Nzc1MGUywAUAyQUAhUQU8D_SBQkJBQt0AAAA2AUB4AUB8AUB-gUECAAQAJAGAZgGALgGAMEGAR8wAADwP9AG1jPaBhYKEAkRGQFcEAAYAOAGDPIGAggAgAcBiAcAoAdBugcOAUgAGA3-JEAAyAfRpQXSBw0VcwE3LNoHBggAEAAYAOAHAA..\\u0026s=5544269b5bf8747ef7438bc78b3490b885531252\\u0026pp=${AUCTION_PRICE}\"}]}",
+  "adid": "162279313",
+  "adomain": [
+    "appnexus.com"
+  ],
+  "iurl": "https://nym1-ib.adnxs.com/cr?id=162279313",
+  "cid": "10094",
+  "crid": "162279313",
+  "ext": {
+    "prebid": {
+      "cache": {
+        "key": "",
+        "url": "",
+        "bids": {
+          "url": "prebid.nym2.adnxs.com/pbc/v1/cache?uuid=a60a6644-98b8-4226-ad40-65f37a845a90",
+          "cacheId": "a60a6644-98b8-4226-ad40-65f37a845a90"
+        }
+      },
+      "targeting": {
+        "hb_bidder": "appnexus",
+        "hb_bidder_appnexus": "appnexus",
+        "hb_cache_host": "prebid.nym2.adnxs.com",
+        "hb_cache_host_appnex": "prebid.nym2.adnxs.com",
+        "hb_cache_id": "a60a6644-98b8-4226-ad40-65f37a845a90",
+        "hb_cache_id_appnexus": "a60a6644-98b8-4226-ad40-65f37a845a90",
+        "hb_cache_path": "/pbc/v1/cache",
+        "hb_cache_path_appnex": "/pbc/v1/cache",
+        "hb_env": "mobile-app",
+        "hb_env_appnexus": "mobile-app",
+        "hb_pb": "0.00",
+        "hb_pb_appnexus": "0.00"
+      },
+      "type": "native",
+      "video": {
+        "duration": 0,
+        "primary_category": ""
+      }
+    },
+    "bidder": {
+      "appnexus": {
+        "brand_id": 1,
+        "auction_id": 2310471109963490433,
+        "bidder_id": 2,
+        "bid_ad_type": 3
+      }
+    }
+  }
+}
