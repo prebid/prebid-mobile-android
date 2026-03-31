@@ -92,7 +92,7 @@ public class PrebidMobile {
     /**
      * Tested Google Next-Gen SDK version.
      */
-    public static final String TESTED_GOOGLE_NEXT_GEN_SDK_VERSION = "0.24.0";
+    public static final String TESTED_GOOGLE_NEXT_GEN_SDK_VERSION = "0.25.0";
 
     private static LogLevel logLevel = LogLevel.NONE;
     @Nullable

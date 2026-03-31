@@ -32,3 +32,8 @@ dependencies {
     implementation libs.kotlin.stdlib
     testImplementation libs.coroutines.test
 }
+
+// Override publisher.gradle's javadoc task for this pure-Kotlin module
+tasks.named('javadoc', Javadoc) {
+    source = files()
+}

@@ -128,10 +128,11 @@ for n in ${!modules[@]}; do
     mkdir -p $AARPATH_ABSOLUTE/META-INF
     mkdir $AARPATH_ABSOLUTE/META-INF/proguard
     mv $AARPATH_ABSOLUTE/proguard.pro $AARPATH_ABSOLUTE/META-INF/proguard
-    # move META-INF into a result direcotory
-    mv $AARPATH_ABSOLUTE/META-INF $TEMPDIR/output
+    # merge META-INF into output directory (cp -r handles non-empty destination)
+    cp -r $AARPATH_ABSOLUTE/META-INF $TEMPDIR/output
+    rm -r $AARPATH_ABSOLUTE/META-INF
 
-    rm -r $TEMPDIR/output/META-INF/com
+    rm -rf $TEMPDIR/output/META-INF/com
 
     # Creating a JAR File
     if [ "${modules[$n]}" == "PrebidMobile-maxAdapters" ]; then
