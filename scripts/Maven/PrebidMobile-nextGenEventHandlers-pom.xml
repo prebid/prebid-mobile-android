@@ -60,7 +60,7 @@
         <dependency>
             <groupId>com.google.android.libraries.ads.mobile.sdk</groupId>
             <artifactId>ads-mobile-sdk</artifactId>
-            <version>0.25.0</version>
+            <version>0.25.0-beta01</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
