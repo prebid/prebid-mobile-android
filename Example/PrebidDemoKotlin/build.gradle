@@ -41,7 +41,6 @@ dependencies {
     // implementation "org.prebid:prebid-mobile-sdk-gam-event-handlers:$prebidSdkVersionName-SNAPSHOT"
     // implementation "org.prebid:prebid-mobile-sdk-admob-adapters:$prebidSdkVersionName-SNAPSHOT"
     // implementation "org.prebid:prebid-mobile-sdk-max-adapters:$prebidSdkVersionName-SNAPSHOT"
-    // implementation "org.prebid:prebid-mobile-sdk-next-gen-event-handlers:$prebidSdkVersionName-SNAPSHOT"
 
     // Standard libraries
     implementation libs.kotlin.stdlib
