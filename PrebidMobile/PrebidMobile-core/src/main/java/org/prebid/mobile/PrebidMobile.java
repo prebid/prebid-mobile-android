@@ -87,7 +87,7 @@ public class PrebidMobile {
     /**
      * Tested Google SDK version.
      */
-    public static final String TESTED_GOOGLE_SDK_VERSION = "25.1.0";
+    public static final String TESTED_GOOGLE_SDK_VERSION = "25.2.0";
 
     /**
      * Tested Google Next-Gen SDK version.
