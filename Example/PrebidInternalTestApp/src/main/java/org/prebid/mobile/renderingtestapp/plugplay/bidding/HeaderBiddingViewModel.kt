@@ -41,8 +41,8 @@ class HeaderBiddingViewModel(
     val demoItems: LiveData<List<DemoItem>>
         get() = _demoItems
 
-    private val _navigateToDemoExample = MutableLiveData<DemoItem>()
-    val navigateToDemoExample: LiveData<DemoItem>
+    private val _navigateToDemoExample = MutableLiveData<DemoItem?>()
+    val navigateToDemoExample: LiveData<DemoItem?>
         get() = _navigateToDemoExample
 
     private val _configurationState = MutableLiveData<Boolean>()

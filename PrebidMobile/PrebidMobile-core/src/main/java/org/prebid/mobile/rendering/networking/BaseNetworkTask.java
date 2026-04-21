@@ -297,7 +297,7 @@ public class BaseNetworkTask
 
     @VisibleForTesting
     protected static void sendRequest(@NotNull String requestBody, @NotNull OutputStream requestStream) throws IOException {
-        byte[] bytes = requestBody.getBytes();
+        byte[] bytes = requestBody.getBytes("UTF-8");
         for (byte b : bytes) {
             requestStream.write(b);
         }

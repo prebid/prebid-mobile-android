@@ -313,7 +313,7 @@ public class BaseNetworkTaskTest {
 
         BaseNetworkTask.sendRequest("{\"app\":\"天気\"}", request);
 
-        Assert.assertEquals("{\"app\":\"天気\"}", request.toString());
+        Assert.assertEquals("{\"app\":\"天気\"}", request.toString("UTF-8"));
     }
 
 }
