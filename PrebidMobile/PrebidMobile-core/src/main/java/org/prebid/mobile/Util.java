@@ -417,9 +417,11 @@ public class Util {
     }
 
     private static void handleNextGenSdkTargeting(HashMap<String, String> bids, Object builder) {
-        Set<Map.Entry<String, String>> entries = bids.entrySet();
-        for (Map.Entry<String, String> entry: entries) {
-            Util.callMethodOnObject(builder, "putCustomTargeting", entry.getKey(), entry.getValue());
+        if (bids != null && !bids.isEmpty()) {
+            Set<Map.Entry<String, String>> entries = bids.entrySet();
+            for (Map.Entry<String, String> entry : entries) {
+                Util.callMethodOnObject(builder, "putCustomTargeting", entry.getKey(), entry.getValue());
+            }
         }
     }
 
