@@ -19,8 +19,6 @@ package org.prebid.mobile.api.rendering;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Pair;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
@@ -488,12 +486,7 @@ public class BannerView extends FrameLayout {
         removeAllViews();
 
         displayView = new DisplayView(getContext(), displayViewListener, displayVideoListener, adUnitConfig, bidResponse);
-        if (bidResponse.getPreferredPluginRendererName().equals(PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME)) {
-            final Pair<Integer, Integer> sizePair = bidResponse.getWinningBidWidthHeightPairDips(getContext());
-            addView(displayView, new FrameLayout.LayoutParams(sizePair.first, sizePair.second, Gravity.CENTER));
-        } else {
-            addView(displayView, new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-        }
+        addView(displayView, new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
         // Give the PluginRenderer the final layout pass
         PrebidMobilePluginRenderer plugin = PrebidMobilePluginRegister.getInstance().getPluginForPreferredRenderer(bidResponse);
