@@ -108,6 +108,7 @@ public class PrebidMobile {
      * the impression event respectively to the legacy analytic setup.
      */
     private static boolean useCacheForReportingWithRenderingApi = false;
+    private static boolean requireServerSideBidCache = false;
 
     private static int timeoutMillis = 2_000;
     private static boolean isTimeoutModified = false;
@@ -156,6 +157,22 @@ public class PrebidMobile {
      */
     public static void setUseCacheForReportingWithRenderingApi(boolean useCacheForReportingWithRenderingApi) {
         PrebidMobile.useCacheForReportingWithRenderingApi = useCacheForReportingWithRenderingApi;
+    }
+
+    /**
+     * Indicates whether the SDK should ignore bids that don't contain a successful
+     * server-side Prebid Cache entry in bid.ext.prebid.cache.
+     */
+    public static boolean isRequireServerSideBidCache() {
+        return requireServerSideBidCache;
+    }
+
+    /**
+     * Enables strict server-side cache validation for bid responses.
+     * If enabled, bids without a successful Prebid Cache entry are ignored.
+     */
+    public static void setRequireServerSideBidCache(boolean requireServerSideBidCache) {
+        PrebidMobile.requireServerSideBidCache = requireServerSideBidCache;
     }
 
     /**
