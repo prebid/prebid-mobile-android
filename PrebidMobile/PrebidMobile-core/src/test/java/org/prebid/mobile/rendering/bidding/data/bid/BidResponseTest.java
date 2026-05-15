@@ -22,6 +22,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 import org.prebid.mobile.PrebidMobile;
@@ -38,6 +40,7 @@ public class BidResponseTest {
     @After
     public void tearDown() {
         PrebidMobile.setUseCacheForReportingWithRenderingApi(false);
+        PrebidMobile.setRequireServerSideBidCache(false);
     }
 
     @Test
@@ -193,6 +196,68 @@ public class BidResponseTest {
     }
 
     @Test
+    public void testRemoveBidsWithoutSuccessfulCache_uncachedBid_removed() throws Exception {
+        String responseString = removePrebidCache(
+                ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"),
+                0
+        );
+
+        BidResponse subject = new BidResponse(responseString, new AdUnitConfiguration());
+
+        assertEquals(1, subject.removeBidsWithoutSuccessfulCache());
+        assertNull(subject.getWinningBid());
+        assertTrue(subject.getTargeting().isEmpty());
+    }
+
+    @Test
+    public void testRemoveBidsWithoutSuccessfulCache_cachedBid_remains() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json");
+
+        BidResponse subject = new BidResponse(responseString, new AdUnitConfiguration());
+
+        assertEquals(0, subject.removeBidsWithoutSuccessfulCache());
+        assertNotNull(subject.getWinningBid());
+        assertEquals("value3", subject.getTargeting().get("hb_cache_id"));
+    }
+
+    @Test
+    public void testRemoveBidsWithoutSuccessfulCache_mixedResponse_onlyCachedBidRemains() throws Exception {
+        String cachedBidResponse = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json");
+        JSONObject response = new JSONObject(cachedBidResponse);
+        JSONArray bids = response.getJSONArray("seatbid").getJSONObject(0).getJSONArray("bid");
+        JSONObject uncachedBid = new JSONObject(bids.getJSONObject(0).toString());
+        uncachedBid.getJSONObject("ext").getJSONObject("prebid").remove("cache");
+        uncachedBid.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting").put("hb_bidder", "uncached_bidder");
+        bids.put(uncachedBid);
+
+        BidResponse subject = new BidResponse(response.toString(), new AdUnitConfiguration());
+
+        assertEquals(1, subject.removeBidsWithoutSuccessfulCache());
+        assertEquals(1, subject.getSeatbids().get(0).getBids().size());
+        assertEquals("value2", subject.getTargeting().get("hb_bidder"));
+    }
+
+    @Test
+    public void testRemoveBidsWithoutSuccessfulCache_vastXmlCache_bidRemains() throws Exception {
+        JSONObject response = new JSONObject(ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"));
+        JSONObject cache = response
+                .getJSONArray("seatbid")
+                .getJSONObject(0)
+                .getJSONArray("bid")
+                .getJSONObject(0)
+                .getJSONObject("ext")
+                .getJSONObject("prebid")
+                .getJSONObject("cache");
+        cache.remove("bids");
+        cache.put("vastXml", new JSONObject().put("url", "vastUrl").put("cacheId", "vastCacheId"));
+
+        BidResponse subject = new BidResponse(response.toString(), new AdUnitConfiguration());
+
+        assertEquals(0, subject.removeBidsWithoutSuccessfulCache());
+        assertNotNull(subject.getWinningBid());
+    }
+
+    @Test
     public void testBidType_banner() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("BidResponseTest/bid_type_banner.json");
 
@@ -230,6 +295,19 @@ public class BidResponseTest {
         BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
 
         assertTrue(subject.isVideo());
+    }
+
+    private String removePrebidCache(String responseString, int bidIndex) throws Exception {
+        JSONObject response = new JSONObject(responseString);
+        response
+                .getJSONArray("seatbid")
+                .getJSONObject(0)
+                .getJSONArray("bid")
+                .getJSONObject(bidIndex)
+                .getJSONObject("ext")
+                .getJSONObject("prebid")
+                .remove("cache");
+        return response.toString();
     }
 
 }

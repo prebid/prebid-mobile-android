@@ -21,6 +21,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidEventDelegate;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -59,6 +60,22 @@ public class BidLoader {
             if (bidResponse.hasParseError()) {
                 failedToLoadBid(new AdException(AdException.FAILED_TO_PARSE_RESPONSE, bidResponse.getParseError()));
                 return;
+            }
+            if (PrebidMobile.isRequireServerSideBidCache()) {
+                int removedBids = bidResponse.removeBidsWithoutSuccessfulCache();
+                if (removedBids > 0) {
+                    LogUtil.warning(TAG, "Ignored " + removedBids + " bids without successful Prebid Cache entries.");
+                }
+                if (bidResponse.getWinningBid() == null) {
+                    String errorMessage = removedBids > 0 && bidResponse.getSeatbids().isEmpty()
+                            ? FetchDemandResult.NO_CACHED_BIDS_MESSAGE
+                            : FetchDemandResult.NO_BIDS_MESSAGE;
+                    failedToLoadBid(new AdException(
+                            AdException.NO_BIDS,
+                            errorMessage
+                    ));
+                    return;
+                }
             }
             checkTmax(response, bidResponse);
             updateAdUnitConfiguration(bidResponse);

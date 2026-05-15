@@ -236,6 +236,33 @@ public class BidResponse {
         return Utils.isVast(bid.getAdm());
     }
 
+    public int removeBidsWithoutSuccessfulCache() {
+        int removedBids = 0;
+        List<Seatbid> filteredSeatbids = new ArrayList<>();
+
+        for (Seatbid seatbid : seatbids) {
+            List<Bid> cachedBids = new ArrayList<>();
+            for (Bid bid : seatbid.getBids()) {
+                if (bid.hasSuccessfulServerCache()) {
+                    cachedBids.add(bid);
+                } else {
+                    removedBids++;
+                }
+            }
+            if (!cachedBids.isEmpty()) {
+                seatbid.getBids().clear();
+                seatbid.getBids().addAll(cachedBids);
+                filteredSeatbids.add(seatbid);
+            }
+        }
+
+        seatbids = filteredSeatbids;
+        winningBidJson = null;
+        getWinningBid();
+
+        return removedBids;
+    }
+
     public String getPreferredPluginRendererName() {
         Bid bid = getWinningBid();
         if (bid != null) {
