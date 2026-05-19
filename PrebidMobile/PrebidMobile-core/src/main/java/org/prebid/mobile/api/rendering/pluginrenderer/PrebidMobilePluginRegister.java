@@ -60,6 +60,10 @@ public class PrebidMobilePluginRegister {
         return plugins.containsKey(prebidMobilePluginRendererName);
     }
 
+    public PrebidMobilePluginRenderer getDefaultPluginRenderer() {
+        return plugins.get(PREBID_MOBILE_RENDERER_NAME);
+    }
+
     public void registerEventListener(
             PluginEventListener pluginEventListener,
             String listenerKey
@@ -93,11 +97,20 @@ public class PrebidMobilePluginRegister {
     // Returns the registered renderer according to the preferred renderer data in the bid response
     // If no preferred renderer is found, it returns PrebidRenderer to perform default behavior
     public PrebidMobilePluginRenderer getPluginForPreferredRenderer(BidResponse bidResponse) {
+        return getPluginForPreferredRenderer(bidResponse, bidResponse.getAdUnitConfiguration());
+    }
+
+    // Returns the registered renderer according to the preferred renderer data in the bid response
+    // If no preferred renderer is found, it returns PrebidRenderer to perform default behavior
+    public PrebidMobilePluginRenderer getPluginForPreferredRenderer(
+            BidResponse bidResponse,
+            AdUnitConfiguration adUnitConfiguration
+    ) {
         String preferredRendererName = bidResponse.getPreferredPluginRendererName();
         String preferredRendererVersion = bidResponse.getPreferredPluginRendererVersion();
         PrebidMobilePluginRenderer preferredPlugin = plugins.get(preferredRendererName);
         if (preferredPlugin != null
-                && preferredPlugin.isSupportRenderingFor(bidResponse.getAdUnitConfiguration())
+                && preferredPlugin.isSupportRenderingFor(adUnitConfiguration)
                 && preferredPlugin.getVersion().equals(preferredRendererVersion)) {
             return preferredPlugin;
         } else {
