@@ -60,6 +60,11 @@ public class PrebidMobilePluginRegister {
         return plugins.containsKey(prebidMobilePluginRendererName);
     }
 
+    @VisibleForTesting
+    public void unregisterAllPlugins() {
+        plugins.clear();
+    }
+
     public PrebidMobilePluginRenderer getDefaultPluginRenderer() {
         return plugins.get(PREBID_MOBILE_RENDERER_NAME);
     }
