@@ -26,6 +26,8 @@ import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -44,6 +46,21 @@ public class CreativeModelTest {
         urls.add("www.impression.url");
         creativeModel.registerTrackingEvent(TrackingEvent.Events.IMPRESSION, urls);
         assertTrue(creativeModel.trackingURLs.size() == 1);
+    }
+
+    @Test
+    public void expirationTimeSeconds_GetterSetter() {
+        CreativeModel creativeModel = new CreativeModel(
+                TrackingManager.getInstance(),
+                mock(OmEventTracker.class),
+                mock(AdUnitConfiguration.class)
+        );
+
+        assertNull(creativeModel.getExpirationTimeSeconds());
+
+        creativeModel.setExpirationTimeSeconds(300);
+
+        assertEquals(Integer.valueOf(300), creativeModel.getExpirationTimeSeconds());
     }
 
     @Test
