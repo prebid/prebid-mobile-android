@@ -157,6 +157,7 @@ public class Prebid {
         }
 
         setPluginRendererList(prebid, config);
+        setUsePxRatio(prebid);
 
         return prebid;
     }
@@ -188,6 +189,16 @@ public class Prebid {
                 LogUtil.error("setPluginRendererList", e.getMessage());
             }
         }
+    }
+
+    private static void setUsePxRatio(JSONObject prebid) {
+        JSONObject sdk = prebid.optJSONObject("sdk");
+        if (sdk == null) {
+            sdk = new JSONObject();
+            Utils.addValue(prebid, "sdk", sdk);
+        }
+
+        Utils.addValue(sdk, "usepxratio", true);
     }
 
     private static void parseEvents(
