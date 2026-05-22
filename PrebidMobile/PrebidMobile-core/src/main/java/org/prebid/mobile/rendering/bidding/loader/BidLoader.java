@@ -62,7 +62,7 @@ public class BidLoader {
                 return;
             }
             if (PrebidMobile.isRequireServerSideBidCache()) {
-                int removedBids = bidResponse.removeBidsWithoutSuccessfulCache();
+                int removedBids = bidResponse.getBidsWithoutSuccessfulCacheCount();
                 if (removedBids > 0) {
                     LogUtil.warning(TAG, "Ignored " + removedBids + " bids without successful Prebid Cache entries.");
                 }
