@@ -62,10 +62,11 @@ public class Cache {
         cache.key = jsonObject.optString("key");
         cache.url = jsonObject.optString("url");
         cache.bids = Bids.fromJSONObject(jsonObject.optJSONObject("bids"));
-        cache.vastXml = Bids.fromJSONObject(jsonObject.optJSONObject("vastXml"));
-        if (!cache.vastXml.hasCacheData()) {
-            cache.vastXml = Bids.fromJSONObject(jsonObject.optJSONObject("vastxml"));
+        JSONObject vastXmlObject = jsonObject.optJSONObject("vastXml");
+        if (vastXmlObject == null) {
+            vastXmlObject = jsonObject.optJSONObject("vastxml");
         }
+        cache.vastXml = Bids.fromJSONObject(vastXmlObject);
 
         return cache;
     }

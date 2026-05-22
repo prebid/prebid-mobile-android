@@ -43,4 +43,19 @@ public class CacheTest {
     public void whenFromJSONObjectAndNullPassed_ReturnNotNull() {
         assertNotNull(Cache.fromJSONObject(null));
     }
+
+    @Test
+    public void whenFromJSONObjectWithLowercaseVastXml_ReturnParsedVastXmlCache()
+    throws JSONException {
+        JSONObject jsonCache = new JSONObject();
+        jsonCache.put("vastxml", new JSONObject()
+                .put("url", "vastUrl")
+                .put("cacheId", "vastCacheId")
+        );
+
+        Cache cache = Cache.fromJSONObject(jsonCache);
+
+        assertEquals("vastUrl", cache.getVastXml().getUrl());
+        assertEquals("vastCacheId", cache.getVastXml().getCacheId());
+    }
 }

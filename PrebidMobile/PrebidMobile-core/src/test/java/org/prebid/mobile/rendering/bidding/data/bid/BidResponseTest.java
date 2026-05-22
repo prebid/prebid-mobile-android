@@ -196,32 +196,34 @@ public class BidResponseTest {
     }
 
     @Test
-    public void testRemoveBidsWithoutSuccessfulCache_uncachedBid_removed() throws Exception {
+    public void testParseJson_requireServerCacheAndUncachedBid_bidSkipped() throws Exception {
         String responseString = removePrebidCache(
                 ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"),
                 0
         );
+        PrebidMobile.setRequireServerSideBidCache(true);
 
         BidResponse subject = new BidResponse(responseString, new AdUnitConfiguration());
 
-        assertEquals(1, subject.removeBidsWithoutSuccessfulCache());
+        assertEquals(1, subject.getBidsWithoutSuccessfulCacheCount());
         assertNull(subject.getWinningBid());
         assertTrue(subject.getTargeting().isEmpty());
     }
 
     @Test
-    public void testRemoveBidsWithoutSuccessfulCache_cachedBid_remains() throws IOException {
+    public void testParseJson_requireServerCacheAndCachedBid_bidRemains() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json");
+        PrebidMobile.setRequireServerSideBidCache(true);
 
         BidResponse subject = new BidResponse(responseString, new AdUnitConfiguration());
 
-        assertEquals(0, subject.removeBidsWithoutSuccessfulCache());
+        assertEquals(0, subject.getBidsWithoutSuccessfulCacheCount());
         assertNotNull(subject.getWinningBid());
         assertEquals("value3", subject.getTargeting().get("hb_cache_id"));
     }
 
     @Test
-    public void testRemoveBidsWithoutSuccessfulCache_mixedResponse_onlyCachedBidRemains() throws Exception {
+    public void testParseJson_requireServerCacheAndMixedResponse_onlyCachedBidAdded() throws Exception {
         String cachedBidResponse = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json");
         JSONObject response = new JSONObject(cachedBidResponse);
         JSONArray bids = response.getJSONArray("seatbid").getJSONObject(0).getJSONArray("bid");
@@ -229,16 +231,17 @@ public class BidResponseTest {
         uncachedBid.getJSONObject("ext").getJSONObject("prebid").remove("cache");
         uncachedBid.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting").put("hb_bidder", "uncached_bidder");
         bids.put(uncachedBid);
+        PrebidMobile.setRequireServerSideBidCache(true);
 
         BidResponse subject = new BidResponse(response.toString(), new AdUnitConfiguration());
 
-        assertEquals(1, subject.removeBidsWithoutSuccessfulCache());
+        assertEquals(1, subject.getBidsWithoutSuccessfulCacheCount());
         assertEquals(1, subject.getSeatbids().get(0).getBids().size());
         assertEquals("value2", subject.getTargeting().get("hb_bidder"));
     }
 
     @Test
-    public void testRemoveBidsWithoutSuccessfulCache_vastXmlCache_bidRemains() throws Exception {
+    public void testParseJson_requireServerCacheAndVastXmlCache_bidRemains() throws Exception {
         JSONObject response = new JSONObject(ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"));
         JSONObject cache = response
                 .getJSONArray("seatbid")
@@ -250,10 +253,11 @@ public class BidResponseTest {
                 .getJSONObject("cache");
         cache.remove("bids");
         cache.put("vastXml", new JSONObject().put("url", "vastUrl").put("cacheId", "vastCacheId"));
+        PrebidMobile.setRequireServerSideBidCache(true);
 
         BidResponse subject = new BidResponse(response.toString(), new AdUnitConfiguration());
 
-        assertEquals(0, subject.removeBidsWithoutSuccessfulCache());
+        assertEquals(0, subject.getBidsWithoutSuccessfulCacheCount());
         assertNotNull(subject.getWinningBid());
     }
 
