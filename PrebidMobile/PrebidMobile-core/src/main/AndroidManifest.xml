@@ -11,7 +11,7 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
         <activity
-                android:exported="true"
+                android:exported="false"
                 android:name="org.prebid.mobile.rendering.views.browser.AdBrowserActivity"
                 android:configChanges="orientation|screenSize|keyboardHidden"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar"
