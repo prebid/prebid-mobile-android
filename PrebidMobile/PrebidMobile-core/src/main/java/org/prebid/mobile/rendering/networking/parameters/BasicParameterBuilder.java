@@ -29,7 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerParameters;
-import org.prebid.mobile.DataObject;
+import org.prebid.mobile.EidsPlacement;
 import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
@@ -45,6 +45,7 @@ import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.users.Eid;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
@@ -189,6 +190,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
             extendedIds.add(TargetingParams.getSharedId());
         }
         if (extendedIds != null && extendedIds.size() > 0) {
+            List<Eid> eidList = new ArrayList<>();
             JSONArray idsJson = new JSONArray();
             for (ExternalUserId id : extendedIds) {
                 if (id != null) {
@@ -196,9 +198,19 @@ public class BasicParameterBuilder extends ParameterBuilder {
                     if (idJson != null) {
                         idsJson.put(idJson);
                     }
+                    Eid eid = id.toEid();
+                    if (eid != null) {
+                        eidList.add(eid);
+                    }
                 }
             }
-            user.getExt().put("eids", idsJson);
+            EidsPlacement placement = PrebidMobile.getEidsPlacement();
+            if (placement.inUserExt()) {
+                user.getExt().put("eids", idsJson);
+            }
+            if (placement.inUser()) {
+                user.eids = eidList;
+            }
         }
 
         final Pair<Float, Float> userLatLng = TargetingParams.getUserLatLng();
