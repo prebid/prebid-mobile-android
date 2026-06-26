@@ -45,6 +45,7 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.BannerParameters;
+import org.prebid.mobile.EidsPlacement;
 import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.NativeTitleAsset;
 import org.prebid.mobile.PrebidMobile;
@@ -70,10 +71,11 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.users.Eid;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.video.vast.Ad;
+import org.prebid.mobile.api.rendering.PrebidRenderer;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -103,10 +105,14 @@ public class BasicParameterBuilderTest {
 
     private final boolean browserActivityAvailable = true;
 
+    private final PrebidMobilePluginRenderer defaultRenderer = new PrebidRenderer();
+
     @Before
     public void setUp() throws Exception {
         context = Robolectric.buildActivity(Activity.class).create().get();
         ManagersResolver.getInstance().prepare(context);
+        PrebidMobile.registerPluginRenderer(defaultRenderer);
+        PrebidMobile.setEidsPlacement(EidsPlacement.COMPATIBLE);
         TargetingParams.setExternalUserIds(null);
     }
 
@@ -125,6 +131,8 @@ public class BasicParameterBuilderTest {
         PrebidMobile.setPrebidServerAccountId("");
         PrebidMobile.setAuctionSettingsId(null);
 
+        PrebidMobile.setEidsPlacement(EidsPlacement.OPEN_RTB_2_6);
+        PrebidMobile.unregisterPluginRenderer(defaultRenderer);
         PrebidMobile.unregisterPluginRenderer(otherPlugin);
     }
 
@@ -685,7 +693,6 @@ public class BasicParameterBuilderTest {
         TargetingParams.addUserKeyword(USER_KEYWORDS);
         TargetingParams.setUserExt(new Ext());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
-
 
         ExternalUserId.UniqueId uid1 = new ExternalUserId.UniqueId("11", 111);
         uid1.setExt(new HashMap() {{
@@ -1447,13 +1454,19 @@ public class BasicParameterBuilderTest {
         if (extendedUserIds != null && extendedUserIds.size() > 0) {
             user.ext = new Ext();
             JSONArray idsJson = new JSONArray();
+            List<Eid> eids = new ArrayList<>();
             for (ExternalUserId id : extendedUserIds) {
                 JSONObject idJson = id.getJson();
                 if (idJson != null) {
                     idsJson.put(idJson);
                 }
+                Eid eid = id.toEid();
+                if (eid != null) {
+                    eids.add(eid);
+                }
             }
             user.ext.put("eids", idsJson);
+            user.eids = eids;
         }
 
         final Geo userGeo = user.getGeo();
