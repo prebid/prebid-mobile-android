@@ -175,22 +175,22 @@ public final class AdViewUtils {
     }
 
     // Overload that applies the scale, then notifies the optional listener on the next frame (so it
-    // runs once the corrected scale has been laid out).
-    static void setWebViewScale(WebView webView, float webViewHeight, int webViewContentHeight, final int width, final int height, @Nullable final PbScaleAppliedListener scaleListener) {
-        //guard a non-positive content height: float/0 yields Infinity, and (int) Infinity is
-        //Integer.MAX_VALUE, which would set a nonsensical initial scale. Skip scaling (and the
-        //listener, since no corrective scale was applied) instead.
-        if (webViewContentHeight <= 0) {
-            return;
-        }
 
+    // runs once the corrected scale has been laid out). The scale computation and setInitialScale call
+    // are intentionally left identical to the legacy overload above so existing callers behave exactly
+    // as before; only the new, opt-in listener notification is added here.
+    static void setWebViewScale(WebView webView, float webViewHeight, int webViewContentHeight, final int width, final int height, @Nullable final PbScaleAppliedListener scaleListener) {
         //case: regulate scale because WebView.getSettings().setLoadWithOverviewMode() does not work
         int scale = (int) (webViewHeight / webViewContentHeight * 100 + 1);
 
         LogUtil.debug("Set WebView scale: " + scale + " (" + webViewHeight + ", " + webViewContentHeight + ")");
         webView.setInitialScale(scale);
 
-        if (scaleListener != null) {
+        // Notify the optional listener once the scale has been applied. Gate on a positive content
+        // height: a non-positive value makes the scale above nonsensical (float/0 -> Infinity ->
+        // Integer.MAX_VALUE), so we must not signal "scale applied" in that degenerate case. This only
+        // affects the new listener; the legacy (listener-less) path above is unchanged.
+        if (scaleListener != null && webViewContentHeight > 0) {
             webView.post(new Runnable() {
                 @Override
                 public void run() {
