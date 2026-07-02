@@ -24,6 +24,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 
 import org.junit.Before;
@@ -62,5 +64,55 @@ public class NetworkConnectionInfoManagerTest {
         when(connectivityManager.getActiveNetworkInfo()).thenReturn(mockInfo);
 
         assertEquals(UserParameters.ConnectionType.CELL, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 23)
+    public void getConnectionTypeWithNetworkCapabilitiesCell_ReturnsCell() {
+        Network mockNetwork = mock(Network.class);
+        NetworkCapabilities mockNetworkCapabilities = mock(NetworkCapabilities.class);
+
+        when(mockContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)).thenReturn(
+                PackageManager.PERMISSION_GRANTED);
+        when(connectivityManager.getActiveNetwork()).thenReturn(mockNetwork);
+        when(connectivityManager.getNetworkCapabilities(mockNetwork)).thenReturn(mockNetworkCapabilities);
+        when(mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)).thenReturn(true);
+        when(mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)).thenReturn(true);
+        when(mockNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)).thenReturn(true);
+
+        assertEquals(UserParameters.ConnectionType.CELL, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 23)
+    public void getConnectionTypeWithNetworkCapabilitiesWifi_ReturnsWifi() {
+        Network mockNetwork = mock(Network.class);
+        NetworkCapabilities mockNetworkCapabilities = mock(NetworkCapabilities.class);
+
+        when(mockContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)).thenReturn(
+                PackageManager.PERMISSION_GRANTED);
+        when(connectivityManager.getActiveNetwork()).thenReturn(mockNetwork);
+        when(connectivityManager.getNetworkCapabilities(mockNetwork)).thenReturn(mockNetworkCapabilities);
+        when(mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)).thenReturn(true);
+        when(mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)).thenReturn(true);
+        when(mockNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)).thenReturn(false);
+
+        assertEquals(UserParameters.ConnectionType.WIFI, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 23)
+    public void getConnectionTypeWithUnvalidatedNetworkCapabilities_ReturnsOffline() {
+        Network mockNetwork = mock(Network.class);
+        NetworkCapabilities mockNetworkCapabilities = mock(NetworkCapabilities.class);
+
+        when(mockContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)).thenReturn(
+                PackageManager.PERMISSION_GRANTED);
+        when(connectivityManager.getActiveNetwork()).thenReturn(mockNetwork);
+        when(connectivityManager.getNetworkCapabilities(mockNetwork)).thenReturn(mockNetworkCapabilities);
+        when(mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)).thenReturn(true);
+        when(mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)).thenReturn(false);
+
+        assertEquals(UserParameters.ConnectionType.OFFLINE, networkConnectionManager.getConnectionType());
     }
 }
