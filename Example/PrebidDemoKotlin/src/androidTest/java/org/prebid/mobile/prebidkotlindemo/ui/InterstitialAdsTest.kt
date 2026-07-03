@@ -20,11 +20,11 @@ class InterstitialAdsTest(
     companion object {
         @JvmStatic
         @Parameterized.Parameters(name = "{1}")
-        fun arguments() = listOf(
-            arrayOf(R.string.gam_original_display_interstitial, "GAM Original API Display Interstitial"),
-            arrayOf(R.string.gam_rendering_display_interstitial, "GAM Rendering API Display Interstitial"),
-            arrayOf(R.string.in_app_display_interstitial, "In-App Display Interstitial"),
-            arrayOf(R.string.ad_mob_display_interstitial, "AdMob Display Interstitial"),
+        fun arguments(): List<Array<Any>> = listOf(
+            arrayOf<Any>(R.string.gam_original_display_interstitial, "GAM Original API Display Interstitial"),
+            arrayOf<Any>(R.string.gam_rendering_display_interstitial, "GAM Rendering API Display Interstitial"),
+            arrayOf<Any>(R.string.in_app_display_interstitial, "In-App Display Interstitial"),
+            arrayOf<Any>(R.string.ad_mob_display_interstitial, "AdMob Display Interstitial"),
         )
     }
 

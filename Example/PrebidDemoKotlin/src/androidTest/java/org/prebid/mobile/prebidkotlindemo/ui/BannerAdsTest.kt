@@ -19,11 +19,11 @@ class BannerAdsTest(
     companion object {
         @JvmStatic
         @Parameterized.Parameters(name = "{1}")
-        fun arguments() = listOf(
-            arrayOf(R.string.gam_original_display_banner_320x50, "GAM Original API Display Banner 320x50"),
-            arrayOf(R.string.gam_rendering_display_banner_320x50, "GAM Rendering API Display Banner 320x50"),
-            arrayOf(R.string.in_app_display_banner_320x50, "In-App Display Banner 320x50"),
-            arrayOf(R.string.ad_mob_display_banner_320x50, "AdMob Display Banner 320x50"),
+        fun arguments(): List<Array<Any>> = listOf(
+            arrayOf<Any>(R.string.gam_original_display_banner_320x50, "GAM Original API Display Banner 320x50"),
+            arrayOf<Any>(R.string.gam_rendering_display_banner_320x50, "GAM Rendering API Display Banner 320x50"),
+            arrayOf<Any>(R.string.in_app_display_banner_320x50, "In-App Display Banner 320x50"),
+            arrayOf<Any>(R.string.ad_mob_display_banner_320x50, "AdMob Display Banner 320x50"),
         )
     }
 
