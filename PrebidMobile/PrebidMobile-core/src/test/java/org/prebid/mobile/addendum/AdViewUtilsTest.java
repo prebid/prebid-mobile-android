@@ -16,13 +16,23 @@
 
 package org.prebid.mobile.addendum;
 
+import android.webkit.WebView;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -129,6 +139,64 @@ public class AdViewUtilsTest {
         assertNull(size);
         assertNotNull(error);
         assertEquals(expectedErrorCode, error.getCode());
+    }
+
+    @Test
+    public void testSetWebViewScaleNotifiesScaleListenerOnSuccess() {
+        // given
+        WebView webView = mock(WebView.class);
+        // run the posted callback synchronously
+        when(webView.post(any(Runnable.class))).thenAnswer(invocation -> {
+            ((Runnable) invocation.getArgument(0)).run();
+            return true;
+        });
+        final AtomicInteger calls = new AtomicInteger();
+        final int[] reported = {-1, -1};
+
+        // when
+        AdViewUtils.setWebViewScale(webView, 100f, 50, 728, 90, (width, height) -> {
+            calls.incrementAndGet();
+            reported[0] = width;
+            reported[1] = height;
+        });
+
+        // then: scale is applied and the listener fires exactly once with the reported size
+        verify(webView).setInitialScale(anyInt());
+        assertEquals(1, calls.get());
+        assertEquals(728, reported[0]);
+        assertEquals(90, reported[1]);
+    }
+
+    @Test
+    public void testSetWebViewScaleDoesNotNotifyListenerWhenContentHeightNonPositive() {
+        // given
+        WebView webView = mock(WebView.class);
+        when(webView.post(any(Runnable.class))).thenAnswer(invocation -> {
+            ((Runnable) invocation.getArgument(0)).run();
+            return true;
+        });
+        final AtomicInteger calls = new AtomicInteger();
+
+        // when: a non-positive content height yields a nonsensical scale
+        AdViewUtils.setWebViewScale(webView, 100f, 0, 728, 90, (width, height) -> calls.incrementAndGet());
+
+        // then: legacy scaling behavior is preserved (setInitialScale is still called, exactly as
+        // before), but the new opt-in listener is not notified for the degenerate scale
+        verify(webView).setInitialScale(anyInt());
+        assertEquals(0, calls.get());
+    }
+
+    @Test
+    public void testSetWebViewScaleWithoutListenerDoesNotPost() {
+        // given: the legacy three-argument path delegates with a null listener
+        WebView webView = mock(WebView.class);
+
+        // when
+        AdViewUtils.setWebViewScale(webView, 100f, 50);
+
+        // then: scale is applied exactly as before and no callback is posted
+        verify(webView).setInitialScale(anyInt());
+        verify(webView, never()).post(any(Runnable.class));
     }
 
     void findSizeInHtmlSuccessHelper(String htmlBody, int expectedWidth, int expectedHeight) {
