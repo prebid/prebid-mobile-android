@@ -123,15 +123,19 @@ public class PrebidTest {
     }
 
     @Test
-    public void includeFormatField() {
+    public void includeFormatField() throws JSONException {
         AdUnitConfiguration config = new AdUnitConfiguration();
         config.setIsOriginalAdUnit(true);
         config.addAdFormat(AdFormat.BANNER);
         config.addAdFormat(AdFormat.VAST);
+
+        JSONObject result = Prebid.getJsonObjectForBidRequest("test", false, config);
+
         assertEquals(
-                "{\"storedrequest\":{\"id\":\"test\"},\"cache\":{\"bids\":{}},\"targeting\":{\"includeformat\":\"true\"}}",
-                Prebid.getJsonObjectForBidRequest("test", false, config).toString()
+                "{\"storedrequest\":{\"id\":\"test\"},\"cache\":{\"bids\":{}},\"targeting\":{\"includeformat\":true}}",
+                result.toString()
         );
+        assertEquals(Boolean.TRUE, result.getJSONObject("targeting").get("includeformat"));
     }
 
     @Test
