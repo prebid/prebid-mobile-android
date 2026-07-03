@@ -21,10 +21,6 @@ android {
     buildFeatures {
         dataBinding true
     }
-    // Fix for Exoplayer Problem
-    packagingOptions {
-        exclude("META-INF/*.kotlin_module")
-    }
 }
 
 dependencies {
@@ -42,10 +38,9 @@ dependencies {
     implementation libs.google.play.services.ads
 
     // Video Player
-    implementation libs.exoplayer
-    implementation libs.exoplayer.core
-    implementation libs.exoplayer.ui
-    implementation libs.extension.ima
+    implementation libs.media3.exoplayer
+    implementation libs.media3.ui
+    implementation libs.media3.exoplayer.ima
 
     // Multidex
     implementation libs.androidx.multidex
