@@ -24,6 +24,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
@@ -41,6 +43,8 @@ import org.prebid.mobile.test.utils.WhiteBox;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+
+import java.util.EnumSet;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -91,6 +95,44 @@ public class RewardedAdUnitTest {
         assertNotNull(rewardedAdUnit);
         assertTrue(eventHandler instanceof StandaloneRewardedVideoEventHandler);
         assertNotNull(bidLoader);
+    }
+
+    @Test
+    public void createRewardedAdUnitWithBannerFormat_ConfigContainsInterstitialDisplayFormat() {
+        RewardedAdUnit rewardedAdUnit = new RewardedAdUnit(
+                context,
+                CONFIGURATION_ID,
+                EnumSet.of(AdUnitFormat.BANNER)
+        );
+
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL), rewardedAdUnit.config.getAdFormats());
+        assertTrue(rewardedAdUnit.config.isRewarded());
+        assertEquals(AdPosition.FULLSCREEN.getValue(), rewardedAdUnit.config.getAdPositionValue());
+    }
+
+    @Test
+    public void createRewardedAdUnitWithVideoFormat_ConfigContainsVastFormat() {
+        RewardedAdUnit rewardedAdUnit = new RewardedAdUnit(
+                context,
+                CONFIGURATION_ID,
+                EnumSet.of(AdUnitFormat.VIDEO)
+        );
+
+        assertEquals(EnumSet.of(AdFormat.VAST), rewardedAdUnit.config.getAdFormats());
+        assertTrue(rewardedAdUnit.config.isRewarded());
+        assertEquals(AdPosition.FULLSCREEN.getValue(), rewardedAdUnit.config.getAdPositionValue());
+    }
+
+    @Test
+    public void createRewardedAdUnitWithBannerVideoFormats_ConfigContainsMultiformat() {
+        RewardedAdUnit rewardedAdUnit = new RewardedAdUnit(
+                context,
+                CONFIGURATION_ID,
+                EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO)
+        );
+
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), rewardedAdUnit.config.getAdFormats());
+        assertTrue(rewardedAdUnit.config.isRewarded());
     }
 
     @Test

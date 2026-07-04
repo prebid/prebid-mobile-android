@@ -189,6 +189,25 @@ public class AdUnitSuccessorTest {
         AdUnitConfiguration configuration = adUnit.getConfiguration();
         assertEquals(testConfigId, configuration.getConfigId());
         assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), configuration.getAdFormats());
+        assertTrue(configuration.isRewarded());
+    }
+
+    @Test
+    public void testRewardedDisplayAdUnitCreation() {
+        RewardedDisplayAdUnit adUnit = new RewardedDisplayAdUnit(testConfigId);
+        AdUnitConfiguration configuration = adUnit.getConfiguration();
+        assertEquals(testConfigId, configuration.getConfigId());
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL), configuration.getAdFormats());
+        assertEquals(AdPosition.FULLSCREEN, configuration.getAdPosition());
+        assertTrue(configuration.isRewarded());
+    }
+
+    @Test
+    public void testRewardedDisplayAdUnitCreationWithMinSizePercentage() {
+        RewardedDisplayAdUnit adUnit = new RewardedDisplayAdUnit(testConfigId, 50, 70);
+        AdSize minSizePercentage = adUnit.getConfiguration().getMinSizePercentage();
+        assertEquals(50, minSizePercentage.getWidth());
+        assertEquals(70, minSizePercentage.getHeight());
     }
 
     @Test
