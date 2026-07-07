@@ -14,12 +14,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.rendering.bidding.data.bid.Bid;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
+import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK, manifest = Config.NONE)
@@ -40,6 +45,29 @@ public class NativeAdUnitTest {
         assertEquals(PBS_CONFIG_ID_NATIVE_APPNEXUS, configuration.getConfigId());
         assertEquals(EnumSet.of(AdFormat.NATIVE), configuration.getAdFormats());
         assertNotNull(configuration.getNativeConfiguration());
+    }
+
+    @Test
+    public void whenBidSelectorRejectsAllBids_reportsNoBids() {
+        NativeAdUnit nativeUnit = new NativeAdUnit(PBS_CONFIG_ID_NATIVE_APPNEXUS);
+        nativeUnit.getConfiguration().setBidSelector(new PrebidBidSelecting() {
+            @Override
+            public Bid selectBid(List<Bid> bids) {
+                return null;
+            }
+        });
+
+        String responseJson = "{\"id\":\"response-id\",\"seatbid\":[{\"bid\":[" +
+                "{\"id\":\"bid-1\",\"impid\":\"imp-1\",\"price\":0.75,\"adm\":\"<html></html>\",\"w\":300,\"h\":250," +
+                "\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder\":\"openx\",\"hb_pb\":\"0.75\"},\"type\":\"banner\"}}}" +
+                "],\"seat\":\"openx\"}],\"cur\":\"USD\"}";
+        BidResponse bidResponse = new BidResponse(responseJson, nativeUnit.getConfiguration());
+
+        ResultCode[] reportedResultCode = new ResultCode[1];
+        BidRequesterListener listener = nativeUnit.createBidListener(code -> reportedResultCode[0] = code);
+        listener.onFetchCompleted(bidResponse);
+
+        assertEquals(ResultCode.NO_BIDS, reportedResultCode[0]);
     }
 
     @Test
