@@ -101,14 +101,19 @@ test-libraries = [
     "mockito-core",
     "androidx-test-runner",
     "androidx-test-rules",
+
+    # JSON comparators
     "jackson-databind",
     "apache-camel-json-patch",
+
     "robolectric",
     "shadows-httpclient",
+
     "assertj-core",
     "jsonassert",
     "okhttp-mockwebserver",
     "okhttp",
+
     "apache-commons-lang3",
     "json",
     "gson"
