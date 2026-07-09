@@ -92,3 +92,24 @@ segmentedcontrol = { module = "com.github.RobertApikyan:SegmentedControl", versi
 shadows-httpclient = { module = "org.robolectric:shadows-httpclient", version.ref = "robolectric" }
 google-next-gen-sdk = { module = "com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk", version.ref = "next-gen-sdk"}
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines-test" }
+
+[bundles]
+test-libraries = [
+    "junit",
+    "hamcrest-core",
+    "hamcrest-library",
+    "mockito-core",
+    "androidx-test-runner",
+    "androidx-test-rules",
+    "jackson-databind",
+    "apache-camel-json-patch",
+    "robolectric",
+    "shadows-httpclient",
+    "assertj-core",
+    "jsonassert",
+    "okhttp-mockwebserver",
+    "okhttp",
+    "apache-commons-lang3",
+    "json",
+    "gson"
+]
