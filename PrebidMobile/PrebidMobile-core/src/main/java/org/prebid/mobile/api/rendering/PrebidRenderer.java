@@ -19,7 +19,9 @@ package org.prebid.mobile.api.rendering;
 import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -97,5 +99,10 @@ public class PrebidRenderer implements PrebidMobilePluginRenderer {
                 adUnitConfiguration.isAdType(AdFormat.INTERSTITIAL) ||
                 adUnitConfiguration.isAdType(AdFormat.NATIVE) ||
                 adUnitConfiguration.isAdType(AdFormat.VAST);
+    }
+
+    @Override
+    public void didInjectView(@NonNull View view, @NonNull View inBannerView, @NonNull BidResponse bidResponse) {
+        view.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
     }
 }
