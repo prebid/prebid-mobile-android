@@ -53,8 +53,15 @@ class NextGenBannerEventHandler(
 
     private var bannerEventListener: BannerEventListener? = null
     private var appEventHandler: Handler? = null
+    private var adRequestConfiguration: NextGenAdRequestConfiguration? = null
 
     private var isExpectingAppEvent = false
+
+    fun setAdRequestConfiguration(adRequestConfiguration: NextGenAdRequestConfiguration?) {
+        this.adRequestConfiguration = adRequestConfiguration
+    }
+
+    fun getAdRequestConfiguration(): NextGenAdRequestConfiguration? = adRequestConfiguration
 
     override fun onEvent(adEvent: AdEvent) {
         when (adEvent) {
@@ -109,7 +116,7 @@ class NextGenBannerEventHandler(
             return
         }
 
-        requestBanner?.loadAd(bid)
+        requestBanner?.loadAd(bid, adRequestConfiguration)
     }
 
     override fun trackImpression() {
