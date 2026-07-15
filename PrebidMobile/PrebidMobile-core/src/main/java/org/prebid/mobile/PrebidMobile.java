@@ -40,6 +40,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Main class for managing Prebid SDK. It allows to initialize, set log level
@@ -137,6 +138,8 @@ public class PrebidMobile {
     @NonNull
     private static WeakReference<PrebidEventDelegate> eventDelegateReference = new WeakReference<>(null);
     private static boolean disableStatusCheck = false;
+    @NonNull
+    private static EidsPlacement eidsPlacement = EidsPlacement.COMPATIBLE;
 
     private PrebidMobile() {
     }
@@ -550,6 +553,26 @@ public class PrebidMobile {
      */
     public static boolean shouldDisableStatusCheck() {
         return disableStatusCheck;
+    }
+
+    /**
+     * Controls where Extended Identifiers (EIDs) are placed in the bid request.
+     * Default is {@link EidsPlacement#COMPATIBLE} (both {@code user.eids} and {@code user.ext.eids}).
+     * <p>
+     * Allows publishers to choose EID placement during migration from OpenRTB 2.5 to 2.6.
+     *
+     * @see EidsPlacement
+     */
+    public static void setEidsPlacement(@NonNull EidsPlacement placement) {
+        PrebidMobile.eidsPlacement = Objects.requireNonNull(placement);
+    }
+
+    /**
+     * @see #setEidsPlacement(EidsPlacement)
+     */
+    @NonNull
+    public static EidsPlacement getEidsPlacement() {
+        return eidsPlacement;
     }
 
     /**

@@ -16,13 +16,19 @@
 
 package org.prebid.mobile;
 
+import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.common.util.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.users.Eid;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.users.Uid;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -35,11 +41,17 @@ public class ExternalUserId {
     private static final String TAG = "ExternalUserId";
 
     @NonNull
-    private String source;
+    private final String source;
     @NonNull
-    private List<UniqueId> uniqueIds;
+    private final List<UniqueId> uniqueIds;
     @Nullable
     private Map<String, Object> ext;
+    @Nullable
+    private String inserter;
+    @Nullable
+    private String matcher;
+    @Nullable
+    private Integer mm;
 
     /**
      * Default constructor.
@@ -61,7 +73,7 @@ public class ExternalUserId {
 
     @NonNull
     public Map<String, Object> getExt() {
-        return ext;
+        return ext == null ? Collections.emptyMap() : ext;
     }
 
     public void setExt(@Nullable Map<String, Object> ext) {
@@ -69,8 +81,35 @@ public class ExternalUserId {
     }
 
     @Nullable
+    public String getInserter() {
+        return inserter;
+    }
+
+    public void setInserter(@Nullable String inserter) {
+        this.inserter = inserter;
+    }
+
+    @Nullable
+    public String getMatcher() {
+        return matcher;
+    }
+
+    public void setMatcher(@Nullable String matcher) {
+        this.matcher = matcher;
+    }
+
+    @Nullable
+    public Integer getMm() {
+        return mm;
+    }
+
+    public void setMm(@Nullable Integer mm) {
+        this.mm = mm;
+    }
+
+    @Nullable
     public JSONObject getJson() {
-        if (source == null || source.isEmpty()) {
+        if (TextUtils.isEmpty(source)) {
             LogUtil.warning(TAG, "Empty source");
             return null;
         }
@@ -90,6 +129,9 @@ public class ExternalUserId {
 
             rootJson.put("source", source);
             rootJson.put("uids", uniqueIdArray);
+            rootJson.putOpt("inserter", inserter);
+            rootJson.putOpt("matcher", matcher);
+            rootJson.putOpt("mm", mm);
             if (ext != null) {
                 rootJson.putOpt("ext", new JSONObject(ext));
             }
@@ -100,12 +142,53 @@ public class ExternalUserId {
         }
     }
 
+    @Nullable
+    public Eid toEid() {
+        if (TextUtils.isEmpty(source)) {
+            LogUtil.warning(TAG, "Empty source");
+            return null;
+        }
+
+        Eid eid = new Eid();
+        eid.source = source;
+        eid.inserter = inserter;
+        eid.matcher = matcher;
+        eid.mm = mm;
+
+        if (ext != null) {
+            Ext eidExt = new Ext();
+            eidExt.put(new JSONObject(ext));
+            eid.ext = eidExt;
+        }
+
+        for (UniqueId uniqueId : uniqueIds) {
+            if (!TextUtils.isEmpty(uniqueId.id)) {
+                Uid uid = new Uid();
+                uid.id = uniqueId.id;
+                uid.atype = uniqueId.atype;
+                if (uniqueId.ext != null) {
+                    Ext uidExt = new Ext();
+                    uidExt.put(new JSONObject(uniqueId.ext));
+                    uid.ext = uidExt;
+                }
+                eid.uids.add(uid);
+            }
+        }
+
+        if (CollectionUtils.isEmpty(eid.uids)) {
+            LogUtil.warning(TAG, "No unique ids");
+            return null;
+        }
+
+        return eid;
+    }
+
     public static class UniqueId {
 
         @NonNull
-        private String id;
+        private final String id;
         @NonNull
-        private Integer atype;
+        private final Integer atype;
         @Nullable
         private Map<String, Object> ext;
 
@@ -130,7 +213,7 @@ public class ExternalUserId {
 
         @Nullable
         public JSONObject getJson() {
-            if (id == null || id.isEmpty()) {
+            if (TextUtils.isEmpty(id)) {
                 return null;
             }
             try {
