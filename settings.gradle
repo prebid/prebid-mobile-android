@@ -1,21 +1,68 @@
-include ':PrebidMobile',
-        ':PrebidMobile-core',
-        ':PrebidMobile-gamEventHandlers',
-        ':PrebidMobile-nextGenEventHandlers',
-        ':PrebidMobile-admobAdapters',
-        ':PrebidMobile-maxAdapters',
-        ':test-utils',
-        ':omsdk-android',
-        // Prebid Demo apps
-        ':PrebidDemoJava',
-        ':PrebidDemoKotlin',
-        ':PrebidInternalTestApp',
-        ':PrebidNextGenDemo'
-        // Other
-//        ':DrPrebid'
+import org.gradle.api.initialization.resolve.RepositoriesMode
 
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
 
-project(':PrebidMobile').projectDir = new File('PrebidMobile')
+    plugins {
+        id("com.android.application") version providers.gradleProperty("android.agp.version")
+        id("com.android.library") version providers.gradleProperty("android.agp.version")
+        id("org.jetbrains.kotlin.android") version providers.gradleProperty("kotlin.version")
+        id("org.jetbrains.kotlin.jvm") version providers.gradleProperty("kotlin.version")
+    }
+}
+
+plugins {
+    id("com.android.application") apply false
+    id("com.android.library") apply false
+    id("org.jetbrains.kotlin.android") apply false
+    id("org.jetbrains.kotlin.jvm") apply false
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            name = "Central Portal Snapshots"
+            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+        }
+        maven { url 'https://jitpack.io' }
+//        maven { url "https://oss.sonatype.org/content/repositories/orgprebid-1079" }
+    }
+
+    versionCatalogs {
+        register("libs") {
+            version(
+                    "kotlin-stdlib",
+                    providers.gradleProperty("kotlin.version").get()
+            )
+        }
+    }
+}
+
+include ':PrebidMobile'
+include ':PrebidMobile-core'
+include ':PrebidMobile-gamEventHandlers'
+include ':PrebidMobile-nextGenEventHandlers'
+include ':PrebidMobile-admobAdapters'
+include ':PrebidMobile-maxAdapters'
+include ':test-utils'
+include ':omsdk-android'
+
+// Prebid Demo apps
+include ':PrebidDemoJava'
+include ':PrebidDemoKotlin'
+include ':PrebidInternalTestApp'
+include ':PrebidNextGenDemo'
+
+// Other
+//include ':DrPrebid'
+
 project(':PrebidMobile-core').projectDir = new File('PrebidMobile/PrebidMobile-core')
 project(':PrebidMobile-gamEventHandlers').projectDir = new File('PrebidMobile/PrebidMobile-gamEventHandlers')
 project(':PrebidMobile-nextGenEventHandlers').projectDir = new File('PrebidMobile/PrebidMobile-nextGenEventHandlers')
