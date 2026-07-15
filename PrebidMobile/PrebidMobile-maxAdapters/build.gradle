@@ -1,10 +1,12 @@
 apply from: '../android.gradle'
 apply from: '../publisher.gradle'
-apply from: '../tests.gradle'
 
 dependencies {
     implementation project(":PrebidMobile")
     implementation libs.applovin.sdk
+
+    testImplementation(project(":test-utils"))
+    testImplementation(libs.bundles.test.libraries)
 }
 android {
     namespace "org.prebid.mobile.max.adapters"

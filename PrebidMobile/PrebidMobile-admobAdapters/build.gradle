@@ -1,6 +1,5 @@
 apply from: '../android.gradle'
 apply from: '../publisher.gradle'
-apply from: '../tests.gradle'
 
 android {
     namespace "org.prebid.mobile.admob.adapters"
@@ -18,4 +17,7 @@ android {
 dependencies {
     implementation project(":PrebidMobile")
     implementation libs.google.play.services.ads
+
+    testImplementation(project(":test-utils"))
+    testImplementation(libs.bundles.test.libraries)
 }

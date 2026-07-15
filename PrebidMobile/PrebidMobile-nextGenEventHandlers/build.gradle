@@ -1,6 +1,5 @@
 apply from: '../android.gradle'
 apply from: '../publisher.gradle'
-apply from: '../tests.gradle'
 apply plugin: 'kotlin-android'
 
 android {
@@ -31,6 +30,9 @@ dependencies {
     implementation libs.google.next.gen.sdk
     implementation libs.kotlin.stdlib
     testImplementation libs.coroutines.test
+
+    testImplementation(project(":test-utils"))
+    testImplementation(libs.bundles.test.libraries)
 }
 
 // Override publisher.gradle's javadoc task for this pure-Kotlin module
