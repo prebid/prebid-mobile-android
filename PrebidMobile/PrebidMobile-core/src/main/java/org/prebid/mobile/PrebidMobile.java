@@ -361,8 +361,26 @@ public class PrebidMobile {
      * @param googleAdsVersion - MobileAds.getVersion().toString()
      */
     public static void checkGoogleMobileAdsCompatibility(@NonNull String googleAdsVersion) {
-        int[] prebidVersion = parseVersion(PrebidMobile.TESTED_GOOGLE_SDK_VERSION);
-        int[] publisherVersion = parseVersion(googleAdsVersion);
+        checkGoogleMobileAdsCompatibility(googleAdsVersion, PrebidMobile.TESTED_GOOGLE_SDK_VERSION, "GMA SDK");
+    }
+
+    /**
+     * Check Google Mobile Ads Next-Gen SDK compatibility.
+     * Show logs if version is not compatible.
+     *
+     * @param googleAdsNextGenVersion - MobileAds.getVersion().toString() from the Next-Gen SDK
+     */
+    public static void checkGoogleMobileAdsNextGenCompatibility(@NonNull String googleAdsNextGenVersion) {
+        checkGoogleMobileAdsCompatibility(googleAdsNextGenVersion, PrebidMobile.TESTED_GOOGLE_NEXT_GEN_SDK_VERSION, "GMA Next-Gen SDK");
+    }
+
+    private static void checkGoogleMobileAdsCompatibility(
+            @NonNull String publisherVersionString,
+            @NonNull String testedVersionString,
+            @NonNull String sdkName
+    ) {
+        int[] prebidVersion = parseVersion(testedVersionString);
+        int[] publisherVersion = parseVersion(publisherVersionString);
 
         boolean prebidVersionBigger = false;
         boolean publisherVersionBigger = false;
@@ -377,9 +395,9 @@ public class PrebidMobile {
         }
 
         if (prebidVersionBigger) {
-            LogUtil.error("You should update GMA SDK version to " + PrebidMobile.TESTED_GOOGLE_SDK_VERSION + " version that was tested with Prebid SDK (current version " + googleAdsVersion + ")");
+            LogUtil.error("You should update " + sdkName + " version to " + testedVersionString + " version that was tested with Prebid SDK (current version " + publisherVersionString + ")");
         } else if (publisherVersionBigger) {
-            LogUtil.error("The current version of Prebid SDK is not validated with your version of GMA SDK " + googleAdsVersion + " (Prebid SDK tested on " + PrebidMobile.TESTED_GOOGLE_SDK_VERSION + "). Please update the Prebid SDK or post a ticket on the github.");
+            LogUtil.error("The current version of Prebid SDK is not validated with your version of " + sdkName + " " + publisherVersionString + " (Prebid SDK tested on " + testedVersionString + "). Please update the Prebid SDK or post a ticket on the github.");
         }
     }
 
