@@ -137,7 +137,7 @@ public class Prebid {
         JSONObject targeting = new JSONObject();
 
         if (config.isOriginalAdUnit() && config.getAdFormats().size() > 1) {
-            Utils.addValue(targeting, "includeformat", "true");
+            Utils.addValue(targeting, "includeformat", true);
         }
 
         if(PrebidMobile.getIncludeWinnersFlag()){
