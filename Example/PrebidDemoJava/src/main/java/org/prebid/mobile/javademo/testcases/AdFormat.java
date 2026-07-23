@@ -6,6 +6,7 @@ public enum AdFormat {
     VIDEO_BANNER("Video Banner"),
     DISPLAY_INTERSTITIAL("Display Interstitial"),
     VIDEO_INTERSTITIAL("Video Interstitial"),
+    DISPLAY_REWARDED("Display Rewarded"),
     VIDEO_REWARDED("Video Rewarded"),
     IN_STREAM_VIDEO("In-stream Video"),
     NATIVE("Native"),
