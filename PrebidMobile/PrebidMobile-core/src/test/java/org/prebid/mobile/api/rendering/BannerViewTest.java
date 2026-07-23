@@ -306,6 +306,27 @@ public class BannerViewTest {
     }
 
     @Test
+    public void onFailedAndNoCachedBids_NotifyErrorListenerWithPrebidCacheStatus() {
+        changePrimaryAdServerRequestStatus(true);
+
+        BidRequesterListener bidRequesterListener = getBidRequesterListener();
+        bidRequesterListener.onError(new AdException(
+                AdException.NO_BIDS,
+                "No bids with successful Prebid Cache entries were found."
+        ));
+
+        final AdException gamException = new AdException(AdException.INTERNAL_ERROR, "GAM error");
+        final BannerEventListener bannerEventListener = getBannerEventListener();
+
+        bannerEventListener.onAdFailed(gamException);
+
+        verify(mockBannerListener, times(1)).onAdFailed(bannerView, new AdException(
+                AdException.NO_BIDS,
+                "GAM status: \"SDK internal error: GAM error\". Prebid status: \"No bids: No bids with successful Prebid Cache entries were found.\""
+        ));
+    }
+
+    @Test
     public void onFailedAndWithWinnerBid_AdRequestStatusIsFinishedNotifyPrebidSdkWin() {
         changePrimaryAdServerRequestStatus(true);
 

@@ -62,6 +62,14 @@ public class Seatbid {
     }
 
     public static Seatbid fromJSONObject(JSONObject jsonObject) {
+        return fromJSONObject(jsonObject, false, null);
+    }
+
+    static Seatbid fromJSONObject(
+            JSONObject jsonObject,
+            boolean requireSuccessfulCache,
+            int[] skippedBids
+    ) {
         Seatbid seatbid = new Seatbid();
         if (jsonObject == null) {
             return seatbid;
@@ -71,8 +79,10 @@ public class Seatbid {
             JSONArray jsonArray = jsonObject.optJSONArray("bid");
             for (int i = 0; i < jsonArray.length(); i++) {
                 Bid bid = Bid.fromJSONObject(jsonArray.optJSONObject(i));
-                if (bid != null) {
+                if (!requireSuccessfulCache || bid.hasSuccessfulServerCache()) {
                     seatbid.bids.add(bid);
+                } else if (skippedBids != null && skippedBids.length > 0) {
+                    skippedBids[0]++;
                 }
             }
         }
