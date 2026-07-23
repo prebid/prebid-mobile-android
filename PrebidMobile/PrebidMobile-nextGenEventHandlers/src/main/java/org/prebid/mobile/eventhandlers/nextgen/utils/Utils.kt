@@ -19,6 +19,8 @@ import com.google.android.libraries.ads.mobile.sdk.common.BaseAdRequestBuilder
 import com.google.android.libraries.ads.mobile.sdk.nativead.CustomNativeAd
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAd
 import org.prebid.mobile.LogUtil
+import org.prebid.mobile.eventhandlers.nextgen.NextGenAdRequestConfiguration
+import org.prebid.mobile.rendering.bidding.data.bid.Bid
 
 internal object Utils {
     private val TAG: String = Utils::class.java.getSimpleName()
@@ -37,6 +39,19 @@ internal object Utils {
         for (entry in keywords.entries) {
             builder.putCustomTargeting(entry.key, entry.value)
             addReservedKeys(entry.key)
+        }
+    }
+
+    fun configureAdRequest(
+        builder: BaseAdRequestBuilder<*>,
+        bid: Bid?,
+        requestConfiguration: NextGenAdRequestConfiguration?,
+    ) {
+        requestConfiguration?.configure(builder)
+
+        bid?.let {
+            val targetingMap = HashMap(it.prebid.targeting)
+            handleCustomTargetingUpdate(builder, targetingMap)
         }
     }
 
