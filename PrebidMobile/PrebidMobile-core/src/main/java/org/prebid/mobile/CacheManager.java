@@ -38,14 +38,25 @@ public class CacheManager {
     private static Handler handler = new Handler(Looper.getMainLooper());
 
     public static String save(String content) {
+        return save(content, null);
+    }
+
+    /**
+     * Saves content and optionally expires it after {@code exp} seconds.
+     */
+    public static String save(String content, @Nullable Long exp) {
         if (!TextUtils.isEmpty(content)) {
             final String cacheId = "Prebid_" + UUID.randomUUID().toString();
             savedValues.put(cacheId, content);
+            if (exp != null && exp > 0) {
+                setExpiry(cacheId, exp);
+            }
             handler.postDelayed(() -> {
                 if (cacheExpiryListenerMap.containsKey(cacheId)) {
                     cacheExpiryListenerMap.remove(cacheId).onCacheExpired();
                 }
                 savedValues.remove(cacheId);
+                expiryIntervalMap.remove(cacheId);
             }, getExpiryInterval(cacheId));
             return cacheId;
         } else {

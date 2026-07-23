@@ -18,6 +18,7 @@ package org.prebid.mobile.api.rendering;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Looper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +42,9 @@ import org.prebid.mobile.test.utils.WhiteBox;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.Shadows;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -102,19 +106,19 @@ public class RewardedAdUnitTest {
 
     @Test
     public void loadAdWithInvalidInterstitialAdState_DoNothing() {
-        changeInterstitialState(LOADING);
+        RenderingTestUtils.changeInterstitialState(rewardedAdUnit, LOADING);
         rewardedAdUnit.loadAd();
         verifyNoInteractions(mockBidLoader);
 
-        changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID);
+        RenderingTestUtils.changeInterstitialState(rewardedAdUnit, BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID);
         rewardedAdUnit.loadAd();
         verifyNoInteractions(mockBidLoader);
 
-        changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM);
+        RenderingTestUtils.changeInterstitialState(rewardedAdUnit, BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM);
         rewardedAdUnit.loadAd();
         verifyNoInteractions(mockBidLoader);
 
-        changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.PREBID_LOADING);
+        RenderingTestUtils.changeInterstitialState(rewardedAdUnit, BaseInterstitialAdUnit.InterstitialAdUnitState.PREBID_LOADING);
         rewardedAdUnit.loadAd();
         verifyNoInteractions(mockBidLoader);
     }
@@ -135,7 +139,7 @@ public class RewardedAdUnitTest {
 
     @Test
     public void showWhenAuctionWinnerIsGAM_ShowGam() {
-        changeInterstitialState(READY_TO_DISPLAY_GAM);
+        RenderingTestUtils.changeInterstitialState(rewardedAdUnit, READY_TO_DISPLAY_GAM);
 
         rewardedAdUnit.show();
 
@@ -146,7 +150,7 @@ public class RewardedAdUnitTest {
     public void showWhenAuctionWinnerIsPrebid_ShowPrebid() {
         final InterstitialController mockInterstitialController = mock(InterstitialController.class);
 
-        changeInterstitialState(READY_TO_DISPLAY_PREBID);
+        RenderingTestUtils.changeInterstitialState(rewardedAdUnit, READY_TO_DISPLAY_PREBID);
 
         WhiteBox.setInternalState(rewardedAdUnit, "interstitialController", mockInterstitialController);
         rewardedAdUnit.show();
@@ -156,23 +160,135 @@ public class RewardedAdUnitTest {
 
     @Test
     public void isLoadedWhenAuctionIsNotReadyForDisplay_ReturnFalse() {
-        changeInterstitialState(READY_FOR_LOAD);
+        RenderingTestUtils.changeInterstitialState(rewardedAdUnit, READY_FOR_LOAD);
         assertFalse(rewardedAdUnit.isLoaded());
 
-        changeInterstitialState(LOADING);
+        RenderingTestUtils.changeInterstitialState(rewardedAdUnit, LOADING);
         assertFalse(rewardedAdUnit.isLoaded());
 
-        changeInterstitialState(PREBID_LOADING);
+        RenderingTestUtils.changeInterstitialState(rewardedAdUnit, PREBID_LOADING);
         assertFalse(rewardedAdUnit.isLoaded());
     }
 
     @Test
     public void isLoadedWhenAuctionIsReadyForDisplay_ReturnTrue() {
-        changeInterstitialState(READY_TO_DISPLAY_PREBID);
+        RenderingTestUtils.changeInterstitialState(rewardedAdUnit, READY_TO_DISPLAY_PREBID);
         assertTrue(rewardedAdUnit.isLoaded());
 
-        changeInterstitialState(READY_TO_DISPLAY_GAM);
+        RenderingTestUtils.changeInterstitialState(rewardedAdUnit, READY_TO_DISPLAY_GAM);
         assertTrue(rewardedAdUnit.isLoaded());
+    }
+
+    @Test
+    public void whenReadyAdExpires_IsLoadedReturnsFalseAndListenerIsNotified() {
+        BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
+        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
+
+        rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
+
+        assertTrue(rewardedAdUnit.isLoaded());
+
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
+
+        assertFalse(rewardedAdUnit.isLoaded());
+        assertTrue(rewardedAdUnit.isExpired());
+        assertEquals(READY_FOR_LOAD, rewardedAdUnit.getAdUnitState());
+        verify(mockInterstitialController).destroy();
+        verify(mockRewardedAdUnitListener).onAdExpired(rewardedAdUnit);
+    }
+
+    @Test
+    public void showWhenReadyAdExpired_DoNothing() {
+        BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
+        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
+
+        rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
+
+        rewardedAdUnit.show();
+
+        verify(mockInterstitialController, never()).show();
+        verify(mockRewardedEventHandler, never()).show();
+    }
+
+    @Test
+    public void whenDisplayedAdExpirationTimerFires_DoNotNotifyExpired() {
+        BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
+        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
+
+        rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
+        rewardedAdUnit.controllerListener.onInterstitialDisplayed();
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
+
+        assertFalse(rewardedAdUnit.isExpired());
+        verify(mockInterstitialController, never()).destroy();
+        verify(mockRewardedAdUnitListener, never()).onAdExpired(rewardedAdUnit);
+    }
+
+    @Test
+    public void whenAdServerWinAdExpires_IsLoadedReturnsFalseAndListenerIsNotified() {
+        BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
+        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
+
+        RenderingTestUtils.getRewardedVideoEventListener(rewardedAdUnit).onAdServerWin(new Object());
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
+
+        assertFalse(rewardedAdUnit.isLoaded());
+        assertTrue(rewardedAdUnit.isExpired());
+        assertEquals(READY_FOR_LOAD, rewardedAdUnit.getAdUnitState());
+        verify(mockRewardedAdUnitListener).onAdExpired(rewardedAdUnit);
+    }
+
+    @Test
+    public void whenDestroyedBeforeExpiration_DoNotNotifyExpired() {
+        BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
+        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
+
+        rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
+        rewardedAdUnit.destroy();
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
+
+        // isExpired() is the meaningful assertion: cancelExpiration() must have fired, otherwise
+        // expireAd() would set expired=true. The verify(never()) below is a secondary check;
+        // destroy() nulls userListener so the callback is suppressed regardless of cancellation.
+        assertFalse(rewardedAdUnit.isExpired());
+        verify(mockRewardedAdUnitListener, never()).onAdExpired(rewardedAdUnit);
+    }
+
+    @Test
+    public void whenLoadAdBeforeExpiration_DoNotNotifyExpiredFromPreviousTimer() {
+        BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
+        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
+
+        rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
+        RenderingTestUtils.changeInterstitialState(rewardedAdUnit, READY_FOR_LOAD);
+
+        rewardedAdUnit.loadAd();
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
+
+        assertFalse(rewardedAdUnit.isExpired());
+        verify(mockBidLoader).load();
+        verify(mockRewardedAdUnitListener, never()).onAdExpired(rewardedAdUnit);
+    }
+
+    @Test
+    public void whenReadyWithoutExpiration_DoNotNotifyExpired() {
+        BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(null);
+        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
+
+        rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
+
+        assertFalse(rewardedAdUnit.isExpired());
+        assertTrue(rewardedAdUnit.isLoaded());
+        verify(mockRewardedAdUnitListener, never()).onAdExpired(rewardedAdUnit);
     }
 
     @Test
@@ -192,7 +308,7 @@ public class RewardedAdUnitTest {
 
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
 
-        BidRequesterListener listener = getBidRequesterListener();
+        BidRequesterListener listener = RenderingTestUtils.getBidRequesterListener(rewardedAdUnit);
         listener.onFetchCompleted(mockBidResponse);
 
         verify(mockRewardedEventHandler, times(1)).requestAdWithBid(eq(mockBid));
@@ -201,7 +317,7 @@ public class RewardedAdUnitTest {
 
     @Test
     public void onError_RequestAdWitNullBid() {
-        BidRequesterListener listener = getBidRequesterListener();
+        BidRequesterListener listener = RenderingTestUtils.getBidRequesterListener(rewardedAdUnit);
         listener.onError(any());
 
         verify(mockRewardedEventHandler, times(1)).requestAdWithBid(eq(null));
@@ -211,7 +327,7 @@ public class RewardedAdUnitTest {
     //region ================= EventListener tests
     @Test
     public void onPrebidSdkWinAndWinnerBidIsNull_AdStatusReadyForLoadNotifyErrorListener() {
-        final RewardedVideoEventListener eventListener = getEventListener();
+        final RewardedVideoEventListener eventListener = RenderingTestUtils.getRewardedVideoEventListener(rewardedAdUnit);
 
         eventListener.onPrebidSdkWin();
 
@@ -221,9 +337,9 @@ public class RewardedAdUnitTest {
 
     @Test
     public void onAdServerWin_AdStatusReadyToDisplayGAMNotifyAdLoaded() {
-        final RewardedVideoEventListener eventListener = getEventListener();
+        final RewardedVideoEventListener eventListener = RenderingTestUtils.getRewardedVideoEventListener(rewardedAdUnit);
 
-        eventListener.onAdServerWin(any());
+        eventListener.onAdServerWin(new Object());
 
         assertEquals(BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM, rewardedAdUnit.getAdUnitState());
         verify(mockRewardedAdUnitListener, times(1)).onAdLoaded(rewardedAdUnit);
@@ -232,7 +348,7 @@ public class RewardedAdUnitTest {
     @Test
     public void onFailedAndNoWinnerBid_AdStatusReadyForLoadNotifyErrorListener() {
         final AdException exception = new AdException(AdException.INTERNAL_ERROR, "GAM error");
-        final RewardedVideoEventListener eventListener = getEventListener();
+        final RewardedVideoEventListener eventListener = RenderingTestUtils.getRewardedVideoEventListener(rewardedAdUnit);
 
         eventListener.onAdFailed(exception);
 
@@ -246,7 +362,7 @@ public class RewardedAdUnitTest {
         final BidResponse mockBidResponse = mock(BidResponse.class);
         final InterstitialController mockInterstitialController = mock(InterstitialController.class);
         final Bid mockBid = mock(Bid.class);
-        final RewardedVideoEventListener spyEventListener = spy(getEventListener());
+        final RewardedVideoEventListener spyEventListener = spy(RenderingTestUtils.getRewardedVideoEventListener(rewardedAdUnit));
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
         PrebidMobilePluginRenderer fakePrebidRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(mockInterstitialController, null, true, PREBID_MOBILE_RENDERER_NAME, "1.0");
         PrebidMobile.registerPluginRenderer(fakePrebidRenderer);
@@ -262,7 +378,7 @@ public class RewardedAdUnitTest {
 
     @Test
     public void onAdOpened_NotifyClickListener() {
-        final RewardedVideoEventListener eventListener = getEventListener();
+        final RewardedVideoEventListener eventListener = RenderingTestUtils.getRewardedVideoEventListener(rewardedAdUnit);
         eventListener.onAdClicked();
 
         verify(mockRewardedAdUnitListener, times(1)).onAdClicked(rewardedAdUnit);
@@ -270,23 +386,11 @@ public class RewardedAdUnitTest {
 
     @Test
     public void onAdClosed_NotifyAdClosedListener() {
-        final RewardedVideoEventListener eventListener = getEventListener();
+        final RewardedVideoEventListener eventListener = RenderingTestUtils.getRewardedVideoEventListener(rewardedAdUnit);
         eventListener.onAdClosed();
 
         verify(mockRewardedAdUnitListener, times(1)).onAdClosed(rewardedAdUnit);
     }
     //endregion ================= EventListener tests
-
-    private BidRequesterListener getBidRequesterListener() {
-        return (BidRequesterListener) WhiteBox.getInternalState(rewardedAdUnit, "bidRequesterListener");
-    }
-
-    private RewardedVideoEventListener getEventListener() {
-        return (RewardedVideoEventListener) WhiteBox.getInternalState(rewardedAdUnit, "eventListener");
-    }
-
-    private void changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState adUnitState) {
-        WhiteBox.setInternalState(rewardedAdUnit, "interstitialAdUnitState", adUnitState);
-    }
 
 }

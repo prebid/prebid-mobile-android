@@ -56,6 +56,7 @@ public class CreativeModel {
     private String html;
 
     @Nullable private Integer refreshMax;
+    @Nullable private Integer expirationTimeSeconds;
 
     HashMap<TrackingEvent.Events, ArrayList<String>> trackingURLs = new HashMap<>();
 
@@ -201,6 +202,19 @@ public class CreativeModel {
         @Nullable
             Integer refreshMax) {
         this.refreshMax = refreshMax;
+    }
+
+    @Nullable
+    public Integer getExpirationTimeSeconds() {
+        return expirationTimeSeconds;
+    }
+
+    /**
+     * HTML/ACJ bid expiration metadata copied from bid.exp for model consumers.
+     * VAST rendering expiration is driven from BidResponse at the ad unit level.
+     */
+    public void setExpirationTimeSeconds(@Nullable Integer expirationTimeSeconds) {
+        this.expirationTimeSeconds = expirationTimeSeconds;
     }
 
     public String getTransactionState() {

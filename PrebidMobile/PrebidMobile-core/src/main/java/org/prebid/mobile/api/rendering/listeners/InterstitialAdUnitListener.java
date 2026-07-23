@@ -59,4 +59,11 @@ public interface InterstitialAdUnitListener {
      * @param interstitialAdUnit view of the corresponding event.
      */
     void onAdClosed(InterstitialAdUnit interstitialAdUnit);
+
+    /**
+     * Executed when the loaded ad expires before it can be used.
+     *
+     * @param interstitialAdUnit view of the corresponding event.
+     */
+    default void onAdExpired(InterstitialAdUnit interstitialAdUnit) {}
 }

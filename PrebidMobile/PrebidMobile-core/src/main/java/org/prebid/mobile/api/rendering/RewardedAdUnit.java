@@ -120,6 +120,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
         if (eventHandler != null) {
             eventHandler.destroy();
         }
+        userListener = null;
     }
 
     /**
@@ -181,6 +182,13 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
         }
     }
 
+    @Override
+    void notifyAdExpiredListener() {
+        if (userListener != null) {
+            userListener.onAdExpired(RewardedAdUnit.this);
+        }
+    }
+
     @Nullable
     private Reward getReward() {
         Reward reward = config.getRewardManager().getRewardedExt().getReward();
@@ -208,6 +216,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
             @Override
             public void onAdServerWin(Object userReward) {
                 changeInterstitialAdUnitState(InterstitialAdUnitState.READY_TO_DISPLAY_GAM);
+                scheduleExpirationIfNeeded();
                 notifyAdEventListener(AdListenerEvent.AD_LOADED);
             }
 
@@ -237,6 +246,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
             @Override
             public void onAdDisplayed() {
+                markAdDisplayed();
                 changeInterstitialAdUnitState(InterstitialAdUnitState.READY_FOR_LOAD);
                 notifyAdEventListener(AdListenerEvent.AD_DISPLAYED);
             }

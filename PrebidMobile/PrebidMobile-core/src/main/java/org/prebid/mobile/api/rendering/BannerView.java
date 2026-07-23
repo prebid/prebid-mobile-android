@@ -18,6 +18,8 @@ package org.prebid.mobile.api.rendering;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
@@ -75,6 +77,9 @@ public class BannerView extends FrameLayout {
     private BidLoader bidLoader;
     private BidResponse bidResponse;
     private AdException prebidException;
+    private final Handler expirationHandler = new Handler(Looper.getMainLooper());
+    private Runnable expirationRunnable;
+    private boolean expired;
 
     private final ScreenStateReceiver screenStateReceiver = new ScreenStateReceiver();
 
@@ -94,6 +99,7 @@ public class BannerView extends FrameLayout {
     private final DisplayViewListener displayViewListener = new DisplayViewListener() {
         @Override
         public void onAdLoaded() {
+            scheduleExpirationIfNeeded();
             if (bannerViewListener != null) {
                 bannerViewListener.onAdLoaded(BannerView.this);
             }
@@ -204,6 +210,7 @@ public class BannerView extends FrameLayout {
         public void onAdServerWin(View view) {
             markPrimaryAdRequestFinished();
 
+            scheduleExpirationIfNeeded();
             notifyAdLoadedListener();
             displayAdServerView(view);
         }
@@ -309,6 +316,8 @@ public class BannerView extends FrameLayout {
             return;
         }
 
+        cancelExpiration();
+        expired = false;
         bidLoader.load();
     }
 
@@ -334,6 +343,7 @@ public class BannerView extends FrameLayout {
         if (displayView != null) {
             displayView.destroy();
         }
+        cancelExpiration();
         bidRequesterListener = null;
 
         PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig.getFingerprint());
@@ -531,6 +541,46 @@ public class BannerView extends FrameLayout {
         }
     }
 
+    private void scheduleExpirationIfNeeded() {
+        Integer expirationTimeSeconds = bidResponse != null ? bidResponse.getExpirationTimeSeconds() : null;
+        // BidResponse normalizes absent, zero, and negative exp values to null.
+        if (expirationTimeSeconds == null) {
+            return;
+        }
+
+        cancelExpiration();
+        expirationRunnable = this::expireAd;
+        expirationHandler.postDelayed(expirationRunnable, expirationTimeSeconds * 1000L);
+    }
+
+    private void cancelExpiration() {
+        if (expirationRunnable != null) {
+            expirationHandler.removeCallbacks(expirationRunnable);
+            expirationRunnable = null;
+        }
+    }
+
+    private void expireAd() {
+        if (expired) {
+            return;
+        }
+
+        expired = true;
+        if (bannerViewListener != null) {
+            bannerViewListener.onAdExpired(BannerView.this);
+        }
+
+        if (displayView != null) {
+            displayView.destroy();
+            displayView = null;
+        }
+        removeAllViews();
+
+        if (adUnitConfig.getAutoRefreshDelay() > 0) {
+            loadAd();
+        }
+    }
+
     public BidResponse getBidResponse() {
         return bidResponse;
     }
@@ -577,6 +627,11 @@ public class BannerView extends FrameLayout {
     @VisibleForTesting
     final boolean isPrimaryAdServerRequestInProgress() {
         return isPrimaryAdServerRequestInProgress;
+    }
+
+    @VisibleForTesting
+    final boolean isExpired() {
+        return expired;
     }
     //endregion ==================== HelperMethods for Unit Tests
 }
