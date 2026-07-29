@@ -31,6 +31,7 @@ import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.utils.constants.IntentActions;
 import org.prebid.mobile.rendering.utils.helpers.InsetsUtils;
+import org.prebid.mobile.rendering.video.VideoCreativeView;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
@@ -75,6 +76,10 @@ public class InterstitialView extends BaseAdView {
 
         @Override
         public void viewReadyForImmediateDisplay(View view) {
+            if (view instanceof VideoCreativeView) {
+                ((VideoCreativeView) view).enableVideoPlayerClick();
+            }
+
             if (adViewManager.isNotShowingEndCard()) {
 
                 listener.onAdDisplayed(InterstitialView.this);

@@ -27,7 +27,9 @@ import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
+import org.prebid.mobile.rendering.video.VideoCreativeView;
 import org.prebid.mobile.rendering.views.AdViewManager;
+import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -69,6 +71,19 @@ public class InterstitialViewTest {
         spyBidInterstitialView.setInterstitialViewListener(mockInterstitialViewListener);
 
         verify(spyBidInterstitialView, times(1)).setInterstitialViewListener(eq(mockInterstitialViewListener));
+    }
+
+    @Test
+    public void viewReadyForImmediateDisplay_VideoCreative_EnableVideoPlayerClick() {
+        VideoCreativeView mockVideoCreativeView = mock(VideoCreativeView.class);
+
+        AdViewManagerListener adViewManagerListener = WhiteBox.getInternalState(
+            spyBidInterstitialView,
+            "onAdViewManagerListener"
+        );
+        adViewManagerListener.viewReadyForImmediateDisplay(mockVideoCreativeView);
+
+        verify(mockVideoCreativeView).enableVideoPlayerClick();
     }
 
 }
