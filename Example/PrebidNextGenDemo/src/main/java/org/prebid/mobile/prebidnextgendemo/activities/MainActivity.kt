@@ -27,7 +27,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.ads.MobileAds
+import com.google.android.libraries.ads.mobile.sdk.MobileAds
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidnextgendemo.R
 import org.prebid.mobile.prebidnextgendemo.databinding.ActivityMainBinding
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         initSearch()
         initList()
 
-        PrebidMobile.checkGoogleMobileAdsCompatibility(MobileAds.getVersion().toString())
+        PrebidMobile.checkGoogleMobileAdsNextGenCompatibility(MobileAds.getVersion().toString())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
