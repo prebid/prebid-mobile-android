@@ -1,5 +1,4 @@
 apply from: '../android.gradle'
-apply from: '../publisher.gradle'
 
 android {
     namespace "org.prebid.mobile.eventhandlers"
