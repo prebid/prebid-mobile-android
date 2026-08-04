@@ -242,6 +242,30 @@ public class VideoCreativeTest {
     }
 
     @Test
+    public void rewardedVideoWithClickThrough_ShowsCallToAction() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setRewarded(true);
+        when(mockModel.getAdConfiguration()).thenReturn(configuration);
+        when(mockModel.getVastClickthroughUrl()).thenReturn("https://example.com");
+
+        videoCreative.showCallToAction();
+
+        verify(mockVideoCreativeView).showCallToAction(true);
+    }
+
+    @Test
+    public void rewardedVideoWithBlankClickThrough_DoesNotShowCallToAction() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setRewarded(true);
+        when(mockModel.getAdConfiguration()).thenReturn(configuration);
+        when(mockModel.getVastClickthroughUrl()).thenReturn(" ");
+
+        videoCreative.showCallToAction();
+
+        verify(mockVideoCreativeView, never()).showCallToAction(anyBoolean());
+    }
+
+    @Test
     public void whenOnVideoInterstitialClosed_DestroyCreativeViewAndCallCreativeDidComplete() {
         CreativeViewListener mockListener = mock(CreativeViewListener.class);
 
