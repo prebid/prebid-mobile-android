@@ -18,6 +18,9 @@ package org.prebid.mobile.api.rendering;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.FrameLayout;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +28,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.video.VideoCreativeView;
@@ -35,6 +39,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
 public class InterstitialViewTest {
@@ -84,6 +89,23 @@ public class InterstitialViewTest {
         adViewManagerListener.viewReadyForImmediateDisplay(mockVideoCreativeView);
 
         verify(mockVideoCreativeView).enableVideoPlayerClick();
+    }
+
+    @Test
+    public void refreshControlInsets_UpdatesDialogSoundControlWithoutResettingMargins() {
+        View soundView = new View(spyBidInterstitialView.getContext());
+        soundView.setId(R.id.iv_sound_interstitial);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(100, 100);
+        params.gravity = Gravity.TOP | Gravity.RIGHT;
+        params.topMargin = 7;
+        params.rightMargin = 9;
+        spyBidInterstitialView.addView(soundView, params);
+
+        spyBidInterstitialView.refreshControlInsets();
+
+        FrameLayout.LayoutParams result = (FrameLayout.LayoutParams) soundView.getLayoutParams();
+        assertEquals(7, result.topMargin);
+        assertEquals(9, result.rightMargin);
     }
 
 }

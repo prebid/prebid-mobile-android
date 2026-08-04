@@ -34,6 +34,7 @@ import androidx.annotation.VisibleForTesting;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.InterstitialView;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
@@ -520,6 +521,10 @@ public abstract class AdBaseDialog extends Dialog {
 
             if (adBaseDialog instanceof InterstitialVideo) {
                 adBaseDialog.addSkipView();
+            }
+
+            if (adBaseDialog.adViewContainer instanceof InterstitialView) {
+                ((InterstitialView) adBaseDialog.adViewContainer).refreshControlInsets();
             }
 
             adBaseDialog.interstitialManager.interstitialDialogShown(adBaseDialog.adViewContainer);

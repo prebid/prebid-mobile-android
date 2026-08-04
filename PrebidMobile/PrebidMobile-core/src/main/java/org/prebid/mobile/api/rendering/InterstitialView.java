@@ -54,15 +54,19 @@ public class InterstitialView extends BaseAdView {
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
+        refreshControlInsets();
+    }
+
+    public void refreshControlInsets() {
         List<View> views = Arrays.asList(
             findViewById(R.id.iv_close_interstitial),
             findViewById(R.id.iv_skip),
+            findViewById(R.id.iv_sound_interstitial),
             findViewById(R.id.rl_count_down),
             findViewById(R.id.tv_learn_more)
         );
 
         for (View view : views) {
-            InsetsUtils.resetMargins(view);
             InsetsUtils.addCutoutAndNavigationInsets(view);
         }
     }
