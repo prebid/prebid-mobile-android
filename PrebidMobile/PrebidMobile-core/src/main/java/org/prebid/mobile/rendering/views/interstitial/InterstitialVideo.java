@@ -21,6 +21,7 @@ import android.content.Context;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -34,13 +35,13 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.interstitial.AdBaseDialog;
 import org.prebid.mobile.rendering.interstitial.rewarded.RewardedCompletionRules;
 import org.prebid.mobile.rendering.interstitial.rewarded.RewardedExt;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
-import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.utils.helpers.InsetsUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
@@ -399,10 +400,8 @@ public class InterstitialVideo extends AdBaseDialog {
             return;
         }
 
-        int paddingTop = (int) (50 * PrebidContextHolder.getContext().getResources().getDisplayMetrics().density);
-        lytCountDownCircle.setPadding(0, 0, 0, paddingTop);
-
         final ProgressBar pbProgress = lytCountDownCircle.findViewById(R.id.Progress);
+        moveCountdownPastTopLeftControl();
         pbProgress.setMax((int) durationInMillis);
 
         // Turns progress bar ccw 90 degrees so progress starts from the top
@@ -450,6 +449,27 @@ public class InterstitialVideo extends AdBaseDialog {
         }
         adViewContainer.addView(lytCountDownCircle);
         InsetsUtils.addCutoutAndNavigationInsets(lytCountDownCircle);
+    }
+
+    private void moveCountdownPastTopLeftControl() {
+        InterstitialDisplayPropertiesInternal properties = interstitialManager.getInterstitialDisplayProperties();
+        Position buttonPosition = useSkipButton
+            ? properties.skipButtonPosition
+            : properties.closeButtonPosition;
+        if (buttonPosition != Position.TOP_LEFT) {
+            return;
+        }
+
+        RelativeLayout countdown = lytCountDownCircle.findViewById(R.id.lytCountdown);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) countdown.getLayoutParams();
+        double buttonArea = useSkipButton ? properties.skipButtonArea : properties.closeButtonArea;
+        int buttonSize = Utils.convertDpToPx(70, countdown.getContext());
+        if (buttonArea >= 0.05 && buttonArea <= 1) {
+            DisplayMetrics metrics = countdown.getResources().getDisplayMetrics();
+            buttonSize = (int) (Math.min(metrics.widthPixels, metrics.heightPixels) * buttonArea);
+        }
+        params.leftMargin = buttonSize + Utils.convertDpToPx(10, countdown.getContext());
+        countdown.setLayoutParams(params);
     }
 
     @VisibleForTesting
