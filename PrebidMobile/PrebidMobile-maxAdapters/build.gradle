@@ -1,5 +1,4 @@
 apply from: '../android.gradle'
-apply from: '../publisher.gradle'
 
 dependencies {
     implementation project(":PrebidMobile")
