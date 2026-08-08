@@ -19,12 +19,14 @@ package org.prebid.mobile.rendering.utils.helpers;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.FrameLayout;
 import androidx.test.filters.Suppress;
 import junit.framework.TestCase;
@@ -307,6 +309,32 @@ public class UtilsTest extends TestCase {
         setFinalStatic(Build.VERSION.class.getField("SDK_INT"), 17);
 
         assertThat(Utils.getScreenHeight(mockWindowManager), equalTo(2001));
+    }
+
+    /**
+     * From API 30 the size must come from getCurrentWindowMetrics(); getDefaultDisplay()
+     * and getRealSize() are deprecated there. Runs under its own Robolectric SDK so
+     * android.view.WindowMetrics is present on the runtime classpath.
+     */
+    @Test
+    @Config(sdk = 30)
+    public void testGetScreenSizeUsesWindowMetricsFromSdkInt30() {
+        WindowManager mockWindowManager = mock(WindowManager.class);
+        WindowMetrics mockWindowMetrics = mock(WindowMetrics.class);
+
+        when(mockWindowMetrics.getBounds()).thenReturn(new Rect(0, 0, 1100, 2001));
+        when(mockWindowManager.getCurrentWindowMetrics()).thenReturn(mockWindowMetrics);
+
+        assertThat(Utils.getScreenWidth(mockWindowManager), equalTo(1100));
+        assertThat(Utils.getScreenHeight(mockWindowManager), equalTo(2001));
+        verify(mockWindowManager, never()).getDefaultDisplay();
+    }
+
+    @Test
+    @Config(sdk = 30)
+    public void testGetScreenSizeReturnsZeroWithoutWindowManager() {
+        assertThat(Utils.getScreenWidth(null), equalTo(0));
+        assertThat(Utils.getScreenHeight(null), equalTo(0));
     }
 
     @Test

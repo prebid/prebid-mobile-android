@@ -391,37 +391,48 @@ public final class Utils {
     }
 
     public static int getScreenWidth(WindowManager windowManager) {
-        if (windowManager != null) {
-            if (Build.VERSION.SDK_INT >= 17) {
-                Point size = new Point();
-                windowManager.getDefaultDisplay().getRealSize(size);
-                return size.x;
-            }
-            else {
-                DisplayMetrics metrics = new DisplayMetrics();
-                windowManager.getDefaultDisplay().getMetrics(metrics);
-                return metrics.widthPixels;
-            }
+        if (windowManager == null) {
+            return 0;
         }
 
-        return 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return windowManager.getCurrentWindowMetrics().getBounds().width();
+        }
+        return legacyDisplaySize(windowManager).x;
     }
 
     public static int getScreenHeight(WindowManager windowManager) {
-        if (windowManager != null) {
-            if (Build.VERSION.SDK_INT >= 17) {
-                Point size = new Point();
-                windowManager.getDefaultDisplay().getRealSize(size);
-                return size.y;
-            }
-            else {
-                DisplayMetrics metrics = new DisplayMetrics();
-                windowManager.getDefaultDisplay().getMetrics(metrics);
-                return metrics.heightPixels;
-            }
+        if (windowManager == null) {
+            return 0;
         }
 
-        return 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return windowManager.getCurrentWindowMetrics().getBounds().height();
+        }
+        return legacyDisplaySize(windowManager).y;
+    }
+
+    /**
+     * WindowManager.getDefaultDisplay() and Display.getRealSize() are both deprecated
+     * from API 30, where getCurrentWindowMetrics() replaces them. minSdk is still far
+     * below that, so this path stays for older devices. Both report the full display
+     * area including system decorations, so the reported size is unchanged.
+     */
+    @SuppressWarnings("deprecation")
+    private static Point legacyDisplaySize(@NonNull WindowManager windowManager) {
+        Point size = new Point();
+        Display display = windowManager.getDefaultDisplay();
+
+        if (Build.VERSION.SDK_INT >= 17) {
+            display.getRealSize(size);
+        }
+        else {
+            DisplayMetrics metrics = new DisplayMetrics();
+            display.getMetrics(metrics);
+            size.set(metrics.widthPixels, metrics.heightPixels);
+        }
+
+        return size;
     }
 
     public static Map<String, String> getQueryMap(String query) {
