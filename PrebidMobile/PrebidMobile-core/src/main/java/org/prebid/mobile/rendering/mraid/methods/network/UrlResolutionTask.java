@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,9 +66,17 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
             }
         }
         catch (IOException e) {
-            return null;
+            // A slow or unreachable host in the middle of the redirect chain must not
+            // swallow the click. previousUrl is a location we already decided to follow
+            // -- either the original click-through or a fully resolved hop -- so handing
+            // it back lets the browser finish the chain instead of the tap doing nothing.
+            LogUtil.debug(TAG, "Url resolution stopped at " + previousUrl + ": " + e.getMessage());
+            return previousUrl;
         }
         catch (URISyntaxException e) {
+            // Deliberately not falling back here: resolveRedirectLocation throws this
+            // when the chain is malformed, and it must stay cancelled rather than open
+            // an intermediary URL.
             return null;
         }
         catch (NullPointerException e) {
@@ -86,6 +95,13 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
         try {
             httpUrlConnection = (HttpURLConnection) url.openConnection();
             httpUrlConnection.setInstanceFollowRedirects(false);
+            // HttpURLConnection defaults to no timeout at all, so a hanging redirect
+            // host blocks this task indefinitely and the click never opens anything.
+            // Bound it with the same values BaseNetworkTask already uses.
+            httpUrlConnection.setConnectTimeout(PrebidMobile.getTimeoutMillis());
+            httpUrlConnection.setReadTimeout(PrebidMobile.getTimeoutModified()
+                    ? PrebidMobile.getTimeoutMillis()
+                    : BaseNetworkTask.SOCKET_TIMEOUT);
 
             return resolveRedirectLocation(urlString, httpUrlConnection);
         }
