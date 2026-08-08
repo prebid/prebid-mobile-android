@@ -24,6 +24,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 
 import org.junit.Before;
@@ -62,5 +64,56 @@ public class NetworkConnectionInfoManagerTest {
         when(connectivityManager.getActiveNetworkInfo()).thenReturn(mockInfo);
 
         assertEquals(UserParameters.ConnectionType.CELL, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 29)
+    public void whenCellularTransportIsActive_reportsCell() {
+        NetworkCapabilities capabilities = grantedNetworkWithCapabilities();
+        when(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)).thenReturn(true);
+
+        assertEquals(UserParameters.ConnectionType.CELL, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 29)
+    public void whenNonCellularTransportIsActive_reportsWifi() {
+        NetworkCapabilities capabilities = grantedNetworkWithCapabilities();
+        when(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)).thenReturn(true);
+
+        assertEquals(UserParameters.ConnectionType.WIFI, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 29)
+    public void whenThereIsNoActiveNetwork_reportsOffline() {
+        when(mockContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)).thenReturn(
+                PackageManager.PERMISSION_GRANTED);
+        when(connectivityManager.getActiveNetwork()).thenReturn(null);
+
+        assertEquals(UserParameters.ConnectionType.OFFLINE, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 29)
+    public void whenNetworkStatePermissionIsMissing_reportsOffline() {
+        when(mockContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)).thenReturn(
+                PackageManager.PERMISSION_DENIED);
+
+        assertEquals(UserParameters.ConnectionType.OFFLINE, networkConnectionManager.getConnectionType());
+    }
+
+    /** An active, internet-capable default network with the permission granted. */
+    private NetworkCapabilities grantedNetworkWithCapabilities() {
+        Network network = mock(Network.class);
+        NetworkCapabilities capabilities = mock(NetworkCapabilities.class);
+
+        when(mockContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)).thenReturn(
+                PackageManager.PERMISSION_GRANTED);
+        when(connectivityManager.getActiveNetwork()).thenReturn(network);
+        when(connectivityManager.getNetworkCapabilities(network)).thenReturn(capabilities);
+        when(capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)).thenReturn(true);
+
+        return capabilities;
     }
 }
