@@ -44,33 +44,54 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
         }
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public void resetLocation() {
-        Location gpsLastKnownLocation = null;
-        Location ntwLastKnownLocation = null;
-        if (getContext() != null) {
-            try {
-                locManager = (android.location.LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-
-                if (isLocationPermissionGranted() && locManager != null) {
-                    gpsLastKnownLocation = locManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
-                    ntwLastKnownLocation = locManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER);
-                }
-
-                if (gpsLastKnownLocation != null) {
-                    location = gpsLastKnownLocation;
-
-                    if (ntwLastKnownLocation != null && isBetterLocation(ntwLastKnownLocation, location)) {
-                        location = ntwLastKnownLocation;
-                    }
-                } else if (ntwLastKnownLocation != null) {
-                    location = ntwLastKnownLocation;
-                }
-            } catch (SecurityException exception) {
-                LogUtil.warning(TAG, "Unable to access locationManager due to android firmware bug.");
-            }
+        if (getContext() == null) {
+            return;
         }
+
+        locManager = (android.location.LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        if (locManager == null) {
+            return;
+        }
+
+        // GPS_PROVIDER requires ACCESS_FINE_LOCATION; NETWORK_PROVIDER is satisfied by
+        // ACCESS_COARSE_LOCATION. Since Android 12 the user can grant approximate
+        // location on its own, so each provider is asked for separately and only when
+        // the permission it actually needs is held.
+        Location gpsLastKnownLocation = isFineLocationPermissionGranted()
+                ? lastKnownLocation(android.location.LocationManager.GPS_PROVIDER)
+                : null;
+        Location ntwLastKnownLocation = isLocationPermissionGranted()
+                ? lastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER)
+                : null;
+
+        if (gpsLastKnownLocation != null) {
+            location = gpsLastKnownLocation;
+
+            if (ntwLastKnownLocation != null && isBetterLocation(ntwLastKnownLocation, location)) {
+                location = ntwLastKnownLocation;
+            }
+        } else if (ntwLastKnownLocation != null) {
+            location = ntwLastKnownLocation;
+        }
+    }
+
+    /**
+     * Reads a single provider in isolation. A provider that the platform refuses or
+     * that does not exist on this device must not stop the other provider from being
+     * read.
+     */
+    @SuppressLint("MissingPermission")
+    private Location lastKnownLocation(String provider) {
+        try {
+            return locManager.getLastKnownLocation(provider);
+        } catch (SecurityException exception) {
+            LogUtil.warning(TAG, "No permission to read the last known location from " + provider + ".");
+        } catch (IllegalArgumentException exception) {
+            LogUtil.warning(TAG, "Location provider " + provider + " does not exist on this device.");
+        }
+        return null;
     }
 
     /**
@@ -170,9 +191,16 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
         return location != null;
     }
 
+    /** True when either approximate or precise location has been granted. */
     private boolean isLocationPermissionGranted() {
         return getContext() != null
                && (getContext().checkCallingOrSelfPermission(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
-                   || getContext().checkCallingOrSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED);
+                   || isFineLocationPermissionGranted());
+    }
+
+    /** True only for precise location, which is what GPS_PROVIDER requires. */
+    private boolean isFineLocationPermissionGranted() {
+        return getContext() != null
+               && getContext().checkCallingOrSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
     }
 }

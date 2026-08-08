@@ -16,13 +16,22 @@
 
 package org.prebid.mobile.rendering.sdk.deviceData.managers;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.pm.PackageManager.PERMISSION_DENIED;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.content.Context;
 import android.location.Location;
+import android.location.LocationManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -82,5 +91,58 @@ public class LastKnownLocationInfoManagerTest {
         when(location.getAccuracy()).thenReturn((float) 0);
         when(currentLocation.getAccuracy()).thenReturn((float) 0);
         assertTrue(locationImpl.isBetterLocation(location, currentLocation));
+    }
+
+    @Test
+    public void whenOnlyCoarseGranted_readsNetworkProviderAndNeverAsksGps() {
+        Context context = mock(Context.class);
+        LocationManager locationManager = mock(LocationManager.class);
+        Location networkLocation = mock(Location.class);
+
+        when(context.checkCallingOrSelfPermission(ACCESS_COARSE_LOCATION)).thenReturn(PERMISSION_GRANTED);
+        when(context.checkCallingOrSelfPermission(ACCESS_FINE_LOCATION)).thenReturn(PERMISSION_DENIED);
+        when(context.getSystemService(Context.LOCATION_SERVICE)).thenReturn(locationManager);
+        when(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)).thenReturn(networkLocation);
+
+        LastKnownLocationInfoManager manager = new LastKnownLocationInfoManager(context);
+
+        assertTrue(manager.isLocationAvailable());
+        // GPS_PROVIDER needs ACCESS_FINE_LOCATION; asking for it with approximate
+        // location only is what raises SecurityException on Android 12+.
+        verify(locationManager, never()).getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    }
+
+    @Test
+    public void whenGpsProviderIsRefused_networkProviderIsStillRead() {
+        Context context = mock(Context.class);
+        LocationManager locationManager = mock(LocationManager.class);
+        Location networkLocation = mock(Location.class);
+
+        when(context.checkCallingOrSelfPermission(ACCESS_COARSE_LOCATION)).thenReturn(PERMISSION_GRANTED);
+        when(context.checkCallingOrSelfPermission(ACCESS_FINE_LOCATION)).thenReturn(PERMISSION_GRANTED);
+        when(context.getSystemService(Context.LOCATION_SERVICE)).thenReturn(locationManager);
+        when(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER))
+                .thenThrow(new SecurityException("gps refused"));
+        when(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)).thenReturn(networkLocation);
+        when(networkLocation.getLatitude()).thenReturn(51.5);
+
+        LastKnownLocationInfoManager manager = new LastKnownLocationInfoManager(context);
+
+        assertTrue(manager.isLocationAvailable());
+        assertEquals(51.5, manager.getLatitude(), 0.0001);
+    }
+
+    @Test
+    public void whenNoLocationPermissionGranted_noProviderIsRead() {
+        Context context = mock(Context.class);
+        LocationManager locationManager = mock(LocationManager.class);
+
+        when(context.checkCallingOrSelfPermission(anyString())).thenReturn(PERMISSION_DENIED);
+        when(context.getSystemService(Context.LOCATION_SERVICE)).thenReturn(locationManager);
+
+        LastKnownLocationInfoManager manager = new LastKnownLocationInfoManager(context);
+
+        assertFalse(manager.isLocationAvailable());
+        verify(locationManager, never()).getLastKnownLocation(anyString());
     }
 }
