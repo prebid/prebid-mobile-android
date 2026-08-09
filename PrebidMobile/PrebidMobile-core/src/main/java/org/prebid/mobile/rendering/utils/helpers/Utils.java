@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -391,37 +392,39 @@ public final class Utils {
     }
 
     public static int getScreenWidth(WindowManager windowManager) {
-        if (windowManager != null) {
-            if (Build.VERSION.SDK_INT >= 17) {
-                Point size = new Point();
-                windowManager.getDefaultDisplay().getRealSize(size);
-                return size.x;
-            }
-            else {
-                DisplayMetrics metrics = new DisplayMetrics();
-                windowManager.getDefaultDisplay().getMetrics(metrics);
-                return metrics.widthPixels;
-            }
-        }
-
-        return 0;
+        Point screenSize = getScreenSize(windowManager);
+        return screenSize.x;
     }
 
     public static int getScreenHeight(WindowManager windowManager) {
-        if (windowManager != null) {
-            if (Build.VERSION.SDK_INT >= 17) {
-                Point size = new Point();
-                windowManager.getDefaultDisplay().getRealSize(size);
-                return size.y;
-            }
-            else {
-                DisplayMetrics metrics = new DisplayMetrics();
-                windowManager.getDefaultDisplay().getMetrics(metrics);
-                return metrics.heightPixels;
-            }
+        Point screenSize = getScreenSize(windowManager);
+        return screenSize.y;
+    }
+
+    private static Point getScreenSize(WindowManager windowManager) {
+        if (windowManager == null) {
+            return new Point();
         }
 
-        return 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Rect bounds = windowManager.getCurrentWindowMetrics().getBounds();
+            return new Point(bounds.width(), bounds.height());
+        }
+
+        return getLegacyScreenSize(windowManager);
+    }
+
+    @SuppressWarnings("deprecation")
+    private static Point getLegacyScreenSize(WindowManager windowManager) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Point size = new Point();
+            windowManager.getDefaultDisplay().getRealSize(size);
+            return size;
+        }
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(metrics);
+        return new Point(metrics.widthPixels, metrics.heightPixels);
     }
 
     public static Map<String, String> getQueryMap(String query) {

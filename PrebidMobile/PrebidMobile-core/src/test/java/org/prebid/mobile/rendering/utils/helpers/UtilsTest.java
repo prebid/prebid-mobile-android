@@ -19,12 +19,14 @@ package org.prebid.mobile.rendering.utils.helpers;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.FrameLayout;
 import androidx.test.filters.Suppress;
 import junit.framework.TestCase;
@@ -263,6 +265,18 @@ public class UtilsTest extends TestCase {
     }
 
     @Test
+    @Config(sdk = 30)
+    public void testGetScreenWidthWithWindowMetrics() {
+        WindowManager mockWindowManager = mock(WindowManager.class);
+        WindowMetrics mockWindowMetrics = mock(WindowMetrics.class);
+
+        when(mockWindowManager.getCurrentWindowMetrics()).thenReturn(mockWindowMetrics);
+        when(mockWindowMetrics.getBounds()).thenReturn(new Rect(0, 0, 1100, 2001));
+
+        assertThat(Utils.getScreenWidth(mockWindowManager), equalTo(1100));
+    }
+
+    @Test
     public void testGetScreenHeightWithSdkIntLess17() throws Exception {
         WindowManager mockWindowManager = mock(WindowManager.class);
         Display mockDisplay = mock(Display.class);
@@ -305,6 +319,18 @@ public class UtilsTest extends TestCase {
         }).when(mockDisplay).getRealSize(any(Point.class));
 
         setFinalStatic(Build.VERSION.class.getField("SDK_INT"), 17);
+
+        assertThat(Utils.getScreenHeight(mockWindowManager), equalTo(2001));
+    }
+
+    @Test
+    @Config(sdk = 30)
+    public void testGetScreenHeightWithWindowMetrics() {
+        WindowManager mockWindowManager = mock(WindowManager.class);
+        WindowMetrics mockWindowMetrics = mock(WindowMetrics.class);
+
+        when(mockWindowManager.getCurrentWindowMetrics()).thenReturn(mockWindowMetrics);
+        when(mockWindowMetrics.getBounds()).thenReturn(new Rect(0, 0, 1100, 2001));
 
         assertThat(Utils.getScreenHeight(mockWindowManager), equalTo(2001));
     }

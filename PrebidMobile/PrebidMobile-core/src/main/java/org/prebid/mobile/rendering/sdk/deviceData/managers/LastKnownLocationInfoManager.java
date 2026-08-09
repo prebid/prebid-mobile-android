@@ -53,8 +53,11 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
             try {
                 locManager = (android.location.LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
-                if (isLocationPermissionGranted() && locManager != null) {
+                if (locManager != null && isFineLocationPermissionGranted()) {
                     gpsLastKnownLocation = locManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
+                }
+
+                if (locManager != null && isLocationPermissionGranted()) {
                     ntwLastKnownLocation = locManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER);
                 }
 
@@ -174,5 +177,10 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
         return getContext() != null
                && (getContext().checkCallingOrSelfPermission(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
                    || getContext().checkCallingOrSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED);
+    }
+
+    private boolean isFineLocationPermissionGranted() {
+        return getContext() != null
+               && getContext().checkCallingOrSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
     }
 }
