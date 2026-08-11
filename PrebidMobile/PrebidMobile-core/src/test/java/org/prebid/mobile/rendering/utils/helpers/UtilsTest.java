@@ -311,22 +311,33 @@ public class UtilsTest extends TestCase {
         assertThat(Utils.getScreenHeight(mockWindowManager), equalTo(2001));
     }
 
-    /**
-     * From API 30 the size must come from getCurrentWindowMetrics(); getDefaultDisplay()
-     * and getRealSize() are deprecated there. Runs under its own Robolectric SDK so
-     * android.view.WindowMetrics is present on the runtime classpath.
-     */
     @Test
     @Config(sdk = 30)
-    public void testGetScreenSizeUsesWindowMetricsFromSdkInt30() {
+    public void testGetScreenSizeUsesMaximumWindowMetricsFromSdkInt30() {
         WindowManager mockWindowManager = mock(WindowManager.class);
-        WindowMetrics mockWindowMetrics = mock(WindowMetrics.class);
+        WindowMetrics mockMaximumWindowMetrics = mock(WindowMetrics.class);
 
-        when(mockWindowMetrics.getBounds()).thenReturn(new Rect(0, 0, 1100, 2001));
-        when(mockWindowManager.getCurrentWindowMetrics()).thenReturn(mockWindowMetrics);
+        when(mockMaximumWindowMetrics.getBounds()).thenReturn(new Rect(0, 0, 2200, 2001));
+        when(mockWindowManager.getMaximumWindowMetrics()).thenReturn(mockMaximumWindowMetrics);
 
-        assertThat(Utils.getScreenWidth(mockWindowManager), equalTo(1100));
+        assertThat(Utils.getScreenWidth(mockWindowManager), equalTo(2200));
         assertThat(Utils.getScreenHeight(mockWindowManager), equalTo(2001));
+        verify(mockWindowManager, never()).getCurrentWindowMetrics();
+        verify(mockWindowManager, never()).getDefaultDisplay();
+    }
+
+    @Test
+    @Config(sdk = 30)
+    public void testGetWindowSizeUsesCurrentWindowMetricsFromSdkInt30() {
+        WindowManager mockWindowManager = mock(WindowManager.class);
+        WindowMetrics mockCurrentWindowMetrics = mock(WindowMetrics.class);
+
+        when(mockCurrentWindowMetrics.getBounds()).thenReturn(new Rect(0, 0, 1100, 1001));
+        when(mockWindowManager.getCurrentWindowMetrics()).thenReturn(mockCurrentWindowMetrics);
+
+        assertThat(Utils.getWindowWidth(mockWindowManager), equalTo(1100));
+        assertThat(Utils.getWindowHeight(mockWindowManager), equalTo(1001));
+        verify(mockWindowManager, never()).getMaximumWindowMetrics();
         verify(mockWindowManager, never()).getDefaultDisplay();
     }
 
@@ -335,6 +346,8 @@ public class UtilsTest extends TestCase {
     public void testGetScreenSizeReturnsZeroWithoutWindowManager() {
         assertThat(Utils.getScreenWidth(null), equalTo(0));
         assertThat(Utils.getScreenHeight(null), equalTo(0));
+        assertThat(Utils.getWindowWidth(null), equalTo(0));
+        assertThat(Utils.getWindowHeight(null), equalTo(0));
     }
 
     @Test

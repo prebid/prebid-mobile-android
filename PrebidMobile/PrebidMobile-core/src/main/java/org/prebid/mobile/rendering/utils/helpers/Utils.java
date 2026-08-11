@@ -396,12 +396,34 @@ public final class Utils {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            return windowManager.getCurrentWindowMetrics().getBounds().width();
+            return windowManager.getMaximumWindowMetrics().getBounds().width();
         }
         return legacyDisplaySize(windowManager).x;
     }
 
     public static int getScreenHeight(WindowManager windowManager) {
+        if (windowManager == null) {
+            return 0;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return windowManager.getMaximumWindowMetrics().getBounds().height();
+        }
+        return legacyDisplaySize(windowManager).y;
+    }
+
+    public static int getWindowWidth(WindowManager windowManager) {
+        if (windowManager == null) {
+            return 0;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return windowManager.getCurrentWindowMetrics().getBounds().width();
+        }
+        return legacyDisplaySize(windowManager).x;
+    }
+
+    public static int getWindowHeight(WindowManager windowManager) {
         if (windowManager == null) {
             return 0;
         }
@@ -414,9 +436,7 @@ public final class Utils {
 
     /**
      * WindowManager.getDefaultDisplay() and Display.getRealSize() are both deprecated
-     * from API 30, where getCurrentWindowMetrics() replaces them. minSdk is still far
-     * below that, so this path stays for older devices. Both report the full display
-     * area including system decorations, so the reported size is unchanged.
+     * from API 30. minSdk is still far below that, so this path stays for older devices.
      */
     @SuppressWarnings("deprecation")
     private static Point legacyDisplaySize(@NonNull WindowManager windowManager) {
