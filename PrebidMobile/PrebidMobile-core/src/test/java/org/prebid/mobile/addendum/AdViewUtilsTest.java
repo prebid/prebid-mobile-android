@@ -168,7 +168,7 @@ public class AdViewUtilsTest {
     }
 
     @Test
-    public void testSetWebViewScaleDoesNotNotifyListenerWhenContentHeightNonPositive() {
+    public void testSetWebViewScaleUsesKnownCreativeHeightWhenContentHeightIsNonPositive() {
         // given
         WebView webView = mock(WebView.class);
         when(webView.post(any(Runnable.class))).thenAnswer(invocation -> {
@@ -177,12 +177,45 @@ public class AdViewUtilsTest {
         });
         final AtomicInteger calls = new AtomicInteger();
 
-        // when: a non-positive content height yields a nonsensical scale
+        // when: the WebView reports no content height, but the creative height is known (90)
         AdViewUtils.setWebViewScale(webView, 100f, 0, 728, 90, (width, height) -> calls.incrementAndGet());
 
-        // then: legacy scaling behavior is preserved (setInitialScale is still called, exactly as
-        // before), but the new opt-in listener is not notified for the degenerate scale
-        verify(webView).setInitialScale(anyInt());
+        // then: the known creative height is used instead of the unusable reported one, so the scale
+        // is sane and the listener is notified. Previously this divided by the reported 0, giving
+        // scale = 1 and a creative rendered at 1% of its size.
+        verify(webView).setInitialScale(112);
+        assertEquals(1, calls.get());
+    }
+
+    @Test
+    public void testSetWebViewScaleSkipsWhenNoUsableHeightIsAvailable() {
+        // given
+        WebView webView = mock(WebView.class);
+        when(webView.post(any(Runnable.class))).thenAnswer(invocation -> {
+            ((Runnable) invocation.getArgument(0)).run();
+            return true;
+        });
+        final AtomicInteger calls = new AtomicInteger();
+
+        // when: neither the reported content height nor the creative height is usable
+        AdViewUtils.setWebViewScale(webView, 100f, 0, 0, 0, (width, height) -> calls.incrementAndGet());
+
+        // then: no scale is applied at all, and the listener is not notified
+        verify(webView, never()).setInitialScale(anyInt());
+        assertEquals(0, calls.get());
+    }
+
+    @Test
+    public void testSetWebViewScaleSkipsWhenTheViewIsNotLaidOut() {
+        // given
+        WebView webView = mock(WebView.class);
+        final AtomicInteger calls = new AtomicInteger();
+
+        // when: the view has no usable height yet (not laid out)
+        AdViewUtils.setWebViewScale(webView, 0f, 50, 728, 90, (width, height) -> calls.incrementAndGet());
+
+        // then: applying a scale from a 0-height view would render the creative at 1%
+        verify(webView, never()).setInitialScale(anyInt());
         assertEquals(0, calls.get());
     }
 
@@ -194,9 +227,10 @@ public class AdViewUtilsTest {
         // when
         AdViewUtils.setWebViewScale(webView, 100f, 50);
 
-        // then: scale is applied exactly as before and no callback is posted
+        // then: scale is applied exactly as before. A repaint is posted (setInitialScale alone does
+        // not reliably repaint a WebView that already painted at the old scale), but no listener
+        // callback can be posted because there is no listener.
         verify(webView).setInitialScale(anyInt());
-        verify(webView, never()).post(any(Runnable.class));
     }
 
     void findSizeInHtmlSuccessHelper(String htmlBody, int expectedWidth, int expectedHeight) {

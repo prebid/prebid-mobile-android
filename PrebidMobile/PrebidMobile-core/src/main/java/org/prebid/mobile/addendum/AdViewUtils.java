@@ -133,9 +133,21 @@ public final class AdViewUtils {
         final LimitedQueueContainer<Integer> contentHeightQueue = new LimitedQueueContainer<>(queueLimit);
         final Set<Integer> contentHeightSet = new HashSet<>(queueLimit);
 
+        // Bounded wait for layout. Previously this gave up silently when the view had no height yet,
+        // leaving the creative unscaled and the listener never notified.
+        final int viewHeightWaitLimit = 5;
+        final int[] viewHeightWaitCount = {0};
+
         webView.post(new Runnable() {
             @Override
             public void run() {
+
+                // In a recycling container the row can be recycled mid-chain and the WebView detached.
+                // Scaling or notifying on a dead WebView paints an empty box, so abort entirely.
+                if (!webView.isAttachedToWindow()) {
+                    LogUtil.debug("fixZoomIn aborted — webView detached (recycled/destroyed), skipping scale+reveal");
+                    return;
+                }
 
                 int webViewHeight = webView.getHeight();
 
@@ -164,6 +176,16 @@ public final class AdViewUtils {
                     } else {
                         setWebViewScale(webView, webViewHeight, webViewContentHeight, expectedWidth, expectedHeight, scaleListener);
                     }
+                } else {
+                    // Not laid out yet: retry, then fall back to the expected-height scale rather than
+                    // giving up silently.
+                    viewHeightWaitCount[0]++;
+                    if (viewHeightWaitCount[0] < viewHeightWaitLimit) {
+                        webView.postDelayed(this, contentHeightDelayMillis);
+                    } else {
+                        LogUtil.debug("fixZoomIn: webView height never ready (" + webViewHeight + ") — deferring to setWebViewScale guards");
+                        setWebViewScale(webView, webViewHeight, webView.getContentHeight(), expectedWidth, expectedHeight, scaleListener);
+                    }
                 }
 
             }
@@ -180,17 +202,44 @@ public final class AdViewUtils {
     // are intentionally left identical to the legacy overload above so existing callers behave exactly
     // as before; only the new, opt-in listener notification is added here.
     static void setWebViewScale(WebView webView, float webViewHeight, int webViewContentHeight, final int width, final int height, @Nullable final PbScaleAppliedListener scaleListener) {
-        //case: regulate scale because WebView.getSettings().setLoadWithOverviewMode() does not work
-        int scale = (int) (webViewHeight / webViewContentHeight * 100 + 1);
 
-        LogUtil.debug("Set WebView scale: " + scale + " (" + webViewHeight + ", " + webViewContentHeight + ")");
+        int effectiveContentHeight = (height > 0) ? height : webViewContentHeight;
+        // Either dimension being unusable computes scale = 1, and setInitialScale(1) renders the
+        // creative at 1% - indistinguishable from blank. The WebView's default scale is correct.
+        if (effectiveContentHeight <= 0 || webViewHeight <= 10) {
+            // The listener is deliberately NOT notified: no scale was applied. A caller gating UI on
+            // the callback needs its own timeout, as the javadoc states.
+            LogUtil.debug("Skip WebView scale: unusable geometry viewH=" + webViewHeight + " contentH=" + webViewContentHeight);
+            return;
+        }
+
+        //case: regulate scale because WebView.getSettings().setLoadWithOverviewMode() does not work
+        int scale = (int) (webViewHeight / effectiveContentHeight * 100 + 1);
+
+        LogUtil.debug("Set WebView scale: " + scale + " (" + webViewHeight + ", " + effectiveContentHeight + ")");
         webView.setInitialScale(scale);
 
-        // Notify the optional listener once the scale has been applied. Gate on a positive content
-        // height: a non-positive value makes the scale above nonsensical (float/0 -> Infinity ->
-        // Integer.MAX_VALUE), so we must not signal "scale applied" in that degenerate case. This only
-        // affects the new listener; the legacy (listener-less) path above is unchanged.
-        if (scaleListener != null && webViewContentHeight > 0) {
+        // Force a repaint after the scale change: setInitialScale alone does not reliably repaint a
+        // WebView that painted before the corrected scale landed (observed as a zoomed/blank frame).
+        webView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (!webView.isAttachedToWindow()) {
+                    return;
+                }
+                try {
+                    webView.onResume();
+                    webView.resumeTimers();
+                } catch (Throwable t) {
+                    LogUtil.debug("WebView onResume after scale failed: " + t);
+                }
+                webView.requestLayout();
+                webView.invalidate();
+            }
+        });
+
+        // effectiveContentHeight > 0 here, so the scale is sane and "scale applied" is accurate.
+        if (scaleListener != null) {
             webView.post(new Runnable() {
                 @Override
                 public void run() {
