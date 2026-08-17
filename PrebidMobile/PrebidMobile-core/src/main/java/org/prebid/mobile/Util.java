@@ -421,7 +421,7 @@ public class Util {
             return;
         }
         Set<Map.Entry<String, String>> entries = bids.entrySet();
-        for (Map.Entry<String, String> entry : entries) {
+        for (Map.Entry<String, String> entry: entries) {
             Util.callMethodOnObject(builder, "putCustomTargeting", entry.getKey(), entry.getValue());
         }
     }
