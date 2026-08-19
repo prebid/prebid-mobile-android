@@ -238,6 +238,27 @@ public class InsetsUtilsTest {
     }
 
     @Test
+    @Config(sdk = 19)
+    public void applyInsetsToMargins_RelativeLayoutOnLegacyApi_DoesNotCrash() {
+        // Regression: RelativeLayout.LayoutParams#getRule(int) requires API 23 and was
+        // previously called directly, which crashed with NoSuchMethodError on API 16-22
+        // (minSdk is 16). Rules are now read through getRules(), which is API 1.
+        View view = new View(RuntimeEnvironment.getApplication());
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(100, 100);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        view.setLayoutParams(params);
+
+        CustomInsets base = new CustomInsets(0, 0, 25, 25);
+        boolean applied = InsetsUtils.applyInsetsToMargins(view, base, PORTRAIT);
+
+        assertEquals(true, applied);
+        RelativeLayout.LayoutParams result = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        assertEquals(55, result.bottomMargin);
+        assertEquals(65, result.leftMargin);
+    }
+
+    @Test
     public void addCutoutAndNavigationInsets_CalledRepeatedly_CapturesBaseMarginsOnceAndIsIdempotent() {
         // End-to-end test of the public entry point: verifies the view-tag base-margin capture
         // wiring runs without error and stays stable across repeated calls on the same view,

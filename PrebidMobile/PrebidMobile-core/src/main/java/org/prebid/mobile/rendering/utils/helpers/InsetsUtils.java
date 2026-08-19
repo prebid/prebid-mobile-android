@@ -101,12 +101,16 @@ public class InsetsUtils {
             RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) params;
             boolean isRtl = ViewCompat.getLayoutDirection(view) == ViewCompat.LAYOUT_DIRECTION_RTL;
 
-            boolean ruleTop = relativeParams.getRule(RelativeLayout.ALIGN_PARENT_TOP) == RelativeLayout.TRUE;
-            boolean ruleBottom = relativeParams.getRule(RelativeLayout.ALIGN_PARENT_BOTTOM) == RelativeLayout.TRUE;
-            boolean ruleRight = relativeParams.getRule(RelativeLayout.ALIGN_PARENT_RIGHT) == RelativeLayout.TRUE;
-            boolean ruleLeft = relativeParams.getRule(RelativeLayout.ALIGN_PARENT_LEFT) == RelativeLayout.TRUE;
-            boolean ruleEnd = relativeParams.getRule(RelativeLayout.ALIGN_PARENT_END) == RelativeLayout.TRUE;
-            boolean ruleStart = relativeParams.getRule(RelativeLayout.ALIGN_PARENT_START) == RelativeLayout.TRUE;
+            // RelativeLayout.LayoutParams#getRule(int) is API 23. This SDK's min is API 16,
+            // so rules must be read through getRules(), which is API 1 and backed by the
+            // same underlying array.
+            int[] rules = relativeParams.getRules();
+            boolean ruleTop = rules[RelativeLayout.ALIGN_PARENT_TOP] == RelativeLayout.TRUE;
+            boolean ruleBottom = rules[RelativeLayout.ALIGN_PARENT_BOTTOM] == RelativeLayout.TRUE;
+            boolean ruleRight = rules[RelativeLayout.ALIGN_PARENT_RIGHT] == RelativeLayout.TRUE;
+            boolean ruleLeft = rules[RelativeLayout.ALIGN_PARENT_LEFT] == RelativeLayout.TRUE;
+            boolean ruleEnd = rules[RelativeLayout.ALIGN_PARENT_END] == RelativeLayout.TRUE;
+            boolean ruleStart = rules[RelativeLayout.ALIGN_PARENT_START] == RelativeLayout.TRUE;
 
             // END/START are direction-relative: resolve them against the view's resolved
             // layout direction instead of always mapping END->right and START->left, which
