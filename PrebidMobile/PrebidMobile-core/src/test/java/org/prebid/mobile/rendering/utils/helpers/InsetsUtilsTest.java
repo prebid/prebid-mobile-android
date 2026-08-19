@@ -146,6 +146,48 @@ public class InsetsUtilsTest {
     }
 
     @Test
+    public void applyInsetsToMargins_UnspecifiedGravity_DoesNotApplyInsetsToAnySide() {
+        // Regression: FrameLayout.LayoutParams.UNSPECIFIED_GRAVITY is -1 (all bits set). Without
+        // explicitly excluding it, the bitmask checks below spuriously match every side and
+        // insets get applied to all four margins instead of none. This is the exact params a
+        // view gets from FrameLayout.addView(View) with no explicit LayoutParams (e.g. the
+        // countdown timer container, rl_count_down/lytCountDownCircle).
+        View view = new View(RuntimeEnvironment.getApplication());
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(100, 100);
+        assertEquals(FrameLayout.LayoutParams.UNSPECIFIED_GRAVITY, params.gravity);
+        view.setLayoutParams(params);
+
+        InsetsUtils.applyInsetsToMargins(view, NONE, PORTRAIT);
+
+        FrameLayout.LayoutParams result = (FrameLayout.LayoutParams) view.getLayoutParams();
+        assertEquals(0, result.topMargin);
+        assertEquals(0, result.bottomMargin);
+        assertEquals(0, result.leftMargin);
+        assertEquals(0, result.rightMargin);
+    }
+
+    @Test
+    @Config(qualifiers = "ar")
+    public void applyInsetsToMargins_FrameLayoutEndGravityOnUnattachedViewInRtlLocale_UsesLeftInset() {
+        // Regression: a real, unattached View (e.g. right after inflate(..., null), before it's
+        // added to its parent) never resolves an RTL layout direction through
+        // ViewCompat.getLayoutDirection()/View.getLayoutDirection() - it reports LTR regardless
+        // of locale until attached. Resolving direction from the view's context configuration
+        // instead means the very first inset application (not just later refreshes after attach)
+        // is correct in an RTL locale.
+        View view = new View(RuntimeEnvironment.getApplication());
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(100, 100);
+        params.gravity = Gravity.TOP | Gravity.END;
+        view.setLayoutParams(params);
+
+        InsetsUtils.applyInsetsToMargins(view, NONE, PORTRAIT);
+
+        FrameLayout.LayoutParams result = (FrameLayout.LayoutParams) view.getLayoutParams();
+        assertEquals(40, result.leftMargin);
+        assertEquals(0, result.rightMargin);
+    }
+
+    @Test
     public void applyInsetsToMargins_RelativeLayoutBottomLeft_AddsInsetsOnTopOfBaseMargins() {
         View view = new View(RuntimeEnvironment.getApplication());
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(100, 100);

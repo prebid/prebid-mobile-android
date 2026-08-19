@@ -275,7 +275,10 @@ public class InterstitialView extends BaseAdView implements ControlInsetsRefresh
         obstructionArray[4] = new InternalFriendlyObstruction(actionButton, InternalFriendlyObstruction.Purpose.OTHER, "Action button");
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            View dialogRoot = closeInterstitial.getRootView();
+            // Use this view's own root rather than closeInterstitial's: closeInterstitial can be
+            // null if addCloseView() failed to add it (e.g. a cleared context reference), and
+            // this view reports the same root regardless.
+            View dialogRoot = getRootView();
             View navigationBar = dialogRoot.findViewById(android.R.id.navigationBarBackground);
             obstructionArray[5] = new InternalFriendlyObstruction(navigationBar, InternalFriendlyObstruction.Purpose.OTHER, "Bottom navigation bar");
         } else {
