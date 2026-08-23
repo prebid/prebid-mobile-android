@@ -27,9 +27,11 @@ import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 @VisibleForTesting
 public class UrlResolutionTask extends AsyncTask<String, Void, String> {
@@ -49,6 +51,10 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
         }
 
         String previousUrl = null;
+        // One budget for the whole chain rather than per hop, so a slow host cannot
+        // multiply the delay by MAX_REDIRECTS before the browser is handed anything.
+        final long deadlineNanos = System.nanoTime()
+                + TimeUnit.MILLISECONDS.toNanos(resolutionBudgetMillis());
         try {
             String locationUrl = urls[0];
 
@@ -60,48 +66,60 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
                     return locationUrl;
                 }
 
+                long remainingMillis = TimeUnit.NANOSECONDS.toMillis(deadlineNanos - System.nanoTime());
+                if (remainingMillis <= 0) {
+                    LogUtil.debug(TAG, "Url resolution budget spent; opening " + locationUrl);
+                    return locationUrl;
+                }
+
                 previousUrl = locationUrl;
-                locationUrl = getRedirectLocation(locationUrl);
+                locationUrl = getRedirectLocation(locationUrl, (int) remainingMillis);
                 redirectCount++;
             }
         }
-        catch (IOException e) {
-            // A slow or unreachable host in the middle of the redirect chain must not
-            // swallow the click. previousUrl is a location we already decided to follow
-            // -- either the original click-through or a fully resolved hop -- so handing
-            // it back lets the browser finish the chain instead of the tap doing nothing.
-            LogUtil.debug(TAG, "Url resolution stopped at " + previousUrl + ": " + e.getMessage());
+        catch (SocketTimeoutException e) {
+            // The reported case: the host accepted the socket and then stalled. The URL
+            // we were about to resolve is still worth opening, and the browser can
+            // finish the chain itself.
+            LogUtil.debug(TAG, "Url resolution timed out at " + previousUrl);
             return previousUrl;
         }
-        catch (URISyntaxException e) {
-            // Deliberately not falling back here: resolveRedirectLocation throws this
-            // when the chain is malformed, and it must stay cancelled rather than open
-            // an intermediary URL.
-            return null;
-        }
-        catch (NullPointerException e) {
+        catch (IOException | URISyntaxException | NullPointerException e) {
+            // Hard failures -- unknown host, TLS, connection reset -- and malformed
+            // redirects stay cancelled. The destination is known to be unreachable or
+            // unsafe to open, so onFailure remains the correct outcome.
             return null;
         }
 
         return previousUrl;
     }
 
+    /** Read timeout for a single hop, mirroring {@link BaseNetworkTask}. */
+    private static int readTimeoutMillis() {
+        return PrebidMobile.getTimeoutModified()
+                ? PrebidMobile.getTimeoutMillis()
+                : BaseNetworkTask.SOCKET_TIMEOUT;
+    }
+
+    /** Total time allowed to resolve the chain: one connect plus one read. */
+    private static int resolutionBudgetMillis() {
+        return PrebidMobile.getTimeoutMillis() + readTimeoutMillis();
+    }
+
     @Nullable
-    private String getRedirectLocation(@NonNull final String urlString) throws IOException,
-                                                                               URISyntaxException {
+    private String getRedirectLocation(@NonNull final String urlString, final int budgetMillis)
+    throws IOException, URISyntaxException {
         final URL url = new URL(urlString);
 
         HttpURLConnection httpUrlConnection = null;
         try {
             httpUrlConnection = (HttpURLConnection) url.openConnection();
             httpUrlConnection.setInstanceFollowRedirects(false);
-            // HttpURLConnection defaults to no timeout at all, so a hanging redirect
-            // host blocks this task indefinitely and the click never opens anything.
-            // Bound it with the same values BaseNetworkTask already uses.
-            httpUrlConnection.setConnectTimeout(PrebidMobile.getTimeoutMillis());
-            httpUrlConnection.setReadTimeout(PrebidMobile.getTimeoutModified()
-                    ? PrebidMobile.getTimeoutMillis()
-                    : BaseNetworkTask.SOCKET_TIMEOUT);
+            // HttpURLConnection defaults to no timeout at all. Capping each hop at
+            // what is left of the budget also bounds the stream close below, which
+            // would otherwise wait a further read timeout after a stalled hop.
+            httpUrlConnection.setConnectTimeout(Math.min(PrebidMobile.getTimeoutMillis(), budgetMillis));
+            httpUrlConnection.setReadTimeout(Math.min(readTimeoutMillis(), budgetMillis));
 
             return resolveRedirectLocation(urlString, httpUrlConnection);
         }

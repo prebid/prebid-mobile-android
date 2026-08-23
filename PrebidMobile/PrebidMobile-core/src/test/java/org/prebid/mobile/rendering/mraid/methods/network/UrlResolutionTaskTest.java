@@ -32,6 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.LooperMode;
@@ -60,7 +61,7 @@ public class UrlResolutionTaskTest {
         server = new MockWebServer();
         server.start();
         task = new UrlResolutionTask(noOpListener);
-        // Keep the stalled-host case fast; this also exercises the configured
+        // Keep the stalled-host cases fast; this also exercises the configured
         // timeout rather than the SOCKET_TIMEOUT default.
         PrebidMobile.setTimeoutMillis(300);
     }
@@ -68,6 +69,11 @@ public class UrlResolutionTaskTest {
     @After
     public void tearDown() throws Exception {
         server.shutdown();
+        // setTimeoutMillis also flips isTimeoutModified, and Robolectric does not reset
+        // app statics between test classes sharing a sandbox. Left alone, every later
+        // BaseNetworkTask read timeout would become 300ms instead of SOCKET_TIMEOUT.
+        WhiteBox.setStaticVariableTo(PrebidMobile.class, "timeoutMillis", 2_000);
+        WhiteBox.setStaticVariableTo(PrebidMobile.class, "isTimeoutModified", false);
     }
 
     @Test
@@ -88,6 +94,27 @@ public class UrlResolutionTaskTest {
         String clickUrl = server.url("/click").toString();
 
         assertEquals(clickUrl, task.doInBackground(clickUrl));
+    }
+
+    @Test
+    public void whenLaterHopStalls_returnsTheHopAlreadyResolved() {
+        // The more interesting half of the fallback: one redirect succeeded before the
+        // stall, so the URL handed back is a resolved hop rather than the original.
+        String secondHop = server.url("/second").toString();
+        server.enqueue(new MockResponse().setResponseCode(302).setHeader("location", secondHop));
+        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.NO_RESPONSE));
+
+        assertEquals(secondHop, task.doInBackground(server.url("/click").toString()));
+    }
+
+    @Test
+    public void whenHostFailsHard_staysCancelled() {
+        // Only timeouts fall back. A refused or dropped connection means the
+        // destination is unreachable, so the click stays cancelled and no
+        // click-tracking fires.
+        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
+
+        assertNull(task.doInBackground(server.url("/click").toString()));
     }
 
     @Test
