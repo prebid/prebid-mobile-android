@@ -18,6 +18,8 @@ package org.prebid.mobile.rendering.sdk.deviceData.managers;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.Manifest;
@@ -78,10 +80,34 @@ public class NetworkConnectionInfoManagerTest {
     @Test
     @Config(sdk = 29)
     public void whenNonCellularTransportIsActive_reportsWifi() {
-        NetworkCapabilities capabilities = grantedNetworkWithCapabilities();
-        when(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)).thenReturn(true);
+        // Only TRANSPORT_CELLULAR is consulted; every other active transport falls
+        // through to WIFI, so leaving it unstubbed is the scenario under test.
+        grantedNetworkWithCapabilities();
 
         assertEquals(UserParameters.ConnectionType.WIFI, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 29)
+    public void whenCapabilitiesAreUnavailable_reportsOffline() {
+        Network network = mock(Network.class);
+
+        when(mockContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)).thenReturn(
+                PackageManager.PERMISSION_GRANTED);
+        when(connectivityManager.getActiveNetwork()).thenReturn(network);
+        when(connectivityManager.getNetworkCapabilities(network)).thenReturn(null);
+
+        assertEquals(UserParameters.ConnectionType.OFFLINE, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 23)
+    public void whenSdkIsAtTheCapabilitiesBoundary_usesCapabilitiesNotNetworkInfo() {
+        NetworkCapabilities capabilities = grantedNetworkWithCapabilities();
+        when(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)).thenReturn(true);
+
+        assertEquals(UserParameters.ConnectionType.CELL, networkConnectionManager.getConnectionType());
+        verify(connectivityManager, never()).getActiveNetworkInfo();
     }
 
     @Test

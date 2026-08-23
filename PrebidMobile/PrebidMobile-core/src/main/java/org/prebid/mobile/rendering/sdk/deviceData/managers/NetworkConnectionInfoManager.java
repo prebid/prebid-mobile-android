@@ -28,10 +28,13 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.networking.parameters.UserParameters;
 import org.prebid.mobile.rendering.sdk.BaseManager;
 
 public final class NetworkConnectionInfoManager extends BaseManager implements ConnectionInfoManager {
+    private static final String TAG = NetworkConnectionInfoManager.class.getSimpleName();
+
     private ConnectivityManager connectivityManager;
 
     public NetworkConnectionInfoManager(Context context) {
@@ -68,8 +71,15 @@ public final class NetworkConnectionInfoManager extends BaseManager implements C
         }
 
         NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
-        if (capabilities == null
-                || !capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
+        if (capabilities == null) {
+            // There is an active network but its capabilities could not be read — it
+            // disappeared between the two calls, or the lookup was refused. OFFLINE
+            // here stops the bid request in Requester, so say so rather than failing
+            // silently.
+            LogUtil.warning(TAG, "Active network reports no NetworkCapabilities; treating connection as OFFLINE.");
+            return UserParameters.ConnectionType.OFFLINE;
+        }
+        if (!capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
             return UserParameters.ConnectionType.OFFLINE;
         }
 
