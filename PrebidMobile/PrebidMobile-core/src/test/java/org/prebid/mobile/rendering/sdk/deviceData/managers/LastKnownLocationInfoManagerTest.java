@@ -45,6 +45,8 @@ public class LastKnownLocationInfoManagerTest {
 
     private LastKnownLocationInfoManager locationImpl;
     private Context context;
+    /** Held for the lifetime of a test; the manager only weakly references it. */
+    private Context permissionContext;
 
     private final int TWO_MINUTES = 1000 * 60 * 2;
 
@@ -94,55 +96,95 @@ public class LastKnownLocationInfoManagerTest {
     }
 
     @Test
-    public void whenOnlyCoarseGranted_readsNetworkProviderAndNeverAsksGps() {
-        Context context = mock(Context.class);
+    public void whenOnlyCoarseGranted_bothProvidersAreStillAsked() {
         LocationManager locationManager = mock(LocationManager.class);
         Location networkLocation = mock(Location.class);
-
-        when(context.checkCallingOrSelfPermission(ACCESS_COARSE_LOCATION)).thenReturn(PERMISSION_GRANTED);
-        when(context.checkCallingOrSelfPermission(ACCESS_FINE_LOCATION)).thenReturn(PERMISSION_DENIED);
-        when(context.getSystemService(Context.LOCATION_SERVICE)).thenReturn(locationManager);
         when(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)).thenReturn(networkLocation);
 
-        LastKnownLocationInfoManager manager = new LastKnownLocationInfoManager(context);
+        LastKnownLocationInfoManager manager =
+                managerWith(locationManager, PERMISSION_GRANTED, PERMISSION_DENIED);
 
         assertTrue(manager.isLocationAvailable());
-        // GPS_PROVIDER needs ACCESS_FINE_LOCATION; asking for it with approximate
-        // location only is what raises SecurityException on Android 12+.
-        verify(locationManager, never()).getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        // From API 31 a coarse-only client still receives a fix from GPS_PROVIDER,
+        // coarsened by LocationFudger, so the provider must not be skipped on the
+        // strength of the permission alone.
+        verify(locationManager).getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        verify(locationManager).getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
     }
 
     @Test
-    public void whenGpsProviderIsRefused_networkProviderIsStillRead() {
-        Context context = mock(Context.class);
+    public void whenCoarseOnlyAndGpsIsRefused_networkProviderIsStillRead() {
+        // The pre-API-31 case, where LocationManagerService rejected GPS_PROVIDER for a
+        // coarse-only client. The refusal must not discard the network fix, which is
+        // the defect this class had.
         LocationManager locationManager = mock(LocationManager.class);
         Location networkLocation = mock(Location.class);
-
-        when(context.checkCallingOrSelfPermission(ACCESS_COARSE_LOCATION)).thenReturn(PERMISSION_GRANTED);
-        when(context.checkCallingOrSelfPermission(ACCESS_FINE_LOCATION)).thenReturn(PERMISSION_GRANTED);
-        when(context.getSystemService(Context.LOCATION_SERVICE)).thenReturn(locationManager);
         when(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER))
-                .thenThrow(new SecurityException("gps refused"));
+                .thenThrow(new SecurityException("coarse permission is insufficient for GPS_PROVIDER"));
         when(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)).thenReturn(networkLocation);
         when(networkLocation.getLatitude()).thenReturn(51.5);
 
-        LastKnownLocationInfoManager manager = new LastKnownLocationInfoManager(context);
+        LastKnownLocationInfoManager manager =
+                managerWith(locationManager, PERMISSION_GRANTED, PERMISSION_DENIED);
 
         assertTrue(manager.isLocationAvailable());
         assertEquals(51.5, manager.getLatitude(), 0.0001);
     }
 
     @Test
+    public void whenAProviderIsAbsentFromTheDevice_theOtherIsStillRead() {
+        LocationManager locationManager = mock(LocationManager.class);
+        Location networkLocation = mock(Location.class);
+        when(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER))
+                .thenThrow(new IllegalArgumentException("no GPS_PROVIDER on this device"));
+        when(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)).thenReturn(networkLocation);
+
+        LastKnownLocationInfoManager manager =
+                managerWith(locationManager, PERMISSION_GRANTED, PERMISSION_GRANTED);
+
+        assertTrue(manager.isLocationAvailable());
+    }
+
+    @Test
     public void whenNoLocationPermissionGranted_noProviderIsRead() {
-        Context context = mock(Context.class);
         LocationManager locationManager = mock(LocationManager.class);
 
-        when(context.checkCallingOrSelfPermission(anyString())).thenReturn(PERMISSION_DENIED);
-        when(context.getSystemService(Context.LOCATION_SERVICE)).thenReturn(locationManager);
-
-        LastKnownLocationInfoManager manager = new LastKnownLocationInfoManager(context);
+        LastKnownLocationInfoManager manager =
+                managerWith(locationManager, PERMISSION_DENIED, PERMISSION_DENIED);
 
         assertFalse(manager.isLocationAvailable());
         verify(locationManager, never()).getLastKnownLocation(anyString());
+    }
+
+    @Test
+    public void whenPermissionIsRevoked_theCachedFixIsCleared() {
+        LocationManager locationManager = mock(LocationManager.class);
+        Location networkLocation = mock(Location.class);
+        when(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)).thenReturn(networkLocation);
+
+        LastKnownLocationInfoManager manager =
+                managerWith(locationManager, PERMISSION_GRANTED, PERMISSION_DENIED);
+        assertTrue(manager.isLocationAvailable());
+
+        when(permissionContext.checkCallingOrSelfPermission(ACCESS_COARSE_LOCATION)).thenReturn(PERMISSION_DENIED);
+        manager.resetLocation();
+
+        assertFalse(manager.isLocationAvailable());
+    }
+
+    /**
+     * Builds a manager over a mocked context with the given grants. The context is held
+     * in a field because the manager keeps only a WeakReference to it.
+     */
+    private LastKnownLocationInfoManager managerWith(
+            LocationManager locationManager,
+            int coarseGrant,
+            int fineGrant
+    ) {
+        permissionContext = mock(Context.class);
+        when(permissionContext.getSystemService(Context.LOCATION_SERVICE)).thenReturn(locationManager);
+        when(permissionContext.checkCallingOrSelfPermission(ACCESS_COARSE_LOCATION)).thenReturn(coarseGrant);
+        when(permissionContext.checkCallingOrSelfPermission(ACCESS_FINE_LOCATION)).thenReturn(fineGrant);
+        return new LastKnownLocationInfoManager(permissionContext);
     }
 }

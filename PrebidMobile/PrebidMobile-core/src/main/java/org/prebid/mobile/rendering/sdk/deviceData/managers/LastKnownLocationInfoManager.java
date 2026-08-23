@@ -30,7 +30,6 @@ import org.prebid.mobile.LogUtil;
 
 public final class LastKnownLocationInfoManager extends BaseManager implements LocationInfoManager {
 
-    private android.location.LocationManager locManager;
     private Location location;
     private static final String TAG = LastKnownLocationInfoManager.class.getSimpleName();
 
@@ -46,25 +45,33 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
 
     @Override
     public void resetLocation() {
-        if (getContext() == null) {
+        // Drop the previous fix first. Location permissions are runtime-revocable, and
+        // without this a revoked grant leaves stale coordinates going out in bid
+        // requests via GeoLocationParameterBuilder.
+        location = null;
+
+        Context context = getContext();
+        if (context == null) {
             return;
         }
 
-        locManager = (android.location.LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        if (locManager == null) {
+        android.location.LocationManager locManager =
+                (android.location.LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (locManager == null || !isLocationPermissionGranted(context)) {
             return;
         }
 
-        // GPS_PROVIDER requires ACCESS_FINE_LOCATION; NETWORK_PROVIDER is satisfied by
-        // ACCESS_COARSE_LOCATION. Since Android 12 the user can grant approximate
-        // location on its own, so each provider is asked for separately and only when
-        // the permission it actually needs is held.
-        Location gpsLastKnownLocation = isFineLocationPermissionGranted()
-                ? lastKnownLocation(android.location.LocationManager.GPS_PROVIDER)
-                : null;
-        Location ntwLastKnownLocation = isLocationPermissionGranted()
-                ? lastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER)
-                : null;
+        // Both providers are asked for, and the per-provider catch below absorbs a
+        // refusal. Deliberately not gated on the fine permission: before API 31
+        // LocationManagerService rejected GPS_PROVIDER outright for a coarse-only
+        // client, but from API 31 that check was replaced by coarsening through
+        // LocationFudger, so an approximate-only client receives an obfuscated fix
+        // from every provider instead. Skipping GPS on the strength of the permission
+        // would therefore throw away a usable location on the newer platforms.
+        Location gpsLastKnownLocation =
+                lastKnownLocation(locManager, android.location.LocationManager.GPS_PROVIDER);
+        Location ntwLastKnownLocation =
+                lastKnownLocation(locManager, android.location.LocationManager.NETWORK_PROVIDER);
 
         if (gpsLastKnownLocation != null) {
             location = gpsLastKnownLocation;
@@ -78,15 +85,15 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
     }
 
     /**
-     * Reads a single provider in isolation. A provider that the platform refuses or
-     * that does not exist on this device must not stop the other provider from being
-     * read.
+     * Reads a single provider in isolation. A provider the platform refuses, or that
+     * does not exist on this device, must not stop the other one from being read.
      */
     @SuppressLint("MissingPermission")
-    private Location lastKnownLocation(String provider) {
+    private Location lastKnownLocation(android.location.LocationManager locManager, String provider) {
         try {
             return locManager.getLastKnownLocation(provider);
         } catch (SecurityException exception) {
+            // Where a coarse-only client meets GPS_PROVIDER before API 31.
             LogUtil.warning(TAG, "No permission to read the last known location from " + provider + ".");
         } catch (IllegalArgumentException exception) {
             LogUtil.warning(TAG, "Location provider " + provider + " does not exist on this device.");
@@ -192,15 +199,8 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
     }
 
     /** True when either approximate or precise location has been granted. */
-    private boolean isLocationPermissionGranted() {
-        return getContext() != null
-               && (getContext().checkCallingOrSelfPermission(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
-                   || isFineLocationPermissionGranted());
-    }
-
-    /** True only for precise location, which is what GPS_PROVIDER requires. */
-    private boolean isFineLocationPermissionGranted() {
-        return getContext() != null
-               && getContext().checkCallingOrSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
+    private boolean isLocationPermissionGranted(Context context) {
+        return context.checkCallingOrSelfPermission(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
+               || context.checkCallingOrSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
     }
 }
