@@ -53,6 +53,7 @@ public final class AdViewUtils {
     private static final String EDQ = "\\\\\"";
 
     private static final String INNER_HTML_SCRIPT = "document.body.innerHTML";
+
     private static final String SIZE_VALUE_REGEX_EXPRESSION = "[0-9]+x[0-9]+";
     private static final String SIZE_OBJECT_REGEX_EXPRESSION = "hb_size\\W+" + SIZE_VALUE_REGEX_EXPRESSION; //"hb_size\\W+[0-9]+x[0-9]+"
 
@@ -64,6 +65,9 @@ public final class AdViewUtils {
     private static final String GAM_CUSTOM_TEMPLATE_AD_CLASS = "com.google.android.gms.ads.formats.NativeCustomTemplateAd";
     private static final String GAM_CUSTOM_TEMPLATE_AD_CLASS_2 = "com.google.android.gms.ads.nativead.NativeCustomFormatAd";
     private static final String NEXT_CUSTOM_TEMPLATE_AD_CLASS = "com.google.android.libraries.ads.mobile.sdk.nativead.CustomNativeAd";
+
+    // A view narrower than this has not been measured yet; a width ratio taken from it is degenerate.
+    private static final int MIN_MEASURED_VIEW_WIDTH = 10;
 
     private AdViewUtils() {
     }
@@ -174,23 +178,45 @@ public final class AdViewUtils {
         setWebViewScale(webView, webViewHeight, webViewContentHeight, 0, 0, null);
     }
 
-    // Overload that applies the scale, then notifies the optional listener on the next frame (so it
-
-    // runs once the corrected scale has been laid out). The scale computation and setInitialScale call
-    // are intentionally left identical to the legacy overload above so existing callers behave exactly
-    // as before; only the new, opt-in listener notification is added here.
+    // Overload that additionally notifies an optional listener once the scale has been applied.
     static void setWebViewScale(WebView webView, float webViewHeight, int webViewContentHeight, final int width, final int height, @Nullable final PbScaleAppliedListener scaleListener) {
-        //case: regulate scale because WebView.getSettings().setLoadWithOverviewMode() does not work
-        int scale = (int) (webViewHeight / webViewContentHeight * 100 + 1);
 
-        LogUtil.debug("Set WebView scale: " + scale + " (" + webViewHeight + ", " + webViewContentHeight + ")");
+        // A contentHeight of 0 makes the ratio below Infinity, which truncates to Integer.MAX_VALUE
+        // and is passed straight to setInitialScale. Leave the WebView's own scale alone instead.
+        if (webViewContentHeight <= 0) {
+            LogUtil.debug("Skip WebView scale: contentHeight not reported yet");
+            return;
+        }
+
+        //case: regulate scale because WebView.getSettings().setLoadWithOverviewMode() does not work
+        // Fit inside the view on both axes. The height ratio alone can exceed what the width allows,
+        // which renders the creative larger than its slot and crops it horizontally.
+        final int viewWidth = webView.getWidth();
+        final int byHeight = (int) (webViewHeight / webViewContentHeight * 100 + 1);
+        int scale = byHeight;
+        // byWidth can only use the DECLARED width -- WebView exposes no getContentWidth() -- so it
+        // caps on an assumption where byHeight measures. Truncated rather than rounded up like
+        // byHeight, since this term is a ceiling.
+        //
+        // Two of the three conditions below are load-bearing: an unmeasured view yields a ratio that
+        // would shrink the creative to a sliver, and a ratio truncating to 0 would reach
+        // setInitialScale as "use the default scale", silently dropping the correction. The
+        // width > 0 check is deliberate but redundant -- width == 0 already lands on byHeight via
+        // Infinity -> MAX_VALUE -> min(). It is kept because routing a zero divisor through that
+        // same chain is the defect being fixed here, not a mechanism to lean on one line below it.
+        if (width > 0 && viewWidth > MIN_MEASURED_VIEW_WIDTH) {
+            final int byWidth = (int) ((float) viewWidth / width * 100);
+            if (byWidth > 0) {
+                scale = Math.min(byWidth, byHeight);
+            }
+        }
+
+        LogUtil.debug("Set WebView scale: " + scale + " (" + webViewHeight + ", " + webViewContentHeight
+                + ", viewWidth " + viewWidth + ", declaredWidth " + width + ")");
         webView.setInitialScale(scale);
 
-        // Notify the optional listener once the scale has been applied. Gate on a positive content
-        // height: a non-positive value makes the scale above nonsensical (float/0 -> Infinity ->
-        // Integer.MAX_VALUE), so we must not signal "scale applied" in that degenerate case. This only
-        // affects the new listener; the legacy (listener-less) path above is unchanged.
-        if (scaleListener != null && webViewContentHeight > 0) {
+        // A scale was genuinely applied here, so "scale applied" is accurate.
+        if (scaleListener != null) {
             webView.post(new Runnable() {
                 @Override
                 public void run() {
