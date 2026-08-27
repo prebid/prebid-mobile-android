@@ -18,12 +18,16 @@ package org.prebid.mobile.rendering.sdk.deviceData.managers;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 
 import org.junit.Before;
@@ -62,5 +66,80 @@ public class NetworkConnectionInfoManagerTest {
         when(connectivityManager.getActiveNetworkInfo()).thenReturn(mockInfo);
 
         assertEquals(UserParameters.ConnectionType.CELL, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 29)
+    public void whenCellularTransportIsActive_reportsCell() {
+        NetworkCapabilities capabilities = grantedNetworkWithCapabilities();
+        when(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)).thenReturn(true);
+
+        assertEquals(UserParameters.ConnectionType.CELL, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 29)
+    public void whenNonCellularTransportIsActive_reportsWifi() {
+        // Only TRANSPORT_CELLULAR is consulted; every other active transport falls
+        // through to WIFI, so leaving it unstubbed is the scenario under test.
+        grantedNetworkWithCapabilities();
+
+        assertEquals(UserParameters.ConnectionType.WIFI, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 29)
+    public void whenCapabilitiesAreUnavailable_reportsOffline() {
+        Network network = mock(Network.class);
+
+        when(mockContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)).thenReturn(
+                PackageManager.PERMISSION_GRANTED);
+        when(connectivityManager.getActiveNetwork()).thenReturn(network);
+        when(connectivityManager.getNetworkCapabilities(network)).thenReturn(null);
+
+        assertEquals(UserParameters.ConnectionType.OFFLINE, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 23)
+    public void whenSdkIsAtTheCapabilitiesBoundary_usesCapabilitiesNotNetworkInfo() {
+        NetworkCapabilities capabilities = grantedNetworkWithCapabilities();
+        when(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)).thenReturn(true);
+
+        assertEquals(UserParameters.ConnectionType.CELL, networkConnectionManager.getConnectionType());
+        verify(connectivityManager, never()).getActiveNetworkInfo();
+    }
+
+    @Test
+    @Config(sdk = 29)
+    public void whenThereIsNoActiveNetwork_reportsOffline() {
+        when(mockContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)).thenReturn(
+                PackageManager.PERMISSION_GRANTED);
+        when(connectivityManager.getActiveNetwork()).thenReturn(null);
+
+        assertEquals(UserParameters.ConnectionType.OFFLINE, networkConnectionManager.getConnectionType());
+    }
+
+    @Test
+    @Config(sdk = 29)
+    public void whenNetworkStatePermissionIsMissing_reportsOffline() {
+        when(mockContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)).thenReturn(
+                PackageManager.PERMISSION_DENIED);
+
+        assertEquals(UserParameters.ConnectionType.OFFLINE, networkConnectionManager.getConnectionType());
+    }
+
+    /** An active, internet-capable default network with the permission granted. */
+    private NetworkCapabilities grantedNetworkWithCapabilities() {
+        Network network = mock(Network.class);
+        NetworkCapabilities capabilities = mock(NetworkCapabilities.class);
+
+        when(mockContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)).thenReturn(
+                PackageManager.PERMISSION_GRANTED);
+        when(connectivityManager.getActiveNetwork()).thenReturn(network);
+        when(connectivityManager.getNetworkCapabilities(network)).thenReturn(capabilities);
+        when(capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)).thenReturn(true);
+
+        return capabilities;
     }
 }
