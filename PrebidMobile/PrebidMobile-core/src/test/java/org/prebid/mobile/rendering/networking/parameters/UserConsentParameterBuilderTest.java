@@ -149,6 +149,51 @@ public class UserConsentParameterBuilderTest {
     }
 
     @Test
+    public void subjectToCoppaTrue_CoppaEqualsOneOnTopLevelRegs() throws JSONException {
+        ManagersResolver.getInstance().getUserConsentManager().setSubjectToCoppa(true);
+        AdRequestInput adRequestInput = new AdRequestInput();
+
+        builder.appendBuilderParameters(adRequestInput);
+
+        String expectedJSON = "{\"regs\":{\"coppa\":1}}";
+        assertEquals(
+            "Generated JSON is wrong!",
+            expectedJSON,
+            adRequestInput.getBidRequest().getJsonObject().toString()
+        );
+    }
+
+    @Test
+    public void subjectToCoppaFalse_CoppaEqualsZeroOnTopLevelRegs() throws JSONException {
+        ManagersResolver.getInstance().getUserConsentManager().setSubjectToCoppa(false);
+        AdRequestInput adRequestInput = new AdRequestInput();
+
+        builder.appendBuilderParameters(adRequestInput);
+
+        String expectedJSON = "{\"regs\":{\"coppa\":0}}";
+        assertEquals(
+            "Generated JSON is wrong!",
+            expectedJSON,
+            adRequestInput.getBidRequest().getJsonObject().toString()
+        );
+    }
+
+    @Test
+    public void subjectToCoppaNull_CoppaNotAppended() throws JSONException {
+        ManagersResolver.getInstance().getUserConsentManager().setSubjectToCoppa(null);
+        AdRequestInput adRequestInput = new AdRequestInput();
+
+        builder.appendBuilderParameters(adRequestInput);
+
+        String expectedJSON = "{}";
+        assertEquals(
+            "Generated JSON is wrong!",
+            expectedJSON,
+            adRequestInput.getBidRequest().getJsonObject().toString()
+        );
+    }
+
+    @Test
     public void gppString_AppendToUserConsentValues() throws JSONException {
         sharedPreferences.edit().putString(UserConsentManager.GPP_STRING_KEY, "testString").commit();
 
