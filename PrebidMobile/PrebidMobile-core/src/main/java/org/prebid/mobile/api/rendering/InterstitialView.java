@@ -20,12 +20,15 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
 import android.view.View;
+import androidx.annotation.RestrictTo;
+import androidx.core.view.ViewCompat;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
+import org.prebid.mobile.rendering.interstitial.ControlInsetsRefresher;
 import org.prebid.mobile.rendering.interstitial.DialogEventListener;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
@@ -43,7 +46,7 @@ import java.util.List;
 /**
  * Internal view for {@link InterstitialAdUnit}.
  */
-public class InterstitialView extends BaseAdView {
+public class InterstitialView extends BaseAdView implements ControlInsetsRefresher {
 
     private static final String TAG = InterstitialView.class.getSimpleName();
 
@@ -54,15 +57,31 @@ public class InterstitialView extends BaseAdView {
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
+        // Insets aren't guaranteed to be redelivered by the time this callback fires, so defer
+        // to the next frame to give the window a chance to resolve them for the new configuration.
+        post(this::refreshControlInsets);
+    }
+
+    /**
+     * Re-applies cutout/navigation-bar insets to the interstitial controls (close, skip, sound,
+     * countdown timer, learn-more button) on top of their original margins, so calling this
+     * repeatedly (e.g. on every rotation) never accumulates margins.
+     * <p>
+     * Internal SDK use only: invoked automatically on configuration changes and when the
+     * interstitial dialog is shown. Not part of the public API contract.
+     */
+    @Override
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    public void refreshControlInsets() {
         List<View> views = Arrays.asList(
             findViewById(R.id.iv_close_interstitial),
             findViewById(R.id.iv_skip),
+            findViewById(R.id.iv_sound_interstitial),
             findViewById(R.id.rl_count_down),
             findViewById(R.id.tv_learn_more)
         );
 
         for (View view : views) {
-            InsetsUtils.resetMargins(view);
             InsetsUtils.addCutoutAndNavigationInsets(view);
         }
     }
@@ -206,6 +225,13 @@ public class InterstitialView extends BaseAdView {
             super.init();
             setAdViewManagerValues();
             registerEventBroadcast();
+
+            // Canonical, self-correcting source of truth for insets: re-applies control
+            // insets whenever the window redelivers them, independently of onConfigurationChanged.
+            ViewCompat.setOnApplyWindowInsetsListener(this, (view, windowInsets) -> {
+                refreshControlInsets();
+                return windowInsets;
+            });
         } catch (Exception e) {
             throw new AdException(AdException.INIT_ERROR, "AdView initialization failed: " + Log.getStackTraceString(e));
         }
@@ -232,24 +258,31 @@ public class InterstitialView extends BaseAdView {
     }
 
     protected InternalFriendlyObstruction[] formInterstitialObstructionsArray() {
-        InternalFriendlyObstruction[] obstructionArray = new InternalFriendlyObstruction[5];
+        InternalFriendlyObstruction[] obstructionArray = new InternalFriendlyObstruction[6];
 
         View closeInterstitial = findViewById(R.id.iv_close_interstitial);
         View skipInterstitial = findViewById(R.id.iv_skip);
+        View soundInterstitial = findViewById(R.id.iv_sound_interstitial);
         View countDownTimer = findViewById(R.id.rl_count_down);
         View actionButton = findViewById(R.id.tv_learn_more);
 
         obstructionArray[0] = new InternalFriendlyObstruction(closeInterstitial, InternalFriendlyObstruction.Purpose.CLOSE_AD, null);
         obstructionArray[1] = new InternalFriendlyObstruction(skipInterstitial, InternalFriendlyObstruction.Purpose.CLOSE_AD, null);
-        obstructionArray[2] = new InternalFriendlyObstruction(countDownTimer, InternalFriendlyObstruction.Purpose.OTHER, "CountDownTimer");
-        obstructionArray[3] = new InternalFriendlyObstruction(actionButton, InternalFriendlyObstruction.Purpose.OTHER, "Action button");
+        // soundInterstitial is null for interstitials without a sound button (e.g. non-video);
+        // InternalFriendlyObstruction/OmAdSessionManager safely skip obstructions with a null view.
+        obstructionArray[2] = new InternalFriendlyObstruction(soundInterstitial, InternalFriendlyObstruction.Purpose.OTHER, "Sound button");
+        obstructionArray[3] = new InternalFriendlyObstruction(countDownTimer, InternalFriendlyObstruction.Purpose.OTHER, "CountDownTimer");
+        obstructionArray[4] = new InternalFriendlyObstruction(actionButton, InternalFriendlyObstruction.Purpose.OTHER, "Action button");
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            View dialogRoot = closeInterstitial.getRootView();
+            // Use this view's own root rather than closeInterstitial's: closeInterstitial can be
+            // null if addCloseView() failed to add it (e.g. a cleared context reference), and
+            // this view reports the same root regardless.
+            View dialogRoot = getRootView();
             View navigationBar = dialogRoot.findViewById(android.R.id.navigationBarBackground);
-            obstructionArray[4] = new InternalFriendlyObstruction(navigationBar, InternalFriendlyObstruction.Purpose.OTHER, "Bottom navigation bar");
+            obstructionArray[5] = new InternalFriendlyObstruction(navigationBar, InternalFriendlyObstruction.Purpose.OTHER, "Bottom navigation bar");
         } else {
-            obstructionArray[4] = null;
+            obstructionArray[5] = null;
         }
 
         return obstructionArray;
