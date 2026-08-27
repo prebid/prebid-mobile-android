@@ -390,38 +390,92 @@ public final class Utils {
         }
     }
 
+    /**
+     * Full physical screen width in pixels, independent of how much of it this app
+     * currently occupies. Backs OpenRTB device.w, which the spec defines as the
+     * physical screen size, and MRAID getScreenSize().
+     */
     public static int getScreenWidth(WindowManager windowManager) {
-        if (windowManager != null) {
-            if (Build.VERSION.SDK_INT >= 17) {
-                Point size = new Point();
-                windowManager.getDefaultDisplay().getRealSize(size);
-                return size.x;
-            }
-            else {
-                DisplayMetrics metrics = new DisplayMetrics();
-                windowManager.getDefaultDisplay().getMetrics(metrics);
-                return metrics.widthPixels;
-            }
+        if (windowManager == null) {
+            return 0;
         }
 
-        return 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return windowManager.getMaximumWindowMetrics().getBounds().width();
+        }
+        return legacyDisplaySize(windowManager).x;
     }
 
+    /**
+     * Full physical screen height in pixels. See {@link #getScreenWidth(WindowManager)}.
+     */
     public static int getScreenHeight(WindowManager windowManager) {
-        if (windowManager != null) {
-            if (Build.VERSION.SDK_INT >= 17) {
-                Point size = new Point();
-                windowManager.getDefaultDisplay().getRealSize(size);
-                return size.y;
-            }
-            else {
-                DisplayMetrics metrics = new DisplayMetrics();
-                windowManager.getDefaultDisplay().getMetrics(metrics);
-                return metrics.heightPixels;
-            }
+        if (windowManager == null) {
+            return 0;
         }
 
-        return 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return windowManager.getMaximumWindowMetrics().getBounds().height();
+        }
+        return legacyDisplaySize(windowManager).y;
+    }
+
+    /**
+     * Width in pixels of the window this app is actually drawing into, which in
+     * split-screen or freeform multi-window is a fraction of the screen. Used for
+     * sizing ad containers, where the space available to the creative matters rather
+     * than the size of the device.
+     * <p>
+     * Below API 30 there is no window-metrics API, so this falls back to the display
+     * size — the same value these call sites received before the split, and therefore
+     * not a behaviour change on those versions.
+     */
+    public static int getWindowWidth(WindowManager windowManager) {
+        if (windowManager == null) {
+            return 0;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return windowManager.getCurrentWindowMetrics().getBounds().width();
+        }
+        return legacyDisplaySize(windowManager).x;
+    }
+
+    /**
+     * Height in pixels of the current app window. See {@link #getWindowWidth(WindowManager)}.
+     */
+    public static int getWindowHeight(WindowManager windowManager) {
+        if (windowManager == null) {
+            return 0;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return windowManager.getCurrentWindowMetrics().getBounds().height();
+        }
+        return legacyDisplaySize(windowManager).y;
+    }
+
+    /**
+     * WindowManager.getDefaultDisplay() and Display.getRealSize() are both deprecated
+     * from API 30. minSdk is still far below that, so this path stays for older devices.
+     * getRealSize() reports the whole physical display including system decorations,
+     * matching getMaximumWindowMetrics() rather than getCurrentWindowMetrics().
+     */
+    @SuppressWarnings("deprecation")
+    private static Point legacyDisplaySize(@NonNull WindowManager windowManager) {
+        Point size = new Point();
+        Display display = windowManager.getDefaultDisplay();
+
+        if (Build.VERSION.SDK_INT >= 17) {
+            display.getRealSize(size);
+        }
+        else {
+            DisplayMetrics metrics = new DisplayMetrics();
+            display.getMetrics(metrics);
+            size.set(metrics.widthPixels, metrics.heightPixels);
+        }
+
+        return size;
     }
 
     public static Map<String, String> getQueryMap(String query) {

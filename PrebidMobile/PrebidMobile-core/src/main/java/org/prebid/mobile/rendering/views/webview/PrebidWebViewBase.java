@@ -250,8 +250,8 @@ public class PrebidWebViewBase extends FrameLayout implements PreloadManager.Pre
         int orientation = Configuration.ORIENTATION_UNDEFINED;
 
         WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        int screenWidth = Utils.getScreenWidth(windowManager);
-        int screenHeight = Utils.getScreenHeight(windowManager);
+        int screenWidth = Utils.getWindowWidth(windowManager);
+        int screenHeight = Utils.getWindowHeight(windowManager);
 
         int deviceWidth = Math.min(screenWidth, screenHeight);
         int deviceHeight = Math.max(screenWidth, screenHeight);
