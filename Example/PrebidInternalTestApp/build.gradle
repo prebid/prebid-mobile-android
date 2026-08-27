@@ -114,8 +114,7 @@ dependencies {
     androidTestImplementation libs.androidx.uiautomator
 
     // Video player
-    implementation libs.exoplayer
-    implementation libs.exoplayer.core
-    implementation libs.exoplayer.ui
-    implementation libs.extension.ima
+    implementation libs.media3.exoplayer
+    implementation libs.media3.ui
+    implementation libs.media3.exoplayer.ima
 }
