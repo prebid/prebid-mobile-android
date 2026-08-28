@@ -80,6 +80,12 @@ object TestCaseRepository {
             GamOriginalApiVideoRewardedActivity::class.java,
         ),
         TestCase(
+            R.string.gam_original_display_rewarded,
+            AdFormat.DISPLAY_REWARDED,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiDisplayRewardedActivity::class.java,
+        ),
+        TestCase(
             R.string.gam_original_video_in_stream,
             AdFormat.IN_STREAM_VIDEO,
             IntegrationKind.GAM_ORIGINAL,
@@ -122,6 +128,12 @@ object TestCaseRepository {
             AdFormat.VIDEO_INTERSTITIAL,
             IntegrationKind.GAM_RENDERING,
             GamRenderingApiVideoInterstitialActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_rendering_display_rewarded,
+            AdFormat.DISPLAY_REWARDED,
+            IntegrationKind.GAM_RENDERING,
+            GamRenderingApiDisplayRewardedActivity::class.java,
         ),
         TestCase(
             R.string.gam_rendering_video_rewarded,
@@ -198,6 +210,12 @@ object TestCaseRepository {
             InAppVideoInterstitialMultiFormatActivity::class.java,
         ),
         TestCase(
+            R.string.in_app_display_rewarded,
+            AdFormat.DISPLAY_REWARDED,
+            IntegrationKind.NO_AD_SERVER,
+            InAppDisplayRewardedActivity::class.java,
+        ),
+        TestCase(
             R.string.in_app_video_rewarded,
             AdFormat.VIDEO_REWARDED,
             IntegrationKind.NO_AD_SERVER,
@@ -230,6 +248,12 @@ object TestCaseRepository {
             AdMobVideoInterstitialActivity::class.java,
         ),
         TestCase(
+            R.string.ad_mob_display_rewarded,
+            AdFormat.DISPLAY_REWARDED,
+            IntegrationKind.ADMOB,
+            AdMobDisplayRewardedActivity::class.java,
+        ),
+        TestCase(
             R.string.ad_mob_video_rewarded,
             AdFormat.VIDEO_REWARDED,
             IntegrationKind.ADMOB,
@@ -260,6 +284,12 @@ object TestCaseRepository {
             AdFormat.DISPLAY_INTERSTITIAL,
             IntegrationKind.MAX,
             AppLovinMaxDisplayInterstitialActivity::class.java,
+        ),
+        TestCase(
+            R.string.app_lovin_max_display_rewarded,
+            AdFormat.DISPLAY_REWARDED,
+            IntegrationKind.MAX,
+            AppLovinMaxDisplayRewardedActivity::class.java,
         ),
         TestCase(
             R.string.app_lovin_max_video_rewarded,

@@ -6,6 +6,7 @@ import org.prebid.mobile.javademo.R;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiDisplayBanner300x250;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiDisplayBanner320x50;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiDisplayInterstitial;
+import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiDisplayRewarded;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiMultiformatBanner;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiMultiformatBannerVideoNativeInApp;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiMultiformatBannerVideoNativeStyles;
@@ -84,6 +85,12 @@ public class TestCaseRepository {
                         AdFormat.VIDEO_REWARDED,
                         IntegrationKind.GAM_ORIGINAL,
                         GamOriginalApiVideoRewarded.class
+                ),
+                new TestCase(
+                        R.string.gam_original_display_rewarded,
+                        AdFormat.DISPLAY_REWARDED,
+                        IntegrationKind.GAM_ORIGINAL,
+                        GamOriginalApiDisplayRewarded.class
                 ),
                 new TestCase(
                         R.string.gam_original_native_in_app,

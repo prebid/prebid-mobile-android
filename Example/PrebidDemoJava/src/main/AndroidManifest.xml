@@ -70,6 +70,9 @@
             android:name=".activities.ads.gam.original.GamOriginalApiVideoRewarded"
             android:exported="true" />
         <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiDisplayRewarded"
+            android:exported="true" />
+        <activity
             android:name=".activities.ads.gam.original.GamOriginalApiNativeInApp"
             android:exported="true" />
         <activity

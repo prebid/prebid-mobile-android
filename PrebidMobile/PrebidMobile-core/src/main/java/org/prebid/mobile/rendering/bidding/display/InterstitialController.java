@@ -170,6 +170,11 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
         }
     }
 
+    @Nullable
+    public AdFormat getAdUnitIdentifierType() {
+        return adUnitIdentifierType;
+    }
+
     public void destroy() {
         bidInterstitialView.destroy();
         listener = null;

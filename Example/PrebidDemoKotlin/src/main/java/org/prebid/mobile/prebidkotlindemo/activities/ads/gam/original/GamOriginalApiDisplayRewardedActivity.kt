@@ -1,0 +1,76 @@
+/*
+ *    Copyright 2018-2019 Prebid.org, Inc.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
+
+import android.os.Bundle
+import android.util.Log
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import org.prebid.mobile.RewardedDisplayAdUnit
+import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
+
+class GamOriginalApiDisplayRewardedActivity : BaseAdActivity() {
+
+    companion object {
+        const val AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-display-interstitial"
+        const val CONFIG_ID = "prebid-demo-banner-rewarded-time"
+    }
+
+    private var adUnit: RewardedDisplayAdUnit? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        createAd()
+    }
+
+    private fun createAd() {
+        adUnit = RewardedDisplayAdUnit(CONFIG_ID)
+
+        val request = AdManagerAdRequest.Builder().build()
+        adUnit?.fetchDemand(request) {
+            RewardedAd.load(
+                this,
+                AD_UNIT_ID,
+                request,
+                createListener()
+            )
+        }
+    }
+
+    private fun createListener(): RewardedAdLoadCallback {
+        return object : RewardedAdLoadCallback() {
+            override fun onAdLoaded(rewardedAd: RewardedAd) {
+                rewardedAd.show(this@GamOriginalApiDisplayRewardedActivity) {
+                    Log.d("GamOriginalRewarded", "User earned reward.")
+                }
+            }
+
+            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                Log.e("GamOriginalRewarded", "Ad failed to load: $loadAdError")
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        adUnit?.destroy()
+    }
+
+}
