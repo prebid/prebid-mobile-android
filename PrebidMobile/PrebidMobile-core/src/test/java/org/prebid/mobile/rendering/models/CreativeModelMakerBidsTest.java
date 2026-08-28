@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.models;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
@@ -130,6 +131,7 @@ public class CreativeModelMakerBidsTest {
         assertEquals(bid.getAdm(), creativeModel.getHtml());
         assertEquals(bid.getWidth(), creativeModel.getWidth());
         assertEquals(bid.getHeight(), creativeModel.getHeight());
+        assertEquals(bidResponse.getExpirationTimeSeconds(), creativeModel.getExpirationTimeSeconds());
         assertFalse(creativeModel.isRequireImpressionUrl());
     }
 
@@ -149,7 +151,32 @@ public class CreativeModelMakerBidsTest {
         assertEquals(bid.getAdm(), creativeModel.getHtml());
         assertEquals(bid.getWidth(), creativeModel.getWidth());
         assertEquals(bid.getHeight(), creativeModel.getHeight());
+        assertEquals(bidResponse.getExpirationTimeSeconds(), creativeModel.getExpirationTimeSeconds());
         assertFalse(creativeModel.isRequireImpressionUrl());
+    }
+
+    @Test
+    public void whenMakeModelsAndBidResponseHasNoExpiration_CreateAcjModelWithoutExpiration() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setAdFormat(AdFormat.BANNER);
+
+        Bid bid = mock(Bid.class);
+        when(bid.getAdm()).thenReturn("<html></html>");
+        when(bid.getWidth()).thenReturn(320);
+        when(bid.getHeight()).thenReturn(50);
+
+        BidResponse bidResponse = mock(BidResponse.class);
+        when(bidResponse.getWinningBid()).thenReturn(bid);
+        when(bidResponse.getExpirationTimeSeconds()).thenReturn(null);
+        ArgumentCaptor<CreativeModelsMaker.Result> resultArgumentCaptor = ArgumentCaptor.forClass(CreativeModelsMaker.Result.class);
+
+        when(mockJsManager.checkIfScriptsDownloadedAndStartDownloadingIfNot()).thenReturn(true);
+
+        modelMakerBids.makeModels(configuration, bidResponse);
+
+        verify(mockLoadListener).onCreativeModelReady(resultArgumentCaptor.capture());
+        CreativeModel creativeModel = resultArgumentCaptor.getValue().creativeModels.get(0);
+        assertNull(creativeModel.getExpirationTimeSeconds());
     }
 
     @Test

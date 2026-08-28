@@ -103,6 +103,14 @@ abstract class BaseBidRewardedFragment : AdFragment() {
             binding.btnLoad.isEnabled = true
         }
 
+        override fun onAdExpired(rewardedAdUnit: RewardedAdUnit?) {
+            Log.d(TAG, "onAdExpired() called with: rewardedAdUnit = [$rewardedAdUnit]")
+            // The test app has no dedicated expired event indicator, so reuse failed for visibility.
+            events.failed(true)
+            binding.btnLoad.setText(R.string.text_load)
+            binding.btnLoad.isEnabled = true
+        }
+
         override fun onAdClicked(rewardedAdUnit: RewardedAdUnit?) {
             Log.d(TAG, "onAdClicked() called with: rewardedAdUnit = [$rewardedAdUnit]")
             events.clicked(true)

@@ -17,6 +17,8 @@
 package org.prebid.mobile.api.rendering;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -54,6 +56,10 @@ public abstract class BaseInterstitialAdUnit {
     protected AdException prebidException;
     private PrebidMobileInterstitialControllerInterface interstitialController;
     private InterstitialAdUnitState interstitialAdUnitState = READY_FOR_LOAD;
+    private final Handler expirationHandler = new Handler(Looper.getMainLooper());
+    private Runnable expirationRunnable;
+    private boolean expired;
+    private boolean adDisplayed;
 
     private final WeakReference<Context> weakContext;
     private final BidRequesterListener bidRequesterListener = createBidRequesterListener();
@@ -72,6 +78,8 @@ public abstract class BaseInterstitialAdUnit {
 
     abstract void notifyErrorListener(AdException exception);
 
+    abstract void notifyAdExpiredListener();
+
 
     /**
      * Executes ad loading if no request is running.
@@ -89,6 +97,9 @@ public abstract class BaseInterstitialAdUnit {
             return;
         }
 
+        cancelExpiration();
+        expired = false;
+        adDisplayed = false;
         bidLoader.load();
     }
 
@@ -103,7 +114,7 @@ public abstract class BaseInterstitialAdUnit {
      * Executes interstitial display if auction winner is defined.
      */
     public void show() {
-        if (!isAuctionWinnerReadyToDisplay()) {
+        if (expired || !isAuctionWinnerReadyToDisplay()) {
             LogUtil.debug(TAG, "show(): Ad is not yet ready for display!");
             return;
         }
@@ -221,6 +232,7 @@ public abstract class BaseInterstitialAdUnit {
         if (interstitialController != null) {
             interstitialController.destroy();
         }
+        cancelExpiration();
     }
 
     protected void init(AdUnitConfiguration adUnitConfiguration) {
@@ -255,6 +267,23 @@ public abstract class BaseInterstitialAdUnit {
         interstitialAdUnitState = state;
     }
 
+    protected void scheduleExpirationIfNeeded() {
+        Integer expirationTimeSeconds = bidResponse != null ? bidResponse.getExpirationTimeSeconds() : null;
+        // BidResponse normalizes absent, zero, and negative exp values to null.
+        if (expirationTimeSeconds == null) {
+            return;
+        }
+
+        cancelExpiration();
+        expirationRunnable = this::expireAd;
+        expirationHandler.postDelayed(expirationRunnable, expirationTimeSeconds * 1000L);
+    }
+
+    protected void markAdDisplayed() {
+        adDisplayed = true;
+        cancelExpiration();
+    }
+
     private void initPrebidRenderingSdk() {
         String hostUrl = PrebidMobile.getPrebidServerHost().getHostUrl();
         if (!hostUrl.isEmpty()) {
@@ -275,7 +304,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     private boolean isAuctionWinnerReadyToDisplay() {
-        return interstitialAdUnitState == READY_TO_DISPLAY_PREBID || interstitialAdUnitState == READY_TO_DISPLAY_GAM;
+        return !expired && (interstitialAdUnitState == READY_TO_DISPLAY_PREBID || interstitialAdUnitState == READY_TO_DISPLAY_GAM);
     }
 
     private boolean isAdLoadAllowed() {
@@ -285,6 +314,32 @@ public abstract class BaseInterstitialAdUnit {
     @VisibleForTesting
     final InterstitialAdUnitState getAdUnitState() {
         return interstitialAdUnitState;
+    }
+
+    @VisibleForTesting
+    final boolean isExpired() {
+        return expired;
+    }
+
+    private void cancelExpiration() {
+        if (expirationRunnable != null) {
+            expirationHandler.removeCallbacks(expirationRunnable);
+            expirationRunnable = null;
+        }
+    }
+
+    private void expireAd() {
+        if (expired) {
+            return;
+        }
+
+        expired = true;
+        changeInterstitialAdUnitState(READY_FOR_LOAD);
+        if (!adDisplayed && interstitialController != null) {
+            interstitialController.destroy();
+            interstitialController = null;
+        }
+        notifyAdExpiredListener();
     }
 
     private BidRequesterListener createBidRequesterListener() {
@@ -313,6 +368,7 @@ public abstract class BaseInterstitialAdUnit {
             @Override
             public void onInterstitialReadyForDisplay() {
                 changeInterstitialAdUnitState(READY_TO_DISPLAY_PREBID);
+                scheduleExpirationIfNeeded();
                 notifyAdEventListener(AdListenerEvent.AD_LOADED);
             }
 
@@ -329,6 +385,7 @@ public abstract class BaseInterstitialAdUnit {
 
             @Override
             public void onInterstitialDisplayed() {
+                markAdDisplayed();
                 changeInterstitialAdUnitState(READY_FOR_LOAD);
                 notifyAdEventListener(AdListenerEvent.AD_DISPLAYED);
             }

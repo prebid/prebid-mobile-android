@@ -305,6 +305,7 @@ public class BidResponse {
         if (winningBid == null) return null;
 
         int expirationTime = winningBid.getExp();
+        // OpenRTB bid.exp is only meaningful when positive; absent, zero, and negative values mean no expiration timer.
         if (expirationTime <= 0) {
             return null;
         }

@@ -59,4 +59,11 @@ public interface BannerViewListener {
      * @param bannerView view of the corresponding event.
      */
     void onAdClosed(BannerView bannerView);
+
+    /**
+     * Executed when the loaded ad expires before it can be used.
+     *
+     * @param bannerView view of the corresponding event.
+     */
+    default void onAdExpired(BannerView bannerView) {}
 }

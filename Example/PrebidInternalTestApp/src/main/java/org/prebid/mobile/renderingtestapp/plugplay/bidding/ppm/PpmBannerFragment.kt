@@ -89,6 +89,13 @@ open class PpmBannerFragment : AdFragment(), BannerViewListener {
         binding.btnLoad.isEnabled = true
     }
 
+    override fun onAdExpired(bannerView: BannerView?) {
+        resetEventButtons()
+        // The test app has no dedicated expired event indicator, so reuse failed for visibility.
+        events.failed(true)
+        binding.btnLoad.isEnabled = true
+    }
+
     override fun onAdClicked(bannerView: BannerView?) {
         events.clicked(true)
     }

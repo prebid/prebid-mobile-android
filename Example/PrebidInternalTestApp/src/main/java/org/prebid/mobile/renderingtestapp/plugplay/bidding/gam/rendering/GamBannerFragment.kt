@@ -95,6 +95,14 @@ open class GamBannerFragment : AdFragment(),
         binding.btnLoad.isEnabled = true
     }
 
+    override fun onAdExpired(bannerView: BannerView?) {
+        Log.d(TAG, "onAdExpired() called with: bannerView = [$bannerView]")
+        resetEventButtons()
+        // The test app has no dedicated expired event indicator, so reuse failed for visibility.
+        events.failed(true)
+        binding.btnLoad.isEnabled = true
+    }
+
     override fun onAdClicked(view: BannerView?) {
         Log.d(TAG, "onAdClicked() called with: view = [$view]")
         events.clicked(true)
