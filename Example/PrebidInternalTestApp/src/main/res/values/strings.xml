@@ -376,6 +376,10 @@
     <string name="imp_prebid_id_banner_multisize">prebid-demo-banner-multisize</string>
     <string name="imp_prebid_id_interstitial_320_480">prebid-demo-display-interstitial-320-480</string>
     <string name="imp_prebid_id_interstitial_320_480_custom_renderer">prebid-ita-display-interstitial-320-480-meta-custom-renderer</string>
+    <string name="demo_bidding_admob_banner_320_50_custom_renderer">Banner 320x50 (AdMob, Custom Renderer)</string>
+    <string name="demo_bidding_admob_interstitial_320_480_custom_renderer">Display Interstitial 320x480 (AdMob, Custom Renderer)</string>
+    <string name="demo_bidding_max_banner_320_50_custom_renderer">Banner 320x50 (MAX, Custom Renderer)</string>
+    <string name="demo_bidding_max_interstitial_320_480_custom_renderer">Display Interstitial 320x480 (MAX, Custom Renderer)</string>
 
     <string name="imp_prebid_id_display_rewarded_default">prebid-demo-banner-rewarded-default</string>
     <string name="imp_prebid_id_display_rewarded_time">prebid-demo-banner-rewarded-time</string>

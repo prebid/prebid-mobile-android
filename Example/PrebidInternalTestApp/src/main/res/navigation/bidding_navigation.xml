@@ -407,6 +407,22 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@+id/headerBiddingFragment" />
         <action
+            android:id="@+id/action_header_bidding_to_admob_banner_custom_renderer"
+            app:destination="@+id/navigation_admob_banner_custom_renderer"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+        <action
+            android:id="@+id/action_header_bidding_to_admob_interstitial_custom_renderer"
+            app:destination="@+id/navigation_admob_interstitial_custom_renderer"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+        <action
             android:id="@+id/action_header_bidding_to_admob_interstitial"
             app:destination="@+id/navigation_admob_interstitial"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -458,6 +474,24 @@
         <action
             android:id="@+id/action_header_bidding_to_max_banner"
             app:destination="@+id/navigation_max_banner"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_max_banner_custom_renderer"
+            app:destination="@+id/navigation_max_banner_custom_renderer"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_max_interstitial_custom_renderer"
+            app:destination="@+id/navigation_max_interstitial_custom_renderer"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -768,6 +802,12 @@
             android:id="@+id/navigation_admob_banner"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobBannerFragment" />
     <fragment
+        android:id="@+id/navigation_admob_banner_custom_renderer"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobBannerCustomRendererFragment" />
+    <fragment
+        android:id="@+id/navigation_admob_interstitial_custom_renderer"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobInterstitialCustomRendererFragment" />
+    <fragment
         android:id="@+id/navigation_admob_random_banner"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobBannerRandomFragment" />
     <fragment
@@ -796,6 +836,12 @@
     <fragment
         android:id="@+id/navigation_max_banner"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.max.MaxBannerFragment" />
+    <fragment
+        android:id="@+id/navigation_max_banner_custom_renderer"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.max.MaxBannerCustomRendererFragment" />
+    <fragment
+        android:id="@+id/navigation_max_interstitial_custom_renderer"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.max.MaxInterstitialCustomRendererFragment" />
 
     <fragment
         android:id="@+id/navigation_max_banner_random"
