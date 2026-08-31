@@ -26,12 +26,15 @@ import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLHandshakeException;
 
 @VisibleForTesting
 public class UrlResolutionTask extends AsyncTask<String, Void, String> {
@@ -77,17 +80,27 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
                 redirectCount++;
             }
         }
-        catch (SocketTimeoutException e) {
-            // The reported case: the host accepted the socket and then stalled. The URL
-            // we were about to resolve is still worth opening, and the browser can
-            // finish the chain itself.
-            LogUtil.debug(TAG, "Url resolution timed out at " + previousUrl);
+        catch (UnknownHostException | ConnectException | SSLHandshakeException e) {
+            // The destination is known to be unreachable: DNS did not resolve, the
+            // connection was refused, or TLS could not be established. Opening the
+            // browser there would fail too, and it would record a click that never
+            // landed, so this stays cancelled.
+            LogUtil.debug(TAG, "Url resolution failed for " + previousUrl + ": " + e.getMessage());
+            return null;
+        }
+        catch (IOException e) {
+            // Everything else, including a stalled host and an abrupt disconnect. The
+            // JDK does not classify these consistently -- whether a reset surfaces as
+            // SocketException or as SocketTimeoutException depends on OS-level timing
+            // of the RST against the read -- so reachability must not be inferred from
+            // the exception type here. The URL in hand is one we had already decided to
+            // follow, so hand it to the browser and let it finish the chain.
+            LogUtil.debug(TAG, "Url resolution stopped at " + previousUrl + ": " + e.getMessage());
             return previousUrl;
         }
-        catch (IOException | URISyntaxException | NullPointerException e) {
-            // Hard failures -- unknown host, TLS, connection reset -- and malformed
-            // redirects stay cancelled. The destination is known to be unreachable or
-            // unsafe to open, so onFailure remains the correct outcome.
+        catch (URISyntaxException | NullPointerException e) {
+            // A malformed redirect target stays cancelled rather than opening an
+            // intermediary URL, as resolveRedirectLocation intends.
             return null;
         }
 

@@ -37,6 +37,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.LooperMode;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 25)
 @LooperMode(LEGACY)
@@ -108,13 +111,17 @@ public class UrlResolutionTaskTest {
     }
 
     @Test
-    public void whenHostFailsHard_staysCancelled() {
-        // Only timeouts fall back. A refused or dropped connection means the
-        // destination is unreachable, so the click stays cancelled and no
-        // click-tracking fires.
-        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
+    public void whenDestinationIsUnreachable_staysCancelled() throws IOException {
+        // A closed port refuses the connection, which is a ConnectException on every
+        // platform. Deliberately not an abrupt disconnect from a live server: whether
+        // that surfaces as a reset or as a read timeout depends on OS timing, so it
+        // cannot assert which branch was taken.
+        int closedPort;
+        try (ServerSocket socket = new ServerSocket(0)) {
+            closedPort = socket.getLocalPort();
+        }
 
-        assertNull(task.doInBackground(server.url("/click").toString()));
+        assertNull(task.doInBackground("http://127.0.0.1:" + closedPort + "/click"));
     }
 
     @Test
