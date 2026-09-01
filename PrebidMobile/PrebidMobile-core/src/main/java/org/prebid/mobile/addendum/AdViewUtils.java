@@ -69,6 +69,12 @@ public final class AdViewUtils {
     // A view narrower than this has not been measured yet; a width ratio taken from it is degenerate.
     private static final int MIN_MEASURED_VIEW_WIDTH = 10;
 
+    // The height equivalent: below this the publisher has not called setAdSizes() and the view is
+    // a few px tall. Deliberately a SEPARATE constant from the width one rather than a shared
+    // "unmeasured" value -- the two axes are independent, and a future change to one must not
+    // silently move the other.
+    private static final int MIN_MEASURED_VIEW_HEIGHT = 10;
+
     private AdViewUtils() {
     }
 
@@ -127,8 +133,6 @@ public final class AdViewUtils {
     // Overload accepting an optional listener that is notified after the corrective scale is applied.
     static void fixZoomIn(final WebView webView, final int expectedWidth, final int expectedHeight, @Nullable final PbScaleAppliedListener scaleListener) {
 
-        final int minViewHeight = 10;
-
         //500 millis to find a webViewContentHeight
         //usually it takes 200 millis
         final int contentHeightDelayMillis = 100;
@@ -145,7 +149,7 @@ public final class AdViewUtils {
 
                 //case: check if a publisher have called PublisherAdView.setAdSizes()
                 //if publisher does not call PublisherAdView.setAdSizes() it is less then 10(e.g 3 instead of 750)
-                if (webViewHeight > minViewHeight) {
+                if (webViewHeight > MIN_MEASURED_VIEW_HEIGHT) {
                     int webViewContentHeight = webView.getContentHeight();
 
                     //case: wait when webView.getContentHeight() >= expected height from HTML
@@ -202,8 +206,10 @@ public final class AdViewUtils {
         // would shrink the creative to a sliver, and a ratio truncating to 0 would reach
         // setInitialScale as "use the default scale", silently dropping the correction. The
         // width > 0 check is deliberate but redundant -- width == 0 already lands on byHeight via
-        // Infinity -> MAX_VALUE -> min(). It is kept because routing a zero divisor through that
-        // same chain is the defect being fixed here, not a mechanism to lean on one line below it.
+        // Infinity -> MAX_VALUE -> min(), which holds only because the viewWidth check to its right
+        // guarantees a non-zero numerator (0f/0f would be NaN, and (int) NaN is 0, not MAX_VALUE).
+        // It is kept because routing a zero divisor through that chain is the defect being fixed
+        // here, not a mechanism to lean on one line below it.
         if (width > 0 && viewWidth > MIN_MEASURED_VIEW_WIDTH) {
             final int byWidth = (int) ((float) viewWidth / width * 100);
             if (byWidth > 0) {

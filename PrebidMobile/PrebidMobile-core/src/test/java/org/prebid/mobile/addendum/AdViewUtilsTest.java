@@ -244,6 +244,85 @@ public class AdViewUtilsTest {
     }
 
     @Test
+    public void testSetWebViewScaleRejectsAWidthExactlyAtTheMeasuredGate() {
+        // given: viewWidth is exactly MIN_MEASURED_VIEW_WIDTH (10). The gate is a strict >, so this
+        // is the last value that must still be treated as unmeasured. Pinning the boundary here is
+        // what makes a > to >= flip fail rather than pass unnoticed.
+        WebView webView = mock(WebView.class);
+        when(webView.getWidth()).thenReturn(10);
+
+        // when
+        AdViewUtils.setWebViewScale(webView, 140f, 50, 100, 50, null);
+
+        // then: the width term is discarded and the height ratio stands
+        verify(webView).setInitialScale(281);
+    }
+
+    @Test
+    public void testSetWebViewScaleAcceptsTheFirstWidthAboveTheMeasuredGate() {
+        // given: one px above the gate -- the first width that must be trusted. Paired with the
+        // test above, these two pin both sides of the boundary.
+        WebView webView = mock(WebView.class);
+        when(webView.getWidth()).thenReturn(11);
+
+        // when: byWidth is 11/100*100 = 11, well under byHeight 281
+        AdViewUtils.setWebViewScale(webView, 140f, 50, 100, 50, null);
+
+        // then: the width term is honoured
+        verify(webView).setInitialScale(11);
+    }
+
+    @Test
+    public void testSetWebViewScaleNotifiesTheListenerWhenTheWidthRatioWins() {
+        // given: the same over-tall geometry as the width-cap test, but with a listener attached.
+        // Both existing listener tests leave getWidth() at 0, so neither reaches this branch.
+        WebView webView = mock(WebView.class);
+        when(webView.getWidth()).thenReturn(900);
+        // the listener is delivered via post(); run it synchronously
+        when(webView.post(any(Runnable.class))).thenAnswer(invocation -> {
+            ((Runnable) invocation.getArgument(0)).run();
+            return true;
+        });
+        final AtomicInteger calls = new AtomicInteger();
+        final int[] reported = {-1, -1};
+
+        // when: byHeight is 563, so the width term is the one applied
+        AdViewUtils.setWebViewScale(webView, 281.25f, 50, 320, 50, (width, height) -> {
+            calls.incrementAndGet();
+            reported[0] = width;
+            reported[1] = height;
+        });
+
+        // then: the width-derived scale is applied, and the listener still reports the DECLARED
+        // creative size rather than anything derived from whichever ratio won.
+        verify(webView).setInitialScale(281);
+        assertEquals(1, calls.get());
+        assertEquals(320, reported[0]);
+        assertEquals(50, reported[1]);
+    }
+
+    @Test
+    public void testFixZoomInAppliesTheWidthCapThroughItsOwnEntryPoint() {
+        // given: a measured, over-tall WebView reaching setWebViewScale through fixZoomIn rather
+        // than by a direct call. Every other width test calls setWebViewScale directly, so nothing
+        // pinned that expectedWidth actually threads through fixZoomIn to the width term.
+        WebView webView = mock(WebView.class);
+        when(webView.getHeight()).thenReturn(281);
+        when(webView.getWidth()).thenReturn(900);
+        when(webView.getContentHeight()).thenReturn(50);
+        doAnswer(invocation -> {
+            ((Runnable) invocation.getArgument(0)).run();
+            return true;
+        }).when(webView).post(any(Runnable.class));
+
+        // when: contentHeight already meets the expected height, so it scales on the first pass
+        AdViewUtils.fixZoomIn(webView, 320, 50);
+
+        // then: min(byWidth 281, byHeight 563) = 281 -- the declared width survived the hop
+        verify(webView).setInitialScale(281);
+    }
+
+    @Test
     public void testSetWebViewScaleUsesWidthRatioWhenItIsTheSmaller() {
         // given: a 320x50 creative whose view was measured twice as tall as the creative, so the
         // height ratio alone would render it wider than the view and crop it horizontally
