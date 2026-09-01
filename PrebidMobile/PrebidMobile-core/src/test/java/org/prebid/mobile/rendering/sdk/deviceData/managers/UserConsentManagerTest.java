@@ -261,7 +261,7 @@ public class UserConsentManagerTest {
         assertTrue(spyConsentManager.canAccessDeviceData());
 
         WhiteBox.setInternalState(spyConsentManager, "realGdpr2PurposeConsents", "00"); // false
-        assertFalse(spyConsentManager.canAccessDeviceData());
+        assertTrue(spyConsentManager.canAccessDeviceData());
 
         WhiteBox.setInternalState(spyConsentManager, "realGdpr2PurposeConsents", null); // undefined
         assertTrue(spyConsentManager.canAccessDeviceData());

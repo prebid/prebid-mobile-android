@@ -252,7 +252,7 @@ public class UserConsentManager extends BaseManager {
      * <p>
      * deviceAccessConsent=true   deviceAccessConsent=false  deviceAccessConsent undefined
      * <p>
-     * gdprApplies=false        Yes, read IDFA             No, don’t read IDFA           Yes, read IDFA
+     * gdprApplies=false        Yes, read IDFA             Yes, read IDFA                Yes, read IDFA
      * gdprApplies=true         Yes, read IDFA             No, don’t read IDFA           No, don’t read IDFA
      * gdprApplies=undefined    Yes, read IDFA             No, don’t read IDFA           Yes, read IDFA
      */
@@ -275,11 +275,12 @@ public class UserConsentManager extends BaseManager {
         @Nullable Boolean gdprApplies,
         @Nullable Boolean deviceAccessConsent
     ) {
-        if (deviceAccessConsent == null && gdprApplies == null) {
+        // GDPR explicitly does not apply — TCF consent signals are out of scope
+        if (Boolean.FALSE.equals(gdprApplies)) {
             return true;
         }
 
-        if (deviceAccessConsent == null && Boolean.FALSE.equals(gdprApplies)) {
+        if (deviceAccessConsent == null && gdprApplies == null) {
             return true;
         }
 
