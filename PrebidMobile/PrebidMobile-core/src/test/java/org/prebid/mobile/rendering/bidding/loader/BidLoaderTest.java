@@ -24,6 +24,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
@@ -36,6 +37,8 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.PrebidEventDelegate;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.FetchDemandResult;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
@@ -77,7 +80,8 @@ public class BidLoaderTest {
 
     @After
     public void clean() {
-
+        PrebidMobile.setRequireServerSideBidCache(false);
+        PrebidMobile.setEventDelegate(null);
     }
 
     @Test
@@ -172,10 +176,101 @@ public class BidLoaderTest {
         assertEquals(testResponse.toString(), response);
     }
 
+    @Test
+    public void responseHandler_requireServerCacheAndNoCachedBids_callError() throws Exception {
+        ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        String responseString = removePrebidCache(
+                ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json")
+        );
+        PrebidMobile.setRequireServerSideBidCache(true);
+
+        BaseNetworkTask.GetUrlResult responseResult = new BaseNetworkTask.GetUrlResult();
+        responseResult.responseString = responseString;
+        responseHandler.onResponse(responseResult);
+
+        ArgumentCaptor<AdException> exceptionCaptor = ArgumentCaptor.forClass(AdException.class);
+        verify(bidRequesterListener).onError(exceptionCaptor.capture());
+        assertEquals(
+                FetchDemandResult.NO_CACHED_BIDS,
+                FetchDemandResult.parseErrorMessage(exceptionCaptor.getValue().getMessage())
+        );
+        verify(bidRequesterListener, never()).onFetchCompleted(any());
+    }
+
+    @Test
+    public void responseHandler_requireServerCacheAndNoBids_callNoBidsError() throws Exception {
+        ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        String responseString = ResourceUtils.convertResourceToString("bidding_response_no_bids_obj.json");
+        PrebidMobile.setRequireServerSideBidCache(true);
+
+        BaseNetworkTask.GetUrlResult responseResult = new BaseNetworkTask.GetUrlResult();
+        responseResult.responseString = responseString;
+        responseHandler.onResponse(responseResult);
+
+        ArgumentCaptor<AdException> exceptionCaptor = ArgumentCaptor.forClass(AdException.class);
+        verify(bidRequesterListener).onError(exceptionCaptor.capture());
+        assertEquals(
+                FetchDemandResult.NO_BIDS,
+                FetchDemandResult.parseErrorMessage(exceptionCaptor.getValue().getMessage())
+        );
+        verify(bidRequesterListener, never()).onFetchCompleted(any());
+    }
+
+    @Test
+    public void responseHandler_defaultServerCacheRequirementAndNoCachedBids_callSuccess() throws Exception {
+        ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        String responseString = removePrebidCache(
+                ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json")
+        );
+
+        BaseNetworkTask.GetUrlResult responseResult = new BaseNetworkTask.GetUrlResult();
+        responseResult.responseString = responseString;
+        responseHandler.onResponse(responseResult);
+
+        verify(bidRequesterListener).onFetchCompleted(any());
+        verify(bidRequesterListener, never()).onError(any());
+    }
+
+    @Test
+    public void responseHandler_requireServerCacheAndMixedBids_callSuccessWithCachedBidOnly() throws Exception {
+        ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        JSONObject response = new JSONObject(ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"));
+        JSONArray bids = response.getJSONArray("seatbid").getJSONObject(0).getJSONArray("bid");
+        JSONObject uncachedBid = new JSONObject(bids.getJSONObject(0).toString());
+        uncachedBid.getJSONObject("ext").getJSONObject("prebid").remove("cache");
+        uncachedBid.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting").put("hb_bidder", "uncached_bidder");
+        bids.put(uncachedBid);
+        PrebidMobile.setRequireServerSideBidCache(true);
+
+        BaseNetworkTask.GetUrlResult responseResult = new BaseNetworkTask.GetUrlResult();
+        responseResult.responseString = response.toString();
+        responseHandler.onResponse(responseResult);
+
+        ArgumentCaptor<org.prebid.mobile.rendering.bidding.data.bid.BidResponse> responseCaptor =
+                ArgumentCaptor.forClass(org.prebid.mobile.rendering.bidding.data.bid.BidResponse.class);
+        verify(bidRequesterListener).onFetchCompleted(responseCaptor.capture());
+        assertEquals(1, responseCaptor.getValue().getSeatbids().get(0).getBids().size());
+        assertEquals("value2", responseCaptor.getValue().getTargeting().get("hb_bidder"));
+        verify(bidRequesterListener, never()).onError(any());
+    }
+
     private BidLoader createBidLoader(AdUnitConfiguration adConfiguration, BidRequesterListener requestListener) {
         BidLoader bidLoader = new BidLoader(adConfiguration, requestListener);
         WhiteBox.setInternalState(bidLoader, "bidRequester", mockRequester);
         WhiteBox.setInternalState(bidLoader, "refreshTimerTask", mockTimerTask);
         return bidLoader;
+    }
+
+    private String removePrebidCache(String responseString) throws Exception {
+        JSONObject response = new JSONObject(responseString);
+        response
+                .getJSONArray("seatbid")
+                .getJSONObject(0)
+                .getJSONArray("bid")
+                .getJSONObject(0)
+                .getJSONObject("ext")
+                .getJSONObject("prebid")
+                .remove("cache");
+        return response.toString();
     }
 }

@@ -286,6 +286,26 @@ public class InterstitialAdUnitTest {
     }
 
     @Test
+    public void onFailedAndNoCachedBids_NotifyErrorListenerWithPrebidCacheStatus() {
+        BidRequesterListener bidRequesterListener = getBidRequesterListener();
+        bidRequesterListener.onError(new AdException(
+                AdException.NO_BIDS,
+                "No bids with successful Prebid Cache entries were found."
+        ));
+
+        final AdException gamException = new AdException(AdException.INTERNAL_ERROR, "GAM error");
+        final InterstitialEventListener eventListener = getEventListener();
+
+        eventListener.onAdFailed(gamException);
+
+        verify(mockInterstitialAdUnitListener, times(1)).onAdFailed(interstitialAdUnit, new AdException(
+                AdException.NO_BIDS,
+                "GAM status: \"SDK internal error: GAM error\". Prebid status: \"No bids: No bids with successful Prebid Cache entries were found.\""
+        ));
+        assertEquals(READY_FOR_LOAD, interstitialAdUnit.getAdUnitState());
+    }
+
+    @Test
     public void onFailedAndWithWinnerBid_ExecuteInterstitialControllerLoadAd() {
         final BidResponse mockBidResponse = mock(BidResponse.class);
         final InterstitialController mockInterstitialController = mock(InterstitialController.class);

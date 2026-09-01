@@ -34,6 +34,10 @@ public class Bids {
         return cacheId;
     }
 
+    public boolean hasCacheData() {
+        return url != null && !url.isEmpty() || cacheId != null && !cacheId.isEmpty();
+    }
+
     public static Bids fromJSONObject(JSONObject jsonObject) {
         Bids bids = new Bids();
         if (jsonObject == null) {

@@ -68,9 +68,14 @@ public enum FetchDemandResult {
     /**
      * Server responded with some error messages
      */
-    SERVER_ERROR;
+    SERVER_ERROR,
+    /**
+     * Prebid Server returned bids, but none had successful cache entries.
+     */
+    NO_CACHED_BIDS;
 
     public static final String NO_BIDS_MESSAGE = "Failed to parse bids. No winning bids were found.";
+    public static final String NO_CACHED_BIDS_MESSAGE = "No bids with successful Prebid Cache entries were found.";
 
     public static FetchDemandResult parseErrorMessage(String msg) {
         Pattern storedRequestNotFound = Pattern.compile("^Invalid request: Stored Request with ID=\".*\" not found.");
@@ -82,6 +87,9 @@ public enum FetchDemandResult {
         Matcher interstitialSizeMatcher = invalidInterstitialSize.matcher(msg);
         Matcher impMatcher = storedImpNotFound.matcher(msg);
 
+        if (msg.contains(NO_CACHED_BIDS_MESSAGE)) {
+            return NO_CACHED_BIDS;
+        }
         if (msg.contains("No bids") || msg.equals(NO_BIDS_MESSAGE)) {
             return NO_BIDS;
         }

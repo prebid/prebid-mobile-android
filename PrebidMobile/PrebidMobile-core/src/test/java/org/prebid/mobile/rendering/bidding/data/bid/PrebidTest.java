@@ -38,6 +38,8 @@ public class PrebidTest {
     public void tearDown(){
         PrebidMobile.setIncludeBidderKeysFlag(false);
         PrebidMobile.setIncludeWinnersFlag(false);
+        PrebidMobile.setRequireServerSideBidCache(false);
+        PrebidMobile.setUseCacheForReportingWithRenderingApi(false);
         PrebidMobile.clearStoredBidResponses();
     }
     @Test
@@ -90,6 +92,24 @@ public class PrebidTest {
 
         AdUnitConfiguration config = new AdUnitConfiguration();
         config.setIsOriginalAdUnit(true);
+        assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false, config).toString());
+    }
+
+    @Test
+    public void whenGetJsonObjectForBidRequestAndRequireServerSideBidCache_EqualsExpected() throws JSONException {
+        JSONObject expected = new JSONObject();
+        StoredRequest storedRequest = new StoredRequest("test");
+        JSONObject cache = new JSONObject();
+        cache.put("bids", new JSONObject());
+
+        expected.put("storedrequest", storedRequest.toJSONObject());
+        expected.put("cache", cache);
+        expected.put("targeting", new JSONObject());
+        expected.put("sdk", new JSONObject().put("renderers", new JSONArray()));
+
+        PrebidMobile.setRequireServerSideBidCache(true);
+        AdUnitConfiguration config = new AdUnitConfiguration();
+
         assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false, config).toString());
     }
 

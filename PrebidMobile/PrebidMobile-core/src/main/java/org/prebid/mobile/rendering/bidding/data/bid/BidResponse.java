@@ -70,6 +70,7 @@ public class BidResponse {
     private AdUnitConfiguration adUnitConfiguration;
     @Nullable
     private JSONObject responseJson;
+    private int bidsWithoutSuccessfulCacheCount;
 
     private long creationTime;
 
@@ -158,10 +159,19 @@ public class BidResponse {
 
             JSONArray jsonSeatbids = responseJson.optJSONArray("seatbid");
             if (jsonSeatbids != null) {
+                boolean requireSuccessfulCache = PrebidMobile.isRequireServerSideBidCache();
+                int[] skippedBids = new int[]{0};
                 for (int i = 0; i < jsonSeatbids.length(); i++) {
-                    Seatbid seatbid = Seatbid.fromJSONObject(jsonSeatbids.optJSONObject(i));
-                    seatbids.add(seatbid);
+                    Seatbid seatbid = Seatbid.fromJSONObject(
+                            jsonSeatbids.optJSONObject(i),
+                            requireSuccessfulCache,
+                            skippedBids
+                    );
+                    if (!requireSuccessfulCache || !seatbid.getBids().isEmpty()) {
+                        seatbids.add(seatbid);
+                    }
                 }
+                bidsWithoutSuccessfulCacheCount = skippedBids[0];
             }
 
             MobileSdkPassThrough bidMobilePassThrough = null;
@@ -234,6 +244,10 @@ public class BidResponse {
         }
 
         return Utils.isVast(bid.getAdm());
+    }
+
+    public int getBidsWithoutSuccessfulCacheCount() {
+        return bidsWithoutSuccessfulCacheCount;
     }
 
     public String getPreferredPluginRendererName() {
