@@ -1,1 +1,1 @@
-moduleSearchIndex = [];updateSearchResults();
+var moduleSearchIndex = [{"l":"Prebid Mobile SDK - Android API Reference","url":"index.html"}]
