@@ -35,6 +35,7 @@ import org.prebid.mobile.api.rendering.listeners.BannerViewListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
 import org.prebid.mobile.rendering.bidding.interfaces.BannerEventHandler;
 import org.prebid.mobile.rendering.bidding.interfaces.StandaloneBannerEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
@@ -50,6 +51,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -490,6 +492,20 @@ public class BannerViewTest {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Test
+    public void setBidSelector_forwardsToAdUnitConfig() {
+        PrebidBidSelecting selector = new PrebidBidSelecting() {
+            @Override
+            public Bid selectBid(List<Bid> bids) {
+                return bids.isEmpty() ? null : bids.get(0);
+            }
+        };
+
+        bannerView.setBidSelector(selector);
+
+        assertEquals(selector, bannerView.getBidSelector());
     }
 
 }

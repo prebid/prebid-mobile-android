@@ -33,6 +33,7 @@ import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler;
 import org.prebid.mobile.rendering.bidding.interfaces.StandaloneInterstitialEventHandler;
@@ -46,6 +47,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.EnumSet;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -323,6 +325,20 @@ public class InterstitialAdUnitTest {
 
     private void changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState adUnitState) {
         WhiteBox.setInternalState(interstitialAdUnit, "interstitialAdUnitState", adUnitState);
+    }
+
+    @Test
+    public void setBidSelector_forwardsToConfig() {
+        PrebidBidSelecting selector = new PrebidBidSelecting() {
+            @Override
+            public Bid selectBid(List<Bid> bids) {
+                return bids.isEmpty() ? null : bids.get(0);
+            }
+        };
+
+        interstitialAdUnit.setBidSelector(selector);
+
+        assertEquals(selector, interstitialAdUnit.getBidSelector());
     }
 
 }

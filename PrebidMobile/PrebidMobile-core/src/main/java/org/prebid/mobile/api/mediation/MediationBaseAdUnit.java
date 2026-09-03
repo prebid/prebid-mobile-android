@@ -31,6 +31,7 @@ import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
@@ -133,6 +134,11 @@ public abstract class MediationBaseAdUnit {
             cancelRefresh();
             return;
         }
+        if (response.hasBidSelectorRejectedAllBids()) {
+            LogUtil.debug(TAG, "Bid selector rejected all bids.");
+            onFetchCompleteListener.onComplete(FetchDemandResult.NO_BIDS);
+            return;
+        }
         BidResponseCache.getInstance().putBidResponse(response);
         mediationDelegate.handleKeywordsUpdate(response.getTargeting());
         mediationDelegate.setResponseToLocalExtras(response);
@@ -186,6 +192,18 @@ public abstract class MediationBaseAdUnit {
      */
     public void setGlobalOrtbConfig(@Nullable String ortbConfig) {
         adUnitConfig.setGlobalOrtbConfig(ortbConfig);
+    }
+
+    @Nullable
+    public PrebidBidSelecting getBidSelector() {
+        return adUnitConfig.getBidSelector();
+    }
+
+    /**
+     * Sets a publisher-supplied strategy for choosing the winning bid. See {@link PrebidBidSelecting}.
+     */
+    public void setBidSelector(@Nullable PrebidBidSelecting bidSelector) {
+        adUnitConfig.setBidSelector(bidSelector);
     }
 
 }

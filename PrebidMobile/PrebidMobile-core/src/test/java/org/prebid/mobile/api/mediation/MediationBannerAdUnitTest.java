@@ -29,6 +29,8 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
+import org.prebid.mobile.rendering.bidding.data.bid.Bid;
+import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
@@ -38,6 +40,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.EnumSet;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -126,6 +129,20 @@ public class MediationBannerAdUnitTest {
 
         mediationBannerAdUnit.setAdPosition(AdPosition.UNKNOWN);
         assertEquals(AdPosition.UNKNOWN, mediationBannerAdUnit.getAdPosition());
+    }
+
+    @Test
+    public void setBidSelector_forwardsToAdUnitConfig() {
+        PrebidBidSelecting selector = new PrebidBidSelecting() {
+            @Override
+            public Bid selectBid(List<Bid> bids) {
+                return bids.isEmpty() ? null : bids.get(0);
+            }
+        };
+
+        mediationBannerAdUnit.setBidSelector(selector);
+
+        assertEquals(selector, mediationBannerAdUnit.getBidSelector());
     }
 
 }

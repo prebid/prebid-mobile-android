@@ -38,6 +38,9 @@ import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
+import org.prebid.mobile.rendering.bidding.data.bid.Bid;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.test.utils.WhiteBox;
@@ -47,6 +50,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -143,6 +147,29 @@ public class MediationBaseAdUnitTest {
         baseAdUnit.fetchDemand(mockListener);
         baseAdUnit.onErrorReceived(adException);
         verify(mockListener).onComplete(FetchDemandResult.SERVER_ERROR);
+    }
+
+    @Test
+    public void whenBidSelectorRejectsAllBids_ReportsNoBids() {
+        PrebidMobile.setPrebidServerAccountId("id");
+        baseAdUnit.adUnitConfig.setBidSelector(new PrebidBidSelecting() {
+            @Override
+            public Bid selectBid(List<Bid> bids) {
+                return null;
+            }
+        });
+
+        String responseJson = "{\"id\":\"response-id\",\"seatbid\":[{\"bid\":[" +
+                "{\"id\":\"bid-1\",\"impid\":\"imp-1\",\"price\":0.75,\"adm\":\"<html></html>\",\"w\":300,\"h\":250," +
+                "\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder\":\"openx\",\"hb_pb\":\"0.75\"},\"type\":\"banner\"}}}" +
+                "],\"seat\":\"openx\"}],\"cur\":\"USD\"}";
+        BidResponse bidResponse = new BidResponse(responseJson, baseAdUnit.adUnitConfig);
+
+        OnFetchCompleteListener mockListener = mock(OnFetchCompleteListener.class);
+        baseAdUnit.fetchDemand(mockListener);
+        baseAdUnit.onResponseReceived(bidResponse);
+
+        verify(mockListener).onComplete(FetchDemandResult.NO_BIDS);
     }
 
     @Test

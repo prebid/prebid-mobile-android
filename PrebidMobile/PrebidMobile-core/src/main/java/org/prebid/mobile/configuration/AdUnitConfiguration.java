@@ -13,6 +13,7 @@ import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
 import org.prebid.mobile.rendering.interstitial.InterstitialSizes;
 import org.prebid.mobile.rendering.interstitial.rewarded.RewardManager;
 import org.prebid.mobile.rendering.models.AdPosition;
@@ -59,6 +60,8 @@ public class AdUnitConfiguration {
     private String impOrtbConfig;
     @Nullable
     private String globalOrtbConfig;
+    @Nullable
+    private PrebidBidSelecting bidSelector;
 
     private Position closeButtonPosition = Position.TOP_RIGHT;
     private Position skipButtonPosition = Position.TOP_RIGHT;
@@ -455,6 +458,15 @@ public class AdUnitConfiguration {
 
     public void setGlobalOrtbConfig(@Nullable String globalOrtbConfig) {
         this.globalOrtbConfig = globalOrtbConfig;
+    }
+
+    @Nullable
+    public PrebidBidSelecting getBidSelector() {
+        return bidSelector;
+    }
+
+    public void setBidSelector(@Nullable PrebidBidSelecting bidSelector) {
+        this.bidSelector = bidSelector;
     }
 
     public boolean getHasEndCard() {

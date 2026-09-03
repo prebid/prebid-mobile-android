@@ -277,6 +277,13 @@ public abstract class AdUnit {
             public void onFetchCompleted(BidResponse response) {
                 bidResponse = response;
 
+                if (response.hasBidSelectorRejectedAllBids()) {
+                    LogUtil.debug(TAG, "Bid selector rejected all bids.");
+                    Util.apply(null, adObject);
+                    originalListener.onComplete(ResultCode.NO_BIDS);
+                    return;
+                }
+
                 HashMap<String, String> keywords = response.getTargeting();
                 LogUtil.debug(TAG, "Bid response received successfully: " + keywords);
 
