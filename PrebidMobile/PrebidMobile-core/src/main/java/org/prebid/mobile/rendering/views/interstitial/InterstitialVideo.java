@@ -462,14 +462,54 @@ public class InterstitialVideo extends AdBaseDialog {
 
         RelativeLayout countdown = lytCountDownCircle.findViewById(R.id.lytCountdown);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) countdown.getLayoutParams();
-        double buttonArea = useSkipButton ? properties.skipButtonArea : properties.closeButtonArea;
-        int buttonSize = Utils.convertDpToPx(70, countdown.getContext());
-        if (buttonArea >= 0.05 && buttonArea <= 1) {
-            DisplayMetrics metrics = countdown.getResources().getDisplayMetrics();
-            buttonSize = (int) (Math.min(metrics.widthPixels, metrics.heightPixels) * buttonArea);
-        }
+        int buttonSize = getCloseOrSkipButtonSizePx(properties, countdown.getContext());
         params.leftMargin = buttonSize + Utils.convertDpToPx(10, countdown.getContext());
         countdown.setLayoutParams(params);
+    }
+
+    /**
+     * The close/skip control is added on top of the sound control (or vice versa) and both
+     * default to the same TOP_RIGHT corner, so without this the sound icon either gets hidden
+     * behind the close/skip control or blocks taps meant for it. Nudge the sound control past
+     * whichever close/skip control is currently active, mirroring {@link #moveCountdownPastTopLeftControl()}.
+     */
+    private void moveSoundViewPastTopRightControl(@Nullable View soundView) {
+        if (soundView == null || interstitialManager == null) {
+            return;
+        }
+
+        InterstitialDisplayPropertiesInternal properties = interstitialManager.getInterstitialDisplayProperties();
+        Position buttonPosition = useSkipButton
+            ? properties.skipButtonPosition
+            : properties.closeButtonPosition;
+        if (buttonPosition == Position.TOP_LEFT) {
+            return;
+        }
+
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) soundView.getLayoutParams();
+        int buttonSize = getCloseOrSkipButtonSizePx(properties, soundView.getContext());
+        params.rightMargin = buttonSize + Utils.convertDpToPx(10, soundView.getContext());
+        soundView.setLayoutParams(params);
+    }
+
+    private int getCloseOrSkipButtonSizePx(
+            InterstitialDisplayPropertiesInternal properties,
+            Context context
+    ) {
+        double buttonArea = useSkipButton ? properties.skipButtonArea : properties.closeButtonArea;
+        int buttonSize = Utils.convertDpToPx(70, context);
+        if (buttonArea >= 0.05 && buttonArea <= 1) {
+            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+            buttonSize = (int) (Math.min(metrics.widthPixels, metrics.heightPixels) * buttonArea);
+        }
+        return buttonSize;
+    }
+
+    @Override
+    protected View createSoundView(Context context) {
+        View soundView = super.createSoundView(context);
+        moveSoundViewPastTopRightControl(soundView);
+        return soundView;
     }
 
     @VisibleForTesting
