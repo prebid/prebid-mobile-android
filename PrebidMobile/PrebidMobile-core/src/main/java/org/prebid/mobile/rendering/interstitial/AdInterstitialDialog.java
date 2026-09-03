@@ -118,18 +118,23 @@ public class AdInterstitialDialog extends AdBaseDialog {
         AdUnitConfiguration config = interstitialManager.getInterstitialDisplayProperties().config;
         RewardManager rewardManager = config.getRewardManager();
         if (config != null && config.isRewarded()) {
+            RewardedExt rewardedExt = rewardManager.getRewardedExt();
+            int postRewardTime = rewardedExt.getClosingRules().getPostRewardTime() * 1000;
+            boolean autoClose = rewardedExt.getClosingRules().getAction() == RewardedClosingRules.Action.AUTO_CLOSE;
+
             if (rewardManager.getUserRewardedAlready()) {
+                // The reward was already granted before this dialog (e.g. the end card) was created,
+                // so there is no reward event to wait for anymore. Still schedule the close button so
+                // it doesn't stay hidden forever, respecting close.action/postrewardtime rules.
+                changeCloseViewVisibility(View.GONE);
+                scheduleCloseButtonDisplaying(postRewardTime, autoClose);
                 return;
             }
 
             setBackgroundListener();
             changeCloseViewVisibility(View.GONE);
 
-            RewardedExt rewardedExt = rewardManager.getRewardedExt();
             int defaultRewardTime = RewardedCompletionRules.DEFAULT_BANNER_TIME_MS;
-            int postRewardTime = rewardedExt.getClosingRules().getPostRewardTime() * 1000;
-
-            boolean autoClose = rewardedExt.getClosingRules().getAction() == RewardedClosingRules.Action.AUTO_CLOSE;
             boolean isEndCard = config.getHasEndCard();
             boolean hasRewardEventUrl = getBannerEvent(rewardedExt, isEndCard) != null;
 
