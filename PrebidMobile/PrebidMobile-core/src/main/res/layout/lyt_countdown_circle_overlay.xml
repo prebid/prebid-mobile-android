@@ -21,14 +21,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom|start"
+    android:gravity="top|left"
     >
 
     <RelativeLayout
         android:id="@+id/lytCountdown"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginTop="25dp"
         android:layout_marginLeft="25dp"
         >
 
