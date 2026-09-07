@@ -99,6 +99,11 @@ def _environment_failure(tail):
 
 
 def main(argv):
+    if os.environ.get("GUARDS_SKIP_BUILD") == "1" and "--update" not in argv:
+        print("SKIPPED: build tier disabled (GUARDS_SKIP_BUILD=1) — the lint workflow")
+        print("runs this guard with the full toolchain.")
+        return guardlib.EXIT_SKIPPED
+
     if len(argv) > 1 and argv[1] == "--update":
         ok, tail = generate(API_DIR)
         if not ok:
