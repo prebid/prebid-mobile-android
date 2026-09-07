@@ -67,3 +67,13 @@ captures/
 .responses
 # Python bytecode from the guard scripts
 __pycache__/
+
+# Claude Code — shared agent config (AGENTS.md, CLAUDE.md, agents/) is tracked on purpose;
+# only per-developer machine state is ignored.
+.claude/settings.local.json
+.claude/shell-snapshots/
+.claude/todos/
+.claude/statsig/
+.claude/projects/
+.claude/worktrees/
+.claude/agent-memory/
