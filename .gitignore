@@ -65,3 +65,5 @@ captures/
 # Kotlin
 .kotlin
 .responses
+# Python bytecode from the guard scripts
+__pycache__/
