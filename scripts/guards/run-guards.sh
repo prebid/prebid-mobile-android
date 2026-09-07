@@ -9,6 +9,7 @@
 # Usage:
 #   ./scripts/guards/run-guards.sh                          # run all guards
 #   ./scripts/guards/run-guards.sh --update-fixme-baseline  # re-record the FIXME/TODO count
+#   ./scripts/guards/run-guards.sh --update-skiplist-baseline # re-record the skipped-test list
 #
 # This script is orchestration only: every check lives in checks/ as a Python
 # module on lib/guardlib.py, and every committed allowlist/baseline is JSON.
@@ -28,11 +29,12 @@ EXIT_SKIPPED=2
 
 # ── baseline regeneration flags ─────────────────────────────────────────────
 case "${1:-}" in
-    --update-fixme-baseline) exec python3 "$GUARDS_DIR/checks/fixme_ratchet.py" --update ;;
+    --update-fixme-baseline)    exec python3 "$GUARDS_DIR/checks/fixme_ratchet.py" --update ;;
+    --update-skiplist-baseline) exec python3 "$GUARDS_DIR/checks/skiplist_ratchet.py" --update ;;
     "") ;;
     *)
         echo "Unknown option: $1"
-        sed -n '9,11p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+        sed -n '/^# Usage:/,/^#$/p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
         exit 2
         ;;
 esac
@@ -60,6 +62,7 @@ run_guard() { # <id> <check-script>
 run_guard fixme-ratchet    fixme_ratchet.py
 run_guard logging-hygiene  logging_hygiene.py
 run_guard ortb-test-presence ortb_test_presence.py
+run_guard skiplist-ratchet skiplist_ratchet.py
 
 # ── summary ─────────────────────────────────────────────────────────────────
 echo ""
