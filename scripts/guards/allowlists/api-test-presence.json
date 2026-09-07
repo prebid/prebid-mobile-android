@@ -1,0 +1,454 @@
+{
+  "guard": "api-test-presence",
+  "description": "Public types with no test reference when the guard landed — the untested-public-API backlog. Shrink-only: add a test for the type (or narrow it out of the public API) and delete its entry in the same PR.",
+  "entries": [
+    {
+      "entry": "com.applovin.mediation.adapters.prebid.ListenersCreator",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "com.applovin.mediation.adapters.prebid.ListenersCreator.OnBannerAdViewLoaded",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "com.applovin.mediation.adapters.prebid.PrebidMaxNativeAd",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "com.applovin.mediation.adapters.prebid.managers.MaxBannerManager",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "com.applovin.mediation.adapters.prebid.managers.MaxInterstitialManager",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "com.applovin.mediation.adapters.prebid.managers.MaxNativeManager",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "com.applovin.mediation.adapters.prebid.managers.MaxRewardedManager",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "com.applovin.mediation.adapters.prebid.utils.MaxMediationBannerUtils",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "com.applovin.mediation.adapters.prebid.utils.MaxMediationInterstitialUtils",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "com.applovin.mediation.adapters.prebid.utils.MaxMediationRewardedUtils",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.ClickTrackerListener",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.ImpressionTrackerListener",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.InStreamVideoAdUnit",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.OnCompleteListener",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.PrebidMobile.LogLevel",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.SharedNetworkManager",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.VisibilityActivityListener",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.VisibilityMonitor",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.addendum.AdViewUtils.CacheIdResult",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.addendum.AdViewUtils.PbFindSizeListener",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.addendum.AdViewUtils.PbScaleAppliedListener",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.admob.AdMobMediationBannerUtils",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.admob.AdMobMediationInterstitialUtils",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.admob.AdMobMediationRewardedUtils",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.admob.PrebidBannerAdapter",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.admob.PrebidBaseAdapter",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.admob.PrebidInterstitialAdapter",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.admob.PrebidNativeAdMapper",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.admob.PrebidNativeAdapter",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.api.mediation.MediationBaseFullScreenAdUnit",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.api.mediation.MediationNativeAdUnit",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.api.rendering.PrebidDestroyable",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.http.HTTPGet",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.http.HTTPResponse",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.http.HttpErrorCode",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.bidding.events.EventsNotifier",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.bidding.loader.BidLoader.BidRefreshListener",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.interstitial.ControlInsetsRefresher",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.interstitial.DialogEventListener",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.interstitial.InterstitialManagerInterface",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.listeners.VideoDialogListener",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesPublic",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.models.InterstitialLayout",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.models.openrtb.bidRequests.BaseBid",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.mraid.methods.MraidPlayVideo",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.mraid.methods.TwoPartExpandRunnable",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.networking.BaseResponseHandler",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.networking.exception.BaseExceptionProvider",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.networking.modelcontrollers.Requester",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.networking.tracking.ServerConnection",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.sdk.BaseManager",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.sdk.calendar.CalendarEventWrapper.Transparency",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.sdk.calendar.CalendarFactory",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.sdk.calendar.ICalendar",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.sdk.deviceData.managers.ConnectionInfoManager",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.sdk.deviceData.managers.LocationInfoManager",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.sdk.scripts.JsScriptRequesterImpl",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.sdk.scripts.JsScriptStorageImpl",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.utils.broadcast.MraidOrientationBroadcastReceiver",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.utils.broadcast.local.BaseLocalBroadcastReceiver",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.utils.broadcast.local.EventForwardingLocalBroadcastReceiver",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.utils.broadcast.local.EventForwardingLocalBroadcastReceiver.EventForwardingBroadcastListener",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.utils.constants.IntentActions",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.utils.helpers.AdvertisingIdManager.FetchTask",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.utils.helpers.Dips",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.utils.helpers.RenderingExceptionParser",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.utils.url.action.BrowserAction",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.utils.url.action.UrlAction",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.RewardedVideoCreative",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.VideoCreativeProtocol",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.AdParameters",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.AdSystem",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.AdTitle",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.AdVerifications",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.AltText",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.BaseId",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.BaseValue",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.ClickThrough",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.ClickTracking",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.CompanionAds",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.CompanionClickThrough",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.CreativeExtension",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.CreativeExtensions",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.Extension",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.IFrameResource",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.Icon",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.IconClickThrough",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.IconClickTracking",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.IconClicks",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.IconViewTracking",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.Icons",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.Impression",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.NonLinearAds",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.NonLinearClickThrough",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.NonLinearClickTracking",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.Pricing",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.Survey",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.TrackingEvents",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.VASTInterface",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.VASTParserBase",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.VastUrl",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.video.vast.VideoClicks",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.views.VolumeControlView",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.views.VolumeControlView.VolumeControlListener",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.views.VolumeControlView.VolumeState",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.views.webview.AdWebView",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.views.webview.mraid.BannerJSInterface",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.rendering.views.webview.mraid.MraidWebViewClient",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.tasksmanager.BackgroundThreadExecutor",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.tasksmanager.CancellableExecutor",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.tasksmanager.MainThreadExecutor",
+      "reason": "No test referenced this public type when the guard landed."
+    },
+    {
+      "entry": "org.prebid.mobile.tasksmanager.TasksManager",
+      "reason": "No test referenced this public type when the guard landed."
+    }
+  ]
+}
