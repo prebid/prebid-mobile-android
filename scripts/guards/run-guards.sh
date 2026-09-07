@@ -63,6 +63,7 @@ run_guard fixme-ratchet    fixme_ratchet.py
 run_guard logging-hygiene  logging_hygiene.py
 run_guard ortb-test-presence ortb_test_presence.py
 run_guard skiplist-ratchet skiplist_ratchet.py
+run_guard deprecation-hygiene deprecation_hygiene.py
 
 # ── summary ─────────────────────────────────────────────────────────────────
 echo ""
