@@ -11,6 +11,7 @@
 #   ./scripts/guards/run-guards.sh --update-fixme-baseline  # re-record the FIXME/TODO count
 #   ./scripts/guards/run-guards.sh --update-skiplist-baseline # re-record the skipped-test list
 #   ./scripts/guards/run-guards.sh --update-string-dup-baseline # re-record duplicated literals
+#   ./scripts/guards/run-guards.sh --update-manifest-baseline # re-record the manifest surface
 #
 # This script is orchestration only: every check lives in checks/ as a Python
 # module on lib/guardlib.py, and every committed allowlist/baseline is JSON.
@@ -33,6 +34,7 @@ case "${1:-}" in
     --update-fixme-baseline)    exec python3 "$GUARDS_DIR/checks/fixme_ratchet.py" --update ;;
     --update-skiplist-baseline) exec python3 "$GUARDS_DIR/checks/skiplist_ratchet.py" --update ;;
     --update-string-dup-baseline) exec python3 "$GUARDS_DIR/checks/string_dup_ratchet.py" --update ;;
+    --update-manifest-baseline) exec python3 "$GUARDS_DIR/checks/manifest_surface.py" --update ;;
     "") ;;
     *)
         echo "Unknown option: $1"
@@ -67,6 +69,7 @@ run_guard ortb-test-presence ortb_test_presence.py
 run_guard skiplist-ratchet skiplist_ratchet.py
 run_guard deprecation-hygiene deprecation_hygiene.py
 run_guard string-dup-ratchet string_dup_ratchet.py
+run_guard manifest-surface manifest_surface.py
 
 # ── summary ─────────────────────────────────────────────────────────────────
 echo ""
