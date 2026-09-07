@@ -1,0 +1,96 @@
+// Signature format: 4.0
+package org.prebid.mobile.eventhandlers {
+
+  public enum AdEvent {
+    enum_constant public static final org.prebid.mobile.eventhandlers.AdEvent APP_EVENT_RECEIVED;
+    enum_constant public static final org.prebid.mobile.eventhandlers.AdEvent CLICKED;
+    enum_constant public static final org.prebid.mobile.eventhandlers.AdEvent CLOSED;
+    enum_constant public static final org.prebid.mobile.eventhandlers.AdEvent DISPLAYED;
+    enum_constant public static final org.prebid.mobile.eventhandlers.AdEvent FAILED;
+    enum_constant public static final org.prebid.mobile.eventhandlers.AdEvent LOADED;
+    enum_constant public static final org.prebid.mobile.eventhandlers.AdEvent REWARD_EARNED;
+  }
+
+  public class GamBannerEventHandler implements org.prebid.mobile.rendering.bidding.interfaces.BannerEventHandler {
+    ctor public GamBannerEventHandler(android.content.Context!, String!, org.prebid.mobile.AdSize!...!);
+    method public static org.prebid.mobile.AdSize![]! convertGamAdSize(com.google.android.gms.ads.AdSize!...!);
+    method public void destroy();
+    method public org.prebid.mobile.AdSize![]! getAdSizeArray();
+    method public void onEvent(org.prebid.mobile.eventhandlers.AdEvent!);
+    method public void requestAdWithBid(org.prebid.mobile.rendering.bidding.data.bid.Bid!);
+    method public void setBannerEventListener(org.prebid.mobile.rendering.bidding.listeners.BannerEventListener);
+    method public void trackImpression();
+  }
+
+  public class GamInterstitialEventHandler implements org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler {
+    ctor public GamInterstitialEventHandler(android.app.Activity!, String!);
+    method public void destroy();
+    method public void onEvent(org.prebid.mobile.eventhandlers.AdEvent!);
+    method public void requestAdWithBid(org.prebid.mobile.rendering.bidding.data.bid.Bid!);
+    method public void setInterstitialEventListener(org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener);
+    method public void show();
+    method public void trackImpression();
+  }
+
+  public class GamRewardedEventHandler implements org.prebid.mobile.rendering.bidding.interfaces.RewardedEventHandler {
+    ctor public GamRewardedEventHandler(android.app.Activity!, String!);
+    method public void destroy();
+    method public void onEvent(org.prebid.mobile.eventhandlers.AdEvent!);
+    method public void requestAdWithBid(org.prebid.mobile.rendering.bidding.data.bid.Bid?);
+    method public void setRewardedEventListener(org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener);
+    method public void show();
+    method public void trackImpression();
+  }
+
+  public class PublisherAdViewWrapper extends com.google.android.gms.ads.AdListener implements com.google.android.gms.ads.admanager.AppEventListener {
+    method public void destroy();
+    method public android.view.View! getView();
+    method public void loadAd(org.prebid.mobile.rendering.bidding.data.bid.Bid!);
+    method public void onAppEvent(String, String);
+    method public void recordManualImpression();
+    method public void setManualImpressionsEnabled(boolean);
+  }
+
+  public class PublisherInterstitialAdWrapper extends com.google.android.gms.ads.FullScreenContentCallback implements com.google.android.gms.ads.admanager.AppEventListener {
+    method public boolean isLoaded();
+    method public void loadAd(org.prebid.mobile.rendering.bidding.data.bid.Bid!);
+    method public void onAppEvent(String, String);
+    method public void show();
+  }
+
+  public class RewardedAdWrapper extends com.google.android.gms.ads.FullScreenContentCallback implements com.google.android.gms.ads.OnUserEarnedRewardListener {
+    method public com.google.android.gms.ads.rewarded.RewardItem! getRewardItem();
+    method public boolean isLoaded();
+    method public void loadAd(org.prebid.mobile.rendering.bidding.data.bid.Bid!);
+    method public void onUserEarnedReward(com.google.android.gms.ads.rewarded.RewardItem);
+    method public void show(android.app.Activity!);
+    field public static final String KEY_METADATA = "AdTitle";
+  }
+
+}
+
+package org.prebid.mobile.eventhandlers.global {
+
+  public class Constants {
+    ctor public Constants();
+    field public static final String APP_EVENT = "PrebidAppEvent";
+    field public static final int ERROR_CODE_INTERNAL_ERROR = 0; // 0x0
+    field public static final int ERROR_CODE_INVALID_REQUEST = 1; // 0x1
+    field public static final int ERROR_CODE_NETWORK_ERROR = 2; // 0x2
+    field public static final int ERROR_CODE_NO_FILL = 3; // 0x3
+  }
+
+}
+
+package org.prebid.mobile.eventhandlers.utils {
+
+  public class GamUtils {
+    ctor public GamUtils();
+    method public static boolean didPrebidWin(com.google.android.gms.ads.nativead.NativeAd!);
+    method public static boolean didPrebidWin(com.google.android.gms.ads.nativead.NativeCustomFormatAd!);
+    method public static void handleGamCustomTargetingUpdate(com.google.android.gms.ads.admanager.AdManagerAdRequest!, java.util.Map<java.lang.String!,java.lang.String!>!);
+    method public static void prepare(com.google.android.gms.ads.admanager.AdManagerAdRequest!, android.os.Bundle!);
+  }
+
+}
+
