@@ -59,6 +59,7 @@ run_guard() { # <id> <check-script>
 # Guards are registered here as they land; each is blocking.
 run_guard fixme-ratchet    fixme_ratchet.py
 run_guard logging-hygiene  logging_hygiene.py
+run_guard ortb-test-presence ortb_test_presence.py
 
 # ── summary ─────────────────────────────────────────────────────────────────
 echo ""
