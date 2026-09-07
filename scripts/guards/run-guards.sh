@@ -14,6 +14,7 @@
 #   ./scripts/guards/run-guards.sh --update-manifest-baseline # re-record the manifest surface
 #   ./scripts/guards/run-guards.sh --update-api-baseline    # regenerate api/*.txt (needs Gradle)
 #   ./scripts/guards/run-guards.sh --update-api-doc-baseline # re-record undocumented public API
+#   ./scripts/guards/run-guards.sh --update-ast-rule-baseline # re-record ast-grep rule counts
 #
 # This script is orchestration only: every check lives in checks/ as a Python
 # module on lib/guardlib.py, and every committed allowlist/baseline is JSON.
@@ -39,6 +40,7 @@ case "${1:-}" in
     --update-manifest-baseline) exec python3 "$GUARDS_DIR/checks/manifest_surface.py" --update ;;
     --update-api-baseline)      exec python3 "$GUARDS_DIR/checks/api_baseline.py" --update ;;
     --update-api-doc-baseline)  exec python3 "$GUARDS_DIR/checks/api_doc_coverage.py" --update ;;
+    --update-ast-rule-baseline) exec python3 "$GUARDS_DIR/checks/ast_rule_ratchet.py" --update ;;
     "") ;;
     *)
         echo "Unknown option: $1"
@@ -77,6 +79,7 @@ run_guard manifest-surface manifest_surface.py
 run_guard public-api-baseline api_baseline.py
 run_guard api-doc-coverage api_doc_coverage.py
 run_guard api-test-presence api_test_presence.py
+run_guard ast-rule-ratchet ast_rule_ratchet.py
 
 # ── summary ─────────────────────────────────────────────────────────────────
 echo ""
