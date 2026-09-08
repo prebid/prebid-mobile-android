@@ -535,6 +535,30 @@ public class BannerView extends FrameLayout {
         return bidResponse;
     }
 
+    /**
+     * Winning creative width in dp for the pure-rendering (Prebid SDK win) path,
+     * or 0 when there is no winning bid. Lets a multi-size placement learn which
+     * size actually rendered (e.g. 300x250 vs 320x50) from inside
+     * {@link org.prebid.mobile.api.rendering.listeners.BannerViewListener#onAdLoaded(BannerView)}
+     * so the host can size the slot to the creative. {@code onAdLoaded} fires
+     * after the bid response is set, so this is populated at callback time. On
+     * the ad-server (GAM) win path the served view owns its size, so this
+     * reflects the Prebid winning bid only.
+     */
+    public int getCreativeWidth() {
+        Bid bid = bidResponse != null ? bidResponse.getWinningBid() : null;
+        return bid != null ? bid.getWidth() : 0;
+    }
+
+    /**
+     * Winning creative height in dp for the pure-rendering (Prebid SDK win)
+     * path, or 0 when there is no winning bid. See {@link #getCreativeWidth()}.
+     */
+    public int getCreativeHeight() {
+        Bid bid = bidResponse != null ? bidResponse.getWinningBid() : null;
+        return bid != null ? bid.getHeight() : 0;
+    }
+
     @Nullable
     public String getImpOrtbConfig() {
         return adUnitConfig.getImpOrtbConfig();
