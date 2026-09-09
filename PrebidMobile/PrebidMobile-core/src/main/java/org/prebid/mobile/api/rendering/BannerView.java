@@ -29,6 +29,7 @@ import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.data.VideoPlacementType;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.BannerVideoListener;
@@ -55,6 +56,7 @@ import org.prebid.mobile.rendering.utils.helpers.RenderingExceptionParser;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -89,6 +91,13 @@ public class BannerView extends FrameLayout {
     private boolean adFailed;
 
     private String nativeStylesCreative = null;
+
+    /**
+     * True once the publisher configured the formats through {@link #setAdUnitFormats(EnumSet)}.
+     * Such an explicit choice takes precedence over the format implied by
+     * {@link #setVideoPlacementType(VideoPlacementType)}.
+     */
+    private boolean adUnitFormatsConfigured;
 
     //region ==================== Listener implementation
     private final DisplayViewListener displayViewListener = new DisplayViewListener() {
@@ -378,8 +387,14 @@ public class BannerView extends FrameLayout {
         PrebidMobilePluginRegister.getInstance().registerEventListener(pluginEventListener, adUnitConfig.getFingerprint());
     }
 
+    /**
+     * Sets the video placement type and, unless the formats were explicitly configured through
+     * {@link #setAdUnitFormats(EnumSet)}, switches the ad unit to a video only request.
+     */
     public void setVideoPlacementType(VideoPlacementType videoPlacement) {
-        adUnitConfig.setAdFormat(AdFormat.VAST);
+        if (!adUnitFormatsConfigured) {
+            adUnitConfig.setAdFormat(AdFormat.VAST);
+        }
 
         final PlacementType placementType = VideoPlacementType.mapToPlacementType(videoPlacement);
         adUnitConfig.setPlacementType(placementType);
@@ -388,6 +403,32 @@ public class BannerView extends FrameLayout {
     @Nullable
     public VideoPlacementType getVideoPlacementType() {
         return VideoPlacementType.mapToVideoPlacementType(adUnitConfig.getPlacementTypeValue());
+    }
+
+    /**
+     * Sets the ad unit formats requested on a single impression.
+     * <p>
+     * Defaults to {@link AdUnitFormat#BANNER}. Pass {@link AdUnitFormat#VIDEO} for an outstream
+     * video banner, or both values to let display and video demand compete on the same impression.
+     * <p>
+     * A null or empty set is ignored and the current value is kept.
+     * <p>
+     * When a video bid wins a multiformat auction, auto refresh is cancelled so that the creative
+     * is not torn down mid playback.
+     */
+    public void setAdUnitFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats) {
+        if (adUnitFormats == null || adUnitFormats.isEmpty()) {
+            LogUtil.warning(TAG, "Ad unit formats must contain at least one item. The current value is kept.");
+            return;
+        }
+
+        adUnitConfig.setAdUnitFormats(adUnitFormats, false);
+        adUnitFormatsConfigured = true;
+    }
+
+    @NonNull
+    public EnumSet<AdUnitFormat> getAdUnitFormats() {
+        return adUnitConfig.getAdUnitFormats();
     }
 
     /**
@@ -478,6 +519,13 @@ public class BannerView extends FrameLayout {
     }
 
     private void displayPrebidView() {
+        // The refresh timer is armed as soon as the bid response arrives, before the primary ad
+        // server answers, so the winning format can only be honoured here. A video creative must
+        // not be torn down mid playback.
+        if (bidResponse != null && bidResponse.isVideo()) {
+            stopRefresh();
+        }
+
         if (indexOfChild(displayView) != -1) {
             displayView.destroy();
             displayView = null;

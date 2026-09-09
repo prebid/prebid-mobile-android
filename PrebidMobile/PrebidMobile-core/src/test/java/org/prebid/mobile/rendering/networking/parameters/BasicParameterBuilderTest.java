@@ -788,6 +788,30 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
+    public void testMultiFormatBannerAdUnit_bannerAndVideoObjectsAreNotNullAndImpIsNotInterstitial() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.addSize(new AdSize(300, 250));
+        configuration.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), false);
+
+        assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), configuration.getAdFormats());
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, null, false);
+
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        BidRequest bidRequest = adRequestInput.getBidRequest();
+        Imp firstImp = bidRequest.getImp().iterator().next();
+
+        assertNotNull(firstImp);
+
+        assertNull(firstImp.nativeObj);
+        assertNotNull(firstImp.banner);
+        assertNotNull(firstImp.video);
+        assertEquals(Integer.valueOf(0), firstImp.instl);
+    }
+
+    @Test
     public void testNativeAdUnit_nativeObjectIsNotNull() {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.addAdFormat(AdFormat.NATIVE);

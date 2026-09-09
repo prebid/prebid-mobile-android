@@ -137,6 +137,35 @@ public class AdUnitConfigurationTest {
     }
 
     @Test
+    public void setAdUnitFormats_notInterstitial_mapsBannerToBanner() {
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER), false);
+
+        assertEquals(EnumSet.of(AdFormat.BANNER), subject.getAdFormats());
+
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), false);
+
+        assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), subject.getAdFormats());
+    }
+
+    @Test
+    public void setAdUnitFormats_emptySet_keepsCurrentValue() {
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), false);
+
+        subject.setAdUnitFormats(EnumSet.noneOf(AdUnitFormat.class), false);
+
+        assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), subject.getAdFormats());
+    }
+
+    @Test
+    public void getAdUnitFormats_mapsBackToPublicFormats() {
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), false);
+        assertEquals(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), subject.getAdUnitFormats());
+
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), true);
+        assertEquals(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), subject.getAdUnitFormats());
+    }
+
+    @Test
     public void fingerprintIsAValidRandomBasedUUID() {
         // Assert
         String uuidString = subject.getFingerprint();

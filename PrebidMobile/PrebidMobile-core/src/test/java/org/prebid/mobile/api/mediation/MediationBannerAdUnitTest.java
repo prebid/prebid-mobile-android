@@ -27,6 +27,7 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
@@ -108,6 +109,39 @@ public class MediationBannerAdUnitTest {
         mediationBannerAdUnit.resumeRefresh();
 
         verify(mockBidLoader, times(1)).setupRefreshTimer();
+    }
+
+    @Test
+    public void adUnitFormatsDefaultToBanner() {
+        assertEquals(EnumSet.of(AdUnitFormat.BANNER), mediationBannerAdUnit.getAdUnitFormats());
+        assertEquals(EnumSet.of(AdFormat.BANNER), mediationBannerAdUnit.adUnitConfig.getAdFormats());
+    }
+
+    @Test
+    public void setAdUnitFormats_video_requestsVideoOnly() {
+        mediationBannerAdUnit.setAdUnitFormats(EnumSet.of(AdUnitFormat.VIDEO));
+
+        assertEquals(EnumSet.of(AdUnitFormat.VIDEO), mediationBannerAdUnit.getAdUnitFormats());
+        assertEquals(EnumSet.of(AdFormat.VAST), mediationBannerAdUnit.adUnitConfig.getAdFormats());
+    }
+
+    @Test
+    public void setAdUnitFormats_multiformat_requestsBannerAndVideo() {
+        mediationBannerAdUnit.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
+
+        assertEquals(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), mediationBannerAdUnit.getAdUnitFormats());
+        assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), mediationBannerAdUnit.adUnitConfig.getAdFormats());
+    }
+
+    @Test
+    public void setAdUnitFormats_nullOrEmpty_keepsCurrentValue() {
+        mediationBannerAdUnit.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
+
+        mediationBannerAdUnit.setAdUnitFormats(null);
+        assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), mediationBannerAdUnit.adUnitConfig.getAdFormats());
+
+        mediationBannerAdUnit.setAdUnitFormats(EnumSet.noneOf(AdUnitFormat.class));
+        assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), mediationBannerAdUnit.adUnitConfig.getAdFormats());
     }
 
     @Test

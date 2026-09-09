@@ -48,4 +48,37 @@ public class AdFormatTest {
         assertEquals(expected, AdFormat.fromSet(input, false));
     }
 
+    @Test
+    public void adFormatsToSet_banner() {
+        assertEquals(EnumSet.of(AdUnitFormat.BANNER), AdFormat.toSet(EnumSet.of(AdFormat.BANNER)));
+    }
+
+    @Test
+    public void adFormatsToSet_interstitial() {
+        assertEquals(EnumSet.of(AdUnitFormat.BANNER), AdFormat.toSet(EnumSet.of(AdFormat.INTERSTITIAL)));
+    }
+
+    @Test
+    public void adFormatsToSet_vast() {
+        assertEquals(EnumSet.of(AdUnitFormat.VIDEO), AdFormat.toSet(EnumSet.of(AdFormat.VAST)));
+    }
+
+    @Test
+    public void adFormatsToSet_multiformat() {
+        EnumSet<AdFormat> input = EnumSet.of(AdFormat.BANNER, AdFormat.VAST);
+        EnumSet<AdUnitFormat> expected = EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO);
+
+        assertEquals(expected, AdFormat.toSet(input));
+    }
+
+    @Test
+    public void adFormatsToSet_nativeHasNoPublicCounterpart() {
+        assertEquals(EnumSet.noneOf(AdUnitFormat.class), AdFormat.toSet(EnumSet.of(AdFormat.NATIVE)));
+    }
+
+    @Test
+    public void adFormatsToSet_null() {
+        assertEquals(EnumSet.noneOf(AdUnitFormat.class), AdFormat.toSet(null));
+    }
+
 }

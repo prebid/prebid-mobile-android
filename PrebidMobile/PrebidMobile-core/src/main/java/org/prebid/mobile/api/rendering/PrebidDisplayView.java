@@ -180,6 +180,9 @@ public class PrebidDisplayView extends FrameLayout implements PrebidDestroyable 
         this.displayVideoListener = displayVideoListener;
         try {
             adUnitConfiguration.modifyUsingBidResponse(response);
+            // The configuration is shared across refreshes of a multiformat banner, so this must
+            // track the format of the current winning bid instead of latching to true.
+            adUnitConfiguration.setBuiltInVideo(response.isVideo());
             if (response.isVideo()) {
                 displayVideoAd(response);
             } else {

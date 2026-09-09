@@ -217,6 +217,15 @@
             app:popUpTo="@+id/headerBiddingFragment" />
 
         <action
+            android:id="@+id/action_header_bidding_to_in_app_multiformat_banner"
+            app:destination="@id/navigation_in_app_multiformat_banner"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
             android:id="@+id/action_header_bidding_to_in_app_banner_video_feed"
             app:destination="@id/navigation_in_app_banner_video_feed"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -696,6 +705,11 @@
         android:id="@+id/navigation_in_app_banner_video"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmVideoFragment"
         android:label="Video Outstream (In-App)" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_multiformat_banner"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmMultiformatBannerFragment"
+        android:label="Multiformat Banner (In-App)" />
 
     <fragment
         android:id="@+id/navigation_in_app_banner_video_feed"

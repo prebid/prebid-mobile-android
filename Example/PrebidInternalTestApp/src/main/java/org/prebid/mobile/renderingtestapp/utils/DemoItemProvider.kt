@@ -55,6 +55,8 @@ class DemoItemProvider private constructor() {
         private const val ppmInterstitialPluginEventListenerAction = R.id.action_header_bidding_to_in_app_interstitial_plugin_event_listener
         private const val ppmInterstitialPluginRendererAction = R.id.action_header_bidding_to_in_app_interstitial_plugin_renderer
         private const val ppmRewardedAction = R.id.action_header_bidding_to_in_app_video_rewarded
+        private const val ppmMultiformatBannerAction =
+            R.id.action_header_bidding_to_in_app_multiformat_banner
 
         private const val gamBannerAction = R.id.action_header_bidding_to_gam_banner
         private const val gamBannerOriginalAction =
@@ -1123,6 +1125,19 @@ class DemoItemProvider private constructor() {
                     ppmVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_video_outstream,
+                        null,
+                        300,
+                        250
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_multiformat_banner),
+                    ppmMultiformatBannerAction,
+                    ppmVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_dynamic,
                         null,
                         300,
                         250
