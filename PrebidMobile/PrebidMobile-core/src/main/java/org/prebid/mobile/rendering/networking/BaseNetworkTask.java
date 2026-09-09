@@ -44,6 +44,16 @@ public class BaseNetworkTask
 
     public static final int MAX_REDIRECTS_COUNT = 5;
 
+    /**
+     * Read timeout for a single request: the publisher's configured value once one has
+     * been set, otherwise {@link #SOCKET_TIMEOUT}. Exposed so callers outside this
+     * class apply the same policy instead of repeating the condition, which would then
+     * be free to drift from it.
+     */
+    public static int readTimeoutMillis() {
+        return PrebidMobile.getTimeoutModified() ? PrebidMobile.getTimeoutMillis() : SOCKET_TIMEOUT;
+    }
+
     public static final String REDIRECT_TASK = "RedirectTask";
     public static final String DOWNLOAD_TASK = "DownloadTask";
     public static final String STATUS_TASK = "StatusTask";
@@ -270,8 +280,7 @@ public class BaseNetworkTask
 
         connection.setConnectTimeout(PrebidMobile.getTimeoutMillis());
         if (!(this instanceof FileDownloadTask)) {
-            int timeout = PrebidMobile.getTimeoutModified() ? PrebidMobile.getTimeoutMillis() : SOCKET_TIMEOUT;
-            connection.setReadTimeout(timeout);
+            connection.setReadTimeout(readTimeoutMillis());
         }
 
         if ("POST".equals(param.requestType)) {

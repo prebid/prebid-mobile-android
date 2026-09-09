@@ -116,12 +116,51 @@ public class UrlResolutionTaskTest {
         // platform. Deliberately not an abrupt disconnect from a live server: whether
         // that surfaces as a reset or as a read timeout depends on OS timing, so it
         // cannot assert which branch was taken.
-        int closedPort;
-        try (ServerSocket socket = new ServerSocket(0)) {
-            closedPort = socket.getLocalPort();
-        }
+        assertNull(task.doInBackground("http://127.0.0.1:" + closedPort() + "/click"));
+    }
 
-        assertNull(task.doInBackground("http://127.0.0.1:" + closedPort + "/click"));
+    @Test
+    public void whenALaterHopIsUnreachable_staysCancelled() throws IOException {
+        // Same branch, but after a hop has already resolved. Cancelling is deliberate:
+        // a hop confirmed unreachable is not worth handing to the browser even though
+        // an ambiguous failure at the same point would be.
+        server.enqueue(new MockResponse()
+                .setResponseCode(302)
+                .setHeader("location", "http://127.0.0.1:" + closedPort() + "/landing"));
+
+        assertNull(task.doInBackground(server.url("/click").toString()));
+    }
+
+    @Test
+    public void whenRedirectTargetIsMalformed_staysCancelled() {
+        // java.net.URI accepts a non-numeric port as a registry-based authority and
+        // resolves it, so this only fails on the next hop, in new URL(), as a
+        // MalformedURLException. It must not be handed on as a resolved URL.
+        server.enqueue(new MockResponse()
+                .setResponseCode(302)
+                .setHeader("location", "http://example.com:abc/landing"));
+
+        assertNull(task.doInBackground(server.url("/click").toString()));
+    }
+
+    @Test
+    public void whenConfiguredTimeoutIsVeryLarge_stillResolvesTheChain() {
+        // The budget is one connect plus one read. Summed as int, this value overflows
+        // to a negative budget, putting the deadline in the past so no hop is ever
+        // attempted and the unresolved URL comes straight back.
+        PrebidMobile.setTimeoutMillis(1_073_741_824);
+        String finalUrl = server.url("/final").toString();
+        server.enqueue(new MockResponse().setResponseCode(302).setHeader("location", finalUrl));
+        server.enqueue(new MockResponse().setResponseCode(200));
+
+        assertEquals(finalUrl, task.doInBackground(server.url("/click").toString()));
+    }
+
+    /** A port nothing is listening on, so connecting to it is refused immediately. */
+    private int closedPort() throws IOException {
+        try (ServerSocket socket = new ServerSocket(0)) {
+            return socket.getLocalPort();
+        }
     }
 
     @Test
