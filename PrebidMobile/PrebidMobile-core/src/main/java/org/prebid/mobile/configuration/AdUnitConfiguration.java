@@ -41,7 +41,7 @@ public class AdUnitConfiguration {
     private int videoSkipOffset = SKIP_OFFSET_NOT_ASSIGNED;
     private int autoRefreshDelayInMillis = 0;
     private int skipDelay = 10;
-    private final int broadcastId = Utils.generateRandomInt();
+    private final int broadcastId;
     private float videoInitialVolume = ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME;
     private double closeButtonArea = 0;
     private double skipButtonArea = 0;
@@ -80,6 +80,66 @@ public class AdUnitConfiguration {
 
     private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
     private final HashSet<AdSize> adSizes = new HashSet<>();
+
+    public AdUnitConfiguration() {
+        broadcastId = Utils.generateRandomInt();
+    }
+
+    /**
+     * Creates a rendering copy of an ad unit's configuration.
+     * <p>
+     * Rendering rewrites the configuration it is handed: the creative pipeline narrows
+     * {@link #getAdFormats()} to the format of the winning creative, and the video player turns
+     * off auto refresh and records the built in video state. A copy keeps those writes away from
+     * the ad unit itself, so a multiformat ad unit still requests every configured format on the
+     * next auction.
+     * <p>
+     * {@code fingerprint} is carried over because plugin event listeners are registered under it.
+     * The mutable sub configurations are shared on purpose: the reward, banner, video and native
+     * settings are read back through the ad unit after rendering.
+     */
+    public AdUnitConfiguration(@NonNull AdUnitConfiguration source) {
+        broadcastId = source.broadcastId;
+        fingerprint = source.fingerprint;
+
+        isRewarded = source.isRewarded;
+        isBuiltInVideo = source.isBuiltInVideo;
+        isMuted = source.isMuted;
+        isSoundButtonVisible = source.isSoundButtonVisible;
+        isOriginalAdUnit = source.isOriginalAdUnit;
+        hasEndCard = source.hasEndCard;
+
+        videoSkipOffset = source.videoSkipOffset;
+        autoRefreshDelayInMillis = source.autoRefreshDelayInMillis;
+        skipDelay = source.skipDelay;
+        videoInitialVolume = source.videoInitialVolume;
+        closeButtonArea = source.closeButtonArea;
+        skipButtonArea = source.skipButtonArea;
+        maxVideoDuration = source.maxVideoDuration;
+
+        configId = source.configId;
+        pbAdSlot = source.pbAdSlot;
+        interstitialSize = source.interstitialSize;
+        impressionUrl = source.impressionUrl;
+        gpid = source.gpid;
+        impOrtbConfig = source.impOrtbConfig;
+        globalOrtbConfig = source.globalOrtbConfig;
+
+        closeButtonPosition = source.closeButtonPosition;
+        skipButtonPosition = source.skipButtonPosition;
+        minSizePercentage = source.minSizePercentage;
+        placementType = source.placementType;
+        adPosition = source.adPosition;
+
+        appContent = source.appContent;
+        bannerParameters = source.bannerParameters;
+        videoParameters = source.videoParameters;
+        nativeConfiguration = source.nativeConfiguration;
+        rewardManager = source.rewardManager;
+
+        adFormats.addAll(source.adFormats);
+        adSizes.addAll(source.adSizes);
+    }
 
     public void modifyUsingBidResponse(@Nullable BidResponse bidResponse) {
         if (bidResponse != null) {

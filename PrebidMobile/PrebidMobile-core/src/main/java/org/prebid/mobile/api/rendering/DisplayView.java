@@ -32,6 +32,10 @@ import org.prebid.mobile.rendering.networking.WinNotifier;
 
 /**
  * Internal view for {@link BannerView}.
+ * <p>
+ * Renders against its own copy of the ad unit's configuration. The creative pipeline rewrites the
+ * configuration it is given, so sharing the ad unit's instance would narrow a multiformat ad unit
+ * to the winning creative's format and break the following auctions.
  */
 public class DisplayView extends FrameLayout {
     private View adView;
@@ -47,7 +51,7 @@ public class DisplayView extends FrameLayout {
     ) {
         super(context);
 
-        this.adUnitConfiguration = adUnitConfiguration;
+        this.adUnitConfiguration = new AdUnitConfiguration(adUnitConfiguration);
         this.displayViewListener = displayViewListener;
 
         createBannerAdView(context, bidResponse);
@@ -62,7 +66,7 @@ public class DisplayView extends FrameLayout {
     ) {
         super(context);
 
-        this.adUnitConfiguration = adUnitConfiguration;
+        this.adUnitConfiguration = new AdUnitConfiguration(adUnitConfiguration);
         this.displayViewListener = displayViewListener;
         this.displayVideoListener = displayVideoListener;
 
