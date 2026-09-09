@@ -38,6 +38,7 @@
     <string name="in_app_display_banner_mraid_expand">In-App Display Banner 320x50 MRAID Expand 1-Part</string>
     <string name="in_app_display_banner_mraid_resize_errors">In-App Display Banner 320x50 MRAID Resize With Errors</string>
     <string name="in_app_video_banner">In-App Video Banner</string>
+    <string name="in_app_multiformat_banner">In-App Multiformat Banner</string>
     <string name="in_app_display_interstitial">In-App Display Interstitial</string>
     <string name="in_app_video_interstitial">In-App Video Interstitial</string>
     <string name="in_app_video_interstitial_end_card">In-App Video Interstitial With End Card</string>

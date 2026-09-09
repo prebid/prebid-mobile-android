@@ -174,6 +174,12 @@ object TestCaseRepository {
             InAppVideoBannerActivity::class.java,
         ),
         TestCase(
+            R.string.in_app_multiformat_banner,
+            AdFormat.MULTIFORMAT,
+            IntegrationKind.NO_AD_SERVER,
+            InAppMultiformatBannerActivity::class.java,
+        ),
+        TestCase(
             R.string.in_app_display_interstitial,
             AdFormat.DISPLAY_INTERSTITIAL,
             IntegrationKind.NO_AD_SERVER,

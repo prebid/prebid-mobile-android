@@ -77,6 +77,23 @@ public class PrebidDisplayViewTest {
     }
 
     @Test
+    public void whenHtmlBidWinsAfterVideo_BuiltInVideoIsCleared() {
+        // A multiformat banner shares one configuration across refreshes, so a video creative must
+        // not leave isBuiltInVideo latched for the next HTML creative.
+        adUnitConfiguration.setBuiltInVideo(true);
+
+        BidResponse htmlResponse = mock(BidResponse.class);
+        Bid htmlBid = mock(Bid.class);
+        when(htmlBid.getAdm()).thenReturn("adm");
+        when(htmlResponse.getWinningBid()).thenReturn(htmlBid);
+        when(htmlResponse.isVideo()).thenReturn(false);
+
+        new PrebidDisplayView(context, mockDisplayViewListener, mockDisplayVideoListener, adUnitConfiguration, htmlResponse);
+
+        Assert.assertFalse(adUnitConfiguration.isBuiltInVideo());
+    }
+
+    @Test
     public void whenDisplayAd_LoadBidTransaction() {
         Assert.assertNotNull(WhiteBox.getInternalState(prebidDisplayView, "adViewManager"));
     }

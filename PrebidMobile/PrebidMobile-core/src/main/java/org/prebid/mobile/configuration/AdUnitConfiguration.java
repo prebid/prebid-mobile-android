@@ -243,12 +243,38 @@ public class AdUnitConfiguration {
 
     /**
      * Clears previous ad formats and adds AdFormats corresponding to AdUnitFormat types.
+     * The formats are mapped as interstitial ones.
      */
     public void setAdUnitFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats) {
-        if (adUnitFormats == null) return;
+        setAdUnitFormats(adUnitFormats, true);
+    }
+
+    /**
+     * Clears previous ad formats and adds AdFormats corresponding to AdUnitFormat types.
+     * <p>
+     * A null or empty set is ignored and the current value is kept, so an ad unit never ends up
+     * without a format to request.
+     *
+     * @param adUnitFormats  formats requested by the publisher.
+     * @param isInterstitial whether {@link AdUnitFormat#BANNER} maps to {@link AdFormat#INTERSTITIAL}
+     *                       (full screen ad units) or to {@link AdFormat#BANNER}.
+     */
+    public void setAdUnitFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats, boolean isInterstitial) {
+        if (adUnitFormats == null || adUnitFormats.isEmpty()) {
+            LogUtil.warning(TAG, "Ad unit formats must contain at least one item. The current value is kept.");
+            return;
+        }
 
         adFormats.clear();
-        adFormats.addAll(AdFormat.fromSet(adUnitFormats, true));
+        adFormats.addAll(AdFormat.fromSet(adUnitFormats, isInterstitial));
+    }
+
+    /**
+     * Returns the currently requested formats mapped back to the public {@link AdUnitFormat} values.
+     */
+    @NonNull
+    public EnumSet<AdUnitFormat> getAdUnitFormats() {
+        return AdFormat.toSet(adFormats);
     }
 
     /**
