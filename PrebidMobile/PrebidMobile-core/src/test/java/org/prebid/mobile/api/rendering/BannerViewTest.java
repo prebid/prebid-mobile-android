@@ -262,35 +262,46 @@ public class BannerViewTest {
 
     //region ================= Auto refresh vs. video creatives
     @Test
-    public void onPrebidSdkWinWithVideoBid_CancelAutoRefresh() {
-        bannerView.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
-        bannerView.setBidResponse(mockBidResponse(true));
+    public void canPerformRefreshWhileVideoIsPlaying_SkipTheTick() throws Exception {
+        when(mockDisplayView.isVideoPlaying()).thenReturn(true);
 
-        getBannerEventListener().onPrebidSdkWin();
-
-        verify(mockBidLoader, times(1)).cancelRefresh();
+        assertFalse(getBidRefreshListener().canPerformRefresh());
     }
 
     @Test
-    public void onPrebidSdkWinWithBannerBid_KeepAutoRefresh() {
-        bannerView.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
-        bannerView.setBidResponse(mockBidResponse(false));
+    public void canPerformRefreshAfterVideoFinished_AllowTheTick() throws Exception {
+        when(mockDisplayView.isVideoPlaying()).thenReturn(false);
+        when(mockScreenStateReceiver.isScreenOn()).thenReturn(true);
 
-        getBannerEventListener().onPrebidSdkWin();
+        // The visibility checker is the only remaining gate, so the video no longer blocks refresh.
+        getBidRefreshListener().canPerformRefresh();
 
-        verify(mockBidLoader, never()).cancelRefresh();
+        verify(mockDisplayView, times(1)).isVideoPlaying();
     }
 
-    private BidResponse mockBidResponse(boolean isVideo) {
-        final BidResponse response = mock(BidResponse.class);
-        final Bid bid = mock(Bid.class);
+    @Test
+    public void canPerformRefreshAfterAdFailed_AllowTheTickEvenIfVideoReportsPlaying() throws Exception {
+        when(mockDisplayView.isVideoPlaying()).thenReturn(true);
+        WhiteBox.field(BannerView.class, "adFailed").set(bannerView, true);
 
-        when(response.getWinningBid()).thenReturn(bid);
-        when(response.isVideo()).thenReturn(isVideo);
-        when(response.getPreferredPluginRendererName()).thenReturn(PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME);
-        when(response.getWinningBidWidthHeightPairDips(any())).thenReturn(new Pair<>(320, 50));
-        when(bid.getPrice()).thenReturn(0.1);
-        return response;
+        assertTrue(getBidRefreshListener().canPerformRefresh());
+    }
+
+    @Test
+    public void isVideoPlayingWithoutDisplayView_False() throws IllegalAccessException {
+        WhiteBox.field(BannerView.class, "displayView").set(bannerView, null);
+
+        assertFalse(bannerView.isVideoPlaying());
+    }
+
+    private BidLoader.BidRefreshListener getBidRefreshListener() throws Exception {
+        // initBidLoader() builds a BidLoader and registers the refresh gate on it.
+        WhiteBox.method(BannerView.class, "initBidLoader").invoke(bannerView);
+
+        final BidLoader bidLoader = (BidLoader) WhiteBox.field(BannerView.class, "bidLoader").get(bannerView);
+        return (BidLoader.BidRefreshListener) WhiteBox
+                .field(BidLoader.class, "bidRefreshListener")
+                .get(bidLoader);
     }
 
     private AdUnitConfiguration getAdUnitConfig() throws IllegalAccessException {

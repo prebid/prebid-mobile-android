@@ -413,8 +413,8 @@ public class BannerView extends FrameLayout {
      * <p>
      * A null or empty set is ignored and the current value is kept.
      * <p>
-     * When a video bid wins a multiformat auction, auto refresh is cancelled so that the creative
-     * is not torn down mid playback.
+     * Auto refresh is deferred while a video creative is playing and resumes once playback
+     * finishes, so a video is never torn down mid playback.
      */
     public void setAdUnitFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats) {
         if (adUnitFormats == null || adUnitFormats.isEmpty()) {
@@ -505,6 +505,12 @@ public class BannerView extends FrameLayout {
                 return true;
             }
 
+            // A video creative must not be torn down mid playback. The tick is skipped and the
+            // timer rescheduled, so refreshing resumes once playback finishes.
+            if (isVideoPlaying()) {
+                return false;
+            }
+
             final boolean isWindowVisibleToUser = screenStateReceiver.isScreenOn();
             return visibilityChecker.isVisibleForRefresh(this) && isWindowVisibleToUser;
         });
@@ -519,13 +525,6 @@ public class BannerView extends FrameLayout {
     }
 
     private void displayPrebidView() {
-        // The refresh timer is armed as soon as the bid response arrives, before the primary ad
-        // server answers, so the winning format can only be honoured here. A video creative must
-        // not be torn down mid playback.
-        if (bidResponse != null && bidResponse.isVideo()) {
-            stopRefresh();
-        }
-
         if (indexOfChild(displayView) != -1) {
             displayView.destroy();
             displayView = null;
@@ -559,6 +558,14 @@ public class BannerView extends FrameLayout {
         if (bannerViewListener != null) {
             bannerViewListener.onAdDisplayed(BannerView.this);
         }
+    }
+
+    /**
+     * True while a Prebid video creative deployed by this view is playing.
+     */
+    @VisibleForTesting
+    boolean isVideoPlaying() {
+        return displayView != null && displayView.isVideoPlaying();
     }
 
     private void markPrimaryAdRequestFinished() {

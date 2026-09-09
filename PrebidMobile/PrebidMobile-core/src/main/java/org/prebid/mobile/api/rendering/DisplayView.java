@@ -84,6 +84,14 @@ public class DisplayView extends FrameLayout {
         });
     }
 
+    /**
+     * True while the rendered creative is a video that is currently playing. A creative that does
+     * not report playback, such as an HTML creative or a third party plugin renderer, reports false.
+     */
+    public boolean isVideoPlaying() {
+        return adView instanceof PrebidDisplayView && ((PrebidDisplayView) adView).isVideoPlaying();
+    }
+
     public void destroy() {
         LogUtil.debug("Destroying view");
         adUnitConfiguration = null;

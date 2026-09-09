@@ -223,6 +223,13 @@ public class PrebidDisplayView extends FrameLayout implements PrebidDestroyable 
         }
     }
 
+    /**
+     * True while a rendered video creative is playing. An HTML creative always reports false.
+     */
+    public boolean isVideoPlaying() {
+        return videoView != null && videoView.isVideoPlaybackInProgress();
+    }
+
     private void displayHtmlAd(BidResponse response) throws AdException {
         adViewManager = new AdViewManager(getContext(), adViewManagerListener, this, interstitialManager);
         adViewManager.loadBidTransaction(adUnitConfiguration, response);
