@@ -21,6 +21,7 @@ import android.content.Context;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -34,13 +35,13 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.interstitial.AdBaseDialog;
 import org.prebid.mobile.rendering.interstitial.rewarded.RewardedCompletionRules;
 import org.prebid.mobile.rendering.interstitial.rewarded.RewardedExt;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
-import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.utils.helpers.InsetsUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
@@ -399,10 +400,8 @@ public class InterstitialVideo extends AdBaseDialog {
             return;
         }
 
-        int paddingTop = (int) (50 * PrebidContextHolder.getContext().getResources().getDisplayMetrics().density);
-        lytCountDownCircle.setPadding(0, 0, 0, paddingTop);
-
         final ProgressBar pbProgress = lytCountDownCircle.findViewById(R.id.Progress);
+        moveCountdownPastTopLeftControl();
         pbProgress.setMax((int) durationInMillis);
 
         // Turns progress bar ccw 90 degrees so progress starts from the top
@@ -450,6 +449,67 @@ public class InterstitialVideo extends AdBaseDialog {
         }
         adViewContainer.addView(lytCountDownCircle);
         InsetsUtils.addCutoutAndNavigationInsets(lytCountDownCircle);
+    }
+
+    private void moveCountdownPastTopLeftControl() {
+        InterstitialDisplayPropertiesInternal properties = interstitialManager.getInterstitialDisplayProperties();
+        Position buttonPosition = useSkipButton
+            ? properties.skipButtonPosition
+            : properties.closeButtonPosition;
+        if (buttonPosition != Position.TOP_LEFT) {
+            return;
+        }
+
+        RelativeLayout countdown = lytCountDownCircle.findViewById(R.id.lytCountdown);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) countdown.getLayoutParams();
+        int buttonSize = getCloseOrSkipButtonSizePx(properties, countdown.getContext());
+        params.leftMargin = buttonSize + Utils.convertDpToPx(10, countdown.getContext());
+        countdown.setLayoutParams(params);
+    }
+
+    /**
+     * The close/skip control is added on top of the sound control (or vice versa) and both
+     * default to the same TOP_RIGHT corner, so without this the sound icon either gets hidden
+     * behind the close/skip control or blocks taps meant for it. Nudge the sound control past
+     * whichever close/skip control is currently active, mirroring {@link #moveCountdownPastTopLeftControl()}.
+     */
+    private void moveSoundViewPastTopRightControl(@Nullable View soundView) {
+        if (soundView == null || interstitialManager == null) {
+            return;
+        }
+
+        InterstitialDisplayPropertiesInternal properties = interstitialManager.getInterstitialDisplayProperties();
+        Position buttonPosition = useSkipButton
+            ? properties.skipButtonPosition
+            : properties.closeButtonPosition;
+        if (buttonPosition == Position.TOP_LEFT) {
+            return;
+        }
+
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) soundView.getLayoutParams();
+        int buttonSize = getCloseOrSkipButtonSizePx(properties, soundView.getContext());
+        params.rightMargin = buttonSize + Utils.convertDpToPx(10, soundView.getContext());
+        soundView.setLayoutParams(params);
+    }
+
+    private int getCloseOrSkipButtonSizePx(
+            InterstitialDisplayPropertiesInternal properties,
+            Context context
+    ) {
+        double buttonArea = useSkipButton ? properties.skipButtonArea : properties.closeButtonArea;
+        int buttonSize = Utils.convertDpToPx(70, context);
+        if (buttonArea >= 0.05 && buttonArea <= 1) {
+            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+            buttonSize = (int) (Math.min(metrics.widthPixels, metrics.heightPixels) * buttonArea);
+        }
+        return buttonSize;
+    }
+
+    @Override
+    protected View createSoundView(Context context) {
+        View soundView = super.createSoundView(context);
+        moveSoundViewPastTopRightControl(soundView);
+        return soundView;
     }
 
     @VisibleForTesting

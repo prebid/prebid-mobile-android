@@ -531,9 +531,9 @@ public final class Utils {
 
         FrameLayout.LayoutParams params;
         params = calculateButtonSize(view, buttonArea);
-        params.gravity = Gravity.END | Gravity.TOP;
+        params.gravity = Gravity.RIGHT | Gravity.TOP;
         if (buttonPosition == Position.TOP_LEFT) {
-            params.gravity = Gravity.START | Gravity.TOP;
+            params.gravity = Gravity.LEFT | Gravity.TOP;
         }
 
         view.setLayoutParams(params);
@@ -578,8 +578,7 @@ public final class Utils {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        params.gravity = Gravity.END | Gravity.BOTTOM;
-        params.bottomMargin += 150;
+        params.gravity = Gravity.RIGHT | Gravity.TOP;
         view.setLayoutParams(params);
         InsetsUtils.addCutoutAndNavigationInsets(view);
         return view;
