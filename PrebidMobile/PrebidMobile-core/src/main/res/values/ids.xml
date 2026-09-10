@@ -17,4 +17,7 @@
 
 <resources>
     <item name="web_view_banner" type="id"/>
+    <!-- Tag key used to remember a view's margins from before any inset was ever applied
+         to it, so InsetsUtils can keep re-applying insets idempotently on top of them. -->
+    <item name="prebid_base_margins" type="id"/>
 </resources>

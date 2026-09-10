@@ -19,10 +19,10 @@ class MraidAdsTest(
     companion object {
         @JvmStatic
         @Parameterized.Parameters(name = "{1}")
-        fun arguments() = listOf(
-            arrayOf(R.string.in_app_display_banner_mraid_resize, "In-App MRAID Resize"),
-            arrayOf(R.string.in_app_display_banner_mraid_resize_errors, "In-App MRAID Resize With Errors"),
-            arrayOf(R.string.in_app_display_banner_mraid_expand, "In-App MRAID Expand"),
+        fun arguments(): List<Array<Any>> = listOf(
+            arrayOf<Any>(R.string.in_app_display_banner_mraid_resize, "In-App MRAID Resize"),
+            arrayOf<Any>(R.string.in_app_display_banner_mraid_resize_errors, "In-App MRAID Resize With Errors"),
+            arrayOf<Any>(R.string.in_app_display_banner_mraid_expand, "In-App MRAID Expand"),
         )
     }
 

@@ -378,9 +378,9 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     private void handleVideoCreativeComplete(AbstractCreative creative) {
         Transaction transaction = transactionManager.getCurrentTransaction();
         boolean isBuiltInVideo = creative.isBuiltInVideo();
-        closeInterstitial();
 
         if (transactionManager.hasNextCreative() && adView != null) {
+            closeInterstitial();
 
             transactionManager.incrementCreativesCounter();
 

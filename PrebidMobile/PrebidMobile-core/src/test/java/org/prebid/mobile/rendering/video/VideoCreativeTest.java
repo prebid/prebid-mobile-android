@@ -184,12 +184,12 @@ public class VideoCreativeTest {
     }
 
     @Test
-    public void mute_volumeZero_DoNothing() {
+    public void mute_volumeZero_MuteVideoCreativeView() {
         when(mockVideoCreativeView.getVolume()).thenReturn(0f);
 
         videoCreative.mute();
 
-        verify(mockVideoCreativeView, never()).mute();
+        verify(mockVideoCreativeView).mute();
     }
 
     @Test
@@ -211,12 +211,12 @@ public class VideoCreativeTest {
     }
 
     @Test
-    public void unmute_volumeNotZero_DoNothing() {
+    public void unmute_volumeNotZero_UnMuteVideoCreativeView() {
         when(mockVideoCreativeView.getVolume()).thenReturn(1f);
 
         videoCreative.unmute();
 
-        verify(mockVideoCreativeView, never()).unMute();
+        verify(mockVideoCreativeView).unMute();
     }
 
     @Test

@@ -19,7 +19,7 @@ jobs:
         distribution: 'temurin'
     - name: Generate docs
       run: |
-        ./gradlew :PrebidMobile:combinedJavadoc
+        ./gradlew :PrebidMobile:dokkaGenerateJavadoc
         cp -r PrebidMobile/build/combinedJavadoc docs_new
     - name: Checkout repository
       uses: actions/checkout@v4

@@ -44,7 +44,8 @@ OUTDIR=$BASEDIR/generated
 LOGPATH=$OUTDIR/logs
 FAT_PATH=$OUTDIR/fat
 AARPATH=build/outputs/aar
-BUILD_LIBS_PATH=build/libs
+SOURCES_PATH=build/intermediates/source_jar/release
+JAVADOC_PATH=build/intermediates/java_doc_jar/release
 TEMPDIR=$OUTDIR/temp
 LIBDIR=$BASEDIR
 PREBIDCORE=PrebidMobile
@@ -150,15 +151,19 @@ for n in ${!modules[@]}; do
 
     # Javadoc
     echoX "Preparing ${modules[$n]} Javadoc"
-    ./gradlew -i --no-daemon ${modules[$n]}:javadocJar >$LOGPATH/javadoc.log 2>&1 || die "Build Javadoc failed, check log in $LOGPATH/javadoc.log"
+    ./gradlew -i --no-daemon ${modules[$n]}:javadocReleaseJar >$LOGPATH/javadoc.log 2>&1 || die "Build Javadoc failed, check log in $LOGPATH/javadoc.log"
 
     # Sources
     echoX "Preparing ${modules[$n]} Sources"
-    ./gradlew -i --no-daemon ${modules[$n]}:sourcesJar >$LOGPATH/sources.log 2>&1 || die "Build Sources failed, check log in $LOGPATH/sources.log"
+    ./gradlew -i --no-daemon ${modules[$n]}:sourceReleaseJar >$LOGPATH/sources.log 2>&1 || die "Build Sources failed, check log in $LOGPATH/sources.log"
 
-    # copy sources and javadoc into a result direcotory
-    BUILD_LIBS_PATH_ABSOLUTE="${projectPaths[$n]}/$BUILD_LIBS_PATH"
-    cp -a $BUILD_LIBS_PATH_ABSOLUTE/. $OUTDIR/
+    # copy sources into a result direcotory
+    SOURCES_PATH_ABSOLUTE="${projectPaths[$n]}/$SOURCES_PATH"
+    mv $SOURCES_PATH_ABSOLUTE/release-sources.jar $OUTDIR/${modules[$n]}-sources.jar
+
+    # copy javadoc into a result direcotory
+    JAVADOC_PATH_ABSOLUTE="${projectPaths[$n]}/$JAVADOC_PATH"
+    mv $JAVADOC_PATH_ABSOLUTE/release-javadoc.jar $OUTDIR/${modules[$n]}-javadoc.jar
     # clean tmp dir
     rm -r $TEMPDIR
   fi

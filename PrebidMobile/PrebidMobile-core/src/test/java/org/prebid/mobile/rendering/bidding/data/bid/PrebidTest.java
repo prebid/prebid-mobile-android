@@ -149,7 +149,7 @@ public class PrebidTest {
         config.addAdFormat(AdFormat.BANNER);
         config.addAdFormat(AdFormat.VAST);
         assertEquals(
-                "{\"storedrequest\":{\"id\":\"test\"},\"cache\":{\"bids\":{}},\"targeting\":{\"includeformat\":\"true\"}}",
+                "{\"storedrequest\":{\"id\":\"test\"},\"cache\":{\"bids\":{}},\"targeting\":{\"includeformat\":true}}",
                 Prebid.getJsonObjectForBidRequest("test", false, config).toString()
         );
     }
@@ -198,7 +198,7 @@ public class PrebidTest {
         expected.put("cache", expectedCache);
 
         JSONObject expectedTargeting = new JSONObject();
-        expectedTargeting.put("includebidderkeys", "true");
+        expectedTargeting.put("includebidderkeys", true);
         expected.put("targeting", expectedTargeting);
 
         AdUnitConfiguration config = new AdUnitConfiguration();
@@ -218,7 +218,7 @@ public class PrebidTest {
         expected.put("cache", expectedCache);
 
         JSONObject expectedTargeting = new JSONObject();
-        expectedTargeting.put("includewinners", "true");
+        expectedTargeting.put("includewinners", true);
 
         expected.put("targeting", expectedTargeting);
 

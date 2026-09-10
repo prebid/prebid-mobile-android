@@ -26,6 +26,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.prebid.mobile.CacheManager
 import org.prebid.mobile.NativeAdUnit
+import org.prebid.mobile.Util
 import org.prebid.mobile.eventhandlers.nextgen.utils.Utils.didPrebidWin
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
 import org.robolectric.RobolectricTestRunner
@@ -117,6 +118,14 @@ class UtilsTest {
         val extras = Bundle()
         val prebidNativeAd = NativeAdProvider.getNativeAd(extras)
         Assert.assertNull(prebidNativeAd)
+    }
+
+    @Test
+    fun handleCustomTargetingHandling_nullableBids_DoNothing() {
+        val mockBuilder = Mockito.mock(BaseAdRequestBuilder::class.java)
+
+        Util.apply(null, mockBuilder)
+        Mockito.verifyNoInteractions(mockBuilder)
     }
 
     private val nativeAdContent: String

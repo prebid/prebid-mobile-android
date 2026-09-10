@@ -1,6 +1,6 @@
 ext {
-    prebidSdkVersionName = "3.3.1"
-    prebidSdkMinVersion = 16
+    prebidSdkVersionName = "3.3.4"
+    prebidSdkMinVersion = 19
     prebidSdkTargetVersion = 34
     prebidSdkCompileVersion = 34
     prebidSdkBuildToolsVersion = "35.0.1"
@@ -9,31 +9,4 @@ ext {
     artifactFolder = "${buildDir}/generated-artifacts"
     omSdkVersion = "1.4.1"
     omSdkModuleName = "omsdk-android"
-}
-
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath libs.gradle
-        classpath libs.kotlin.gradle.plugin
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        maven {
-            name = "Central Portal Snapshots"
-            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
-        }
-        mavenCentral()
-        mavenCentral()
-        maven { url 'https://maven.google.com' }
-        maven { url 'https://jitpack.io' }
-//        maven { url "https://oss.sonatype.org/content/repositories/orgprebid-1079" }
-    }
 }

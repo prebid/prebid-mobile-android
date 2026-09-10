@@ -1,6 +1,4 @@
 apply from: '../android.gradle'
-apply from: '../publisher.gradle'
-apply from: '../tests.gradle'
 
 android {
     namespace "org.prebid.mobile.core"
@@ -35,8 +33,11 @@ dependencies {
 
     implementation libs.google.play.services.base
     implementation libs.google.play.services.ads.identifier
-    implementation libs.exoplayer.core
-    implementation libs.exoplayer.ui
+    implementation libs.media3.exoplayer
+    implementation libs.media3.ui
 
     implementation libs.androidx.localbroadcastmanager
+
+    testImplementation(project(":test-utils"))
+    testImplementation(libs.bundles.test.libraries)
 }

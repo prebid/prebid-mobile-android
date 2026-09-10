@@ -30,6 +30,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -73,5 +74,13 @@ public class VideoCreativeViewTest {
     @Test
     public void getCallToActionOverlayViewTest() {
 
+    }
+
+    @Test
+    public void enableVideoPlayerClick_PerformClick_NotifyAdClick() {
+        videoCreativeView.enableVideoPlayerClick();
+
+        assertTrue(videoCreativeView.performClick());
+        verify(mockCreative).onEvent(VideoAdEvent.Event.AD_CLICK);
     }
 }

@@ -23,19 +23,19 @@ class VideoAdsTest(
     companion object {
         @JvmStatic
         @Parameterized.Parameters(name = "{1}")
-        fun arguments() = listOf(
-            arrayOf(R.string.gam_original_video_rewarded, "GAM Original API Video Rewarded"),
-            arrayOf(R.string.ad_mob_video_rewarded, "AdMob Video Rewarded"),
+        fun arguments(): List<Array<Any>> = listOf(
+            arrayOf<Any>(R.string.gam_original_video_rewarded, "GAM Original API Video Rewarded"),
+            arrayOf<Any>(R.string.ad_mob_video_rewarded, "AdMob Video Rewarded"),
 
-            arrayOf(R.string.gam_rendering_video_banner, "GAM Video Banner"),
-            arrayOf(R.string.gam_rendering_video_rewarded, "GAM Rendering API Video Rewarded"),
+            arrayOf<Any>(R.string.gam_rendering_video_banner, "GAM Video Banner"),
+            arrayOf<Any>(R.string.gam_rendering_video_rewarded, "GAM Rendering API Video Rewarded"),
 
-            arrayOf(R.string.in_app_video_banner, "In-App Video Banner"),
-            arrayOf(
+            arrayOf<Any>(R.string.in_app_video_banner, "In-App Video Banner"),
+            arrayOf<Any>(
                 R.string.in_app_video_interstitial_end_card,
                 "In-App Video Interstitial End Card"
             ),
-            arrayOf(R.string.in_app_video_rewarded, "In-App Video Rewarded"),
+            arrayOf<Any>(R.string.in_app_video_rewarded, "In-App Video Rewarded"),
         )
     }
 
