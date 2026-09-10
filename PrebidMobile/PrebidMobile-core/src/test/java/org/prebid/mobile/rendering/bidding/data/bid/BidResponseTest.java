@@ -22,9 +22,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.BuildConfig;
@@ -38,6 +42,7 @@ public class BidResponseTest {
     @After
     public void tearDown() {
         PrebidMobile.setUseCacheForReportingWithRenderingApi(false);
+        PrebidMobile.setFilterOutUncachedBids(false);
     }
 
     @Test
@@ -193,6 +198,136 @@ public class BidResponseTest {
     }
 
     @Test
+    public void testParseJson_filterUncachedBidsAndUncachedBid_bidSkipped() throws Exception {
+        String responseString = removePrebidCache(
+                ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"),
+                0
+        );
+        PrebidMobile.setFilterOutUncachedBids(true);
+
+        BidResponse subject = new BidResponse(responseString, createOriginalApiConfiguration());
+
+        assertTrue(subject.isFilteringUncachedBids());
+        assertEquals(1, subject.getBidsWithoutSuccessfulCacheCount());
+        assertTrue(subject.getSeatbids().isEmpty());
+        assertNull(subject.getWinningBid());
+        assertFalse(subject.isTopBidFiltered());
+        assertTrue(subject.getTargeting().isEmpty());
+    }
+
+    @Test
+    public void testParseJson_filterUncachedBidsAndCachedBid_bidRemains() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json");
+        PrebidMobile.setFilterOutUncachedBids(true);
+
+        BidResponse subject = new BidResponse(responseString, createOriginalApiConfiguration());
+
+        assertEquals(0, subject.getBidsWithoutSuccessfulCacheCount());
+        assertNotNull(subject.getWinningBid());
+        assertFalse(subject.isTopBidFiltered());
+        assertEquals("value3", subject.getTargeting().get("hb_cache_id"));
+    }
+
+    @Test
+    public void testParseJson_filterUncachedBidsAndMixedResponse_onlyCachedBidAdded() throws Exception {
+        String cachedBidResponse = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json");
+        JSONObject response = new JSONObject(cachedBidResponse);
+        JSONArray bids = response.getJSONArray("seatbid").getJSONObject(0).getJSONArray("bid");
+        JSONObject uncachedBid = new JSONObject(bids.getJSONObject(0).toString());
+        uncachedBid.getJSONObject("ext").getJSONObject("prebid").remove("cache");
+        uncachedBid.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting").put("hb_bidder", "uncached_bidder");
+        bids.put(uncachedBid);
+        PrebidMobile.setFilterOutUncachedBids(true);
+
+        BidResponse subject = new BidResponse(response.toString(), createOriginalApiConfiguration());
+
+        assertEquals(1, subject.getBidsWithoutSuccessfulCacheCount());
+        assertEquals(1, subject.getSeatbids().get(0).getBids().size());
+        assertFalse(subject.isTopBidFiltered());
+        assertEquals("value2", subject.getTargeting().get("hb_bidder"));
+    }
+
+    @Test
+    public void testParseJson_filterUncachedBidsAndVastXmlCache_bidRemains() throws Exception {
+        JSONObject response = new JSONObject(ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"));
+        JSONObject cache = getCacheObject(response);
+        cache.remove("bids");
+        cache.put("vastXml", new JSONObject().put("url", "vastUrl").put("cacheId", "vastCacheId"));
+        PrebidMobile.setFilterOutUncachedBids(true);
+
+        BidResponse subject = new BidResponse(response.toString(), createOriginalApiConfiguration());
+
+        assertEquals(0, subject.getBidsWithoutSuccessfulCacheCount());
+        assertNotNull(subject.getWinningBid());
+    }
+
+    @Test
+    public void testParseJson_filterUncachedBidsAndCacheUrlWithoutCacheId_bidSkipped() throws Exception {
+        // The creative is fetched from Prebid Cache by cacheId, so a url alone is not a usable entry.
+        JSONObject response = new JSONObject(ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"));
+        getCacheObject(response).getJSONObject("bids").remove("cacheId");
+        PrebidMobile.setFilterOutUncachedBids(true);
+
+        BidResponse subject = new BidResponse(response.toString(), createOriginalApiConfiguration());
+
+        assertEquals(1, subject.getBidsWithoutSuccessfulCacheCount());
+        assertNull(subject.getWinningBid());
+    }
+
+    @Test
+    public void testParseJson_filterUncachedBidsAndTopBidUncached_highestPricedCachedBidPromoted() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/top_bid_uncached_runner_up_cached.json");
+        PrebidMobile.setFilterOutUncachedBids(true);
+        AdUnitConfiguration configuration = createOriginalApiConfiguration();
+
+        BidResponse subject = new BidResponse(responseString, configuration);
+
+        assertEquals(1, subject.getBidsWithoutSuccessfulCacheCount());
+        assertEquals(2, subject.getSeatbids().get(0).getBids().size());
+        assertTrue(subject.isTopBidFiltered());
+
+        Bid winningBid = subject.getWinningBid();
+        assertNotNull(winningBid);
+        assertEquals("runnerUpBid", winningBid.getId());
+        assertEquals(winningBid.getJsonString(), subject.getWinningBidJson());
+
+        assertNull(subject.getTargeting().get("hb_bidder_openx"));
+        assertEquals("runner-up-cache-id", subject.getTargeting().get("hb_cache_id_appnexus"));
+
+        BidInfo bidInfo = BidInfo.create(ResultCode.SUCCESS, subject, configuration);
+        assertTrue(bidInfo.isTopBidFiltered());
+    }
+
+    @Test
+    public void testParseJson_filterUncachedBidsDisabledAndTopBidUncached_noPromotion() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/top_bid_uncached_runner_up_cached.json");
+
+        BidResponse subject = new BidResponse(responseString, createOriginalApiConfiguration());
+
+        assertFalse(subject.isFilteringUncachedBids());
+        assertFalse(subject.isTopBidFiltered());
+        assertEquals(3, subject.getSeatbids().get(0).getBids().size());
+        assertNull(subject.getWinningBid());
+        assertFalse(BidInfo.create(ResultCode.SUCCESS, subject, null).isTopBidFiltered());
+    }
+
+    @Test
+    public void testParseJson_filterUncachedBidsWithRenderingApi_noBidsFiltered() throws Exception {
+        // The Rendering API renders from the bid markup and never reads Prebid Cache.
+        String responseString = removePrebidCache(
+                ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"),
+                0
+        );
+        PrebidMobile.setFilterOutUncachedBids(true);
+
+        BidResponse subject = new BidResponse(responseString, new AdUnitConfiguration());
+
+        assertFalse(subject.isFilteringUncachedBids());
+        assertEquals(0, subject.getBidsWithoutSuccessfulCacheCount());
+        assertNotNull(subject.getWinningBid());
+    }
+
+    @Test
     public void testBidType_banner() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("BidResponseTest/bid_type_banner.json");
 
@@ -230,6 +365,36 @@ public class BidResponseTest {
         BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
 
         assertTrue(subject.isVideo());
+    }
+
+    private AdUnitConfiguration createOriginalApiConfiguration() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(true);
+        return configuration;
+    }
+
+    private JSONObject getCacheObject(JSONObject response) throws Exception {
+        return response
+                .getJSONArray("seatbid")
+                .getJSONObject(0)
+                .getJSONArray("bid")
+                .getJSONObject(0)
+                .getJSONObject("ext")
+                .getJSONObject("prebid")
+                .getJSONObject("cache");
+    }
+
+    private String removePrebidCache(String responseString, int bidIndex) throws Exception {
+        JSONObject response = new JSONObject(responseString);
+        response
+                .getJSONArray("seatbid")
+                .getJSONObject(0)
+                .getJSONArray("bid")
+                .getJSONObject(bidIndex)
+                .getJSONObject("ext")
+                .getJSONObject("prebid")
+                .remove("cache");
+        return response.toString();
     }
 
 }

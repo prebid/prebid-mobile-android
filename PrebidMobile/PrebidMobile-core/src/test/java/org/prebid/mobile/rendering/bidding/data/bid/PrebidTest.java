@@ -38,6 +38,8 @@ public class PrebidTest {
     public void tearDown(){
         PrebidMobile.setIncludeBidderKeysFlag(false);
         PrebidMobile.setIncludeWinnersFlag(false);
+        PrebidMobile.setFilterOutUncachedBids(false);
+        PrebidMobile.setUseCacheForReportingWithRenderingApi(false);
         PrebidMobile.clearStoredBidResponses();
     }
     @Test
@@ -90,6 +92,22 @@ public class PrebidTest {
 
         AdUnitConfiguration config = new AdUnitConfiguration();
         config.setIsOriginalAdUnit(true);
+        assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false, config).toString());
+    }
+
+    @Test
+    public void whenGetJsonObjectForBidRequestAndFilterOutUncachedBidsWithRenderingApi_NoCacheRequested() throws JSONException {
+        // filterOutUncachedBids only filters the response, so it must never add a cache request.
+        JSONObject expected = new JSONObject();
+        StoredRequest storedRequest = new StoredRequest("test");
+
+        expected.put("storedrequest", storedRequest.toJSONObject());
+        expected.put("targeting", new JSONObject());
+        expected.put("sdk", new JSONObject().put("renderers", new JSONArray()));
+
+        PrebidMobile.setFilterOutUncachedBids(true);
+        AdUnitConfiguration config = new AdUnitConfiguration();
+
         assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false, config).toString());
     }
 

@@ -16,6 +16,9 @@
 
 package org.prebid.mobile.rendering.bidding.data.bid;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
@@ -62,6 +65,17 @@ public class Seatbid {
     }
 
     public static Seatbid fromJSONObject(JSONObject jsonObject) {
+        return fromJSONObject(jsonObject, null);
+    }
+
+    /**
+     * Parses a seatbid, keeping only the bids accepted by {@code bidFilter}. Filtering while
+     * parsing avoids rebuilding the bid lists afterwards.
+     */
+    static Seatbid fromJSONObject(
+            JSONObject jsonObject,
+            @Nullable BidFilter bidFilter
+    ) {
         Seatbid seatbid = new Seatbid();
         if (jsonObject == null) {
             return seatbid;
@@ -71,7 +85,7 @@ public class Seatbid {
             JSONArray jsonArray = jsonObject.optJSONArray("bid");
             for (int i = 0; i < jsonArray.length(); i++) {
                 Bid bid = Bid.fromJSONObject(jsonArray.optJSONObject(i));
-                if (bid != null) {
+                if (bid != null && (bidFilter == null || bidFilter.keep(bid))) {
                     seatbid.bids.add(bid);
                 }
             }
@@ -84,5 +98,11 @@ public class Seatbid {
         }
 
         return seatbid;
+    }
+
+    interface BidFilter {
+
+        boolean keep(@NonNull Bid bid);
+
     }
 }
