@@ -22,6 +22,7 @@ import android.os.Looper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.PrebidMobile;
@@ -181,10 +182,7 @@ public class RewardedAdUnitTest {
 
     @Test
     public void whenReadyAdExpires_NotifyListenerAndKeepAdLoaded() {
-        BidResponse mockBidResponse = mock(BidResponse.class);
-        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
-        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
-
+        receiveBid(1);
         rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
 
         assertTrue(rewardedAdUnit.isLoaded());
@@ -199,11 +197,37 @@ public class RewardedAdUnitTest {
     }
 
     @Test
-    public void showWhenReadyAdExpired_ShowPrebid() {
-        BidResponse mockBidResponse = mock(BidResponse.class);
-        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
-        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
+    public void whenBidExpiresWhileAdIsLoading_NotifyExpiredRightAfterLoaded() {
+        receiveBid(1);
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
+        verify(mockRewardedAdUnitListener, never()).onAdExpired(rewardedAdUnit);
+
+        rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
+
+        InOrder inOrder = inOrder(mockRewardedAdUnitListener);
+        inOrder.verify(mockRewardedAdUnitListener).onAdLoaded(rewardedAdUnit);
+        inOrder.verify(mockRewardedAdUnitListener).onAdExpired(rewardedAdUnit);
+        assertTrue(rewardedAdUnit.isExpired());
+        assertTrue(rewardedAdUnit.isLoaded());
+    }
+
+    @Test
+    public void whenCreativeLoadsSlowly_ExpirationStillCountsFromBidReceipt() {
+        receiveBid(2);
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
+        rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
+
+        verify(mockRewardedAdUnitListener, never()).onAdExpired(rewardedAdUnit);
+
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
+
+        verify(mockRewardedAdUnitListener).onAdExpired(rewardedAdUnit);
+    }
+
+    @Test
+    public void showWhenReadyAdExpired_ShowPrebid() {
+        receiveBid(1);
         rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
@@ -214,10 +238,7 @@ public class RewardedAdUnitTest {
 
     @Test
     public void loadAdWhenReadyAdExpired_ReleaseExpiredAdAndLoadNewOne() {
-        BidResponse mockBidResponse = mock(BidResponse.class);
-        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
-        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
-
+        receiveBid(1);
         rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
@@ -231,10 +252,7 @@ public class RewardedAdUnitTest {
 
     @Test
     public void whenDisplayedAdExpirationTimerFires_DoNotNotifyExpired() {
-        BidResponse mockBidResponse = mock(BidResponse.class);
-        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
-        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
-
+        receiveBid(1);
         rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
         rewardedAdUnit.controllerListener.onInterstitialDisplayed();
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
@@ -245,11 +263,8 @@ public class RewardedAdUnitTest {
     }
 
     @Test
-    public void whenAdServerWins_DoNotScheduleExpiration() {
-        BidResponse mockBidResponse = mock(BidResponse.class);
-        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
-        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
-
+    public void whenAdServerWins_DoNotNotifyExpired() {
+        receiveBid(1);
         RenderingTestUtils.getRewardedVideoEventListener(rewardedAdUnit).onAdServerWin(new Object());
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
@@ -260,16 +275,13 @@ public class RewardedAdUnitTest {
 
     @Test
     public void whenDestroyedBeforeExpiration_DoNotNotifyExpired() {
-        BidResponse mockBidResponse = mock(BidResponse.class);
-        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
-        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
-
+        receiveBid(1);
         rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
         rewardedAdUnit.destroy();
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
         // isExpired() is the meaningful assertion: cancelExpiration() must have fired, otherwise
-        // expireAd() would set expired=true. The verify(never()) below is a secondary check;
+        // expireAdIfNeeded() would set expired=true. The verify(never()) below is a secondary check;
         // destroy() nulls userListener so the callback is suppressed regardless of cancellation.
         assertFalse(rewardedAdUnit.isExpired());
         verify(mockRewardedAdUnitListener, never()).onAdExpired(rewardedAdUnit);
@@ -277,10 +289,7 @@ public class RewardedAdUnitTest {
 
     @Test
     public void whenLoadAdBeforeExpiration_DoNotNotifyExpiredFromPreviousTimer() {
-        BidResponse mockBidResponse = mock(BidResponse.class);
-        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
-        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
-
+        receiveBid(1);
         rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
         RenderingTestUtils.changeInterstitialState(rewardedAdUnit, READY_FOR_LOAD);
 
@@ -294,10 +303,7 @@ public class RewardedAdUnitTest {
 
     @Test
     public void whenReadyWithoutExpiration_DoNotNotifyExpired() {
-        BidResponse mockBidResponse = mock(BidResponse.class);
-        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(null);
-        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
-
+        receiveBid(null);
         rewardedAdUnit.controllerListener.onInterstitialReadyForDisplay();
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
@@ -407,5 +413,11 @@ public class RewardedAdUnitTest {
         verify(mockRewardedAdUnitListener, times(1)).onAdClosed(rewardedAdUnit);
     }
     //endregion ================= EventListener tests
+
+    private void receiveBid(Integer expirationTimeSeconds) {
+        BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(expirationTimeSeconds);
+        RenderingTestUtils.getBidRequesterListener(rewardedAdUnit).onFetchCompleted(mockBidResponse);
+    }
 
 }

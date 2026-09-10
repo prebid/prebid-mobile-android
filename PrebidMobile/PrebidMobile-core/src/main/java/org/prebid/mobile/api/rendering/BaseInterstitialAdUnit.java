@@ -19,6 +19,7 @@ package org.prebid.mobile.api.rendering;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -58,8 +59,8 @@ public abstract class BaseInterstitialAdUnit {
     private InterstitialAdUnitState interstitialAdUnitState = READY_FOR_LOAD;
     private final Handler expirationHandler = new Handler(Looper.getMainLooper());
     private Runnable expirationRunnable;
+    private long bidExpirationUptimeMillis;
     private boolean expired;
-    private boolean adDisplayed;
 
     private final WeakReference<Context> weakContext;
     private final BidRequesterListener bidRequesterListener = createBidRequesterListener();
@@ -102,7 +103,6 @@ public abstract class BaseInterstitialAdUnit {
         }
         cancelExpiration();
         expired = false;
-        adDisplayed = false;
         bidLoader.load();
     }
 
@@ -279,12 +279,12 @@ public abstract class BaseInterstitialAdUnit {
             return;
         }
 
-        expirationRunnable = this::expireAd;
-        expirationHandler.postDelayed(expirationRunnable, expirationTimeSeconds * 1000L);
+        bidExpirationUptimeMillis = SystemClock.uptimeMillis() + expirationTimeSeconds * 1000L;
+        expirationRunnable = this::expireAdIfNeeded;
+        expirationHandler.postAtTime(expirationRunnable, bidExpirationUptimeMillis);
     }
 
     protected void markAdDisplayed() {
-        adDisplayed = true;
         cancelExpiration();
     }
 
@@ -331,10 +331,17 @@ public abstract class BaseInterstitialAdUnit {
             expirationHandler.removeCallbacks(expirationRunnable);
             expirationRunnable = null;
         }
+        bidExpirationUptimeMillis = 0;
     }
 
-    private void expireAd() {
-        if (expired || adDisplayed) {
+    private boolean hasBidExpired() {
+        return bidExpirationUptimeMillis > 0 && SystemClock.uptimeMillis() >= bidExpirationUptimeMillis;
+    }
+
+    private void expireAdIfNeeded() {
+        // Only a loaded Prebid ad that is not shown yet can expire. While its creative loads,
+        // onInterstitialReadyForDisplay() re-checks, so onAdExpired never precedes onAdLoaded.
+        if (expired || interstitialAdUnitState != READY_TO_DISPLAY_PREBID || !hasBidExpired()) {
             return;
         }
 
@@ -357,6 +364,8 @@ public abstract class BaseInterstitialAdUnit {
             public void onFetchCompleted(BidResponse response) {
                 bidResponse = response;
                 prebidException = null;
+                // bid.exp counts from the auction, so the countdown starts as soon as the bid arrives.
+                scheduleExpirationIfNeeded();
 
                 changeInterstitialAdUnitState(LOADING);
                 requestAdWithBid(getWinnerBid());
@@ -377,8 +386,9 @@ public abstract class BaseInterstitialAdUnit {
             @Override
             public void onInterstitialReadyForDisplay() {
                 changeInterstitialAdUnitState(READY_TO_DISPLAY_PREBID);
-                scheduleExpirationIfNeeded();
                 notifyAdEventListener(AdListenerEvent.AD_LOADED);
+                // The bid may have expired while the creative was loading.
+                expireAdIfNeeded();
             }
 
             @Override

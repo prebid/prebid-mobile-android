@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
@@ -79,6 +80,8 @@ public class BannerView extends FrameLayout {
     private AdException prebidException;
     private final Handler expirationHandler = new Handler(Looper.getMainLooper());
     private Runnable expirationRunnable;
+    private long bidExpirationUptimeMillis;
+    private boolean isBidAdLoaded;
     private boolean expired;
     private boolean isRefreshStopped;
 
@@ -100,10 +103,12 @@ public class BannerView extends FrameLayout {
     private final DisplayViewListener displayViewListener = new DisplayViewListener() {
         @Override
         public void onAdLoaded() {
-            scheduleExpirationIfNeeded();
+            isBidAdLoaded = true;
             if (bannerViewListener != null) {
                 bannerViewListener.onAdLoaded(BannerView.this);
             }
+            // The bid may have expired while the creative was loading.
+            expireAdIfNeeded();
         }
 
         @Override
@@ -181,6 +186,8 @@ public class BannerView extends FrameLayout {
         public void onFetchCompleted(BidResponse response) {
             bidResponse = response;
             prebidException = null;
+            // bid.exp counts from the auction, so the countdown starts as soon as the bid arrives.
+            scheduleExpirationIfNeeded();
 
             isPrimaryAdServerRequestInProgress = true;
             eventHandler.requestAdWithBid(getWinnerBid());
@@ -491,8 +498,6 @@ public class BannerView extends FrameLayout {
     }
 
     private void displayPrebidView() {
-        resetExpiration();
-
         if (indexOfChild(displayView) != -1) {
             displayView.destroy();
             displayView = null;
@@ -510,6 +515,7 @@ public class BannerView extends FrameLayout {
     }
 
     private void displayAdServerView(View view) {
+        // The ad server's own creative is not the Prebid bid, so it never expires.
         resetExpiration();
         removeAllViews();
 
@@ -548,8 +554,8 @@ public class BannerView extends FrameLayout {
     }
 
     private void scheduleExpirationIfNeeded() {
-        // A refreshed bid without exp must not inherit the previous ad's timer.
-        cancelExpiration();
+        // The new bid replaces the previous ad, so a bid without exp must not inherit its timer.
+        resetExpiration();
 
         Integer expirationTimeSeconds = bidResponse != null ? bidResponse.getExpirationTimeSeconds() : null;
         // BidResponse normalizes absent, zero, and negative exp values to null.
@@ -557,8 +563,9 @@ public class BannerView extends FrameLayout {
             return;
         }
 
-        expirationRunnable = this::expireAd;
-        expirationHandler.postDelayed(expirationRunnable, expirationTimeSeconds * 1000L);
+        bidExpirationUptimeMillis = SystemClock.uptimeMillis() + expirationTimeSeconds * 1000L;
+        expirationRunnable = this::expireAdIfNeeded;
+        expirationHandler.postAtTime(expirationRunnable, bidExpirationUptimeMillis);
     }
 
     private void cancelExpiration() {
@@ -566,15 +573,23 @@ public class BannerView extends FrameLayout {
             expirationHandler.removeCallbacks(expirationRunnable);
             expirationRunnable = null;
         }
+        bidExpirationUptimeMillis = 0;
     }
 
     private void resetExpiration() {
         cancelExpiration();
+        isBidAdLoaded = false;
         expired = false;
     }
 
-    private void expireAd() {
-        if (expired) {
+    private boolean hasBidExpired() {
+        return bidExpirationUptimeMillis > 0 && SystemClock.uptimeMillis() >= bidExpirationUptimeMillis;
+    }
+
+    private void expireAdIfNeeded() {
+        // Only the current bid's loaded Prebid ad can expire. While its creative loads,
+        // onAdLoaded() re-checks, so onAdExpired never precedes onAdLoaded.
+        if (expired || !isBidAdLoaded || !hasBidExpired()) {
             return;
         }
 

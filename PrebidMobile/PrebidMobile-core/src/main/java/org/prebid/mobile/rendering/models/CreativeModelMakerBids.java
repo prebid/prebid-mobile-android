@@ -43,8 +43,6 @@ public class CreativeModelMakerBids {
 
     @Nullable
     private String viewableUrl;
-    @Nullable
-    private Integer expirationTimeSeconds;
 
     @NonNull private final AdLoadListener listener;
     private final VastParserExtractor parserExtractor = new VastParserExtractor(this::handleExtractorResult);
@@ -89,7 +87,6 @@ public class CreativeModelMakerBids {
         }
 
         viewableUrl = winningBid.getBurl();
-        expirationTimeSeconds = bidResponse.getExpirationTimeSeconds();
 
         if (bidResponse.isVideo()) {
             makeVideoModels(adConfiguration, winningBid.getAdm());
@@ -128,7 +125,6 @@ public class CreativeModelMakerBids {
         model.setHeight(bid != null ? bid.getHeight() : 0);
         model.setRequireImpressionUrl(false);
         model.setViewableUrl(viewableUrl);
-        model.setExpirationTimeSeconds(expirationTimeSeconds);
 
         adConfiguration.setInterstitialSize(model.getWidth(), model.getHeight());
         result.creativeModels.add(model);
