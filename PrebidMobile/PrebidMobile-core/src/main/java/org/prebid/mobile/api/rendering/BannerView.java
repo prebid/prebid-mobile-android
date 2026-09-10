@@ -579,17 +579,21 @@ public class BannerView extends FrameLayout {
         }
 
         expired = true;
-        if (displayView != null) {
-            displayView.destroy();
-            displayView = null;
+        // A non-refreshable banner keeps showing the expired creative; the app is only notified.
+        boolean isRefreshable = adUnitConfig.getAutoRefreshDelay() > 0 && !isRefreshStopped;
+        if (isRefreshable) {
+            if (displayView != null) {
+                displayView.destroy();
+                displayView = null;
+            }
+            removeAllViews();
         }
-        removeAllViews();
 
         if (bannerViewListener != null) {
             bannerViewListener.onAdExpired(BannerView.this);
         }
 
-        if (adUnitConfig.getAutoRefreshDelay() > 0 && !isRefreshStopped) {
+        if (isRefreshable) {
             loadAd();
         }
     }

@@ -62,7 +62,7 @@ public interface BannerViewListener {
 
     /**
      * Executed when the loaded ad expires ({@code bid.exp}) before an impression is tracked.
-     * The expired ad is removed, and a new one is loaded if auto-refresh is enabled.
+     * With auto-refresh enabled, the expired ad is replaced with a new one; otherwise it stays on screen.
      *
      * @param bannerView view of the corresponding event.
      */

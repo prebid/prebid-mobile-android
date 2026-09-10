@@ -90,7 +90,6 @@ open class PpmBannerFragment : AdFragment(), BannerViewListener {
     }
 
     override fun onAdExpired(bannerView: BannerView?) {
-        resetEventButtons()
         events.expired(true)
         binding.btnLoad.isEnabled = true
     }

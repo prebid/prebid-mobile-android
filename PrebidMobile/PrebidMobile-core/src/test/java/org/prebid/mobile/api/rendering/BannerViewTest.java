@@ -363,20 +363,22 @@ public class BannerViewTest {
     }
 
     @Test
-    public void whenLoadedBannerExpiresWithoutRefresh_NotifyExpiredOnly()
+    public void whenLoadedBannerExpiresWithoutRefresh_KeepAdAndNotifyExpiredOnly()
         throws IllegalAccessException {
         BidResponse mockBidResponse = mock(BidResponse.class);
         when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
         bannerView.setBidResponse(mockBidResponse);
+        bannerView.addView(new View(mockContext));
 
         RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
 
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
         assertTrue(bannerView.isExpired());
+        assertEquals(1, bannerView.getChildCount());
         verify(mockBannerListener).onAdExpired(bannerView);
         verify(mockBannerListener, never()).onAdFailed(eq(bannerView), any(AdException.class));
-        verify(mockDisplayView).destroy();
+        verify(mockDisplayView, never()).destroy();
         verify(mockBidLoader, never()).load();
     }
 
@@ -400,7 +402,7 @@ public class BannerViewTest {
     }
 
     @Test
-    public void whenRefreshStoppedBannerExpires_DoNotLoadAgain()
+    public void whenRefreshStoppedBannerExpires_KeepAdAndDoNotLoadAgain()
         throws IllegalAccessException {
         BidResponse mockBidResponse = mock(BidResponse.class);
         when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(1);
@@ -413,6 +415,7 @@ public class BannerViewTest {
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
         verify(mockBannerListener).onAdExpired(bannerView);
+        verify(mockDisplayView, never()).destroy();
         verify(mockBidLoader, never()).load();
     }
 

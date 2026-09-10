@@ -97,7 +97,6 @@ open class GamBannerFragment : AdFragment(),
 
     override fun onAdExpired(bannerView: BannerView?) {
         Log.d(TAG, "onAdExpired() called with: bannerView = [$bannerView]")
-        resetEventButtons()
         events.expired(true)
         binding.btnLoad.isEnabled = true
     }
