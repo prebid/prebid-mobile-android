@@ -34,8 +34,17 @@ public class Bids {
         return cacheId;
     }
 
+    /**
+     * A cache entry is usable only with a cacheId. Prebid Cache is read with
+     * {@code GET /cache?uuid=<cacheId>}, and Prebid Universal Creative builds that request from the
+     * hb_cache_id targeting key. {@code url} is the same cacheId pre-assembled with the cache host
+     * and path, so it never counts on its own.
+     *
+     * @see <a href="https://docs.prebid.org/prebid-server/endpoints/pbs-endpoints-pbc.html">Prebid Cache endpoints</a>
+     * @see <a href="https://docs.prebid.org/prebid-server/use-cases/pbs-sdk.html">Prebid Server with the Mobile SDK</a>
+     */
     public boolean hasCacheData() {
-        return url != null && !url.isEmpty() || cacheId != null && !cacheId.isEmpty();
+        return cacheId != null && !cacheId.isEmpty();
     }
 
     public static Bids fromJSONObject(JSONObject jsonObject) {

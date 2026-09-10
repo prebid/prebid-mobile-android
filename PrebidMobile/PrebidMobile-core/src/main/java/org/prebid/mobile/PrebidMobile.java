@@ -108,7 +108,17 @@ public class PrebidMobile {
      * the impression event respectively to the legacy analytic setup.
      */
     private static boolean useCacheForReportingWithRenderingApi = false;
-    private static boolean requireServerSideBidCache = false;
+
+    /**
+     * Indicates whether the SDK filters out bids that don't have a successful server-side Prebid Cache
+     * entry (bid.ext.prebid.cache) before passing their targeting to the ad server.
+     * Applies to the Original API only: the Rendering API renders the creative from the bid markup
+     * and never fetches it from Prebid Cache.
+     * <p>
+     * This setting only filters the response. It never requests caching: the Original API already
+     * asks Prebid Server to cache bids.
+     */
+    private static boolean filterOutUncachedBids = false;
 
     private static int timeoutMillis = 2_000;
     private static boolean isTimeoutModified = false;
@@ -160,19 +170,24 @@ public class PrebidMobile {
     }
 
     /**
-     * Indicates whether the SDK should ignore bids that don't contain a successful
-     * server-side Prebid Cache entry in bid.ext.prebid.cache.
+     * {@link #filterOutUncachedBids}
      */
-    public static boolean isRequireServerSideBidCache() {
-        return requireServerSideBidCache;
+    public static boolean isFilterOutUncachedBids() {
+        return filterOutUncachedBids;
     }
 
     /**
-     * Enables strict server-side cache validation for bid responses.
-     * If enabled, bids without a successful Prebid Cache entry are ignored.
+     * Enables filtering of bids without a successful server-side Prebid Cache entry. Original API only.
+     * <p>
+     * Filtered bids never reach the ad server targeting. If the bid Prebid Server designated as the
+     * winner is filtered, the highest-priced cached bid is promoted and
+     * {@link org.prebid.mobile.api.data.BidInfo#isTopBidFiltered()} is {@code true}. If every bid is
+     * filtered, the fetch demand result is {@link ResultCode#NO_CACHED_BIDS}.
+     * <p>
+     * Default is {@code false}.
      */
-    public static void setRequireServerSideBidCache(boolean requireServerSideBidCache) {
-        PrebidMobile.requireServerSideBidCache = requireServerSideBidCache;
+    public static void setFilterOutUncachedBids(boolean filterOutUncachedBids) {
+        PrebidMobile.filterOutUncachedBids = filterOutUncachedBids;
     }
 
     /**

@@ -61,10 +61,13 @@ public class BidLoader {
                 failedToLoadBid(new AdException(AdException.FAILED_TO_PARSE_RESPONSE, bidResponse.getParseError()));
                 return;
             }
-            if (PrebidMobile.isRequireServerSideBidCache()) {
+            if (bidResponse.isFilteringUncachedBids()) {
                 int removedBids = bidResponse.getBidsWithoutSuccessfulCacheCount();
                 if (removedBids > 0) {
                     LogUtil.warning(TAG, "Ignored " + removedBids + " bids without successful Prebid Cache entries.");
+                }
+                if (bidResponse.isTopBidFiltered()) {
+                    LogUtil.warning(TAG, "Top bid was filtered for a failed Prebid Cache entry; promoted the next best cached bid.");
                 }
                 if (bidResponse.getWinningBid() == null) {
                     String errorMessage = removedBids > 0 && bidResponse.getSeatbids().isEmpty()
@@ -74,6 +77,7 @@ public class BidLoader {
                             AdException.NO_BIDS,
                             errorMessage
                     ));
+                    callEventDelegate(bidResponse);
                     return;
                 }
             }

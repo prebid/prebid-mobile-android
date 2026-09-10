@@ -130,9 +130,7 @@ public class Prebid {
             Utils.addValue(cache, "vastxml", new JSONObject());
         }
 
-        if (PrebidMobile.isUseCacheForReportingWithRenderingApi()
-                || config.isOriginalAdUnit()
-                || PrebidMobile.isRequireServerSideBidCache()) {
+        if (PrebidMobile.isUseCacheForReportingWithRenderingApi() || config.isOriginalAdUnit()) {
             Utils.addValue(prebid, "cache", cache);
         }
 

@@ -24,7 +24,9 @@ import org.prebid.mobile.test.utils.ResourceUtils;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class CacheTest {
 
@@ -57,5 +59,36 @@ public class CacheTest {
 
         assertEquals("vastUrl", cache.getVastXml().getUrl());
         assertEquals("vastCacheId", cache.getVastXml().getCacheId());
+    }
+
+    @Test
+    public void whenBidsHaveCacheId_HasSuccessfulServerCache() throws JSONException {
+        JSONObject jsonCache = new JSONObject();
+        jsonCache.put("bids", new JSONObject().put("cacheId", "cache-id"));
+
+        assertTrue(Cache.fromJSONObject(jsonCache).hasSuccessfulServerCache());
+    }
+
+    @Test
+    public void whenVastXmlHasCacheId_HasSuccessfulServerCache() throws JSONException {
+        JSONObject jsonCache = new JSONObject();
+        jsonCache.put("vastXml", new JSONObject().put("cacheId", "vast-cache-id"));
+
+        assertTrue(Cache.fromJSONObject(jsonCache).hasSuccessfulServerCache());
+    }
+
+    @Test
+    public void whenBidsHaveUrlButNoCacheId_NoSuccessfulServerCache() throws JSONException {
+        // url is only cacheId pre-assembled with the cache host and path; without a cacheId the
+        // creative cannot be retrieved from Prebid Cache.
+        JSONObject jsonCache = new JSONObject();
+        jsonCache.put("bids", new JSONObject().put("url", "https://prebid-cache/cache?uuid=cache-id"));
+
+        assertFalse(Cache.fromJSONObject(jsonCache).hasSuccessfulServerCache());
+    }
+
+    @Test
+    public void whenNoCacheEntries_NoSuccessfulServerCache() {
+        assertFalse(Cache.fromJSONObject(new JSONObject()).hasSuccessfulServerCache());
     }
 }
