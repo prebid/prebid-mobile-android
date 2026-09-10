@@ -217,7 +217,16 @@ public class BasicParameterBuilder extends ParameterBuilder {
             video.pos = adConfiguration.getAdPositionValue();
         }
 
-        if (adConfiguration.isOriginalAdUnit()) {
+        // Also honor VideoParameters on the rendering path (e.g. a multiformat
+        // BannerView configured via setVideoParameters). Gating the whole read on
+        // isOriginalAdUnit() — which no rendering-API class sets — meant a
+        // rendering BannerView's video imp carried only video.w/h; every other
+        // field (mimes/protocols/playbackmethod/api/plcmt/placement/durations)
+        // was dropped and placement fell back to INTERSTITIAL. Reading params
+        // only when they're explicitly set is guarded: rendering units that never
+        // call setVideoParameters keep the original default branch. isOriginalAdUnit
+        // is intentionally not flipped — it drives more than video imp building.
+        if (adConfiguration.isOriginalAdUnit() || adConfiguration.getVideoParameters() != null) {
             VideoParameters videoParameters = adConfiguration.getVideoParameters();
             if (videoParameters != null) {
                 video.minduration = videoParameters.getMinDuration();

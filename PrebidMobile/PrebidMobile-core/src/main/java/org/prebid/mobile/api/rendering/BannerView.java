@@ -28,8 +28,11 @@ import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.data.VideoPlacementType;
+import java.util.EnumSet;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.BannerVideoListener;
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener;
@@ -388,6 +391,32 @@ public class BannerView extends FrameLayout {
     @Nullable
     public VideoPlacementType getVideoPlacementType() {
         return VideoPlacementType.mapToVideoPlacementType(adUnitConfig.getPlacementTypeValue());
+    }
+
+    /**
+     * Sets the ad unit formats for a MULTIFORMAT bid request (e.g. banner +
+     * video). Unlike {@link #setVideoPlacementType(VideoPlacementType)} — which
+     * calls {@code setAdFormat(VAST)} and therefore makes the request
+     * video-only — this lets a single {@code BannerView} impression request
+     * banner AND video (and/or native), matching {@code InterstitialAdUnit}'s
+     * {@code EnumSet<AdUnitFormat>} API and the original API. The winning
+     * creative is rendered by the existing path (DisplayView -> PrebidRenderer
+     * -> PrebidDisplayView, which branches on {@code BidResponse#isVideo()}).
+     *
+     * @param adUnitFormats the set of formats to request
+     */
+    public void setAdUnitFormats(EnumSet<AdUnitFormat> adUnitFormats) {
+        adUnitConfig.setAdUnitFormats(adUnitFormats);
+    }
+
+    /**
+     * Sets the {@link VideoParameters} used when requesting video demand in a
+     * multiformat {@link BannerView} (see {@link #setAdUnitFormats(EnumSet)}).
+     *
+     * @param videoParameters the video parameters to apply to the request
+     */
+    public void setVideoParameters(VideoParameters videoParameters) {
+        adUnitConfig.setVideoParameters(videoParameters);
     }
 
     /**
