@@ -79,7 +79,10 @@ public final class NetworkConnectionInfoManager extends BaseManager implements C
             LogUtil.warning(TAG, "Active network reports no NetworkCapabilities; treating connection as OFFLINE.");
             return UserParameters.ConnectionType.OFFLINE;
         }
-        if (!capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
+        // An internet-capable network the system has not validated (captive portal, no
+        // upstream connectivity yet) cannot reach the bid server either.
+        if (!capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                || !capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)) {
             return UserParameters.ConnectionType.OFFLINE;
         }
 
