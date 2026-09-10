@@ -101,8 +101,7 @@ abstract class BaseBidInterstitialFragment : AdFragment(),
 
     override fun onAdExpired(interstitialAdUnit: InterstitialAdUnit?) {
         Log.d(TAG, "onAdExpired() called with: interstitialAdUnit = [$interstitialAdUnit]")
-        // The test app has no dedicated expired event indicator, so reuse failed for visibility.
-        events.failed(true)
+        events.expired(true)
         binding.btnLoad.setText(R.string.text_load)
         binding.btnLoad.isEnabled = true
     }
@@ -140,6 +139,7 @@ abstract class BaseBidInterstitialFragment : AdFragment(),
         fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
         fun closed(b: Boolean) = enable(R.id.btnAdClosed, b)
         fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+        fun expired(b: Boolean) = enable(R.id.btnAdExpired, b)
         fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
 
     }

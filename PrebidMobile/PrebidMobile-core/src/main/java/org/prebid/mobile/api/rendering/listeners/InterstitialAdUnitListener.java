@@ -61,7 +61,8 @@ public interface InterstitialAdUnitListener {
     void onAdClosed(InterstitialAdUnit interstitialAdUnit);
 
     /**
-     * Executed when the loaded ad expires before it can be used.
+     * Executed when the loaded ad expires ({@code bid.exp}) before an impression is tracked.
+     * The ad can still be shown, or replaced by calling {@link InterstitialAdUnit#loadAd()}.
      *
      * @param interstitialAdUnit view of the corresponding event.
      */

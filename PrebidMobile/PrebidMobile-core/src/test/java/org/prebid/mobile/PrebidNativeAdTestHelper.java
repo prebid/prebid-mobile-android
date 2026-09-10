@@ -8,7 +8,6 @@ import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.test.utils.ResourceUtils;
 
 import java.util.ArrayList;
-import java.lang.ref.WeakReference;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,10 +46,6 @@ final class PrebidNativeAdTestHelper {
 
     static boolean isExpired(PrebidNativeAd ad) {
         return Reflection.getFieldOf(ad, "expired");
-    }
-
-    static void markRegisteredViewReleased(PrebidNativeAd ad) {
-        Reflection.setVariableTo(ad, "registeredView", new WeakReference<View>(null));
     }
 
     static class TestNativeAdEventListener implements PrebidNativeAdEventListener {

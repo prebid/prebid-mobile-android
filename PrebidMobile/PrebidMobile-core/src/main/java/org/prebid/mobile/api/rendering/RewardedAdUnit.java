@@ -216,7 +216,6 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
             @Override
             public void onAdServerWin(Object userReward) {
                 changeInterstitialAdUnitState(InterstitialAdUnitState.READY_TO_DISPLAY_GAM);
-                scheduleExpirationIfNeeded();
                 notifyAdEventListener(AdListenerEvent.AD_LOADED);
             }
 

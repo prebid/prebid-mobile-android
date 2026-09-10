@@ -191,7 +191,6 @@ public class PrebidNativeAdTest {
                 expired.set(true);
             }
         });
-        PrebidNativeAdTestHelper.markRegisteredViewReleased(nativeAd);
 
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
@@ -237,7 +236,6 @@ public class PrebidNativeAdTest {
         AtomicBoolean expired = new AtomicBoolean(false);
 
         nativeAd.registerPrebidNativeAdEventListener(new PrebidNativeAdTestHelper.TestNativeAdEventListener(expired::set));
-        PrebidNativeAdTestHelper.markRegisteredViewReleased(nativeAd);
 
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
@@ -256,7 +254,6 @@ public class PrebidNativeAdTest {
         AtomicInteger expireCallCount = new AtomicInteger(0);
 
         nativeAd.registerPrebidNativeAdEventListener(new PrebidNativeAdTestHelper.TestNativeAdEventListener(expired -> expireCallCount.incrementAndGet()));
-        PrebidNativeAdTestHelper.markRegisteredViewReleased(nativeAd);
 
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(2, TimeUnit.SECONDS);
 
@@ -270,7 +267,6 @@ public class PrebidNativeAdTest {
         PrebidNativeAd nativeAd = PrebidNativeAd.create(cacheId);
 
         nativeAd.registerPrebidNativeAdEventListener(null);
-        PrebidNativeAdTestHelper.markRegisteredViewReleased(nativeAd);
 
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 

@@ -102,6 +102,7 @@ abstract class AdFragment : BaseFragment() {
         baseBinding?.root?.findViewById<EventCounterView>(R.id.btnAdClicked)?.isEnabled = false
         baseBinding?.root?.findViewById<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = false
         baseBinding?.root?.findViewById<EventCounterView>(R.id.btnAdClosed)?.isEnabled = false
+        baseBinding?.root?.findViewById<EventCounterView>(R.id.btnAdExpired)?.isEnabled = false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

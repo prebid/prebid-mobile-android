@@ -71,7 +71,8 @@ public interface RewardedAdUnitListener {
     void onUserEarnedReward(RewardedAdUnit rewardedAdUnit, @Nullable Reward reward);
 
     /**
-     * Executed when the loaded ad expires before it can be used.
+     * Executed when the loaded ad expires ({@code bid.exp}) before an impression is tracked.
+     * The ad can still be shown, or replaced by calling {@link RewardedAdUnit#loadAd()}.
      *
      * @param rewardedAdUnit view of the corresponding event.
      */

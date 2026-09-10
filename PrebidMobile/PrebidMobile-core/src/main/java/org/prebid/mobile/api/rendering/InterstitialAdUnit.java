@@ -218,7 +218,6 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
             @Override
             public void onAdServerWin() {
                 changeInterstitialAdUnitState(READY_TO_DISPLAY_GAM);
-                scheduleExpirationIfNeeded();
                 notifyAdEventListener(AdListenerEvent.AD_LOADED);
             }
 

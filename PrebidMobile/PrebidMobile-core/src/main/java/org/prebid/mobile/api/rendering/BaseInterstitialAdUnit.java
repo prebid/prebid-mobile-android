@@ -97,6 +97,9 @@ public abstract class BaseInterstitialAdUnit {
             return;
         }
 
+        if (expired) {
+            releaseExpiredAd();
+        }
         cancelExpiration();
         expired = false;
         adDisplayed = false;
@@ -114,7 +117,7 @@ public abstract class BaseInterstitialAdUnit {
      * Executes interstitial display if auction winner is defined.
      */
     public void show() {
-        if (expired || !isAuctionWinnerReadyToDisplay()) {
+        if (!isAuctionWinnerReadyToDisplay()) {
             LogUtil.debug(TAG, "show(): Ad is not yet ready for display!");
             return;
         }
@@ -267,14 +270,15 @@ public abstract class BaseInterstitialAdUnit {
         interstitialAdUnitState = state;
     }
 
-    protected void scheduleExpirationIfNeeded() {
+    private void scheduleExpirationIfNeeded() {
+        cancelExpiration();
+
         Integer expirationTimeSeconds = bidResponse != null ? bidResponse.getExpirationTimeSeconds() : null;
         // BidResponse normalizes absent, zero, and negative exp values to null.
         if (expirationTimeSeconds == null) {
             return;
         }
 
-        cancelExpiration();
         expirationRunnable = this::expireAd;
         expirationHandler.postDelayed(expirationRunnable, expirationTimeSeconds * 1000L);
     }
@@ -304,11 +308,12 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     private boolean isAuctionWinnerReadyToDisplay() {
-        return !expired && (interstitialAdUnitState == READY_TO_DISPLAY_PREBID || interstitialAdUnitState == READY_TO_DISPLAY_GAM);
+        return interstitialAdUnitState == READY_TO_DISPLAY_PREBID || interstitialAdUnitState == READY_TO_DISPLAY_GAM;
     }
 
     private boolean isAdLoadAllowed() {
-        return interstitialAdUnitState == READY_FOR_LOAD;
+        // An expired ad stays showable, but the app may replace it with a new one.
+        return interstitialAdUnitState == READY_FOR_LOAD || (expired && isAuctionWinnerReadyToDisplay());
     }
 
     @VisibleForTesting
@@ -329,17 +334,21 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     private void expireAd() {
-        if (expired) {
+        if (expired || adDisplayed) {
             return;
         }
 
+        // Only inform the app: the ad stays loaded and can still be shown.
         expired = true;
-        changeInterstitialAdUnitState(READY_FOR_LOAD);
-        if (!adDisplayed && interstitialController != null) {
+        notifyAdExpiredListener();
+    }
+
+    private void releaseExpiredAd() {
+        if (interstitialController != null) {
             interstitialController.destroy();
             interstitialController = null;
         }
-        notifyAdExpiredListener();
+        changeInterstitialAdUnitState(READY_FOR_LOAD);
     }
 
     private BidRequesterListener createBidRequesterListener() {

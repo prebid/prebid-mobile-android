@@ -80,6 +80,7 @@ public class BannerView extends FrameLayout {
     private final Handler expirationHandler = new Handler(Looper.getMainLooper());
     private Runnable expirationRunnable;
     private boolean expired;
+    private boolean isRefreshStopped;
 
     private final ScreenStateReceiver screenStateReceiver = new ScreenStateReceiver();
 
@@ -107,6 +108,8 @@ public class BannerView extends FrameLayout {
 
         @Override
         public void onAdDisplayed() {
+            // Once the impression is tracked, the bid can no longer expire.
+            cancelExpiration();
             if (bannerViewListener != null) {
                 bannerViewListener.onAdDisplayed(BannerView.this);
                 eventHandler.trackImpression();
@@ -210,7 +213,6 @@ public class BannerView extends FrameLayout {
         public void onAdServerWin(View view) {
             markPrimaryAdRequestFinished();
 
-            scheduleExpirationIfNeeded();
             notifyAdLoadedListener();
             displayAdServerView(view);
         }
@@ -316,8 +318,8 @@ public class BannerView extends FrameLayout {
             return;
         }
 
-        cancelExpiration();
-        expired = false;
+        // A successful load re-arms the BidLoader refresh timer.
+        isRefreshStopped = false;
         bidLoader.load();
     }
 
@@ -325,6 +327,7 @@ public class BannerView extends FrameLayout {
      * Cancels BidLoader refresh timer.
      */
     public void stopRefresh() {
+        isRefreshStopped = true;
         if (bidLoader != null) {
             bidLoader.cancelRefresh();
         }
@@ -488,6 +491,8 @@ public class BannerView extends FrameLayout {
     }
 
     private void displayPrebidView() {
+        resetExpiration();
+
         if (indexOfChild(displayView) != -1) {
             displayView.destroy();
             displayView = null;
@@ -505,6 +510,7 @@ public class BannerView extends FrameLayout {
     }
 
     private void displayAdServerView(View view) {
+        resetExpiration();
         removeAllViews();
 
         if (view == null) {
@@ -542,13 +548,15 @@ public class BannerView extends FrameLayout {
     }
 
     private void scheduleExpirationIfNeeded() {
+        // A refreshed bid without exp must not inherit the previous ad's timer.
+        cancelExpiration();
+
         Integer expirationTimeSeconds = bidResponse != null ? bidResponse.getExpirationTimeSeconds() : null;
         // BidResponse normalizes absent, zero, and negative exp values to null.
         if (expirationTimeSeconds == null) {
             return;
         }
 
-        cancelExpiration();
         expirationRunnable = this::expireAd;
         expirationHandler.postDelayed(expirationRunnable, expirationTimeSeconds * 1000L);
     }
@@ -560,23 +568,28 @@ public class BannerView extends FrameLayout {
         }
     }
 
+    private void resetExpiration() {
+        cancelExpiration();
+        expired = false;
+    }
+
     private void expireAd() {
         if (expired) {
             return;
         }
 
         expired = true;
-        if (bannerViewListener != null) {
-            bannerViewListener.onAdExpired(BannerView.this);
-        }
-
         if (displayView != null) {
             displayView.destroy();
             displayView = null;
         }
         removeAllViews();
 
-        if (adUnitConfig.getAutoRefreshDelay() > 0) {
+        if (bannerViewListener != null) {
+            bannerViewListener.onAdExpired(BannerView.this);
+        }
+
+        if (adUnitConfig.getAutoRefreshDelay() > 0 && !isRefreshStopped) {
             loadAd();
         }
     }
