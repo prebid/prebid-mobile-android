@@ -105,6 +105,7 @@
     <string name="demo_bidding_in_app_interstitial_320_480_no_bids">Display Interstitial 320x480 [noBids] (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_320_480_multiformat">Multiformat Interstitial 320x480 (In-App)</string>
     <string name="demo_bidding_in_app_banner_video_outstream">Video Outstream (In-App)</string>
+    <string name="demo_bidding_in_app_multiformat_banner">Multiformat Banner 300x250 (In-App)</string>
     <string name="demo_bidding_in_app_banner_video_outstream_no_bids">Video Outstream [noBids] (In-App)</string>
     <string name="demo_bidding_in_app_banner_video_outstream_feed">Video Outstream Feed (In-App)</string>
     <string name="demo_bidding_in_app_banner_video_outstream_end_card">Video Outstream with End Card (In-App)</string>

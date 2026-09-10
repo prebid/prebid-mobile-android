@@ -28,10 +28,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.data.VideoPlacementType;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.BannerVideoListener;
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -49,6 +51,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -195,6 +198,116 @@ public class BannerViewTest {
         verify(mockAdConfiguration, times(1)).setPlacementType(eq(VideoPlacementType.mapToPlacementType(videoPlacement)));
         verify(mockAdConfiguration, times(1)).setAdFormat(eq(AdFormat.VAST));
     }
+
+    @Test
+    public void setVideoPlacementType_afterExplicitAdUnitFormats_keepsConfiguredFormats() {
+        bannerView.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
+
+        bannerView.setVideoPlacementType(VideoPlacementType.IN_BANNER);
+
+        assertEquals(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), bannerView.getAdUnitFormats());
+        assertEquals(VideoPlacementType.IN_BANNER, bannerView.getVideoPlacementType());
+    }
+
+    @Test
+    public void setAdUnitFormats_afterVideoPlacementType_keepsConfiguredFormats() {
+        bannerView.setVideoPlacementType(VideoPlacementType.IN_BANNER);
+
+        bannerView.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
+
+        assertEquals(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), bannerView.getAdUnitFormats());
+        assertEquals(VideoPlacementType.IN_BANNER, bannerView.getVideoPlacementType());
+    }
+
+    @Test
+    public void adUnitFormatsDefaultToBanner() {
+        assertEquals(EnumSet.of(AdUnitFormat.BANNER), bannerView.getAdUnitFormats());
+    }
+
+    @Test
+    public void setAdUnitFormats_video_requestsVideoOnly() throws IllegalAccessException {
+        bannerView.setAdUnitFormats(EnumSet.of(AdUnitFormat.VIDEO));
+
+        assertEquals(EnumSet.of(AdUnitFormat.VIDEO), bannerView.getAdUnitFormats());
+        assertEquals(EnumSet.of(AdFormat.VAST), getAdUnitConfig().getAdFormats());
+    }
+
+    @Test
+    public void setAdUnitFormats_multiformat_requestsBannerAndVideo() throws IllegalAccessException {
+        bannerView.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
+
+        assertEquals(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), bannerView.getAdUnitFormats());
+        assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), getAdUnitConfig().getAdFormats());
+    }
+
+    @Test
+    public void setAdUnitFormats_nullOrEmpty_keepsCurrentValue() throws IllegalAccessException {
+        bannerView.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
+
+        bannerView.setAdUnitFormats(null);
+        assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), getAdUnitConfig().getAdFormats());
+
+        bannerView.setAdUnitFormats(EnumSet.noneOf(AdUnitFormat.class));
+        assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), getAdUnitConfig().getAdFormats());
+    }
+
+    @Test
+    public void setAdUnitFormats_multiformat_autoRefreshStaysAvailable() {
+        bannerView.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
+
+        bannerView.setAutoRefreshDelay(30);
+
+        assertEquals(30_000, bannerView.getAutoRefreshDelayInMs());
+    }
+
+    //region ================= Auto refresh vs. video creatives
+    @Test
+    public void canPerformRefreshWhileVideoIsPlaying_SkipTheTick() throws Exception {
+        when(mockDisplayView.isVideoPlaying()).thenReturn(true);
+
+        assertFalse(getBidRefreshListener().canPerformRefresh());
+    }
+
+    @Test
+    public void canPerformRefreshAfterVideoFinished_AllowTheTick() throws Exception {
+        when(mockDisplayView.isVideoPlaying()).thenReturn(false);
+        when(mockScreenStateReceiver.isScreenOn()).thenReturn(true);
+
+        // The visibility checker is the only remaining gate, so the video no longer blocks refresh.
+        getBidRefreshListener().canPerformRefresh();
+
+        verify(mockDisplayView, times(1)).isVideoPlaying();
+    }
+
+    @Test
+    public void canPerformRefreshAfterAdFailed_AllowTheTickEvenIfVideoReportsPlaying() throws Exception {
+        when(mockDisplayView.isVideoPlaying()).thenReturn(true);
+        WhiteBox.field(BannerView.class, "adFailed").set(bannerView, true);
+
+        assertTrue(getBidRefreshListener().canPerformRefresh());
+    }
+
+    @Test
+    public void isVideoPlayingWithoutDisplayView_False() throws IllegalAccessException {
+        WhiteBox.field(BannerView.class, "displayView").set(bannerView, null);
+
+        assertFalse(bannerView.isVideoPlaying());
+    }
+
+    private BidLoader.BidRefreshListener getBidRefreshListener() throws Exception {
+        // initBidLoader() builds a BidLoader and registers the refresh gate on it.
+        WhiteBox.method(BannerView.class, "initBidLoader").invoke(bannerView);
+
+        final BidLoader bidLoader = (BidLoader) WhiteBox.field(BannerView.class, "bidLoader").get(bannerView);
+        return (BidLoader.BidRefreshListener) WhiteBox
+                .field(BidLoader.class, "bidRefreshListener")
+                .get(bidLoader);
+    }
+
+    private AdUnitConfiguration getAdUnitConfig() throws IllegalAccessException {
+        return (AdUnitConfiguration) WhiteBox.field(BannerView.class, "adUnitConfig").get(bannerView);
+    }
+    //endregion ================= Auto refresh vs. video creatives
 
     @Test
     public void setAdVideoPlacement_EqualsGetVideoPlacement() {
