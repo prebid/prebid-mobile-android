@@ -75,11 +75,15 @@ class DemoItemProvider private constructor() {
             R.id.action_header_bidding_to_gam_original_multiformat_rewarded
 
         private const val adMobBannerAction = R.id.action_header_bidding_to_admob_banner
+        private const val adMobBannerCustomRendererAction =
+            R.id.action_header_bidding_to_admob_banner_custom_renderer
         private const val adMobRandomBannerAction =
             R.id.action_header_bidding_to_admob_random_banner
         private const val adMobFlexibleBannerAction =
             R.id.action_header_bidding_to_admob_flexible_banner
         private const val adMobInterstitialAction = R.id.action_header_bidding_to_admob_interstitial
+        private const val adMobInterstitialCustomRendererAction =
+            R.id.action_header_bidding_to_admob_interstitial_custom_renderer
         private const val adMobInterstitialMultiformatAction =
             R.id.action_header_bidding_to_admob_interstitial_multiformat
         private const val adMobInterstitialRandomAction =
@@ -1940,6 +1944,18 @@ class DemoItemProvider private constructor() {
             )
             demoList.add(
                 DemoItem(
+                    getString(R.string.demo_bidding_admob_banner_320_50_custom_renderer),
+                    adMobBannerCustomRendererAction,
+                    adMobBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_320x50_custom_renderer,
+                        R.string.admob_banner_bidding_ad_unit_id_adapter,
+                        320, 50
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
                     getString(R.string.demo_bidding_admob_banner_300_250_adapter),
                     adMobBannerAction,
                     adMobBannerTagList,
@@ -1988,6 +2004,18 @@ class DemoItemProvider private constructor() {
                 )
             )
 
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_320_480_custom_renderer),
+                    adMobInterstitialCustomRendererAction,
+                    adMobInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_interstitial_320_480_custom_renderer,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_admob_interstitial_admob),
@@ -2192,6 +2220,7 @@ class DemoItemProvider private constructor() {
         private fun addApplovinMaxPbsExamples() {
             val maxBannerTagList = listOf(Tag.ALL, Tag.MAX, Tag.BANNER, Tag.REMOTE)
             val maxBannerAction = R.id.action_header_bidding_to_max_banner
+            val maxBannerCustomRendererAction = R.id.action_header_bidding_to_max_banner_custom_renderer
             val maxBannerRandomAction = R.id.action_header_bidding_to_max_banner_random
             val maxBannerAdaptiveAction = R.id.action_header_bidding_to_max_banner_adaptive
 
@@ -2202,6 +2231,18 @@ class DemoItemProvider private constructor() {
                     maxBannerTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_320x50,
+                        R.string.max_banner_ad_unit_id,
+                        320, 50
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_banner_320_50_custom_renderer),
+                    maxBannerCustomRendererAction,
+                    maxBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_320x50_custom_renderer,
                         R.string.max_banner_ad_unit_id,
                         320, 50
                     )
@@ -2288,6 +2329,7 @@ class DemoItemProvider private constructor() {
             val maxInterstitialTagList = listOf(Tag.ALL, Tag.MAX, Tag.INTERSTITIAL, Tag.REMOTE)
             val maxVideoInterstitialTagList = listOf(Tag.ALL, Tag.MAX, Tag.VIDEO, Tag.REMOTE)
             val maxInterstitialAction = R.id.action_header_bidding_to_max_interstitial
+            val maxInterstitialCustomRendererAction = R.id.action_header_bidding_to_max_interstitial_custom_renderer
             val maxMultiformatInterstitialAction =
                 R.id.action_header_bidding_to_max_interstitial_multiformat
             val maxRandomInterstitialAction = R.id.action_header_bidding_to_max_interstitial_random
@@ -2300,6 +2342,18 @@ class DemoItemProvider private constructor() {
                     maxInterstitialTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_interstitial_320_480,
+                        R.string.max_interstitial_ad_unit_id,
+                        320, 480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_interstitial_320_480_custom_renderer),
+                    maxInterstitialCustomRendererAction,
+                    maxInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_interstitial_320_480_custom_renderer,
                         R.string.max_interstitial_ad_unit_id,
                         320, 480
                     )

@@ -1,62 +1,50 @@
-/*
- *    Copyright 2018-2021 Prebid.org, Inc.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
-
-package org.prebid.mobile.api.rendering;
+package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
 import android.view.View;
 import android.widget.FrameLayout;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.PrebidDestroyable;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.bidding.display.PluginRendererFactory;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 
 /**
- * Internal view for {@link BannerView}.
+ * Mediation banner container that lets adapters render through the preferred plugin renderer.
  */
-public class DisplayView extends FrameLayout {
+public class MediationBannerView extends FrameLayout implements PrebidDestroyable {
+
+    private static final String TAG = MediationBannerView.class.getSimpleName();
+
+    @Nullable
     private View adView;
+    @Nullable
     private AdUnitConfiguration adUnitConfiguration;
+    @Nullable
     private DisplayViewListener displayViewListener;
+    @Nullable
     private DisplayVideoListener displayVideoListener;
 
-    public DisplayView(
+    public MediationBannerView(
             @NonNull Context context,
-            DisplayViewListener displayViewListener,
+            @NonNull DisplayViewListener displayViewListener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse bidResponse
     ) {
-        super(context);
-
-        this.adUnitConfiguration = adUnitConfiguration;
-        this.displayViewListener = displayViewListener;
-
-        createBannerAdView(context, bidResponse);
+        this(context, displayViewListener, null, adUnitConfiguration, bidResponse);
     }
 
-    public DisplayView(
+    public MediationBannerView(
             @NonNull Context context,
-            DisplayViewListener displayViewListener,
-            DisplayVideoListener displayVideoListener,
+            @NonNull DisplayViewListener displayViewListener,
+            @Nullable DisplayVideoListener displayVideoListener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse bidResponse
     ) {
@@ -75,6 +63,10 @@ public class DisplayView extends FrameLayout {
     ) {
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {
+            if (adUnitConfiguration == null || displayViewListener == null) {
+                return;
+            }
+
             adView = PluginRendererFactory.createBannerAdView(
                     context,
                     displayViewListener,
@@ -82,42 +74,29 @@ public class DisplayView extends FrameLayout {
                     adUnitConfiguration,
                     bidResponse
             );
-            if (adView != null) {
-                addView(adView);
-            } else {
+
+            if (adView == null) {
                 displayViewListener.onAdFailed(new AdException(
                         AdException.INTERNAL_ERROR,
                         "Renderer returned null banner view"
                 ));
+                return;
             }
+
+            addView(adView);
         });
     }
 
+    @Override
     public void destroy() {
-        LogUtil.debug("Destroying view");
+        LogUtil.debug(TAG, "Destroying mediation banner view");
+        if (adView instanceof PrebidDestroyable) {
+            ((PrebidDestroyable) adView).destroy();
+        }
+        removeAllViews();
+        adView = null;
         adUnitConfiguration = null;
         displayViewListener = null;
         displayVideoListener = null;
-        if (adView != null && adView instanceof PrebidDestroyable) {
-            ((PrebidDestroyable) adView).destroy();
-        }
-    }
-
-    @Nullable
-    public String getImpOrtbConfig() {
-        return adUnitConfiguration.getImpOrtbConfig();
-    }
-
-    public void setImpOrtbConfig(@Nullable String ortbConfig) {
-        adUnitConfiguration.setImpOrtbConfig(ortbConfig);
-    }
-
-    @Nullable
-    public String getGlobalOrtbConfig() {
-        return adUnitConfiguration.getGlobalOrtbConfig();
-    }
-
-    public void setGlobalOrtbConfig(@Nullable String ortbConfig) {
-        adUnitConfiguration.setGlobalOrtbConfig(ortbConfig);
     }
 }
