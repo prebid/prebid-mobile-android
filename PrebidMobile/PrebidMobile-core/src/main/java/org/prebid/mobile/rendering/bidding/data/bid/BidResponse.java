@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
@@ -237,11 +238,16 @@ public class BidResponse {
     }
 
     public String getPreferredPluginRendererName() {
+        String renderer = null;
         Bid bid = getWinningBid();
         if (bid != null) {
-            return bid.getPrebid().getMeta().get(KEY_RENDERER_NAME);
+            renderer = bid.getPrebid().getMeta().get(KEY_RENDERER_NAME);
         }
-        return null;
+        // Return Prebid Mobile Renderer as default
+        if (renderer == null) {
+            renderer = PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
+        }
+        return renderer;
     }
 
     public String getPreferredPluginRendererVersion() {
