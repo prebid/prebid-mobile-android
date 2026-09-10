@@ -95,6 +95,12 @@ open class GamBannerFragment : AdFragment(),
         binding.btnLoad.isEnabled = true
     }
 
+    override fun onAdExpired(bannerView: BannerView?) {
+        Log.d(TAG, "onAdExpired() called with: bannerView = [$bannerView]")
+        events.expired(true)
+        binding.btnLoad.isEnabled = true
+    }
+
     override fun onAdClicked(view: BannerView?) {
         Log.d(TAG, "onAdClicked() called with: view = [$view]")
         events.clicked(true)
@@ -124,6 +130,7 @@ open class GamBannerFragment : AdFragment(),
         fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
         fun closed(b: Boolean) = enable(R.id.btnAdClosed, b)
         fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+        fun expired(b: Boolean) = enable(R.id.btnAdExpired, b)
         fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
 
     }

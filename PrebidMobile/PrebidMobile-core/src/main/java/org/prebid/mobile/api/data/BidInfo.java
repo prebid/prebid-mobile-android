@@ -89,7 +89,10 @@ public class BidInfo {
 
         boolean isNative = configuration != null && configuration.getNativeConfiguration() != null;
         if (isNative && bidInfo.resultCode == ResultCode.SUCCESS) {
-            final @Nullable String cacheId = CacheManager.save(bidResponse.getWinningBidJson());
+            final @Nullable String cacheId = CacheManager.save(
+                    bidResponse.getWinningBidJson(),
+                    bidInfo.exp != null ? bidInfo.exp.longValue() : null
+            );
             bidInfo.nativeCacheId = cacheId;
             if (cacheId != null) {
                 bidInfo.targetingKeywords.put(BidResponse.KEY_CACHE_ID, cacheId);
