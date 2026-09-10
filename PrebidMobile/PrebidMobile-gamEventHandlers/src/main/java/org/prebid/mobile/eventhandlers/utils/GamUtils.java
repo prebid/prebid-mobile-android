@@ -22,6 +22,8 @@ import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.NativeAdUnit;
+import org.prebid.mobile.eventhandlers.AdManagerRequestConfiguration;
+import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,6 +66,24 @@ public class GamUtils {
             bundle.putString(key, keywords.get(key));
             addReservedKeys(key);
         }
+    }
+
+    public static AdManagerAdRequest buildAdManagerRequest(
+            Bid bid,
+            AdManagerRequestConfiguration requestConfiguration
+    ) {
+        AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
+        if (requestConfiguration != null) {
+            requestConfiguration.configure(builder);
+        }
+
+        AdManagerAdRequest adRequest = builder.build();
+        if (bid != null) {
+            Map<String, String> targetingMap = new HashMap<>(bid.getPrebid().getTargeting());
+            handleGamCustomTargetingUpdate(adRequest, targetingMap);
+        }
+
+        return adRequest;
     }
 
     public static boolean didPrebidWin(NativeAd unifiedNativeAd) {

@@ -183,6 +183,16 @@ public class GamBannerEventHandlerTest {
         assertEquals(0, prebidSizes.length);
     }
 
+    @Test
+    public void adManagerRequestConfiguration_DefaultsToNullAndCanBeSet() {
+        assertEquals(null, bannerEventHandler.getAdManagerRequestConfiguration());
+
+        AdManagerRequestConfiguration configuration = builder -> builder.addCustomTargeting("key", "value");
+        bannerEventHandler.setAdManagerRequestConfiguration(configuration);
+
+        assertEquals(configuration, bannerEventHandler.getAdManagerRequestConfiguration());
+    }
+
     private void changeExpectingAppEventStatus(boolean status) {
         WhiteBox.setInternalState(bannerEventHandler, "isExpectingAppEvent", status);
     }

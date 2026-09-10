@@ -16,6 +16,7 @@
 package org.prebid.mobile.eventhandlers.nextgen
 
 import android.app.Activity
+import com.google.android.libraries.ads.mobile.sdk.common.BaseAdRequestBuilder
 import com.google.android.libraries.ads.mobile.sdk.common.FullScreenContentError
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
 import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAd
@@ -137,6 +138,18 @@ class InterstitialAdWrapperTest {
 
         Mockito.verify(mockListener, Mockito.times(1))
             .onEvent(AdEvent.Loaded())
+    }
+
+    @Test
+    fun loadAd_WithRequestConfiguration_ConfiguresRequest() {
+        var configuredBuilder: BaseAdRequestBuilder<*>? = null
+        val configuration = NextGenAdRequestConfiguration {
+            configuredBuilder = it
+        }
+
+        interstitialAdWrapper.loadAd(null, configuration)
+
+        Assert.assertNotNull(configuredBuilder)
     }
 
     @Test

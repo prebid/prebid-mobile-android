@@ -37,6 +37,8 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.PrebidNativeAd;
+import org.prebid.mobile.rendering.bidding.data.bid.Bid;
+import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -143,6 +145,43 @@ public class GamUtilsTest {
         Assert.assertEquals(1, request.getCustomTargeting().size());
         assertTrue(request.getCustomTargeting().containsKey("Key"));
         Assert.assertEquals("Value", request.getCustomTargeting().get("Key"));
+    }
+
+    @Test
+    public void buildAdManagerRequest_WithConfiguration_AppliesPublisherFields() {
+        AdManagerAdRequest request = GamUtils.buildAdManagerRequest(
+                null,
+                builder -> {
+                    builder.setPublisherProvidedId("test-ppid");
+                    builder.addCustomTargeting("publisher_key", "publisher_value");
+                }
+        );
+
+        assertEquals("test-ppid", request.getPublisherProvidedId());
+        assertEquals("publisher_value", request.getCustomTargeting().getString("publisher_key"));
+    }
+
+    @Test
+    public void buildAdManagerRequest_WithConfigurationAndBid_MergesTargetingWithBidPriority() {
+        Bid bid = mock(Bid.class);
+        Prebid prebid = mock(Prebid.class);
+        HashMap<String, String> targeting = new HashMap<>();
+        targeting.put("hb_pb", "1.50");
+        targeting.put("hb_cache_id", "prebid-cache-id");
+        when(bid.getPrebid()).thenReturn(prebid);
+        when(prebid.getTargeting()).thenReturn(targeting);
+
+        AdManagerAdRequest request = GamUtils.buildAdManagerRequest(
+                bid,
+                builder -> {
+                    builder.addCustomTargeting("publisher_key", "publisher_value");
+                    builder.addCustomTargeting("hb_pb", "publisher-value");
+                }
+        );
+
+        assertEquals("publisher_value", request.getCustomTargeting().getString("publisher_key"));
+        assertEquals("1.50", request.getCustomTargeting().getString("hb_pb"));
+        assertEquals("prebid-cache-id", request.getCustomTargeting().getString("hb_cache_id"));
     }
 
     private String getNativeAdContent() {
