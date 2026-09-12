@@ -17,12 +17,14 @@
 package org.prebid.mobile.rendering.networking.parameters;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.robolectric.Shadows.shadowOf;
 
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
+import android.telephony.TelephonyManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,17 +39,19 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowLocationManager;
+import org.robolectric.shadows.ShadowTelephonyManager;
 
 @RunWith(RobolectricTestRunner.class)
 public class GeoLocationParameterBuilderTest {
 
     private final Double LATITUDE = 1.0;
     private final Double LONGITUDE = -1.0;
+    private Activity robolectricActivity;
 
     @Before
     public void setUp() throws Exception {
         PrebidMobile.setShareGeoLocation(true);
-        Activity robolectricActivity = Robolectric.buildActivity(Activity.class).create().get();
+        robolectricActivity = Robolectric.buildActivity(Activity.class).create().get();
         ShadowActivity shadowActivity = shadowOf(robolectricActivity);
         shadowActivity.grantPermissions("android.permission.ACCESS_FINE_LOCATION");
 
@@ -76,6 +80,24 @@ public class GeoLocationParameterBuilderTest {
 
         assertEquals(expectedBidRequest.getJsonObject().toString(),
                      adRequestInput.getBidRequest().getJsonObject().toString());
+    }
+
+    @Test
+    public void testCountryIsNotPopulatedFromCarrierData() throws Exception {
+        ShadowTelephonyManager shadowTelephonyManager = shadowOf(
+                (TelephonyManager) robolectricActivity.getSystemService(Context.TELEPHONY_SERVICE)
+        );
+        shadowTelephonyManager.setSimCountryIso("us");
+        shadowTelephonyManager.setNetworkCountryIso("ca");
+
+        GeoLocationParameterBuilder builder = new GeoLocationParameterBuilder();
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        Geo geo = adRequestInput.getBidRequest().getDevice().getGeo();
+        assertEquals(LATITUDE.floatValue(), geo.lat, 0.0f);
+        assertEquals(LONGITUDE.floatValue(), geo.lon, 0.0f);
+        assertNull(geo.country);
     }
 
     /**
