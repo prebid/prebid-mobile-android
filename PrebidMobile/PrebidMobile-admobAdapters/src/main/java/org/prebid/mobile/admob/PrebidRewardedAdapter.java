@@ -7,8 +7,8 @@ import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
 import com.google.android.gms.ads.mediation.MediationRewardedAd;
 import com.google.android.gms.ads.mediation.MediationRewardedAdCallback;
 import com.google.android.gms.ads.mediation.MediationRewardedAdConfiguration;
-import com.google.android.gms.ads.rewarded.RewardItem;
 import org.jetbrains.annotations.NotNull;
+import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
@@ -66,11 +66,7 @@ public class PrebidRewardedAdapter extends PrebidBaseAdapter {
 
             @Override
             public void onInterstitialDisplayed() {
-                if (rewardedAdCallback != null) {
-                    rewardedAdCallback.reportAdImpression();
-                    rewardedAdCallback.onAdOpened();
-                    rewardedAdCallback.onVideoStart();
-                }
+                notifyAdDisplayed();
             }
 
             @Override
@@ -82,10 +78,7 @@ public class PrebidRewardedAdapter extends PrebidBaseAdapter {
 
             @Override
             public void onInterstitialClosed() {
-                if (rewardedAdCallback != null) {
-                    rewardedAdCallback.onVideoComplete();
-                    rewardedAdCallback.onAdClosed();
-                }
+                notifyAdClosed();
             }
 
             @Override
@@ -97,11 +90,39 @@ public class PrebidRewardedAdapter extends PrebidBaseAdapter {
 
             @Override
             public void onUserEarnedReward() {
-                if (rewardedAdCallback != null && interstitialController != null) {
-                    rewardedAdCallback.onUserEarnedReward();
-                }
+                notifyUserEarnedReward();
             }
         };
+    }
+
+    void notifyAdDisplayed() {
+        if (rewardedAdCallback != null) {
+            rewardedAdCallback.reportAdImpression();
+            rewardedAdCallback.onAdOpened();
+            if (isLoadedAdVideo()) {
+                rewardedAdCallback.onVideoStart();
+            }
+        }
+    }
+
+    void notifyAdClosed() {
+        if (rewardedAdCallback != null) {
+            if (isLoadedAdVideo()) {
+                rewardedAdCallback.onVideoComplete();
+            }
+            rewardedAdCallback.onAdClosed();
+        }
+    }
+
+    void notifyUserEarnedReward() {
+        if (rewardedAdCallback != null) {
+            rewardedAdCallback.onUserEarnedReward();
+        }
+    }
+
+    private boolean isLoadedAdVideo() {
+        return interstitialController != null
+                && interstitialController.getAdUnitIdentifierType() == AdFormat.VAST;
     }
 
 }

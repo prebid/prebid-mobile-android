@@ -75,6 +75,9 @@
             android:name=".activities.ads.gam.original.GamOriginalApiVideoRewardedActivity"
             android:exported="true" />
         <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiDisplayRewardedActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.ads.gam.original.GamOriginalApiNativeStylesActivity"
             android:exported="true" />
         <activity
@@ -99,6 +102,9 @@
             android:exported="true" />
         <activity
             android:name=".activities.ads.gam.rendering.GamRenderingApiVideoInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.rendering.GamRenderingApiDisplayRewardedActivity"
             android:exported="true" />
         <activity
             android:name=".activities.ads.gam.rendering.GamRenderingApiVideoRewardedActivity"
@@ -139,6 +145,9 @@
             android:name=".activities.ads.inapp.InAppVideoInterstitialMultiFormatActivity"
             android:exported="true" />
         <activity
+            android:name=".activities.ads.inapp.InAppDisplayRewardedActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.ads.inapp.InAppVideoRewardedActivity"
             android:exported="true" />
         <activity
@@ -156,6 +165,9 @@
             android:name=".activities.ads.admob.AdMobVideoInterstitialActivity"
             android:exported="true" />
         <activity
+            android:name=".activities.ads.admob.AdMobDisplayRewardedActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.ads.admob.AdMobVideoRewardedActivity"
             android:exported="true" />
         <activity
@@ -171,6 +183,9 @@
             android:exported="true" />
         <activity
             android:name=".activities.ads.applovin.AppLovinMaxDisplayInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.applovin.AppLovinMaxDisplayRewardedActivity"
             android:exported="true" />
         <activity
             android:name=".activities.ads.applovin.AppLovinMaxVideoRewardedActivity"

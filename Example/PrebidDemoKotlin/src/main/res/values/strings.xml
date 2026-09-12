@@ -20,6 +20,7 @@
     <string name="gam_original_display_interstitial">GAM (Original API) Display Interstitial</string>
     <string name="gam_original_video_interstitial">GAM (Original API) Video Interstitial</string>
     <string name="gam_original_multiformat_interstitial">GAM (Original API) Multiformat Interstitial</string>
+    <string name="gam_original_display_rewarded">GAM (Original API) Display Rewarded</string>
     <string name="gam_original_video_rewarded">GAM (Original API) Video Rewarded</string>
     <string name="gam_original_video_in_stream">GAM (Original API) Video In-Stream</string>
     <string name="gam_original_native_in_app">GAM (Original API) Native In-App</string>
@@ -29,6 +30,7 @@
     <string name="gam_rendering_display_interstitial">GAM (Rendering API) Display Interstitial</string>
     <string name="gam_rendering_video_banner">GAM (Rendering API) Video Banner</string>
     <string name="gam_rendering_video_interstitial">GAM (Rendering API) Video Interstitial</string>
+    <string name="gam_rendering_display_rewarded">GAM (Rendering API) Display Rewarded</string>
     <string name="gam_rendering_video_rewarded">GAM (Rendering API) Video Rewarded</string>
     <string name="gam_rendering_native">GAM (Rendering API) Native</string>
 
@@ -42,18 +44,21 @@
     <string name="in_app_video_interstitial">In-App Video Interstitial</string>
     <string name="in_app_video_interstitial_end_card">In-App Video Interstitial With End Card</string>
     <string name="in_app_video_interstitial_multi_format">In-App Video Interstitial Multi-Format</string>
+    <string name="in_app_display_rewarded">In-App Display Rewarded</string>
     <string name="in_app_video_rewarded">In-App Video Rewarded</string>
     <string name="in_app_native">In-App Native</string>
 
     <string name="ad_mob_display_banner_320x50">AdMob Display Banner 320x50</string>
     <string name="ad_mob_display_interstitial">AdMob Display Interstitial</string>
     <string name="ad_mob_video_interstitial">AdMob Video Interstitial</string>
+    <string name="ad_mob_display_rewarded">AdMob Display Rewarded</string>
     <string name="ad_mob_video_rewarded">AdMob Video Rewarded</string>
     <string name="ad_mob_native">AdMob Native</string>
 
     <string name="app_lovin_max_display_banner_320x50">AppLovin MAX Display Banner 320x50</string>
     <string name="app_lovin_max_display_banner_300x250">AppLovin MAX Display Banner 300x250</string>
     <string name="app_lovin_max_display_interstitial">AppLovin MAX Display Interstitial</string>
+    <string name="app_lovin_max_display_rewarded">AppLovin MAX Display Rewarded</string>
     <string name="app_lovin_max_video_rewarded">AppLovin MAX Video Rewarded</string>
     <string name="app_lovin_max_native">AppLovin MAX Native</string>
 

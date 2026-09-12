@@ -6,6 +6,8 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
 
 import org.prebid.mobile.AdSize;
+import org.prebid.mobile.BannerParameters;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 
@@ -23,6 +25,30 @@ public abstract class MediationBaseFullScreenAdUnit extends MediationBaseAdUnit 
         PrebidMediationDelegate mediationDelegate
     ) {
         super(context, configId, adSize, mediationDelegate);
+    }
+
+    /**
+     * Sets banner parameters for display fullscreen ads.
+     */
+    public void setBannerParameters(BannerParameters parameters) {
+        adUnitConfig.setBannerParameters(parameters);
+    }
+
+    @Nullable
+    public BannerParameters getBannerParameters() {
+        return adUnitConfig.getBannerParameters();
+    }
+
+    /**
+     * Sets video parameters for video fullscreen ads.
+     */
+    public void setVideoParameters(VideoParameters parameters) {
+        adUnitConfig.setVideoParameters(parameters);
+    }
+
+    @Nullable
+    public VideoParameters getVideoParameters() {
+        return adUnitConfig.getVideoParameters();
     }
 
     /**

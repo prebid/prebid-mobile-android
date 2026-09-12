@@ -1241,6 +1241,26 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
+    public void displayRewarded_BannerImpWithRewardedSignals() throws JSONException {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setAdFormat(AdFormat.INTERSTITIAL);
+        config.setAdPosition(AdPosition.FULLSCREEN);
+        config.setRewarded(true);
+
+        BidRequest actualRequest = getActualRequest(config);
+        Imp imp = actualRequest.getImp().get(0);
+        JSONObject impJson = imp.getJsonObject();
+        JSONObject prebidJson = impJson.getJSONObject("ext").getJSONObject("prebid");
+
+        assertNotNull(imp.banner);
+        assertNull(imp.video);
+        assertEquals(Integer.valueOf(1), imp.rewarded);
+        assertEquals(Integer.valueOf(1), imp.instl);
+        assertEquals(1, impJson.optInt("rwdd"));
+        assertEquals(1, prebidJson.optInt("is_rewarded_inventory"));
+    }
+
+    @Test
     public void notRewarded_rwdd0() throws JSONException {
         AdUnitConfiguration config = new AdUnitConfiguration();
 

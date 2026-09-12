@@ -19,7 +19,7 @@ package org.prebid.mobile.api.rendering;
 import android.content.Context;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -63,6 +63,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
     /**
      * Constructor that creates the instance with a {@link StandaloneRewardedVideoEventHandler}
      * for integration without any primary ad server.
+     * Requests both display and video rewarded formats by default.
      *
      * @param context  Android context
      * @param configId configuration id for on Prebid Server
@@ -71,7 +72,24 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
             Context context,
             String configId
     ) {
-        this(context, configId, new StandaloneRewardedVideoEventHandler());
+        this(context, configId, EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), new StandaloneRewardedVideoEventHandler());
+    }
+
+    /**
+     * Constructor that creates the instance for the requested rewarded ad formats.
+     * Use {@code EnumSet.of(AdUnitFormat.BANNER)} for display rewarded ads,
+     * {@code EnumSet.of(AdUnitFormat.VIDEO)} for rewarded video ads, or both for multiformat rewarded inventory.
+     *
+     * @param context       Android context
+     * @param configId      configuration id on Prebid Server
+     * @param adUnitFormats rewarded ad formats to request
+     */
+    public RewardedAdUnit(
+            Context context,
+            String configId,
+            EnumSet<AdUnitFormat> adUnitFormats
+    ) {
+        this(context, configId, adUnitFormats, new StandaloneRewardedVideoEventHandler());
     }
 
     /**
@@ -87,13 +105,31 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
         String configId,
         RewardedEventHandler eventHandler
     ) {
+        this(context, configId, EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), eventHandler);
+    }
+
+    /**
+     * Constructor that initializes a RewardedAdUnit with custom ad formats and event handler.
+     * It supports GAM integration (use {@code GamRewardedEventHandler}).
+     *
+     * @param context       the Android context
+     * @param configId      the configuration id on Prebid Server
+     * @param adUnitFormats rewarded ad formats to request
+     * @param eventHandler  the event handler for primary ad server responsible for managing rewarded ad
+     */
+    public RewardedAdUnit(
+        Context context,
+        String configId,
+        EnumSet<AdUnitFormat> adUnitFormats,
+        RewardedEventHandler eventHandler
+    ) {
         super(context);
         this.eventHandler = eventHandler;
         this.eventHandler.setRewardedEventListener(eventListener);
 
         AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         adUnitConfiguration.setConfigId(configId);
-        adUnitConfiguration.setAdFormats(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST));
+        adUnitConfiguration.setAdUnitFormats(adUnitFormats);
         adUnitConfiguration.setRewarded(true);
 
         init(adUnitConfiguration);
