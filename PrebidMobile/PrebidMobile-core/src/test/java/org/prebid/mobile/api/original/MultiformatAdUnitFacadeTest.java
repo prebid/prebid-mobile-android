@@ -13,9 +13,15 @@ import org.prebid.mobile.BannerParameters;
 import org.prebid.mobile.NativeAsset;
 import org.prebid.mobile.NativeParameters;
 import org.prebid.mobile.NativeTitleAsset;
+import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.rendering.bidding.data.bid.Bid;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
+import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 
@@ -23,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.List;
 
 public class MultiformatAdUnitFacadeTest {
 
@@ -254,6 +261,50 @@ public class MultiformatAdUnitFacadeTest {
                 new HashSet<>(Arrays.asList(new AdSize(320, 50), new AdSize(320, 480))),
                 Matchers.equalTo(configurationSizes)
         );
+    }
+
+    @Test
+    public void configuration_bidSelector() {
+        PrebidRequest request = new PrebidRequest();
+        PrebidBidSelecting selector = new PrebidBidSelecting() {
+            @Override
+            public Bid selectBid(List<Bid> bids) {
+                return bids.isEmpty() ? null : bids.get(0);
+            }
+        };
+        request.setBidSelector(selector);
+
+        subject = new MultiformatAdUnitFacade(configId, request);
+        AdUnitConfiguration configuration = subject.getConfiguration();
+
+        assertEquals(selector, configuration.getBidSelector());
+    }
+
+    @Test
+    public void bidSelectorRejectsAllBids_reportsNoBids() {
+        PrebidRequest request = new PrebidRequest();
+        request.setBidSelector(new PrebidBidSelecting() {
+            @Override
+            public Bid selectBid(List<Bid> bids) {
+                return null;
+            }
+        });
+
+        subject = new MultiformatAdUnitFacade(configId, request);
+
+        String responseJson = "{\"id\":\"response-id\",\"seatbid\":[{\"bid\":[" +
+                "{\"id\":\"bid-1\",\"impid\":\"imp-1\",\"price\":0.75,\"adm\":\"<html></html>\",\"w\":300,\"h\":250," +
+                "\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder\":\"openx\",\"hb_pb\":\"0.75\"},\"type\":\"banner\"}}}" +
+                "],\"seat\":\"openx\"}],\"cur\":\"USD\"}";
+        BidResponse bidResponse = new BidResponse(responseJson, subject.getConfiguration());
+
+        ResultCode[] reportedResultCode = new ResultCode[1];
+        OnCompleteListener listener = resultCode -> reportedResultCode[0] = resultCode;
+        BidRequesterListener bidListener = subject.createBidListener(listener);
+
+        bidListener.onFetchCompleted(bidResponse);
+
+        assertEquals(ResultCode.NO_BIDS, reportedResultCode[0]);
     }
 
     @Test

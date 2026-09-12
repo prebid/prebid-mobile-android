@@ -9,8 +9,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
+import org.prebid.mobile.rendering.bidding.data.bid.Bid;
+import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.util.List;
 
 import java.util.EnumSet;
 import java.util.UUID;
@@ -143,6 +147,25 @@ public class AdUnitConfigurationTest {
         assertNotNull(uuidString);
         assertNotNull(UUID.fromString(uuidString)); // valid UUID
         assertEquals(4, UUID.fromString(uuidString).version()); // version 4 (random-based)
+    }
+
+    @Test
+    public void bidSelector_defaultsToNull() {
+        assertNull(subject.getBidSelector());
+    }
+
+    @Test
+    public void bidSelector_settableAndGettable() {
+        PrebidBidSelecting selector = new PrebidBidSelecting() {
+            @Override
+            public Bid selectBid(List<Bid> bids) {
+                return bids.isEmpty() ? null : bids.get(0);
+            }
+        };
+
+        subject.setBidSelector(selector);
+
+        assertEquals(selector, subject.getBidSelector());
     }
 
 }

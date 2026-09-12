@@ -39,6 +39,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
 import org.prebid.mobile.rendering.bidding.interfaces.BannerEventHandler;
 import org.prebid.mobile.rendering.bidding.interfaces.StandaloneBannerEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
@@ -561,6 +562,18 @@ public class BannerView extends FrameLayout {
      */
     public void setGlobalOrtbConfig(@Nullable String ortbConfig) {
         adUnitConfig.setGlobalOrtbConfig(ortbConfig);
+    }
+
+    @Nullable
+    public PrebidBidSelecting getBidSelector() {
+        return adUnitConfig.getBidSelector();
+    }
+
+    /**
+     * Sets a publisher-supplied strategy for choosing the winning bid. See {@link PrebidBidSelecting}.
+     */
+    public void setBidSelector(@Nullable PrebidBidSelecting bidSelector) {
+        adUnitConfig.setBidSelector(bidSelector);
     }
 
     //region ==================== HelperMethods for Unit Tests. Should be used only in tests
