@@ -29,7 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerParameters;
-import org.prebid.mobile.EidsPlacement;
+import org.prebid.mobile.DataObject;
 import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
@@ -42,10 +42,10 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.users.Eid;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
@@ -183,14 +183,18 @@ public class BasicParameterBuilder extends ParameterBuilder {
         final User user = bidRequest.getUser();
 
         user.keywords = TargetingParams.getUserKeywords();
-        user.ext = TargetingParams.getUserExt();
+        // A copy, so request-only keys such as "eids" never end up in the publisher's shared Ext.
+        final Ext publisherUserExt = TargetingParams.getUserExt();
+        user.ext = new Ext();
+        if (publisherUserExt != null) {
+            user.ext.put(publisherUserExt.getJsonObject());
+        }
 
         List<ExternalUserId> extendedIds = TargetingParams.getExternalUserIds();
         if (TargetingParams.getSendSharedId()) {
             extendedIds.add(TargetingParams.getSharedId());
         }
         if (extendedIds != null && extendedIds.size() > 0) {
-            List<Eid> eidList = new ArrayList<>();
             JSONArray idsJson = new JSONArray();
             for (ExternalUserId id : extendedIds) {
                 if (id != null) {
@@ -198,19 +202,9 @@ public class BasicParameterBuilder extends ParameterBuilder {
                     if (idJson != null) {
                         idsJson.put(idJson);
                     }
-                    Eid eid = id.toEid();
-                    if (eid != null) {
-                        eidList.add(eid);
-                    }
                 }
             }
-            EidsPlacement placement = PrebidMobile.getEidsPlacement();
-            if (placement.inUserExt()) {
-                user.getExt().put("eids", idsJson);
-            }
-            if (placement.inUser()) {
-                user.eids = eidList;
-            }
+            user.getExt().put("eids", idsJson);
         }
 
         final Pair<Float, Float> userLatLng = TargetingParams.getUserLatLng();

@@ -18,17 +18,13 @@ package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.common.util.CollectionUtils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.DataObject;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.users.Eid;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class User extends BaseBid {
 
@@ -38,7 +34,6 @@ public class User extends BaseBid {
     public String id = null;
     public Ext ext = null;
     public String buyerUid = null;
-    public List<Eid> eids = new ArrayList<>();
     public ArrayList<DataObject> dataObjects = new ArrayList<>();
 
     public JSONObject getJsonObject() throws JSONException {
@@ -49,14 +44,6 @@ public class User extends BaseBid {
         toJSON(jsonObject, "keywords", this.keywords);
         toJSON(jsonObject, "customdata", this.customData);
         toJSON(jsonObject, "geo", (geo != null) ? this.geo.getJsonObject() : null);
-
-        if (!CollectionUtils.isEmpty(eids)) {
-            JSONArray eidsArray = new JSONArray();
-            for (Eid eid: eids) {
-                eidsArray.put(eid.getJsonObject());
-            }
-            toJSON(jsonObject, "eids", eidsArray);
-        }
 
         if (ext != null) {
             JSONObject extJson = this.ext.getJsonObject();

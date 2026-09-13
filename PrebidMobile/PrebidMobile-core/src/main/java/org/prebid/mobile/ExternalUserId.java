@@ -16,17 +16,12 @@
 
 package org.prebid.mobile;
 
-import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.common.util.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.users.Eid;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.users.Uid;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +29,8 @@ import java.util.Map;
 
 /**
  * User id object from an external third-party source for additional targeting.
- * <a href="https://github.com/InteractiveAdvertisingBureau/openrtb/blob/main/extensions/2.x_official_extensions/eids.md">OpenRTB extended identifiers</a>.
+ * <a href="https://github.com/InteractiveAdvertisingBureau/openrtb2.x/blob/main/2.6.md#3227---object-eid-">OpenRTB 2.6 EID object</a>,
+ * <a href="https://github.com/InteractiveAdvertisingBureau/openrtb/blob/main/extensions/2.x_official_extensions/eids.md">OpenRTB 2.5 extended identifiers</a>.
  */
 public class ExternalUserId {
 
@@ -85,6 +81,9 @@ public class ExternalUserId {
         return inserter;
     }
 
+    /**
+     * Canonical domain of the entity that added this ID to the request. ORTB: {@code user.eids[].inserter}
+     */
     public void setInserter(@Nullable String inserter) {
         this.inserter = inserter;
     }
@@ -94,6 +93,9 @@ public class ExternalUserId {
         return matcher;
     }
 
+    /**
+     * Technology that provided the match method in {@code mm}. ORTB: {@code user.eids[].matcher}
+     */
     public void setMatcher(@Nullable String matcher) {
         this.matcher = matcher;
     }
@@ -103,13 +105,16 @@ public class ExternalUserId {
         return mm;
     }
 
+    /**
+     * Match method used by the matcher, from the AdCOM 1.0 list "ID Match Methods". ORTB: {@code user.eids[].mm}
+     */
     public void setMm(@Nullable Integer mm) {
         this.mm = mm;
     }
 
     @Nullable
     public JSONObject getJson() {
-        if (TextUtils.isEmpty(source)) {
+        if (source == null || source.isEmpty()) {
             LogUtil.warning(TAG, "Empty source");
             return null;
         }
@@ -142,47 +147,6 @@ public class ExternalUserId {
         }
     }
 
-    @Nullable
-    public Eid toEid() {
-        if (TextUtils.isEmpty(source)) {
-            LogUtil.warning(TAG, "Empty source");
-            return null;
-        }
-
-        Eid eid = new Eid();
-        eid.source = source;
-        eid.inserter = inserter;
-        eid.matcher = matcher;
-        eid.mm = mm;
-
-        if (ext != null) {
-            Ext eidExt = new Ext();
-            eidExt.put(new JSONObject(ext));
-            eid.ext = eidExt;
-        }
-
-        for (UniqueId uniqueId : uniqueIds) {
-            if (!TextUtils.isEmpty(uniqueId.id)) {
-                Uid uid = new Uid();
-                uid.id = uniqueId.id;
-                uid.atype = uniqueId.atype;
-                if (uniqueId.ext != null) {
-                    Ext uidExt = new Ext();
-                    uidExt.put(new JSONObject(uniqueId.ext));
-                    uid.ext = uidExt;
-                }
-                eid.uids.add(uid);
-            }
-        }
-
-        if (CollectionUtils.isEmpty(eid.uids)) {
-            LogUtil.warning(TAG, "No unique ids");
-            return null;
-        }
-
-        return eid;
-    }
-
     public static class UniqueId {
 
         @NonNull
@@ -213,7 +177,7 @@ public class ExternalUserId {
 
         @Nullable
         public JSONObject getJson() {
-            if (TextUtils.isEmpty(id)) {
+            if (id == null || id.isEmpty()) {
                 return null;
             }
             try {

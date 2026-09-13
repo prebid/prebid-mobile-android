@@ -45,7 +45,6 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.BannerParameters;
-import org.prebid.mobile.EidsPlacement;
 import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.NativeTitleAsset;
 import org.prebid.mobile.PrebidMobile;
@@ -71,11 +70,10 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.users.Eid;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.api.rendering.PrebidRenderer;
+import org.prebid.mobile.rendering.video.vast.Ad;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -105,14 +103,10 @@ public class BasicParameterBuilderTest {
 
     private final boolean browserActivityAvailable = true;
 
-    private final PrebidMobilePluginRenderer defaultRenderer = new PrebidRenderer();
-
     @Before
     public void setUp() throws Exception {
         context = Robolectric.buildActivity(Activity.class).create().get();
         ManagersResolver.getInstance().prepare(context);
-        PrebidMobile.registerPluginRenderer(defaultRenderer);
-        PrebidMobile.setEidsPlacement(EidsPlacement.COMPATIBLE);
         TargetingParams.setExternalUserIds(null);
     }
 
@@ -124,6 +118,7 @@ public class BasicParameterBuilderTest {
         TargetingParams.setOmidPartnerName(null);
         TargetingParams.setOmidPartnerVersion(null);
         TargetingParams.setGlobalOrtbConfig(null);
+        TargetingParams.setUserExt(null);
         TargetingParams.setExternalUserIds(null);
 
         PrebidMobile.clearStoredBidResponses();
@@ -131,8 +126,6 @@ public class BasicParameterBuilderTest {
         PrebidMobile.setPrebidServerAccountId("");
         PrebidMobile.setAuctionSettingsId(null);
 
-        PrebidMobile.setEidsPlacement(EidsPlacement.OPEN_RTB_2_6);
-        PrebidMobile.unregisterPluginRenderer(defaultRenderer);
         PrebidMobile.unregisterPluginRenderer(otherPlugin);
     }
 
@@ -694,6 +687,7 @@ public class BasicParameterBuilderTest {
         TargetingParams.setUserExt(new Ext());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
 
+
         ExternalUserId.UniqueId uid1 = new ExternalUserId.UniqueId("11", 111);
         uid1.setExt(new HashMap() {{
             put("category", "shopping");
@@ -722,6 +716,37 @@ public class BasicParameterBuilderTest {
         User actualUser = adRequestInput.getBidRequest().getUser();
         User expectedUser = getExpectedUser();
         assertEquals(expectedUser.getJsonObject().toString(), actualUser.getJsonObject().toString());
+    }
+
+    @Test
+    public void whenAppendParametersWithExternalUserIds_SharedUserExtIsNotModified() throws JSONException {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdFormat(AdFormat.BANNER);
+        adConfiguration.addSize(new AdSize(320, 50));
+
+        Ext publisherUserExt = new Ext();
+        publisherUserExt.put("custom", "value");
+        TargetingParams.setUserExt(publisherUserExt);
+        TargetingParams.setExternalUserIds(List.of(
+                new ExternalUserId("adserver1.com", List.of(new ExternalUserId.UniqueId("11", 1)))
+        ));
+
+        AdRequestInput firstRequest = new AdRequestInput();
+        new BasicParameterBuilder(adConfiguration, context.getResources(), browserActivityAvailable)
+                .appendBuilderParameters(firstRequest);
+
+        JSONObject firstUserExt = firstRequest.getBidRequest().getUser().getJsonObject().getJSONObject("ext");
+        assertTrue(firstUserExt.has("eids"));
+        assertFalse(publisherUserExt.getMap().containsKey("eids"));
+
+        TargetingParams.setExternalUserIds(null);
+        AdRequestInput secondRequest = new AdRequestInput();
+        new BasicParameterBuilder(adConfiguration, context.getResources(), browserActivityAvailable)
+                .appendBuilderParameters(secondRequest);
+
+        JSONObject secondUserExt = secondRequest.getBidRequest().getUser().getJsonObject().getJSONObject("ext");
+        assertEquals("value", secondUserExt.getString("custom"));
+        assertFalse(secondUserExt.has("eids"));
     }
 
     @Test
@@ -1454,19 +1479,13 @@ public class BasicParameterBuilderTest {
         if (extendedUserIds != null && extendedUserIds.size() > 0) {
             user.ext = new Ext();
             JSONArray idsJson = new JSONArray();
-            List<Eid> eids = new ArrayList<>();
             for (ExternalUserId id : extendedUserIds) {
                 JSONObject idJson = id.getJson();
                 if (idJson != null) {
                     idsJson.put(idJson);
                 }
-                Eid eid = id.toEid();
-                if (eid != null) {
-                    eids.add(eid);
-                }
             }
             user.ext.put("eids", idsJson);
-            user.eids = eids;
         }
 
         final Geo userGeo = user.getGeo();
