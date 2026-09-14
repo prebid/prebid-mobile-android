@@ -72,7 +72,6 @@ public class BaseJSInterface implements JSInterface {
     private final JsExecutor jsExecutor;
     private final DeviceVolumeObserver deviceVolumeObserver;
 
-    private final MraidEvent mraidEvent = new MraidEvent();
     private final MraidVariableContainer mraidVariableContainer = new MraidVariableContainer();
 
     // An ad container, which contains the ad web view in default state, but is empty when expanded.
@@ -198,10 +197,8 @@ public class BaseJSInterface implements JSInterface {
     @JavascriptInterface
     public void onOrientationPropertiesChanged(String properties) {
         mraidVariableContainer.setOrientationProperties(properties);
-        mraidEvent.mraidAction = ACTION_ORIENTATION_CHANGE;
-        mraidEvent.mraidActionHelper = properties;
 
-        notifyMraidEventHandler();
+        notifyMraidEventHandler(ACTION_ORIENTATION_CHANGE, properties);
     }
 
     @Override
@@ -214,8 +211,7 @@ public class BaseJSInterface implements JSInterface {
     @Override
     @JavascriptInterface
     public void close() {
-        mraidEvent.mraidAction = ACTION_CLOSE;
-        notifyMraidEventHandler();
+        notifyMraidEventHandler(ACTION_CLOSE, null);
     }
 
     @Override
@@ -225,12 +221,10 @@ public class BaseJSInterface implements JSInterface {
         // passing this off to the MRAIDResize facade
         // trying to thin out this to make this
         // refactorable for the future
-        mraidEvent.mraidAction = ACTION_RESIZE;
-
         if (adBaseView.isMRAID() && orientationBroadcastReceiver != null && orientationBroadcastReceiver.isOrientationChanged()) {
-            updateScreenMetricsAsync(this::notifyMraidEventHandler);
+            updateScreenMetricsAsync(() -> notifyMraidEventHandler(ACTION_RESIZE, null));
         } else {
-            notifyMraidEventHandler();
+            notifyMraidEventHandler(ACTION_RESIZE, null);
         }
 
         if (adBaseView.isMRAID() && orientationBroadcastReceiver != null) {
@@ -250,11 +244,8 @@ public class BaseJSInterface implements JSInterface {
     public void expand(final String url) {
         LogUtil.debug(TAG, "Expand with url: " + url);
 
-        mraidEvent.mraidAction = ACTION_EXPAND;
-        mraidEvent.mraidActionHelper = url;
-
         //call creative's api that handles all mraid events
-        notifyMraidEventHandler();
+        notifyMraidEventHandler(ACTION_EXPAND, url);
     }
 
     @Override
@@ -262,10 +253,7 @@ public class BaseJSInterface implements JSInterface {
     public void open(String url) {
         adBaseView.sendClickCallBack(url);
 
-        mraidEvent.mraidAction = ACTION_OPEN;
-        mraidEvent.mraidActionHelper = url;
-
-        notifyMraidEventHandler();
+        notifyMraidEventHandler(ACTION_OPEN, url);
     }
 
     @Override
@@ -290,10 +278,7 @@ public class BaseJSInterface implements JSInterface {
     public void createCalendarEvent(String parameters) {
         adBaseView.sendClickCallBack(parameters);
 
-        mraidEvent.mraidAction = ACTION_CREATE_CALENDAR_EVENT;
-        mraidEvent.mraidActionHelper = parameters;
-
-        notifyMraidEventHandler();
+        notifyMraidEventHandler(ACTION_CREATE_CALENDAR_EVENT, parameters);
     }
 
     @Override
@@ -301,10 +286,7 @@ public class BaseJSInterface implements JSInterface {
     public void storePicture(String url) {
         adBaseView.sendClickCallBack(url);
 
-        mraidEvent.mraidAction = ACTION_STORE_PICTURE;
-        mraidEvent.mraidActionHelper = url;
-
-        notifyMraidEventHandler();
+        notifyMraidEventHandler(ACTION_STORE_PICTURE, url);
     }
 
     @Override
@@ -316,10 +298,7 @@ public class BaseJSInterface implements JSInterface {
     @Override
     @JavascriptInterface
     public void playVideo(String url) {
-        mraidEvent.mraidAction = ACTION_PLAY_VIDEO;
-        mraidEvent.mraidActionHelper = url;
-
-        notifyMraidEventHandler();
+        notifyMraidEventHandler(ACTION_PLAY_VIDEO, url);
     }
 
     @Override
@@ -380,8 +359,7 @@ public class BaseJSInterface implements JSInterface {
     @JavascriptInterface
     public void unload() {
         LogUtil.debug(TAG, "unload called");
-        mraidEvent.mraidAction = ACTION_UNLOAD;
-        notifyMraidEventHandler();
+        notifyMraidEventHandler(ACTION_UNLOAD, null);
     }
 
     public void onStateChange(String state) {
@@ -574,8 +552,13 @@ public class BaseJSInterface implements JSInterface {
         jsExecutor.executeOnSizeChange(screenMetrics.getCurrentAdRect());
     }
 
-    private void notifyMraidEventHandler() {
-        orientationBroadcastReceiver.setMraidAction(mraidEvent.mraidAction);
+    private void notifyMraidEventHandler(String action, @Nullable String actionHelper) {
+        // A new event per command: MRAID handlers may read it after the next command has arrived
+        MraidEvent mraidEvent = new MraidEvent();
+        mraidEvent.mraidAction = action;
+        mraidEvent.mraidActionHelper = actionHelper;
+
+        orientationBroadcastReceiver.setMraidAction(action);
         HTMLCreative htmlCreative = ((PrebidWebViewBase) adBaseView.getPreloadedListener()).getCreative();
         adBaseView.post(new MraidEventHandlerNotifierRunnable(htmlCreative, adBaseView, mraidEvent, jsExecutor));
     }
