@@ -56,9 +56,10 @@ import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 
 import java.lang.ref.WeakReference;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.RunnableFuture;
 
+/**
+ * Handles MRAID calls on the main thread. WebView reaches it through {@link MainThreadJSInterface}.
+ */
 @SuppressLint("NewApi")
 public class BaseJSInterface implements JSInterface {
 
@@ -84,6 +85,8 @@ public class BaseJSInterface implements JSInterface {
     private LayoutParams defaultLayoutParams;
 
     private MraidOrientationBroadcastReceiver orientationBroadcastReceiver = new MraidOrientationBroadcastReceiver(this);
+
+    private boolean isDestroyed;
 
 
     public BaseJSInterface(
@@ -175,12 +178,10 @@ public class BaseJSInterface implements JSInterface {
     public String getCurrentPosition() {
         JSONObject position = new JSONObject();
         Rect rect = new Rect();
-        Handler mainHandler = new Handler(Looper.getMainLooper());
-        Runnable mainThreadRunnable = () -> adBaseView.getGlobalVisibleRect(rect);
-        RunnableFuture<Void> task = new FutureTask<>(mainThreadRunnable, null);
+
+        adBaseView.getGlobalVisibleRect(rect);
+
         try {
-            mainHandler.post(task);
-            task.get();
             position.put(JSON_X, (int) (rect.left / Utils.DENSITY));
             position.put(JSON_Y, (int) (rect.top / Utils.DENSITY));
             position.put(JSON_WIDTH, (int) (rect.right / Utils.DENSITY - rect.left / Utils.DENSITY));
@@ -449,6 +450,10 @@ public class BaseJSInterface implements JSInterface {
         return jsExecutor;
     }
 
+    boolean isDestroyed() {
+        return isDestroyed;
+    }
+
     public void loading() {
         jsExecutor.loading();
     }
@@ -541,6 +546,7 @@ public class BaseJSInterface implements JSInterface {
     }
 
     public void destroy() {
+        isDestroyed = true;
         screenMetricsWaiter.cancelPendingRequests();
         orientationBroadcastReceiver.unregister();
         deviceVolumeObserver.stop();

@@ -17,9 +17,11 @@
 package org.prebid.mobile.rendering.views.webview.mraid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.eq;
@@ -363,6 +365,15 @@ public class BaseJSInterfaceTest {
 
         currentPosition = spyBaseJSInterface.getCurrentPosition();
         assertNotEquals("{\"x\":0,\"width\":0,\"y\":0,\"height\":0}", currentPosition);
+    }
+
+    @Test
+    public void destroyTest() {
+        assertFalse(spyBaseJSInterface.isDestroyed());
+
+        spyBaseJSInterface.destroy();
+
+        assertTrue(spyBaseJSInterface.isDestroyed());
     }
 
     @Test
