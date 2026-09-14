@@ -27,6 +27,8 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
 
       - name: Gradle cache
         uses: gradle/gradle-build-action@v3
@@ -49,6 +51,8 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
 
       - name: Gradle cache
         uses: gradle/gradle-build-action@v3
@@ -71,6 +75,8 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
 
       - name: Gradle cache
         uses: gradle/gradle-build-action@v3
@@ -93,6 +99,8 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
 
       - name: Gradle cache
         uses: gradle/gradle-build-action@v3
@@ -114,6 +122,8 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
 
       - name: Gradle cache
         uses: gradle/gradle-build-action@v3
