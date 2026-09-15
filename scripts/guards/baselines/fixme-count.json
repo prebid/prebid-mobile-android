@@ -1,0 +1,5 @@
+{
+  "guard": "fixme-ratchet",
+  "description": "Count of FIXME/TODO markers in PrebidMobile-core/src/main. Shrink-only: fix the marked issue or file a GitHub issue and delete the marker; update with --update-fixme-baseline in the same PR.",
+  "count": 15
+}

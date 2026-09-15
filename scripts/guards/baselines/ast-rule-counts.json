@@ -1,0 +1,8 @@
+{
+  "guard": "ast-rule-ratchet",
+  "description": "Per-rule finding counts for the ast-grep rules in scripts/guards/rules/. Shrink-only per rule: fix sites and update with --update-ast-rule-baseline in the same PR. kotlin-not-null-assert and static-context-leak are at zero and stay there.",
+  "counts": {
+    "empty-catch": 8,
+    "main-thread-callbacks": 283
+  }
+}
