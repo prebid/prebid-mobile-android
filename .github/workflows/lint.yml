@@ -49,6 +49,10 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          # The action's default package list installs the removed legacy
+          # 'tools' package and fails; same override as PR_checks.yml.
+          packages: 'platform-tools'
 
       - name: Set up Gradle cache
         uses: gradle/actions/setup-gradle@v4
