@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
+import org.prebid.mobile.rendering.views.webview.mraid.MainThreadJSInterface;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -30,7 +31,9 @@ import org.robolectric.annotation.Config;
 import java.io.IOException;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -66,5 +69,12 @@ public class WebViewBannerTest {
 
         webViewBanner = new WebViewBanner(context, mock(PrebidWebViewBase.class), mockMraidListener);
         assertNotNull(webViewBanner.getMRAIDInterface());
+    }
+
+    @Test
+    public void setMRAIDInterface_RegistersMainThreadJSInterface() {
+        WebViewBanner webViewBanner = new WebViewBanner(context, adHTML, 100, 200, mockPreloadListener, mockMraidListener);
+
+        assertTrue(shadowOf(webViewBanner).getJavascriptInterface("jsBridge") instanceof MainThreadJSInterface);
     }
 }

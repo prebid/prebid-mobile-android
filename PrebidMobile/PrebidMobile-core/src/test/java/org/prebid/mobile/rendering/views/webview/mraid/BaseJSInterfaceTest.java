@@ -17,9 +17,11 @@
 package org.prebid.mobile.rendering.views.webview.mraid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.eq;
@@ -54,6 +56,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -83,8 +86,6 @@ import org.robolectric.annotation.Config;
 import org.robolectric.annotation.LooperMode;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowLocationManager;
-
-import java.lang.reflect.Field;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -190,118 +191,101 @@ public class BaseJSInterfaceTest {
     }
 
     @Test
-    public void onOrientationPropertiesChangedTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
-
+    public void onOrientationPropertiesChangedTest() {
         spyBaseJSInterface.onOrientationPropertiesChanged("test");
-        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
+        MraidEvent event = captureHandledMraidEvent();
 
         assertEquals(JSInterface.ACTION_ORIENTATION_CHANGE, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
-
-        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
-    public void closeTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
-
+    public void closeTest() {
         spyBaseJSInterface.close();
-        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
+        MraidEvent event = captureHandledMraidEvent();
 
         assertEquals(JSInterface.ACTION_CLOSE, event.mraidAction);
-
-        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
-    public void resizeTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
-
+    public void resizeTest() {
         spyBaseJSInterface.resize();
-        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
+        MraidEvent event = captureHandledMraidEvent();
 
         assertEquals(JSInterface.ACTION_RESIZE, event.mraidAction);
-
-        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
-    public void expandNoUrlTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
-
+    public void expandNoUrlTest() {
         spyBaseJSInterface.expand();
-        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
+        MraidEvent event = captureHandledMraidEvent();
 
         assertEquals(JSInterface.ACTION_EXPAND, event.mraidAction);
         assertNull(event.mraidActionHelper);
-
-        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
-    public void expandWithUrlTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
-
+    public void expandWithUrlTest() {
         spyBaseJSInterface.expand(null);
-        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
+        MraidEvent event = captureHandledMraidEvent();
 
         assertEquals(JSInterface.ACTION_EXPAND, event.mraidAction);
-
-        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
-    public void openTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
-
+    public void openTest() {
         spyBaseJSInterface.open("test");
-        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
+        MraidEvent event = captureHandledMraidEvent();
 
         verify(mockWebViewBase, times(1)).sendClickCallBack(anyString());
         assertEquals(JSInterface.ACTION_OPEN, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
-
-        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
-    public void createCalendarEventTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
-
+    public void createCalendarEventTest() {
         spyBaseJSInterface.createCalendarEvent("test");
-        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
+        MraidEvent event = captureHandledMraidEvent();
 
         assertEquals(JSInterface.ACTION_CREATE_CALENDAR_EVENT, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
-
-        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
-    public void storePictureTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
-
+    public void storePictureTest() {
         spyBaseJSInterface.storePicture("test");
-        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
+        MraidEvent event = captureHandledMraidEvent();
 
         assertEquals(JSInterface.ACTION_STORE_PICTURE, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
-
-        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
-    public void playVideoTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
-
+    public void playVideoTest() {
         spyBaseJSInterface.playVideo("test");
-        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
+        MraidEvent event = captureHandledMraidEvent();
 
         assertEquals(JSInterface.ACTION_PLAY_VIDEO, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
+    }
 
-        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
+    @Test
+    public void consecutiveCommandsDoNotShareMraidEventTest() {
+        spyBaseJSInterface.playVideo("video");
+        spyBaseJSInterface.open("url");
+
+        ArgumentCaptor<MraidEvent> captor = ArgumentCaptor.forClass(MraidEvent.class);
+        verify(mockMraidController, times(2)).handleMraidEvent(captor.capture(), eq(mockCreative), any(WebViewBase.class), any());
+        MraidEvent playVideoEvent = captor.getAllValues().get(0);
+
+        assertEquals(JSInterface.ACTION_PLAY_VIDEO, playVideoEvent.mraidAction);
+        assertEquals("video", playVideoEvent.mraidActionHelper);
+    }
+
+    private MraidEvent captureHandledMraidEvent() {
+        ArgumentCaptor<MraidEvent> captor = ArgumentCaptor.forClass(MraidEvent.class);
+        verify(mockMraidController).handleMraidEvent(captor.capture(), eq(mockCreative), any(WebViewBase.class), any());
+        return captor.getValue();
     }
 
     @Test
@@ -363,6 +347,15 @@ public class BaseJSInterfaceTest {
 
         currentPosition = spyBaseJSInterface.getCurrentPosition();
         assertNotEquals("{\"x\":0,\"width\":0,\"y\":0,\"height\":0}", currentPosition);
+    }
+
+    @Test
+    public void destroyTest() {
+        assertFalse(spyBaseJSInterface.isDestroyed());
+
+        spyBaseJSInterface.destroy();
+
+        assertTrue(spyBaseJSInterface.isDestroyed());
     }
 
     @Test
