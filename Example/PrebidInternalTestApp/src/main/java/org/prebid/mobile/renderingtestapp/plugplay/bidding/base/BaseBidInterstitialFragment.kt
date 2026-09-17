@@ -99,6 +99,13 @@ abstract class BaseBidInterstitialFragment : AdFragment(),
         binding.btnLoad.isEnabled = true
     }
 
+    override fun onAdExpired(interstitialAdUnit: InterstitialAdUnit?) {
+        Log.d(TAG, "onAdExpired() called with: interstitialAdUnit = [$interstitialAdUnit]")
+        events.expired(true)
+        binding.btnLoad.setText(R.string.text_load)
+        binding.btnLoad.isEnabled = true
+    }
+
     private fun handleLoadInterstitialClick() {
         when (binding.btnLoad.text) {
             getString(R.string.text_load) -> {
@@ -132,6 +139,7 @@ abstract class BaseBidInterstitialFragment : AdFragment(),
         fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
         fun closed(b: Boolean) = enable(R.id.btnAdClosed, b)
         fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+        fun expired(b: Boolean) = enable(R.id.btnAdExpired, b)
         fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
 
     }

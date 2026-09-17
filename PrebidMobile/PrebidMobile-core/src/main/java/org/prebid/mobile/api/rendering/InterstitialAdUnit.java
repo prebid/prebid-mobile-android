@@ -164,6 +164,13 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         }
     }
 
+    @Override
+    void notifyAdExpiredListener() {
+        if (adUnitEventsListener != null) {
+            adUnitEventsListener.onAdExpired(InterstitialAdUnit.this);
+        }
+    }
+
 
     public void setInterstitialAdUnitListener(@Nullable InterstitialAdUnitListener adUnitEventsListener) {
         this.adUnitEventsListener = adUnitEventsListener;
@@ -235,6 +242,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
 
             @Override
             public void onAdDisplayed() {
+                markAdDisplayed();
                 changeInterstitialAdUnitState(READY_FOR_LOAD);
                 notifyAdEventListener(AdListenerEvent.AD_DISPLAYED);
             }

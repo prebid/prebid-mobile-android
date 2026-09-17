@@ -89,6 +89,11 @@ open class PpmBannerFragment : AdFragment(), BannerViewListener {
         binding.btnLoad.isEnabled = true
     }
 
+    override fun onAdExpired(bannerView: BannerView?) {
+        events.expired(true)
+        binding.btnLoad.isEnabled = true
+    }
+
     override fun onAdClicked(bannerView: BannerView?) {
         events.clicked(true)
     }
@@ -113,6 +118,7 @@ open class PpmBannerFragment : AdFragment(), BannerViewListener {
         fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
         fun closed(b: Boolean) = enable(R.id.btnAdClosed, b)
         fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+        fun expired(b: Boolean) = enable(R.id.btnAdExpired, b)
         fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
 
     }

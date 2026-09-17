@@ -18,6 +18,9 @@ package org.prebid.mobile.api.rendering;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
@@ -75,6 +78,12 @@ public class BannerView extends FrameLayout {
     private BidLoader bidLoader;
     private BidResponse bidResponse;
     private AdException prebidException;
+    private final Handler expirationHandler = new Handler(Looper.getMainLooper());
+    private Runnable expirationRunnable;
+    private long bidExpirationUptimeMillis;
+    private boolean isBidAdLoaded;
+    private boolean expired;
+    private boolean isRefreshStopped;
 
     private final ScreenStateReceiver screenStateReceiver = new ScreenStateReceiver();
 
@@ -94,13 +103,18 @@ public class BannerView extends FrameLayout {
     private final DisplayViewListener displayViewListener = new DisplayViewListener() {
         @Override
         public void onAdLoaded() {
+            isBidAdLoaded = true;
             if (bannerViewListener != null) {
                 bannerViewListener.onAdLoaded(BannerView.this);
             }
+            // The bid may have expired while the creative was loading.
+            expireAdIfNeeded();
         }
 
         @Override
         public void onAdDisplayed() {
+            // Once the impression is tracked, the bid can no longer expire.
+            cancelExpiration();
             if (bannerViewListener != null) {
                 bannerViewListener.onAdDisplayed(BannerView.this);
                 eventHandler.trackImpression();
@@ -172,6 +186,8 @@ public class BannerView extends FrameLayout {
         public void onFetchCompleted(BidResponse response) {
             bidResponse = response;
             prebidException = null;
+            // bid.exp counts from the auction, so the countdown starts as soon as the bid arrives.
+            scheduleExpirationIfNeeded();
 
             isPrimaryAdServerRequestInProgress = true;
             eventHandler.requestAdWithBid(getWinnerBid());
@@ -309,6 +325,8 @@ public class BannerView extends FrameLayout {
             return;
         }
 
+        // A successful load re-arms the BidLoader refresh timer.
+        isRefreshStopped = false;
         bidLoader.load();
     }
 
@@ -316,6 +334,7 @@ public class BannerView extends FrameLayout {
      * Cancels BidLoader refresh timer.
      */
     public void stopRefresh() {
+        isRefreshStopped = true;
         if (bidLoader != null) {
             bidLoader.cancelRefresh();
         }
@@ -334,6 +353,7 @@ public class BannerView extends FrameLayout {
         if (displayView != null) {
             displayView.destroy();
         }
+        cancelExpiration();
         bidRequesterListener = null;
 
         PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig.getFingerprint());
@@ -495,6 +515,8 @@ public class BannerView extends FrameLayout {
     }
 
     private void displayAdServerView(View view) {
+        // The ad server's own creative is not the Prebid bid, so it never expires.
+        resetExpiration();
         removeAllViews();
 
         if (view == null) {
@@ -528,6 +550,66 @@ public class BannerView extends FrameLayout {
         LogUtil.debug(TAG, "Ad failed listener: " + exception);
         if (bannerViewListener != null) {
             bannerViewListener.onAdFailed(BannerView.this, exception);
+        }
+    }
+
+    private void scheduleExpirationIfNeeded() {
+        // The new bid replaces the previous ad, so a bid without exp must not inherit its timer.
+        resetExpiration();
+
+        Integer expirationTimeSeconds = bidResponse != null ? bidResponse.getExpirationTimeSeconds() : null;
+        // BidResponse normalizes absent, zero, and negative exp values to null.
+        if (expirationTimeSeconds == null) {
+            return;
+        }
+
+        bidExpirationUptimeMillis = SystemClock.uptimeMillis() + expirationTimeSeconds * 1000L;
+        expirationRunnable = this::expireAdIfNeeded;
+        expirationHandler.postAtTime(expirationRunnable, bidExpirationUptimeMillis);
+    }
+
+    private void cancelExpiration() {
+        if (expirationRunnable != null) {
+            expirationHandler.removeCallbacks(expirationRunnable);
+            expirationRunnable = null;
+        }
+        bidExpirationUptimeMillis = 0;
+    }
+
+    private void resetExpiration() {
+        cancelExpiration();
+        isBidAdLoaded = false;
+        expired = false;
+    }
+
+    private boolean hasBidExpired() {
+        return bidExpirationUptimeMillis > 0 && SystemClock.uptimeMillis() >= bidExpirationUptimeMillis;
+    }
+
+    private void expireAdIfNeeded() {
+        // Only the current bid's loaded Prebid ad can expire. While its creative loads,
+        // onAdLoaded() re-checks, so onAdExpired never precedes onAdLoaded.
+        if (expired || !isBidAdLoaded || !hasBidExpired()) {
+            return;
+        }
+
+        expired = true;
+        // A non-refreshable banner keeps showing the expired creative; the app is only notified.
+        boolean isRefreshable = adUnitConfig.getAutoRefreshDelay() > 0 && !isRefreshStopped;
+        if (isRefreshable) {
+            if (displayView != null) {
+                displayView.destroy();
+                displayView = null;
+            }
+            removeAllViews();
+        }
+
+        if (bannerViewListener != null) {
+            bannerViewListener.onAdExpired(BannerView.this);
+        }
+
+        if (isRefreshable) {
+            loadAd();
         }
     }
 
@@ -577,6 +659,11 @@ public class BannerView extends FrameLayout {
     @VisibleForTesting
     final boolean isPrimaryAdServerRequestInProgress() {
         return isPrimaryAdServerRequestInProgress;
+    }
+
+    @VisibleForTesting
+    final boolean isExpired() {
+        return expired;
     }
     //endregion ==================== HelperMethods for Unit Tests
 }
