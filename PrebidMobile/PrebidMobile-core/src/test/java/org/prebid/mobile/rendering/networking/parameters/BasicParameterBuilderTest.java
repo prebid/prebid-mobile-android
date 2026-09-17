@@ -118,6 +118,7 @@ public class BasicParameterBuilderTest {
         TargetingParams.setOmidPartnerName(null);
         TargetingParams.setOmidPartnerVersion(null);
         TargetingParams.setGlobalOrtbConfig(null);
+        TargetingParams.setUserExt(null);
         TargetingParams.setExternalUserIds(null);
 
         PrebidMobile.clearStoredBidResponses();
@@ -715,6 +716,37 @@ public class BasicParameterBuilderTest {
         User actualUser = adRequestInput.getBidRequest().getUser();
         User expectedUser = getExpectedUser();
         assertEquals(expectedUser.getJsonObject().toString(), actualUser.getJsonObject().toString());
+    }
+
+    @Test
+    public void whenAppendParametersWithExternalUserIds_SharedUserExtIsNotModified() throws JSONException {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdFormat(AdFormat.BANNER);
+        adConfiguration.addSize(new AdSize(320, 50));
+
+        Ext publisherUserExt = new Ext();
+        publisherUserExt.put("custom", "value");
+        TargetingParams.setUserExt(publisherUserExt);
+        TargetingParams.setExternalUserIds(List.of(
+                new ExternalUserId("adserver1.com", List.of(new ExternalUserId.UniqueId("11", 1)))
+        ));
+
+        AdRequestInput firstRequest = new AdRequestInput();
+        new BasicParameterBuilder(adConfiguration, context.getResources(), browserActivityAvailable)
+                .appendBuilderParameters(firstRequest);
+
+        JSONObject firstUserExt = firstRequest.getBidRequest().getUser().getJsonObject().getJSONObject("ext");
+        assertTrue(firstUserExt.has("eids"));
+        assertFalse(publisherUserExt.getMap().containsKey("eids"));
+
+        TargetingParams.setExternalUserIds(null);
+        AdRequestInput secondRequest = new AdRequestInput();
+        new BasicParameterBuilder(adConfiguration, context.getResources(), browserActivityAvailable)
+                .appendBuilderParameters(secondRequest);
+
+        JSONObject secondUserExt = secondRequest.getBidRequest().getUser().getJsonObject().getJSONObject("ext");
+        assertEquals("value", secondUserExt.getString("custom"));
+        assertFalse(secondUserExt.has("eids"));
     }
 
     @Test
