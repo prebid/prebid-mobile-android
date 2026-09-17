@@ -97,14 +97,14 @@ internal class InterstitialAdWrapper(
         }
     }
 
-    fun loadAd(bid: Bid?) {
+    fun loadAd(
+        bid: Bid?,
+        requestConfiguration: NextGenAdRequestConfiguration? = null,
+    ) {
         interstitialAd = null
         try {
             val adRequestBuilder = AdRequest.Builder(adUnit)
-            bid?.let {
-                val targetingMap = HashMap(it.prebid.targeting)
-                Utils.handleCustomTargetingUpdate(adRequestBuilder, targetingMap)
-            }
+            Utils.configureAdRequest(adRequestBuilder, bid, requestConfiguration)
 
             InterstitialAd.load(adRequestBuilder.build(), this)
         } catch (e: Throwable) {

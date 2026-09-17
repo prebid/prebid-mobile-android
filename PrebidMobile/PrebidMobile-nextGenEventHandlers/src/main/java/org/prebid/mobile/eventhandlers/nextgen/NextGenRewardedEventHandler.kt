@@ -48,9 +48,16 @@ class NextGenRewardedEventHandler(
 
     private var listener: RewardedVideoEventListener? = null
     private var appEventHandler: Handler? = null
+    private var nextGenAdRequestConfiguration: NextGenAdRequestConfiguration? = null
 
     private var isExpectingAppEvent = false
     private var didNotifiedBidWin = false
+
+    fun setNextGenAdRequestConfiguration(nextGenAdRequestConfiguration: NextGenAdRequestConfiguration?) {
+        this.nextGenAdRequestConfiguration = nextGenAdRequestConfiguration
+    }
+
+    fun getNextGenAdRequestConfiguration(): NextGenAdRequestConfiguration? = nextGenAdRequestConfiguration
 
     override fun onEvent(adEvent: AdEvent) {
         when (adEvent) {
@@ -179,7 +186,7 @@ class NextGenRewardedEventHandler(
             return
         }
 
-        rewardedAd?.loadAd(bid)
+        rewardedAd?.loadAd(bid, nextGenAdRequestConfiguration)
     }
 
     private fun initPublisherRewardedAd() {

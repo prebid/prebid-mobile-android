@@ -48,6 +48,7 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
 
     private RewardedVideoEventListener listener;
     private Handler appEventHandler;
+    private AdManagerRequestConfiguration adManagerRequestConfiguration;
 
     private boolean isExpectingAppEvent;
     private boolean didNotifiedBidWin;
@@ -64,6 +65,17 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
     ) {
         activityWeakReference = new WeakReference<>(activity);
         this.gamAdUnitId = gamAdUnitId;
+    }
+
+    public void setAdManagerRequestConfiguration(
+            @Nullable AdManagerRequestConfiguration adManagerRequestConfiguration
+    ) {
+        this.adManagerRequestConfiguration = adManagerRequestConfiguration;
+    }
+
+    @Nullable
+    public AdManagerRequestConfiguration getAdManagerRequestConfiguration() {
+        return adManagerRequestConfiguration;
     }
 
     //region ==================== EventListener Implementation
@@ -119,7 +131,7 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
             return;
         }
 
-        rewardedAd.loadAd(bid);
+        rewardedAd.loadAd(bid, adManagerRequestConfiguration);
     }
 
     @Override
