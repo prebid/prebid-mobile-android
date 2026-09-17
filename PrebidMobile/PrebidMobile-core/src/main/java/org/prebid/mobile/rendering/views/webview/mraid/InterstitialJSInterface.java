@@ -40,5 +40,7 @@ public class InterstitialJSInterface extends BaseJSInterface {
     @Override
     @JavascriptInterface
     public void expand() {
+        // Expand has no effect on interstitials, but mraid.js holds later commands until this call completes.
+        getJsExecutor().executeNativeCallComplete();
     }
 }
