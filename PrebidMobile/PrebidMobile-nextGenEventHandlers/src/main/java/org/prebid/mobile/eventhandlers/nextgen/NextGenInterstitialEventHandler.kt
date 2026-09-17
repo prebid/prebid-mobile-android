@@ -42,16 +42,16 @@ class NextGenInterstitialEventHandler(activity: Activity, private val adUnitId: 
 
     private var eventListener: InterstitialEventListener? = null
     private var appEventHandler: Handler? = null
-    private var adRequestConfiguration: NextGenAdRequestConfiguration? = null
+    private var nextGenAdRequestConfiguration: NextGenAdRequestConfiguration? = null
 
     private var isExpectingAppEvent = false
     private var didNotifiedBidWin = false
 
-    fun setAdRequestConfiguration(adRequestConfiguration: NextGenAdRequestConfiguration?) {
-        this.adRequestConfiguration = adRequestConfiguration
+    fun setNextGenAdRequestConfiguration(nextGenAdRequestConfiguration: NextGenAdRequestConfiguration?) {
+        this.nextGenAdRequestConfiguration = nextGenAdRequestConfiguration
     }
 
-    fun getAdRequestConfiguration(): NextGenAdRequestConfiguration? = adRequestConfiguration
+    fun getNextGenAdRequestConfiguration(): NextGenAdRequestConfiguration? = nextGenAdRequestConfiguration
 
     override fun onEvent(adEvent: AdEvent) {
         when (adEvent) {
@@ -174,7 +174,7 @@ class NextGenInterstitialEventHandler(activity: Activity, private val adUnitId: 
             return
         }
 
-        requestInterstitial?.loadAd(bid, adRequestConfiguration)
+        requestInterstitial?.loadAd(bid, nextGenAdRequestConfiguration)
     }
 
     private fun initPublisherInterstitialAd() {

@@ -23,6 +23,7 @@ import org.junit.After
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.prebid.mobile.CacheManager
 import org.prebid.mobile.NativeAdUnit
@@ -120,8 +121,10 @@ class UtilsTest {
 
         val inOrder = Mockito.inOrder(configuration, mockBuilder)
         inOrder.verify(configuration).configure(mockBuilder)
-        inOrder.verify(mockBuilder).putCustomTargeting("hb_pb", "1.50")
-        inOrder.verify(mockBuilder).putCustomTargeting("hb_cache_id", "prebid-cache-id")
+        inOrder.verify(mockBuilder, Mockito.times(2))
+            .putCustomTargeting(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())
+        Mockito.verify(mockBuilder).putCustomTargeting("hb_pb", "1.50")
+        Mockito.verify(mockBuilder).putCustomTargeting("hb_cache_id", "prebid-cache-id")
         Assert.assertTrue(Utils.RESERVED_KEYS.containsAll(listOf("hb_pb", "hb_cache_id")))
     }
 

@@ -27,6 +27,10 @@ public interface AdManagerRequestConfiguration {
 
     /**
      * Called before every GAM ad request is built.
+     * <p>
+     * When there is a bid, Prebid applies its own targeting (keys such as {@code hb_pb}) after this
+     * callback, and it takes precedence: values set here under those keys are overwritten, and keys
+     * that Prebid set for earlier bids are removed.
      */
     void configure(@NonNull AdManagerAdRequest.Builder builder);
 }

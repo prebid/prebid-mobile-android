@@ -168,15 +168,15 @@ class NextGenBannerEventHandlerTest {
     }
 
     @Test
-    fun adRequestConfiguration_SetAndGet() {
-        Assert.assertNull(bannerEventHandler.getAdRequestConfiguration())
+    fun nextGenAdRequestConfiguration_SetAndGet() {
+        Assert.assertNull(bannerEventHandler.getNextGenAdRequestConfiguration())
 
         val configuration = NextGenAdRequestConfiguration {
             it.putCustomTargeting("key", "value")
         }
-        bannerEventHandler.setAdRequestConfiguration(configuration)
+        bannerEventHandler.setNextGenAdRequestConfiguration(configuration)
 
-        Assert.assertEquals(configuration, bannerEventHandler.getAdRequestConfiguration())
+        Assert.assertEquals(configuration, bannerEventHandler.getNextGenAdRequestConfiguration())
     }
 
     @Test

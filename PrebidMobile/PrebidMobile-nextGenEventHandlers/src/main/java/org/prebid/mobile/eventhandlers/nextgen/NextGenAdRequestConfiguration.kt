@@ -24,6 +24,9 @@ fun interface NextGenAdRequestConfiguration {
 
     /**
      * Called before every Next-Gen SDK ad request is built.
+     *
+     * When there is a bid, Prebid applies its own targeting (keys such as `hb_pb`) after this
+     * callback, so values set here under those keys are overwritten.
      */
     fun configure(builder: BaseAdRequestBuilder<*>)
 }
