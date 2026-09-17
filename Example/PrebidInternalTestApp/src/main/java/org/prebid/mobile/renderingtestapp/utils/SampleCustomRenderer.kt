@@ -84,6 +84,8 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
             onClick = { displayViewListener.onAdClicked() },
             onClosed = { displayViewListener.onAdClosed() }
         )
+        bannerView.post { displayViewListener.onAdLoaded() }
+
         val visibilityChecker = ViewVisibilityObserver(bannerView) {
             // Dispatch additional event listener based on criteria from ViewVisibilityObserver
             pluginEventListenerMap[adUnitConfiguration.fingerprint]?.onImpression()

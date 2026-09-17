@@ -2,14 +2,21 @@ package com.applovin.mediation.adapters.prebid.managers;
 
 import android.app.Activity;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.applovin.mediation.MaxReward;
 import com.applovin.mediation.adapter.MaxAdapterError;
 import com.applovin.mediation.adapter.listeners.MaxRewardedAdapterListener;
 import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
 import com.applovin.mediation.adapters.prebid.ParametersChecker;
-import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.rendering.bidding.display.InterstitialController;
+
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.display.PluginRendererFactory;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.interstitial.rewarded.Reward;
 
@@ -20,14 +27,14 @@ public class MaxRewardedManager {
     @Nullable
     private MaxRewardedAdapterListener maxListener;
     @Nullable
-    private InterstitialController interstitialController;
+    private PrebidMobileInterstitialControllerInterface interstitialController;
     @Nullable
-    private InterstitialControllerListener prebidListener;
+    private AdUnitConfiguration adUnitConfiguration;
 
     public void loadAd(
             MaxAdapterResponseParameters parameters,
             Activity activity,
-            MaxRewardedAdapterListener maxListener
+            @NonNull MaxRewardedAdapterListener maxListener
     ) {
         this.maxListener = maxListener;
         loadAd(parameters, activity);
@@ -42,19 +49,28 @@ public class MaxRewardedManager {
             return;
         }
 
+        BidResponse bidResponse = ParametersChecker.getBidResponse(responseId, this::onError);
+        if (bidResponse == null) {
+            return;
+        }
+
         activity.runOnUiThread(() -> {
-            try {
-                prebidListener = createRewardedListener();
-                interstitialController = new InterstitialController(activity, prebidListener);
-                if (prebidListener != null) {
-                    interstitialController.setRewardListener(prebidListener::onUserEarnedReward);
-                }
-                interstitialController.loadAd(responseId, true);
-            } catch (AdException e) {
-                String error = "Exception in Prebid interstitial controller (" + e.getMessage() + ")";
+            InterstitialControllerListener prebidListener = createRewardedListener();
+            adUnitConfiguration = new AdUnitConfiguration();
+            adUnitConfiguration.setAdFormat(bidResponse.isVideo() ? AdFormat.VAST : AdFormat.INTERSTITIAL);
+            adUnitConfiguration.setRewarded(true);
+            adUnitConfiguration.getRewardManager().setRewardListener(prebidListener::onUserEarnedReward);
+
+            interstitialController = PluginRendererFactory.createInterstitialController(
+                    activity, prebidListener, adUnitConfiguration, bidResponse
+            );
+            if (interstitialController == null) {
+                String error = "Renderer returned null rewarded controller";
                 Log.e(TAG, error);
                 onError(1006, error);
+                return;
             }
+            interstitialController.loadAd(adUnitConfiguration, bidResponse);
         });
     }
 
@@ -86,7 +102,7 @@ public class MaxRewardedManager {
     }
 
 
-    public InterstitialControllerListener createRewardedListener() {
+    private InterstitialControllerListener createRewardedListener() {
         return new InterstitialControllerListener() {
             @Override
             public void onInterstitialReadyForDisplay() {
@@ -103,7 +119,7 @@ public class MaxRewardedManager {
             }
 
             @Override
-            public void onInterstitialFailedToLoad(AdException exception) {
+            public void onInterstitialFailedToLoad(org.prebid.mobile.api.exceptions.AdException exception) {
                 if (maxListener != null) {
                     maxListener.onRewardedAdLoadFailed(new MaxAdapterError(2002,
                             "Ad failed: " + exception.getMessage()
@@ -127,23 +143,19 @@ public class MaxRewardedManager {
 
             @Override
             public void onUserEarnedReward() {
-                if (maxListener != null && interstitialController != null) {
-                    Reward reward = interstitialController.getReward();
+                if (maxListener != null) {
+                    Reward reward = adUnitConfiguration != null
+                            ? adUnitConfiguration.getRewardManager().getRewardedExt().getReward()
+                            : null;
                     maxListener.onUserRewarded(new MaxReward() {
                         @Override
                         public String getLabel() {
-                            if (reward != null) {
-                                return reward.getType();
-                            }
-                            return "";
+                            return reward != null ? reward.getType() : "";
                         }
 
                         @Override
                         public int getAmount() {
-                            if (reward != null) {
-                                return reward.getCount();
-                            }
-                            return 0;
+                            return reward != null ? reward.getCount() : 0;
                         }
                     });
                 }
