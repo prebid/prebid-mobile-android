@@ -1,12 +1,9 @@
 {
   "user": {
-    "ext": {
-    }
+    "ext": {}
   },
   "regs": {
+    "ext": {}
   },
-  "geo": {
-  },
-  "device": {
-  }
+  "device": {}
 }

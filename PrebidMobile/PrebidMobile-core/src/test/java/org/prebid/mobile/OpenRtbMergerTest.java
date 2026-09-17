@@ -53,6 +53,56 @@ public class OpenRtbMergerTest {
     }
 
     @Test
+    public void mergeSensitiveData_regsExtConsentFields_areNotOverridden() throws JSONException {
+        String request = "{\"regs\":{\"ext\":{\"gdpr\":1,\"us_privacy\":\"1YNN\"}}}";
+        String openRtb = "{\"regs\":{\"ext\":{\"gdpr\":0,\"us_privacy\":\"1---\"}}}";
+
+        JSONObject mergedJson = merge(request, openRtb);
+
+        assertJsonEquals(request, mergedJson.toString());
+    }
+
+    @Test
+    public void mergeSensitiveData_regsExtConsentFields_areNotAddedToEmptyRequest() throws JSONException {
+        String request = "{}";
+        String openRtb = "{\"regs\":{\"ext\":{\"gdpr\":0,\"us_privacy\":\"1---\"}}}";
+
+        JSONObject mergedJson = merge(request, openRtb);
+
+        assertJsonEquals("{\"regs\":{\"ext\":{}}}", mergedJson.toString());
+    }
+
+    @Test
+    public void mergeSensitiveData_regsExtTfua_passesThrough() throws JSONException {
+        String request = "{\"regs\":{\"ext\":{\"gdpr\":1}}}";
+        String openRtb = "{\"regs\":{\"ext\":{\"tfua\":1,\"gdpr\":0}}}";
+
+        JSONObject mergedJson = merge(request, openRtb);
+
+        assertJsonEquals("{\"regs\":{\"ext\":{\"gdpr\":1,\"tfua\":1}}}", mergedJson.toString());
+    }
+
+    @Test
+    public void mergeSensitiveData_regsCoppaGppAndGppSid_areNotOverridden() throws JSONException {
+        String request = "{\"regs\":{\"coppa\":1,\"gpp\":\"real\",\"gpp_sid\":[7]}}";
+        String openRtb = "{\"regs\":{\"coppa\":0,\"gpp\":\"fake\",\"gpp_sid\":[1,2]}}";
+
+        JSONObject mergedJson = merge(request, openRtb);
+
+        assertJsonEquals(request, mergedJson.toString());
+    }
+
+    @Test
+    public void mergeSensitiveData_userGeo_isNotOverridden() throws JSONException {
+        String request = "{\"user\":{\"geo\":{\"lat\":1.5,\"lon\":2.5}}}";
+        String openRtb = "{\"user\":{\"geo\":{\"lat\":9.9,\"lon\":8.8},\"keywords\":\"new\"}}";
+
+        JSONObject mergedJson = merge(request, openRtb);
+
+        assertJsonEquals("{\"user\":{\"geo\":{\"lat\":1.5,\"lon\":2.5},\"keywords\":\"new\"}}", mergedJson.toString());
+    }
+
+    @Test
     public void merge_differentTypes() throws JSONException {
         String request = "{}";
         String openRtb = fromResources("merge_all_types.json");
