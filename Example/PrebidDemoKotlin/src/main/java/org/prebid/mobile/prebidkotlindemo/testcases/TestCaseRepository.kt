@@ -20,6 +20,12 @@ object TestCaseRepository {
             GamOriginalApiDisplayBanner320x50Activity::class.java,
         ),
         TestCase(
+            R.string.gam_original_display_banner_320x50_filter_uncached_bids,
+            AdFormat.DISPLAY_BANNER,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiFilterUncachedBidsBannerActivity::class.java,
+        ),
+        TestCase(
             R.string.gam_original_display_banner_300x250,
             AdFormat.DISPLAY_BANNER,
             IntegrationKind.GAM_ORIGINAL,

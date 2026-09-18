@@ -29,6 +29,14 @@ public class FetchDemandResultTest {
     }
 
     @Test
+    public void whenParseErrorMessageAndNoCachedBidsMsg_NoCachedBidsResult() {
+        assertEquals(
+                NO_CACHED_BIDS,
+                FetchDemandResult.parseErrorMessage("No bids: No bids with successful Prebid Cache entries were found.")
+        );
+    }
+
+    @Test
     public void whenParseErrorMessageAndTimeoutsMsg_TimeoutResult() {
         assertEquals(TIMEOUT, FetchDemandResult.parseErrorMessage("Creative factory Timeout"));
     }
