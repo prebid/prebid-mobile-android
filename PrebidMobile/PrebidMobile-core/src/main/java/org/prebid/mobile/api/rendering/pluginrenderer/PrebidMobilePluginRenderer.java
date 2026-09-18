@@ -81,4 +81,14 @@ public interface PrebidMobilePluginRenderer {
      * Returns true only if the given ad unit could be renderer by the plugin
      */
     boolean isSupportRenderingFor(AdUnitConfiguration adUnitConfiguration);
+
+    /**
+     * Optional callback invoked after a view has been injected into a BannerView container
+     * to ensure that the renderer has the final layout pass.
+     * Default implementation is a no-op to preserve backward compatibility for existing plugins.
+     *
+     * @param view The view that was injected (typically a DisplayView or plugin-created ad view).
+     * @param inBannerView The BannerView container where the view was added.
+     */
+    default void didInjectView(@NonNull View view, @NonNull View inBannerView, @NonNull BidResponse bidResponse) { }
 }
