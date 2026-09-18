@@ -982,7 +982,12 @@ public class BasicParameterBuilderTest {
         assertNotNull(video);
         assertNotNull(video.w);
         assertNotNull(video.h);
-        assertEquals(new Integer(5), video.placement);
+        // placement now reflects the caller's explicit VideoParameters (set via
+        // createFullVideoParameters(), which uses InBanner/2 — same value the
+        // original-API path already asserts at line ~869) instead of always
+        // defaulting to Interstitial/5. See the isOriginalAdUnit() ||
+        // getVideoParameters() != null gate this PR adds to setVideoImpValues().
+        assertEquals(new Integer(2), video.placement);
         assertEquals(new Integer(1), video.linearity);
         assertEquals(new Integer(1), video.playbackend);
         assertArrayEquals(new int[]{3}, video.delivery);
@@ -1058,7 +1063,10 @@ public class BasicParameterBuilderTest {
         assertNotNull(video);
         assertNotNull(video.w);
         assertNotNull(video.h);
-        assertEquals(new Integer(5), video.placement);
+        // placement now reflects the caller's explicit VideoParameters — see the
+        // comment on the analogous assertion in
+        // testRenderingApiVideoParameters_interstitial_full above.
+        assertEquals(new Integer(2), video.placement);
         assertEquals(new Integer(1), video.linearity);
         assertEquals(new Integer(2), video.playbackend);
         assertArrayEquals(new int[]{3}, video.delivery);
