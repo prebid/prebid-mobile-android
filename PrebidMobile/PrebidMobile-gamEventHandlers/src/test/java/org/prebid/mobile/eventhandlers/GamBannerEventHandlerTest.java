@@ -50,7 +50,7 @@ import org.robolectric.annotation.Config;
 import java.util.HashMap;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 23)
+@Config(sdk = 24)
 public class GamBannerEventHandlerTest {
 
     private static final String GAM_AD_UNIT_ID = "12345678";
