@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.PrebidDestroyable;
+import org.prebid.mobile.api.rendering.PrebidDisplayView;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
@@ -85,6 +86,14 @@ public class MediationBannerView extends FrameLayout implements PrebidDestroyabl
 
             addView(adView);
         });
+    }
+
+    /**
+     * True while the rendered creative is a video that is currently playing. A creative that does
+     * not report playback, such as an HTML creative or a third party plugin renderer, reports false.
+     */
+    public boolean isVideoPlaying() {
+        return adView instanceof PrebidDisplayView && ((PrebidDisplayView) adView).isVideoPlaying();
     }
 
     @Override

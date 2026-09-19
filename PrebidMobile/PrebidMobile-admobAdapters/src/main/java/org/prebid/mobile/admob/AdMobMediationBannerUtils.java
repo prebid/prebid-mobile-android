@@ -2,6 +2,7 @@ package org.prebid.mobile.admob;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
@@ -66,6 +67,12 @@ public class AdMobMediationBannerUtils implements PrebidMediationDelegate {
     @Override
     public void handleKeywordsUpdate(@Nullable HashMap<String, String> keywords) {
 
+    }
+
+    @Nullable
+    @Override
+    public View getAdView() {
+        return adView.get();
     }
 
 }
