@@ -1,0 +1,14 @@
+# Guard: ast-rule-ratchet / kotlin-not-null-assert (count-ratcheted)
+#
+# `!!` turns unexpected null into a publisher-visible crash — the Kotlin
+# analog of the iOS force-unwrap rule. The tree is at ZERO today; this
+# rule keeps it there.
+id: kotlin-not-null-assert
+language: kotlin
+severity: warning
+message: "`!!` crashes on null — handle the null path instead."
+note: "Use ?. with an early return, ?: with a default, or checkNotNull() with a message that names the invariant."
+files:
+  - "PrebidMobile/*/src/main/**"
+rule:
+  pattern: $EXPR!!

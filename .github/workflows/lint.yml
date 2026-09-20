@@ -1,0 +1,75 @@
+name: API Baseline and Lint
+
+# The build tier of the quality layer: the two checks that need Gradle, a
+# JDK, and the Android SDK.
+#
+#   1. public-api-baseline — Metalava regenerates api/*.txt and any drift
+#      from the committed baseline fails (scripts/guards/checks/api_baseline.py).
+#   2. Diff-scoped Android Lint — findings on the lines this PR ADDS fail;
+#      lines the PR did not touch are never reported (scripts/lint/run-lint.sh).
+#
+# Deliberately separate from guards.yml: architecture checks and
+# build-backed checks fail for different reasons and should read as
+# separate signals — and this one costs minutes where the guards cost
+# seconds. GUARDS_REQUIRE_BUILD=1 turns every "could not run" into a FAIL:
+# nothing is skipped silently in CI.
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx3g"
+  GUARDS_REQUIRE_BUILD: "1"
+
+jobs:
+  api-and-lint:
+    name: API Baseline + Diff-Scoped Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Full history: the lint runner diffs against the merge-base
+          # with master.
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          # The action's default package list installs the removed legacy
+          # 'tools' package and fails; same override as PR_checks.yml.
+          packages: 'platform-tools'
+
+      - name: Set up Gradle cache
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Check Public API Baseline
+        run: python3 scripts/guards/checks/api_baseline.py
+
+      - name: Run Diff-Scoped Lint
+        run: |
+          # pipefail so tee cannot mask the runner's exit code; `|| status=$?`
+          # because Actions runs this with `set -e`, which would otherwise skip
+          # the closing fence and leave the job summary malformed.
+          set -o pipefail
+          status=0
+          echo '### Android Lint — lines this PR adds' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          ./scripts/lint/run-lint.sh 2>&1 \
+            | tee -a "$GITHUB_STEP_SUMMARY" || status=$?
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          exit $status
