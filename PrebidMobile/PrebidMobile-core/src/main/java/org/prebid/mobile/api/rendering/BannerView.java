@@ -86,6 +86,9 @@ public class BannerView extends FrameLayout {
     private boolean isBidAdLoaded;
     private boolean expired;
     private boolean isRefreshStopped;
+    // Size of the creative currently in the slot, captured when it is displayed. 0 x 0 when unknown.
+    private int creativeWidth;
+    private int creativeHeight;
 
     private final ScreenStateReceiver screenStateReceiver = new ScreenStateReceiver();
 
@@ -132,6 +135,8 @@ public class BannerView extends FrameLayout {
 
         @Override
         public void onAdFailed(AdException exception) {
+            // The Prebid creative failed to render, so there is no creative size to report.
+            clearCreativeSize();
             if (bannerViewListener != null) {
                 bannerViewListener.onAdFailed(BannerView.this, exception);
             }
@@ -227,7 +232,19 @@ public class BannerView extends FrameLayout {
 
         @Override
         public void onAdServerWin(View view) {
+            onAdServerWin(view, null);
+        }
+
+        @Override
+        public void onAdServerWin(View view, @Nullable AdSize adSize) {
             markPrimaryAdRequestFinished();
+
+            // Report the ad server's creative, never the Prebid bid that lost to it.
+            if (view != null && adSize != null) {
+                setCreativeSize(adSize.getWidth(), adSize.getHeight());
+            } else {
+                clearCreativeSize();
+            }
 
             notifyAdLoadedListener();
             displayAdServerView(view);
@@ -363,6 +380,7 @@ public class BannerView extends FrameLayout {
             displayView.destroy();
         }
         cancelExpiration();
+        clearCreativeSize();
         bidRequesterListener = null;
 
         PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig.getFingerprint());
@@ -552,6 +570,14 @@ public class BannerView extends FrameLayout {
 
         removeAllViews();
 
+        // Captured before the creative is created, so it is set by the time onAdLoaded fires.
+        final Bid winnerBid = getWinnerBid();
+        if (winnerBid != null) {
+            setCreativeSize(winnerBid.getWidth(), winnerBid.getHeight());
+        } else {
+            clearCreativeSize();
+        }
+
         displayView = new DisplayView(getContext(), displayViewListener, displayVideoListener, adUnitConfig, bidResponse);
         if (bidResponse.getPreferredPluginRendererName() == PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME) {
             final Pair<Integer, Integer> sizePair = bidResponse.getWinningBidWidthHeightPairDips(getContext());
@@ -657,6 +683,7 @@ public class BannerView extends FrameLayout {
                 displayView = null;
             }
             removeAllViews();
+            clearCreativeSize();
         }
 
         if (bannerViewListener != null) {
@@ -672,28 +699,54 @@ public class BannerView extends FrameLayout {
         return bidResponse;
     }
 
-    /**
-     * Winning creative width in dp for the pure-rendering (Prebid SDK win) path,
-     * or 0 when there is no winning bid. Lets a multi-size placement learn which
-     * size actually rendered (e.g. 300x250 vs 320x50) from inside
-     * {@link org.prebid.mobile.api.rendering.listeners.BannerViewListener#onAdLoaded(BannerView)}
-     * so the host can size the slot to the creative. {@code onAdLoaded} fires
-     * after the bid response is set, so this is populated at callback time. On
-     * the ad-server (GAM) win path the served view owns its size, so this
-     * reflects the Prebid winning bid only.
-     */
-    public int getCreativeWidth() {
-        Bid bid = bidResponse != null ? bidResponse.getWinningBid() : null;
-        return bid != null ? bid.getWidth() : 0;
+    @Nullable
+    final Bid getWinnerBid() {
+        return bidResponse != null ? bidResponse.getWinningBid() : null;
     }
 
     /**
-     * Winning creative height in dp for the pure-rendering (Prebid SDK win)
-     * path, or 0 when there is no winning bid. See {@link #getCreativeWidth()}.
+     * Declared width, in dp, of the creative currently displayed by this view. Read it in
+     * {@link BannerViewListener#onAdLoaded(BannerView)} to learn which of several requested
+     * sizes won, e.g. 300x250 or 320x50.
+     * <p>
+     * The value is captured when a creative is displayed and does not change until the next one
+     * is displayed, so a refresh that is still loading or that fails keeps reporting the creative
+     * on screen.
+     * <ul>
+     *     <li>Prebid win: the winning bid's {@code w}. This is the size the bid declares, not a
+     *     measured one: a third party plugin renderer lays its view out to match this view, and
+     *     MRAID {@code resize()} or {@code expand()} can change the creative after it loads.</li>
+     *     <li>Ad server win: the size the ad server's event handler reports for its creative
+     *     (e.g. the GAM event handler), or 0 when the handler does not report one.</li>
+     *     <li>0 when nothing is displayed: before the first ad, after a creative fails to
+     *     render, after an expired ad is removed, and after {@link #destroy()}.</li>
+     * </ul>
+     */
+    public int getCreativeWidth() {
+        return creativeWidth;
+    }
+
+    /**
+     * Declared height, in dp, of the creative currently displayed by this view, or 0 when it is
+     * unknown. See {@link #getCreativeWidth()} for when the value is captured and cleared.
      */
     public int getCreativeHeight() {
-        Bid bid = bidResponse != null ? bidResponse.getWinningBid() : null;
-        return bid != null ? bid.getHeight() : 0;
+        return creativeHeight;
+    }
+
+    private void setCreativeSize(int width, int height) {
+        // A non positive dimension, such as a fluid ad server size, is not a usable size.
+        if (width <= 0 || height <= 0) {
+            clearCreativeSize();
+            return;
+        }
+        creativeWidth = width;
+        creativeHeight = height;
+    }
+
+    private void clearCreativeSize() {
+        creativeWidth = 0;
+        creativeHeight = 0;
     }
 
     @Nullable
@@ -728,11 +781,6 @@ public class BannerView extends FrameLayout {
     @VisibleForTesting
     final void setBidResponse(BidResponse response) {
         bidResponse = response;
-    }
-
-    @VisibleForTesting
-    final Bid getWinnerBid() {
-        return bidResponse != null ? bidResponse.getWinningBid() : null;
     }
 
     @VisibleForTesting

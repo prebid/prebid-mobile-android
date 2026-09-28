@@ -203,7 +203,7 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
             requestBanner = null;
             recycleCurrentBanner();
             embeddedBanner = gamBannerView;
-            bannerEventListener.onAdServerWin(getView(gamBannerView));
+            bannerEventListener.onAdServerWin(getView(gamBannerView), getAdSize(gamBannerView));
         }
     }
 
@@ -243,11 +243,16 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
         recycleCurrentBanner();
         embeddedBanner = gamBannerView;
         isExpectingAppEvent = false;
-        bannerEventListener.onAdServerWin(getView(gamBannerView));
+        bannerEventListener.onAdServerWin(getView(gamBannerView), getAdSize(gamBannerView));
     }
 
     private View getView(PublisherAdViewWrapper gamBannerView) {
         return gamBannerView != null ? gamBannerView.getView() : null;
+    }
+
+    @Nullable
+    private AdSize getAdSize(PublisherAdViewWrapper gamBannerView) {
+        return gamBannerView != null ? gamBannerView.getAdSize() : null;
     }
 
     private void handleAdFailure(int errorCode) {
