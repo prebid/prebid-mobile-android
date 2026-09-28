@@ -381,6 +381,18 @@ public class VideoView extends BaseAdView {
         videoViewState = undefined;
     }
 
+    /**
+     * True once playback has started and until it finishes, including while the video is paused.
+     * Callers use it to avoid tearing the creative down mid playback. Replaying through
+     * "watch again" moves the view back to {@link State#PLAYBACK_NOT_STARTED} and then to
+     * {@link State#PLAYING}, so a replay is covered as well.
+     */
+    public boolean isVideoPlaybackInProgress() {
+        return isInState(State.PLAYING)
+                || isInState(State.PAUSED_AUTO)
+                || isInState(State.PAUSED_BY_USER);
+    }
+
     private boolean canPlay() {
         return isInState(State.PLAYBACK_NOT_STARTED);
     }

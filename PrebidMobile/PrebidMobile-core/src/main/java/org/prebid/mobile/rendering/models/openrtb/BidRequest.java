@@ -18,12 +18,14 @@ package org.prebid.mobile.rendering.models.openrtb;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.EidsPlacement;
 import org.prebid.mobile.OpenRtbMerger;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
@@ -37,6 +39,8 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class BidRequest extends BaseBid {
 
@@ -85,7 +89,75 @@ public class BidRequest extends BaseBid {
         if (globalOrtbConfig != null) {
             jsonObject = OpenRtbMerger.globalMerge(jsonObject, globalOrtbConfig);
         }
+
+        placeEids(jsonObject, PrebidMobile.getEidsPlacement());
         return jsonObject;
+    }
+
+    /**
+     * Places EIDs in {@code user.eids} (OpenRTB 2.6), {@code user.ext.eids} (OpenRTB 2.5), or both.
+     * <p>
+     * Runs after the ORTB config merge because EIDs reach both locations from different sources:
+     * the SDK fills {@code user.ext.eids}, while an ORTB config can add to either. Prebid Server drops
+     * {@code user.ext.eids} whenever {@code user.eids} is present, so each enabled location receives
+     * the same combined list rather than only its own entries.
+     */
+    @VisibleForTesting
+    static void placeEids(@NonNull JSONObject request, @NonNull EidsPlacement placement) throws JSONException {
+        JSONObject user = request.optJSONObject("user");
+        if (user == null) {
+            return;
+        }
+
+        JSONObject userExt = user.optJSONObject("ext");
+        if (userExt == null) {
+            userExt = new JSONObject();
+        }
+
+        // Entries already in user.eids are not added twice, so a request that holds the same list
+        // in both locations comes out unchanged.
+        JSONArray eids = new JSONArray();
+        Set<String> userEidStrings = new HashSet<>();
+        JSONArray userEids = user.optJSONArray("eids");
+        if (userEids != null) {
+            for (int i = 0; i < userEids.length(); i++) {
+                eids.put(userEids.get(i));
+                userEidStrings.add(userEids.get(i).toString());
+            }
+        }
+        JSONArray userExtEids = userExt.optJSONArray("eids");
+        if (userExtEids != null) {
+            for (int i = 0; i < userExtEids.length(); i++) {
+                if (!userEidStrings.contains(userExtEids.get(i).toString())) {
+                    eids.put(userExtEids.get(i));
+                }
+            }
+        }
+
+        if (eids.length() == 0) {
+            return;
+        }
+
+        switch (placement) {
+            case OPEN_RTB_2_6:
+                user.put("eids", eids);
+                userExt.remove("eids");
+                break;
+            case OPEN_RTB_2_5:
+                user.remove("eids");
+                userExt.put("eids", eids);
+                break;
+            case COMPATIBLE:
+                user.put("eids", eids);
+                userExt.put("eids", eids);
+                break;
+        }
+
+        if (userExt.length() > 0) {
+            user.put("ext", userExt);
+        } else {
+            user.remove("ext");
+        }
     }
 
     // App

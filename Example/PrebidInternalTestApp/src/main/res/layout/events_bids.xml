@@ -71,4 +71,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnAdClicked" />
+
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+        android:id="@+id/btnAdExpired"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/event_top_margin"
+        android:text="onAdExpired"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAdClosed" />
 </androidx.constraintlayout.widget.ConstraintLayout>

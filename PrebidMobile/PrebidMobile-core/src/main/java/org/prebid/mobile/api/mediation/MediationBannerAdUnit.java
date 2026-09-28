@@ -18,13 +18,17 @@ package org.prebid.mobile.api.mediation;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
+
+import java.util.EnumSet;
 
 /**
  * Mediation banner ad unit for Rendering API with AdMob or AppLovin MAX.
@@ -106,6 +110,33 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
 
     public final void addAdditionalSizes(AdSize... sizes) {
         adUnitConfig.addSizes(sizes);
+    }
+
+    /**
+     * Sets the ad unit formats requested on a single impression.
+     * <p>
+     * Defaults to {@link AdUnitFormat#BANNER}. Pass {@link AdUnitFormat#VIDEO} for an outstream
+     * video banner, or both values to let display and video demand compete on the same impression.
+     * <p>
+     * A null or empty set is ignored and the current value is kept.
+     * <p>
+     * Unlike {@code BannerView}, a mediation ad unit is not told whether the Prebid bid actually
+     * won in the primary ad server, so auto refresh keeps running when video is requested. Call
+     * {@link #stopRefresh()} and {@link #resumeRefresh()} around video playback if the refresh
+     * interval is shorter than the creatives being served.
+     */
+    public void setAdUnitFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats) {
+        if (adUnitFormats == null || adUnitFormats.isEmpty()) {
+            LogUtil.warning(TAG, "Ad unit formats must contain at least one item. The current value is kept.");
+            return;
+        }
+
+        adUnitConfig.setAdUnitFormats(adUnitFormats, false);
+    }
+
+    @NonNull
+    public EnumSet<AdUnitFormat> getAdUnitFormats() {
+        return adUnitConfig.getAdUnitFormats();
     }
 
     public final void setRefreshInterval(int seconds) {

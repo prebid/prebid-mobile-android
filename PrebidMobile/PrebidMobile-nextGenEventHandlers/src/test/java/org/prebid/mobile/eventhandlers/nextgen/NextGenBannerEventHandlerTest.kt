@@ -168,6 +168,18 @@ class NextGenBannerEventHandlerTest {
     }
 
     @Test
+    fun nextGenAdRequestConfiguration_SetAndGet() {
+        Assert.assertNull(bannerEventHandler.getNextGenAdRequestConfiguration())
+
+        val configuration = NextGenAdRequestConfiguration {
+            it.putCustomTargeting("key", "value")
+        }
+        bannerEventHandler.setNextGenAdRequestConfiguration(configuration)
+
+        Assert.assertEquals(configuration, bannerEventHandler.getNextGenAdRequestConfiguration())
+    }
+
+    @Test
     fun onAppEventNotExpected_DoNothing() {
         // isExpectingAppEvent is false by default
         bannerEventHandler.onEvent(AdEvent.AppEvent())

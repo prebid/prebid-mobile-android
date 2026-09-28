@@ -11,6 +11,7 @@
     <string name="settings_text">Demonstration of Prebid SDK customization in the Demo App will be introduced soon.</string>
 
     <string name="gam_original_display_banner_320x50">GAM (Original API) Display Banner 320x50</string>
+    <string name="gam_original_display_banner_320x50_filter_uncached_bids">GAM (Original API) Display Banner 320x50 [Filter Uncached Bids]</string>
     <string name="gam_original_display_banner_300x250">GAM (Original API) Display Banner 300x250</string>
     <string name="gam_original_display_banner_multi_size">GAM (Original API) Display Banner Multi-size</string>
     <string name="gam_original_video_banner">GAM (Original API) Video Banner</string>
@@ -38,6 +39,7 @@
     <string name="in_app_display_banner_mraid_expand">In-App Display Banner 320x50 MRAID Expand 1-Part</string>
     <string name="in_app_display_banner_mraid_resize_errors">In-App Display Banner 320x50 MRAID Resize With Errors</string>
     <string name="in_app_video_banner">In-App Video Banner</string>
+    <string name="in_app_multiformat_banner">In-App Multiformat Banner</string>
     <string name="in_app_display_interstitial">In-App Display Interstitial</string>
     <string name="in_app_video_interstitial">In-App Video Interstitial</string>
     <string name="in_app_video_interstitial_end_card">In-App Video Interstitial With End Card</string>

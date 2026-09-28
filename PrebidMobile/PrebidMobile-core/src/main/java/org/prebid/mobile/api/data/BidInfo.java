@@ -26,6 +26,7 @@ public class BidInfo {
     private String nativeCacheId;
     @Nullable
     private Integer exp;
+    private boolean topBidFiltered;
 
     /**
      * Key for {@link #getEvents()} map to get win event.
@@ -66,6 +67,18 @@ public class BidInfo {
         return events;
     }
 
+    /**
+     * {@code true} when {@link org.prebid.mobile.PrebidMobile#setFilterOutUncachedBids(boolean)} removed
+     * the bid Prebid Server designated as the winner because it had no successful Prebid Cache entry,
+     * and a lower-priced cached bid was promoted in its place.
+     * <p>
+     * The demand is still valid and its targeting is applied, so {@link #getResultCode()} stays
+     * {@link ResultCode#SUCCESS}. Use this flag only to track the yield impact of the filtering.
+     */
+    public boolean isTopBidFiltered() {
+        return topBidFiltered;
+    }
+
 
     @NonNull
     public static BidInfo create(
@@ -82,6 +95,8 @@ public class BidInfo {
 
         bidInfo.exp = bidResponse.getExpirationTimeSeconds();
 
+        bidInfo.topBidFiltered = bidResponse.isTopBidFiltered();
+
         Bid winningBid = bidResponse.getWinningBid();
         if (winningBid != null) {
             bidInfo.events = winningBid.getEvents();
@@ -89,7 +104,10 @@ public class BidInfo {
 
         boolean isNative = configuration != null && configuration.getNativeConfiguration() != null;
         if (isNative && bidInfo.resultCode == ResultCode.SUCCESS) {
-            final @Nullable String cacheId = CacheManager.save(bidResponse.getWinningBidJson());
+            final @Nullable String cacheId = CacheManager.save(
+                    bidResponse.getWinningBidJson(),
+                    bidInfo.exp != null ? bidInfo.exp.longValue() : null
+            );
             bidInfo.nativeCacheId = cacheId;
             if (cacheId != null) {
                 bidInfo.targetingKeywords.put(BidResponse.KEY_CACHE_ID, cacheId);

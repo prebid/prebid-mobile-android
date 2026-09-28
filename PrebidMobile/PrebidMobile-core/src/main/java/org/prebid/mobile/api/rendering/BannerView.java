@@ -18,6 +18,9 @@ package org.prebid.mobile.api.rendering;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
@@ -29,6 +32,7 @@ import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.data.VideoPlacementType;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.BannerVideoListener;
@@ -55,6 +59,7 @@ import org.prebid.mobile.rendering.utils.helpers.RenderingExceptionParser;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -75,6 +80,12 @@ public class BannerView extends FrameLayout {
     private BidLoader bidLoader;
     private BidResponse bidResponse;
     private AdException prebidException;
+    private final Handler expirationHandler = new Handler(Looper.getMainLooper());
+    private Runnable expirationRunnable;
+    private long bidExpirationUptimeMillis;
+    private boolean isBidAdLoaded;
+    private boolean expired;
+    private boolean isRefreshStopped;
 
     private final ScreenStateReceiver screenStateReceiver = new ScreenStateReceiver();
 
@@ -90,17 +101,29 @@ public class BannerView extends FrameLayout {
 
     private String nativeStylesCreative = null;
 
+    /**
+     * True once the publisher configured the formats through {@link #setAdUnitFormats(EnumSet)}.
+     * Such an explicit choice takes precedence over the format implied by
+     * {@link #setVideoPlacementType(VideoPlacementType)}.
+     */
+    private boolean adUnitFormatsConfigured;
+
     //region ==================== Listener implementation
     private final DisplayViewListener displayViewListener = new DisplayViewListener() {
         @Override
         public void onAdLoaded() {
+            isBidAdLoaded = true;
             if (bannerViewListener != null) {
                 bannerViewListener.onAdLoaded(BannerView.this);
             }
+            // The bid may have expired while the creative was loading.
+            expireAdIfNeeded();
         }
 
         @Override
         public void onAdDisplayed() {
+            // Once the impression is tracked, the bid can no longer expire.
+            cancelExpiration();
             if (bannerViewListener != null) {
                 bannerViewListener.onAdDisplayed(BannerView.this);
                 eventHandler.trackImpression();
@@ -172,6 +195,8 @@ public class BannerView extends FrameLayout {
         public void onFetchCompleted(BidResponse response) {
             bidResponse = response;
             prebidException = null;
+            // bid.exp counts from the auction, so the countdown starts as soon as the bid arrives.
+            scheduleExpirationIfNeeded();
 
             isPrimaryAdServerRequestInProgress = true;
             eventHandler.requestAdWithBid(getWinnerBid());
@@ -309,6 +334,8 @@ public class BannerView extends FrameLayout {
             return;
         }
 
+        // A successful load re-arms the BidLoader refresh timer.
+        isRefreshStopped = false;
         bidLoader.load();
     }
 
@@ -316,6 +343,7 @@ public class BannerView extends FrameLayout {
      * Cancels BidLoader refresh timer.
      */
     public void stopRefresh() {
+        isRefreshStopped = true;
         if (bidLoader != null) {
             bidLoader.cancelRefresh();
         }
@@ -334,6 +362,7 @@ public class BannerView extends FrameLayout {
         if (displayView != null) {
             displayView.destroy();
         }
+        cancelExpiration();
         bidRequesterListener = null;
 
         PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig.getFingerprint());
@@ -378,8 +407,14 @@ public class BannerView extends FrameLayout {
         PrebidMobilePluginRegister.getInstance().registerEventListener(pluginEventListener, adUnitConfig.getFingerprint());
     }
 
+    /**
+     * Sets the video placement type and, unless the formats were explicitly configured through
+     * {@link #setAdUnitFormats(EnumSet)}, switches the ad unit to a video only request.
+     */
     public void setVideoPlacementType(VideoPlacementType videoPlacement) {
-        adUnitConfig.setAdFormat(AdFormat.VAST);
+        if (!adUnitFormatsConfigured) {
+            adUnitConfig.setAdFormat(AdFormat.VAST);
+        }
 
         final PlacementType placementType = VideoPlacementType.mapToPlacementType(videoPlacement);
         adUnitConfig.setPlacementType(placementType);
@@ -388,6 +423,32 @@ public class BannerView extends FrameLayout {
     @Nullable
     public VideoPlacementType getVideoPlacementType() {
         return VideoPlacementType.mapToVideoPlacementType(adUnitConfig.getPlacementTypeValue());
+    }
+
+    /**
+     * Sets the ad unit formats requested on a single impression.
+     * <p>
+     * Defaults to {@link AdUnitFormat#BANNER}. Pass {@link AdUnitFormat#VIDEO} for an outstream
+     * video banner, or both values to let display and video demand compete on the same impression.
+     * <p>
+     * A null or empty set is ignored and the current value is kept.
+     * <p>
+     * Auto refresh is deferred while a video creative is playing and resumes once playback
+     * finishes, so a video is never torn down mid playback.
+     */
+    public void setAdUnitFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats) {
+        if (adUnitFormats == null || adUnitFormats.isEmpty()) {
+            LogUtil.warning(TAG, "Ad unit formats must contain at least one item. The current value is kept.");
+            return;
+        }
+
+        adUnitConfig.setAdUnitFormats(adUnitFormats, false);
+        adUnitFormatsConfigured = true;
+    }
+
+    @NonNull
+    public EnumSet<AdUnitFormat> getAdUnitFormats() {
+        return adUnitConfig.getAdUnitFormats();
     }
 
     /**
@@ -464,6 +525,12 @@ public class BannerView extends FrameLayout {
                 return true;
             }
 
+            // A video creative must not be torn down mid playback. The tick is skipped and the
+            // timer rescheduled, so refreshing resumes once playback finishes.
+            if (isVideoPlaying()) {
+                return false;
+            }
+
             final boolean isWindowVisibleToUser = screenStateReceiver.isScreenOn();
             return visibilityChecker.isVisibleForRefresh(this) && isWindowVisibleToUser;
         });
@@ -495,6 +562,8 @@ public class BannerView extends FrameLayout {
     }
 
     private void displayAdServerView(View view) {
+        // The ad server's own creative is not the Prebid bid, so it never expires.
+        resetExpiration();
         removeAllViews();
 
         if (view == null) {
@@ -513,6 +582,14 @@ public class BannerView extends FrameLayout {
         }
     }
 
+    /**
+     * True while a Prebid video creative deployed by this view is playing.
+     */
+    @VisibleForTesting
+    boolean isVideoPlaying() {
+        return displayView != null && displayView.isVideoPlaying();
+    }
+
     private void markPrimaryAdRequestFinished() {
         isPrimaryAdServerRequestInProgress = false;
     }
@@ -528,6 +605,66 @@ public class BannerView extends FrameLayout {
         LogUtil.debug(TAG, "Ad failed listener: " + exception);
         if (bannerViewListener != null) {
             bannerViewListener.onAdFailed(BannerView.this, exception);
+        }
+    }
+
+    private void scheduleExpirationIfNeeded() {
+        // The new bid replaces the previous ad, so a bid without exp must not inherit its timer.
+        resetExpiration();
+
+        Integer expirationTimeSeconds = bidResponse != null ? bidResponse.getExpirationTimeSeconds() : null;
+        // BidResponse normalizes absent, zero, and negative exp values to null.
+        if (expirationTimeSeconds == null) {
+            return;
+        }
+
+        bidExpirationUptimeMillis = SystemClock.uptimeMillis() + expirationTimeSeconds * 1000L;
+        expirationRunnable = this::expireAdIfNeeded;
+        expirationHandler.postAtTime(expirationRunnable, bidExpirationUptimeMillis);
+    }
+
+    private void cancelExpiration() {
+        if (expirationRunnable != null) {
+            expirationHandler.removeCallbacks(expirationRunnable);
+            expirationRunnable = null;
+        }
+        bidExpirationUptimeMillis = 0;
+    }
+
+    private void resetExpiration() {
+        cancelExpiration();
+        isBidAdLoaded = false;
+        expired = false;
+    }
+
+    private boolean hasBidExpired() {
+        return bidExpirationUptimeMillis > 0 && SystemClock.uptimeMillis() >= bidExpirationUptimeMillis;
+    }
+
+    private void expireAdIfNeeded() {
+        // Only the current bid's loaded Prebid ad can expire. While its creative loads,
+        // onAdLoaded() re-checks, so onAdExpired never precedes onAdLoaded.
+        if (expired || !isBidAdLoaded || !hasBidExpired()) {
+            return;
+        }
+
+        expired = true;
+        // A non-refreshable banner keeps showing the expired creative; the app is only notified.
+        boolean isRefreshable = adUnitConfig.getAutoRefreshDelay() > 0 && !isRefreshStopped;
+        if (isRefreshable) {
+            if (displayView != null) {
+                displayView.destroy();
+                displayView = null;
+            }
+            removeAllViews();
+        }
+
+        if (bannerViewListener != null) {
+            bannerViewListener.onAdExpired(BannerView.this);
+        }
+
+        if (isRefreshable) {
+            loadAd();
         }
     }
 
@@ -601,6 +738,11 @@ public class BannerView extends FrameLayout {
     @VisibleForTesting
     final boolean isPrimaryAdServerRequestInProgress() {
         return isPrimaryAdServerRequestInProgress;
+    }
+
+    @VisibleForTesting
+    final boolean isExpired() {
+        return expired;
     }
     //endregion ==================== HelperMethods for Unit Tests
 }

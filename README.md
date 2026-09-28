@@ -1,5 +1,3 @@
-[![Build Status](https://api.travis-ci.org/prebid/prebid-mobile-android.svg?branch=master)](https://travis-ci.org/prebid/prebid-mobile-android)
-
 # Prebid Mobile Android SDK
 
 To work with Prebid Mobile, you will need access to a Prebid Server.

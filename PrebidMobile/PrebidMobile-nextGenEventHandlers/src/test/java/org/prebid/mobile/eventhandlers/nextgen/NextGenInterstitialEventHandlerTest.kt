@@ -155,6 +155,18 @@ class NextGenInterstitialEventHandlerTest {
     }
 
     @Test
+    fun nextGenAdRequestConfiguration_SetAndGet() {
+        Assert.assertNull(eventHandler.getNextGenAdRequestConfiguration())
+
+        val configuration = NextGenAdRequestConfiguration {
+            it.putCustomTargeting("key", "value")
+        }
+        eventHandler.setNextGenAdRequestConfiguration(configuration)
+
+        Assert.assertEquals(configuration, eventHandler.getNextGenAdRequestConfiguration())
+    }
+
+    @Test
     fun showWhenEmbeddedInterstitialIsNull_NotifyEventErrorListener() {
         eventHandler.show()
 

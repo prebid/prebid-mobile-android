@@ -2,6 +2,7 @@ package com.applovin.mediation.adapters.prebid.managers;
 
 import android.app.Activity;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
@@ -14,9 +15,10 @@ import com.applovin.mediation.adapters.prebid.ParametersChecker;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
-import org.prebid.mobile.api.rendering.DisplayView;
+import org.prebid.mobile.api.rendering.PrebidDestroyable;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.display.MediationBannerView;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
 public class MaxBannerManager {
@@ -24,7 +26,7 @@ public class MaxBannerManager {
     private static final String TAG = MaxBannerManager.class.getSimpleName();
 
     @Nullable
-    private DisplayView adView;
+    private View adView;
     @Nullable
     private MaxAdViewAdapterListener maxListener;
 
@@ -55,8 +57,8 @@ public class MaxBannerManager {
     }
 
     public void destroy() {
-        if (adView != null) {
-            adView.destroy();
+        if (adView instanceof PrebidDestroyable) {
+            ((PrebidDestroyable) adView).destroy();
         }
         adView = null;
     }
@@ -81,7 +83,7 @@ public class MaxBannerManager {
         if (activity != null) {
             LogUtil.info(TAG, "Prebid ad won: " + parameters.getThirdPartyAdPlacementId());
             activity.runOnUiThread(() -> {
-                adView = new DisplayView(activity, listener, adConfiguration, response);
+                adView = new MediationBannerView(activity, listener, adConfiguration, response);
             });
         } else {
             onError(1005, "Activity is null");

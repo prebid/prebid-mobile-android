@@ -69,4 +69,12 @@ public interface RewardedAdUnitListener {
      * @param reward the reward object. It can be null if it is not set in the ad server.
      */
     void onUserEarnedReward(RewardedAdUnit rewardedAdUnit, @Nullable Reward reward);
+
+    /**
+     * Executed when the loaded ad expires ({@code bid.exp}) before an impression is tracked.
+     * The ad can still be shown, or replaced by calling {@link RewardedAdUnit#loadAd()}.
+     *
+     * @param rewardedAdUnit view of the corresponding event.
+     */
+    default void onAdExpired(RewardedAdUnit rewardedAdUnit) {}
 }

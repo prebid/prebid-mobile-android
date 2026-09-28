@@ -27,7 +27,10 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -36,13 +39,15 @@ public class InterstitialJSInterfaceTest {
     private InterstitialJSInterface interstitialJSInterface;
     private Context context;
     private WebViewBase mockWebViewBase;
+    private JsExecutor mockJsExecutor;
 
     @Before
     public void setUp() throws Exception {
         context = Robolectric.buildActivity(Activity.class).create().get();
         mockWebViewBase = mock(WebViewBase.class);
+        mockJsExecutor = mock(JsExecutor.class);
 
-        interstitialJSInterface = new InterstitialJSInterface(context, mockWebViewBase, mock(JsExecutor.class));
+        interstitialJSInterface = new InterstitialJSInterface(context, mockWebViewBase, mockJsExecutor);
     }
 
     @Test
@@ -52,8 +57,11 @@ public class InterstitialJSInterfaceTest {
 
     @Test
     public void expandTest() {
-        //do nothing
         interstitialJSInterface.expand();
+
+        // Expand is ignored, but mraid.js holds later commands until nativeCallComplete() arrives.
+        verify(mockWebViewBase, never()).post(any(Runnable.class));
+        verify(mockJsExecutor).executeNativeCallComplete();
     }
 
 }

@@ -51,6 +51,7 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.VideoParameters;
+import org.prebid.mobile.api.rendering.PrebidRenderer;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
@@ -82,6 +83,7 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -108,6 +110,9 @@ public class BasicParameterBuilderTest {
         context = Robolectric.buildActivity(Activity.class).create().get();
         ManagersResolver.getInstance().prepare(context);
         TargetingParams.setExternalUserIds(null);
+
+        PrebidMobilePluginRegister.getInstance().unregisterAllPlugins();
+        PrebidMobile.registerPluginRenderer(new PrebidRenderer());
     }
 
     @After
@@ -118,6 +123,7 @@ public class BasicParameterBuilderTest {
         TargetingParams.setOmidPartnerName(null);
         TargetingParams.setOmidPartnerVersion(null);
         TargetingParams.setGlobalOrtbConfig(null);
+        TargetingParams.setUserExt(null);
         TargetingParams.setExternalUserIds(null);
 
         PrebidMobile.clearStoredBidResponses();
@@ -125,7 +131,7 @@ public class BasicParameterBuilderTest {
         PrebidMobile.setPrebidServerAccountId("");
         PrebidMobile.setAuctionSettingsId(null);
 
-        PrebidMobile.unregisterPluginRenderer(otherPlugin);
+        PrebidMobilePluginRegister.getInstance().unregisterAllPlugins();
     }
 
     @Test
@@ -718,6 +724,37 @@ public class BasicParameterBuilderTest {
     }
 
     @Test
+    public void whenAppendParametersWithExternalUserIds_SharedUserExtIsNotModified() throws JSONException {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdFormat(AdFormat.BANNER);
+        adConfiguration.addSize(new AdSize(320, 50));
+
+        Ext publisherUserExt = new Ext();
+        publisherUserExt.put("custom", "value");
+        TargetingParams.setUserExt(publisherUserExt);
+        TargetingParams.setExternalUserIds(List.of(
+                new ExternalUserId("adserver1.com", List.of(new ExternalUserId.UniqueId("11", 1)))
+        ));
+
+        AdRequestInput firstRequest = new AdRequestInput();
+        new BasicParameterBuilder(adConfiguration, context.getResources(), browserActivityAvailable)
+                .appendBuilderParameters(firstRequest);
+
+        JSONObject firstUserExt = firstRequest.getBidRequest().getUser().getJsonObject().getJSONObject("ext");
+        assertTrue(firstUserExt.has("eids"));
+        assertFalse(publisherUserExt.getMap().containsKey("eids"));
+
+        TargetingParams.setExternalUserIds(null);
+        AdRequestInput secondRequest = new AdRequestInput();
+        new BasicParameterBuilder(adConfiguration, context.getResources(), browserActivityAvailable)
+                .appendBuilderParameters(secondRequest);
+
+        JSONObject secondUserExt = secondRequest.getBidRequest().getUser().getJsonObject().getJSONObject("ext");
+        assertEquals("value", secondUserExt.getString("custom"));
+        assertFalse(secondUserExt.has("eids"));
+    }
+
+    @Test
     public void whenAppendParametersAndUseExternalBrowserFalseAndBrowserActivityAvailable_ClickBrowserEqualsZero() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.setAdFormat(AdFormat.BANNER);
@@ -785,6 +822,30 @@ public class BasicParameterBuilderTest {
         assertNull(firstImp.nativeObj);
         assertNotNull(firstImp.banner);
         assertNotNull(firstImp.video);
+    }
+
+    @Test
+    public void testMultiFormatBannerAdUnit_bannerAndVideoObjectsAreNotNullAndImpIsNotInterstitial() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.addSize(new AdSize(300, 250));
+        configuration.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO), false);
+
+        assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), configuration.getAdFormats());
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, null, false);
+
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        BidRequest bidRequest = adRequestInput.getBidRequest();
+        Imp firstImp = bidRequest.getImp().iterator().next();
+
+        assertNotNull(firstImp);
+
+        assertNull(firstImp.nativeObj);
+        assertNotNull(firstImp.banner);
+        assertNotNull(firstImp.video);
+        assertEquals(Integer.valueOf(0), firstImp.instl);
     }
 
     @Test
@@ -1103,9 +1164,14 @@ public class BasicParameterBuilderTest {
         JSONObject sdkObj = prebidObj.getJSONObject("sdk");
         JSONArray renderersObj = sdkObj.getJSONArray(PluginRendererList.RENDERERS_KEY);
         // Default plugin is indexed and additional plugin is indexed
-        assertTrue(renderersObj.length() == 2);
-        assertEquals(((JSONObject)renderersObj.get(0)).get("name"), otherPlugin.getName());
-        assertEquals(((JSONObject)renderersObj.get(1)).get("name"), PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME);
+        assertEquals(2, renderersObj.length());
+
+        Set<String> rendererNames = new HashSet<>();
+        for (int i = 0; i < renderersObj.length(); i++) {
+            rendererNames.add(renderersObj.getJSONObject(i).getString("name"));
+        }
+        assertTrue(rendererNames.contains(otherPlugin.getName()));
+        assertTrue(rendererNames.contains(PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME));
     }
 
     @Test

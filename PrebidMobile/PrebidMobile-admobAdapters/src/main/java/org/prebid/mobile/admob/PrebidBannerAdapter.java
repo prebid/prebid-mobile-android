@@ -3,6 +3,8 @@ package org.prebid.mobile.admob;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.view.View;
+
 import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
 import com.google.android.gms.ads.mediation.MediationBannerAd;
 import com.google.android.gms.ads.mediation.MediationBannerAdCallback;
@@ -10,10 +12,10 @@ import com.google.android.gms.ads.mediation.MediationBannerAdConfiguration;
 
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.DisplayView;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
+import org.prebid.mobile.rendering.bidding.display.MediationBannerView;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
 /**
@@ -23,7 +25,7 @@ public class PrebidBannerAdapter extends PrebidBaseAdapter {
 
     public static final String EXTRA_RESPONSE_ID = "PrebidBannerAdapterExtraId";
 
-    private DisplayView adView;
+    private View adView;
     @Nullable
     private MediationBannerAdCallback adMobBannerListener;
 
@@ -50,7 +52,7 @@ public class PrebidBannerAdapter extends PrebidBaseAdapter {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.setAdFormat(AdFormat.BANNER);
         DisplayViewListener listener = getPrebidListener(adMobLoadListener);
-        adView = new DisplayView(
+        adView = new MediationBannerView(
                 configuration.getContext(),
                 listener,
                 adConfiguration,

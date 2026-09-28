@@ -1,0 +1,81 @@
+{
+  "id": "id",
+  "seatbid": [
+    {
+      "bid": [
+        {
+          "id": "topBid",
+          "impid": "impId",
+          "price": 0.20,
+          "adm": "adm",
+          "crid": "crid",
+          "w": 320,
+          "h": 50,
+          "ext": {
+            "prebid": {
+              "targeting": {
+                "hb_pb": "0.20",
+                "hb_bidder": "openx",
+                "hb_pb_openx": "0.20",
+                "hb_bidder_openx": "openx"
+              },
+              "type": "banner"
+            }
+          }
+        },
+        {
+          "id": "runnerUpBid",
+          "impid": "impId",
+          "price": 0.10,
+          "adm": "adm",
+          "crid": "crid",
+          "w": 320,
+          "h": 50,
+          "ext": {
+            "prebid": {
+              "cache": {
+                "bids": {
+                  "url": "https://prebid-cache/cache?uuid=runner-up-cache-id",
+                  "cacheId": "runner-up-cache-id"
+                }
+              },
+              "targeting": {
+                "hb_pb_appnexus": "0.10",
+                "hb_bidder_appnexus": "appnexus",
+                "hb_cache_id_appnexus": "runner-up-cache-id"
+              },
+              "type": "banner"
+            }
+          }
+        },
+        {
+          "id": "lowestBid",
+          "impid": "impId",
+          "price": 0.05,
+          "adm": "adm",
+          "crid": "crid",
+          "w": 320,
+          "h": 50,
+          "ext": {
+            "prebid": {
+              "cache": {
+                "bids": {
+                  "url": "https://prebid-cache/cache?uuid=lowest-cache-id",
+                  "cacheId": "lowest-cache-id"
+                }
+              },
+              "targeting": {
+                "hb_pb_rubicon": "0.05",
+                "hb_bidder_rubicon": "rubicon",
+                "hb_cache_id_rubicon": "lowest-cache-id"
+              },
+              "type": "banner"
+            }
+          }
+        }
+      ],
+      "seat": "prebid"
+    }
+  ],
+  "cur": "USD"
+}

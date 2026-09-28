@@ -162,6 +162,57 @@ public class AdInterstitialDialogTest {
     }
 
     @Test
+    public void setUpCloseButton_endCard_KeepsCloseButtonVisible() {
+        AdInterstitialDialog spySubject = adInterstitialDialog;
+        InterstitialDisplayPropertiesInternal mockProperties = mock(InterstitialDisplayPropertiesInternal.class);
+
+        AdUnitConfiguration mockConfig = mock(AdUnitConfiguration.class);
+        when(mockConfig.isRewarded()).thenReturn(true);
+        when(mockConfig.getHasEndCard()).thenReturn(true);
+        RewardedExt rewardedExt = RewardedExt.defaultExt();
+        mockProperties.config = mockConfig;
+
+        RewardManager mockRewardManager = mock(RewardManager.class);
+        when(mockRewardManager.getRewardedExt()).thenReturn(rewardedExt);
+        when(mockConfig.getRewardManager()).thenReturn(mockRewardManager);
+        when(mockInterstitialManager.getInterstitialDisplayProperties()).thenReturn(mockProperties);
+
+        spySubject.setUpCloseButtonTask();
+
+        verify(spySubject, never()).changeCloseViewVisibility(View.GONE);
+        verify(spySubject).scheduleRewardListener(RewardedCompletionRules.DEFAULT_BANNER_TIME_MS, 0, false);
+    }
+
+    @Test
+    public void setUpCloseButton_endCardWithAutoCloseEvent_KeepsCloseButtonVisible() {
+        AdInterstitialDialog spySubject = adInterstitialDialog;
+        InterstitialDisplayPropertiesInternal mockProperties = mock(InterstitialDisplayPropertiesInternal.class);
+
+        AdUnitConfiguration mockConfig = mock(AdUnitConfiguration.class);
+        when(mockConfig.isRewarded()).thenReturn(true);
+        when(mockConfig.getHasEndCard()).thenReturn(true);
+        RewardedCompletionRules completionRules = new RewardedCompletionRules(
+            null, null, null, null, null, "rwdd://yes"
+        );
+        RewardedClosingRules closingRules = new RewardedClosingRules(
+            2, RewardedClosingRules.Action.AUTO_CLOSE
+        );
+        RewardedExt rewardedExt = new RewardedExt(null, completionRules, closingRules);
+        mockProperties.config = mockConfig;
+
+        RewardManager mockRewardManager = mock(RewardManager.class);
+        when(mockRewardManager.getRewardedExt()).thenReturn(rewardedExt);
+        when(mockConfig.getRewardManager()).thenReturn(mockRewardManager);
+        when(mockInterstitialManager.getInterstitialDisplayProperties()).thenReturn(mockProperties);
+
+        spySubject.setUpCloseButtonTask();
+
+        verify(spySubject, never()).changeCloseViewVisibility(View.GONE);
+        verify(spySubject).scheduleRewardListener(RewardedCompletionRules.DEFAULT_BANNER_TIME_MS, 0, true);
+        verify(mockRewardManager).setAfterRewardListener(any());
+    }
+
+    @Test
     public void setUpCloseButton_rewardEventUrl() {
         AdInterstitialDialog spySubject = adInterstitialDialog;
         InterstitialDisplayPropertiesInternal mockProperties = mock(InterstitialDisplayPropertiesInternal.class);
