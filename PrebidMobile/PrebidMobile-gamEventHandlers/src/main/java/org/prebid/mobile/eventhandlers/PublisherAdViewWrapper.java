@@ -161,12 +161,16 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
 
     /**
      * Size of the creative GAM loaded into the view, in dp, or null when GAM does not report one.
+     * <p>
+     * GAM reports special sizes with negative dimensions, e.g. -3 x -4 for
+     * {@link com.google.android.gms.ads.AdSize#FLUID}. They are returned as is, and
+     * {@code BannerView} reports them as a creative of unknown size.
      */
     @Nullable
     public AdSize getAdSize() {
         try {
             com.google.android.gms.ads.AdSize gamAdSize = adView.getAdSize();
-            return gamAdSize != null ? new AdSize(gamAdSize.getWidth(), gamAdSize.getHeight()) : null;
+            return gamAdSize != null ? GamBannerEventHandler.convertGamAdSize(gamAdSize)[0] : null;
         }
         catch (Throwable throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(throwable));

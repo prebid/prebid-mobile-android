@@ -155,6 +155,21 @@ public class GamBannerEventHandlerTest {
     }
 
     @Test
+    public void onAppEventTimeout_PassGamCreativeSizeToOnAdServerWin() throws Exception {
+        final PublisherAdViewWrapper mockPublisherAdView = mock(PublisherAdViewWrapper.class);
+        final View mockView = mock(View.class);
+        final AdSize gamCreativeSize = new AdSize(320, 50);
+        when(mockPublisherAdView.getView()).thenReturn(mockView);
+        when(mockPublisherAdView.getAdSize()).thenReturn(gamCreativeSize);
+
+        WhiteBox.field(GamBannerEventHandler.class, "requestBanner").set(bannerEventHandler, mockPublisherAdView);
+
+        WhiteBox.method(GamBannerEventHandler.class, "handleAppEventTimeout").invoke(bannerEventHandler);
+
+        verify(mockBannerEventListener, times(1)).onAdServerWin(eq(mockView), eq(gamCreativeSize));
+    }
+
+    @Test
     public void destroy_CancelTimer() throws IllegalAccessException {
         // by default apEventHandler is null if not scheduled
         WhiteBox.field(GamBannerEventHandler.class, "appEventHandler").set(bannerEventHandler, mockAppEventHandler);

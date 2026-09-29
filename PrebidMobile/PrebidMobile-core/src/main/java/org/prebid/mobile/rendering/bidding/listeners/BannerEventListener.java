@@ -24,15 +24,21 @@ import org.prebid.mobile.api.exceptions.AdException;
 public interface BannerEventListener {
     void onPrebidSdkWin();
 
-    void onAdServerWin(View view);
+    /**
+     * The ad server won and its creative is ready to be displayed.
+     *
+     * @param view   the ad server's creative view.
+     * @param adSize size, in dp, of the creative the ad server served, or null when the event
+     *               handler does not know it.
+     */
+    void onAdServerWin(View view, @Nullable AdSize adSize);
 
     /**
-     * Ad server win that also reports the size of the creative the ad server served, in dp.
-     * Event handlers that know the served size should call this instead of
-     * {@link #onAdServerWin(View)}, so the banner can report it. Pass null when the size is unknown.
+     * @deprecated Use {@link #onAdServerWin(View, AdSize)}, which also reports the served size.
      */
-    default void onAdServerWin(View view, @Nullable AdSize adSize) {
-        onAdServerWin(view);
+    @Deprecated
+    default void onAdServerWin(View view) {
+        onAdServerWin(view, null);
     }
 
     void onAdFailed(AdException exception);

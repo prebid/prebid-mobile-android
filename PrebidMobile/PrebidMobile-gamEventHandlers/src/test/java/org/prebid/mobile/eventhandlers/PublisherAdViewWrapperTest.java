@@ -18,10 +18,13 @@ package org.prebid.mobile.eventhandlers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 import android.app.Activity;
 import android.content.Context;
@@ -125,5 +128,47 @@ public class PublisherAdViewWrapperTest {
         final View view = publisherAdViewWrapper.getView();
 
         assertEquals(publisherAdView, view);
+    }
+
+    @Test
+    public void getAdSize_ReturnGamCreativeSize() throws IllegalAccessException {
+        AdManagerAdView mockAdView = mock(AdManagerAdView.class);
+        when(mockAdView.getAdSize()).thenReturn(new com.google.android.gms.ads.AdSize(300, 250));
+        WhiteBox.field(PublisherAdViewWrapper.class, "adView").set(publisherAdViewWrapper, mockAdView);
+
+        assertEquals(new AdSize(300, 250), publisherAdViewWrapper.getAdSize());
+    }
+
+    @Test
+    public void getAdSize_WithFluidGamSize_ReturnNegativeDimensions() throws IllegalAccessException {
+        AdManagerAdView mockAdView = mock(AdManagerAdView.class);
+        when(mockAdView.getAdSize()).thenReturn(com.google.android.gms.ads.AdSize.FLUID);
+        WhiteBox.field(PublisherAdViewWrapper.class, "adView").set(publisherAdViewWrapper, mockAdView);
+
+        final AdSize adSize = publisherAdViewWrapper.getAdSize();
+
+        assertEquals(new AdSize(
+                com.google.android.gms.ads.AdSize.FLUID.getWidth(),
+                com.google.android.gms.ads.AdSize.FLUID.getHeight()
+        ), adSize);
+        assertTrue(adSize.getWidth() < 0 && adSize.getHeight() < 0);
+    }
+
+    @Test
+    public void getAdSize_WhenGamReportsNoSize_ReturnNull() throws IllegalAccessException {
+        AdManagerAdView mockAdView = mock(AdManagerAdView.class);
+        when(mockAdView.getAdSize()).thenReturn(null);
+        WhiteBox.field(PublisherAdViewWrapper.class, "adView").set(publisherAdViewWrapper, mockAdView);
+
+        assertNull(publisherAdViewWrapper.getAdSize());
+    }
+
+    @Test
+    public void getAdSize_WhenGamThrows_ReturnNull() throws IllegalAccessException {
+        AdManagerAdView mockAdView = mock(AdManagerAdView.class);
+        when(mockAdView.getAdSize()).thenThrow(new IllegalStateException("Test"));
+        WhiteBox.field(PublisherAdViewWrapper.class, "adView").set(publisherAdViewWrapper, mockAdView);
+
+        assertNull(publisherAdViewWrapper.getAdSize());
     }
 }

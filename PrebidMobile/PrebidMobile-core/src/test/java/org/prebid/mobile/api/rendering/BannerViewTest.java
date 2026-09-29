@@ -61,6 +61,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -417,7 +418,7 @@ public class BannerViewTest {
         final View mockView = mock(View.class);
         final BannerEventListener bannerEventListener = RenderingTestUtils.getBannerEventListener(bannerView);
 
-        bannerEventListener.onAdServerWin(mockView);
+        bannerEventListener.onAdServerWin(mockView, null);
 
         assertFalse(bannerView.isPrimaryAdServerRequestInProgress());
         verify(mockBannerListener, times(1)).onAdLoaded(bannerView);
@@ -479,8 +480,18 @@ public class BannerViewTest {
         }
     }
 
-    private void receiveBid(Integer expirationTimeSeconds) {
+    /**
+     * Fakes an auction won by a bid of the given size. The bid names no preferred renderer, as
+     * real bids usually do not, so it takes the same display path as in production.
+     */
+    private void receiveBid(int width, int height, Integer expirationTimeSeconds) {
+        Bid mockBid = mock(Bid.class);
+        when(mockBid.getWidth()).thenReturn(width);
+        when(mockBid.getHeight()).thenReturn(height);
+        when(mockBid.getAdm()).thenReturn("adm");
+
         BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
         when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(expirationTimeSeconds);
         RenderingTestUtils.getBidRequesterListener(bannerView).onFetchCompleted(mockBidResponse);
         // The primary ad server has answered, so a new load is allowed again.
@@ -504,7 +515,7 @@ public class BannerViewTest {
     public void whenLoadedBannerExpiresWithoutRefresh_KeepAdAndNotifyExpiredOnly()
         throws IllegalAccessException {
         bannerView.addView(new View(mockContext));
-        receiveBid(1);
+        receiveBid(320, 50, 1);
         RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
 
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
@@ -521,7 +532,7 @@ public class BannerViewTest {
     public void whenLoadedBannerExpiresWithAutoRefresh_RemoveAdThenNotifyThenLoadAgain()
         throws IllegalAccessException {
         bannerView.setAutoRefreshDelay(30);
-        receiveBid(1);
+        receiveBid(320, 50, 1);
         RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
 
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
@@ -538,7 +549,7 @@ public class BannerViewTest {
         throws IllegalAccessException {
         bannerView.setAutoRefreshDelay(30);
         bannerView.stopRefresh();
-        receiveBid(1);
+        receiveBid(320, 50, 1);
         RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
 
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
@@ -554,7 +565,7 @@ public class BannerViewTest {
         bannerView.setAutoRefreshDelay(30);
         bannerView.stopRefresh();
         bannerView.loadAd();
-        receiveBid(1);
+        receiveBid(320, 50, 1);
         RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
 
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
@@ -566,7 +577,7 @@ public class BannerViewTest {
     @Test
     public void whenBidExpiresWhileAdIsLoading_NotifyExpiredRightAfterLoaded()
         throws IllegalAccessException {
-        receiveBid(1);
+        receiveBid(320, 50, 1);
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
         verify(mockBannerListener, never()).onAdExpired(bannerView);
@@ -582,7 +593,7 @@ public class BannerViewTest {
     @Test
     public void whenCreativeLoadsSlowly_ExpirationStillCountsFromBidReceipt()
         throws IllegalAccessException {
-        receiveBid(2);
+        receiveBid(320, 50, 2);
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
         RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
 
@@ -596,7 +607,7 @@ public class BannerViewTest {
     @Test
     public void whenBannerImpressionTrackedBeforeExpiration_DoNotNotifyExpired()
         throws IllegalAccessException {
-        receiveBid(1);
+        receiveBid(320, 50, 1);
         DisplayViewListener displayViewListener = RenderingTestUtils.getDisplayViewListener(bannerView);
 
         displayViewListener.onAdLoaded();
@@ -611,8 +622,8 @@ public class BannerViewTest {
     @Test
     public void whenAdServerWins_DoNotNotifyExpired()
         throws IllegalAccessException {
-        receiveBid(1);
-        RenderingTestUtils.getBannerEventListener(bannerView).onAdServerWin(new View(mockContext));
+        receiveBid(320, 50, 1);
+        RenderingTestUtils.getBannerEventListener(bannerView).onAdServerWin(new View(mockContext), null);
 
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
@@ -623,7 +634,7 @@ public class BannerViewTest {
     @Test
     public void whenBannerDestroyedBeforeExpiration_DoNotNotifyExpired()
         throws IllegalAccessException {
-        receiveBid(1);
+        receiveBid(320, 50, 1);
         RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
         bannerView.destroy();
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
@@ -635,9 +646,9 @@ public class BannerViewTest {
     @Test
     public void whenNewBidWithoutExpirationArrives_PreviousAdStopsExpiring()
         throws IllegalAccessException {
-        receiveBid(1);
+        receiveBid(320, 50, 1);
         RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
-        receiveBid(null);
+        receiveBid(320, 50, null);
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
         assertFalse(bannerView.isExpired());
@@ -647,7 +658,7 @@ public class BannerViewTest {
     @Test
     public void whenBannerLoadedWithoutExpiration_DoNotNotifyExpired()
         throws IllegalAccessException {
-        receiveBid(null);
+        receiveBid(320, 50, null);
         RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
@@ -753,104 +764,175 @@ public class BannerViewTest {
 
     //region ================= Creative size
     @Test
-    public void creativeSize_BeforeAnyAd_IsZero() {
-        assertEquals(0, bannerView.getCreativeWidth());
-        assertEquals(0, bannerView.getCreativeHeight());
+    public void creativeSize_BeforeAnyAd_IsNull() {
+        assertNull(bannerView.getCreativeSize());
     }
 
     @Test
-    public void creativeSize_OnPrebidWin_IsWinningBidSizeWhenOnAdLoadedFires() throws IllegalAccessException {
-        final int[] sizeAtOnAdLoaded = new int[2];
+    public void creativeSize_OnPrebidWin_IsPublishedWhenCreativeLoads() throws IllegalAccessException {
+        final AdSize[] sizeAtOnAdLoaded = new AdSize[1];
         doAnswer(invocation -> {
-            sizeAtOnAdLoaded[0] = bannerView.getCreativeWidth();
-            sizeAtOnAdLoaded[1] = bannerView.getCreativeHeight();
+            sizeAtOnAdLoaded[0] = bannerView.getCreativeSize();
             return null;
         }).when(mockBannerListener).onAdLoaded(bannerView);
 
         displayPrebidAd(320, 50, null);
+
+        // The creative is still loading, so it is not reported yet.
+        assertNull(bannerView.getCreativeSize());
+
         RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
 
-        assertArrayEquals(new int[]{320, 50}, sizeAtOnAdLoaded);
-        assertEquals(320, bannerView.getCreativeWidth());
-        assertEquals(50, bannerView.getCreativeHeight());
+        assertEquals(new AdSize(320, 50), sizeAtOnAdLoaded[0]);
+        assertEquals(new AdSize(320, 50), bannerView.getCreativeSize());
+    }
+
+    @Test
+    public void creativeSize_OnPrebidWin_CreativeFillsBannerView() {
+        displayPrebidAd(320, 50, null);
+
+        assertEquals(1, bannerView.getChildCount());
+        assertEquals(MATCH_PARENT, bannerView.getChildAt(0).getLayoutParams().width);
+        assertEquals(MATCH_PARENT, bannerView.getChildAt(0).getLayoutParams().height);
+    }
+
+    @Test
+    public void creativeSize_OnPrebidWinWithoutBidSize_IsUnknown() throws IllegalAccessException {
+        displayPrebidAd(0, 0, null);
+        RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
+
+        assertEquals(new AdSize(0, 0), bannerView.getCreativeSize());
     }
 
     @Test
     public void creativeSize_OnAdServerWinWithSize_IsAdServerSizeNotLosingBidSize() {
-        final int[] sizeAtOnAdLoaded = new int[2];
+        final AdSize[] sizeAtOnAdLoaded = new AdSize[1];
         doAnswer(invocation -> {
-            sizeAtOnAdLoaded[0] = bannerView.getCreativeWidth();
-            sizeAtOnAdLoaded[1] = bannerView.getCreativeHeight();
+            sizeAtOnAdLoaded[0] = bannerView.getCreativeSize();
             return null;
         }).when(mockBannerListener).onAdLoaded(bannerView);
 
         // Prebid bids 320x50 but the ad server serves its own 300x250 creative.
-        RenderingTestUtils.getBidRequesterListener(bannerView).onFetchCompleted(mockBidResponse(320, 50, null));
+        receiveBid(320, 50, null);
         RenderingTestUtils.getBannerEventListener(bannerView).onAdServerWin(new View(mockContext), new AdSize(300, 250));
 
-        assertArrayEquals(new int[]{300, 250}, sizeAtOnAdLoaded);
-        assertEquals(300, bannerView.getCreativeWidth());
-        assertEquals(250, bannerView.getCreativeHeight());
+        assertEquals(new AdSize(300, 250), sizeAtOnAdLoaded[0]);
+        assertEquals(new AdSize(300, 250), bannerView.getCreativeSize());
     }
 
     @Test
-    public void creativeSize_OnAdServerWinWithoutSize_IsZero() {
-        displayPrebidAd(320, 50, null);
+    public void creativeSize_OnAdServerWinWithoutSize_IsUnknown() {
+        RenderingTestUtils.getBannerEventListener(bannerView).onAdServerWin(new View(mockContext), null);
 
-        RenderingTestUtils.getBidRequesterListener(bannerView).onFetchCompleted(mockBidResponse(300, 250, null));
+        assertEquals(new AdSize(0, 0), bannerView.getCreativeSize());
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
+    public void creativeSize_OnDeprecatedAdServerWin_IsUnknown() {
         RenderingTestUtils.getBannerEventListener(bannerView).onAdServerWin(new View(mockContext));
 
-        assertEquals(0, bannerView.getCreativeWidth());
-        assertEquals(0, bannerView.getCreativeHeight());
+        verify(mockBannerListener).onAdLoaded(bannerView);
+        assertEquals(new AdSize(0, 0), bannerView.getCreativeSize());
     }
 
     @Test
-    public void creativeSize_OnAdServerWinWithFluidSize_IsZero() {
+    public void creativeSize_OnAdServerWinWithFluidSize_IsUnknown() {
         RenderingTestUtils.getBannerEventListener(bannerView).onAdServerWin(new View(mockContext), new AdSize(-3, -4));
 
-        assertEquals(0, bannerView.getCreativeWidth());
-        assertEquals(0, bannerView.getCreativeHeight());
+        assertEquals(new AdSize(0, 0), bannerView.getCreativeSize());
     }
 
     @Test
-    public void creativeSize_WhileRefreshIsInFlight_KeepsDisplayedCreativeSize() {
+    public void creativeSize_OnAdServerWinWithNullView_IsNullAndReportsFailure() throws IllegalAccessException {
+        displayPrebidAd(320, 50, null);
+        RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
+
+        receiveBid(300, 250, null);
+        RenderingTestUtils.getBannerEventListener(bannerView).onAdServerWin(null, new AdSize(300, 250));
+
+        verify(mockBannerListener).onAdFailed(eq(bannerView), any(AdException.class));
+        assertNull(bannerView.getCreativeSize());
+    }
+
+    @Test
+    public void creativeSize_OnAdServerFailureFallbackToPrebid_IsBidSize() throws IllegalAccessException {
+        receiveBid(300, 250, null);
+        registerFakeRenderer();
+
+        RenderingTestUtils.getBannerEventListener(bannerView)
+                .onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - no fill."));
+        RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
+
+        assertEquals(new AdSize(300, 250), bannerView.getCreativeSize());
+    }
+
+    @Test
+    public void creativeSize_PrebidThenAdServerThenPrebid_TracksDisplayedCreative() throws IllegalAccessException {
         displayPrebidAd(300, 250, null);
+        RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
+        assertEquals(new AdSize(300, 250), bannerView.getCreativeSize());
 
-        RenderingTestUtils.getBidRequesterListener(bannerView).onFetchCompleted(mockBidResponse(320, 50, null));
+        receiveBid(300, 250, null);
+        RenderingTestUtils.getBannerEventListener(bannerView).onAdServerWin(new View(mockContext), new AdSize(320, 50));
+        assertEquals(new AdSize(320, 50), bannerView.getCreativeSize());
 
-        assertEquals(300, bannerView.getCreativeWidth());
-        assertEquals(250, bannerView.getCreativeHeight());
+        displayPrebidAd(728, 90, null);
+        assertNull(bannerView.getCreativeSize());
+        RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
+        assertEquals(new AdSize(728, 90), bannerView.getCreativeSize());
+    }
+
+    @Test
+    public void onAdServerWin_DestroysPreviousPrebidCreative() throws IllegalAccessException {
+        RenderingTestUtils.getBannerEventListener(bannerView).onAdServerWin(new View(mockContext), new AdSize(300, 250));
+
+        verify(mockDisplayView).destroy();
+        assertNull(WhiteBox.field(BannerView.class, "displayView").get(bannerView));
+    }
+
+    @Test
+    public void creativeSize_WhileRefreshIsInFlight_KeepsDisplayedCreativeSize() throws IllegalAccessException {
+        displayPrebidAd(300, 250, null);
+        RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
+
+        receiveBid(320, 50, null);
+
+        assertEquals(new AdSize(300, 250), bannerView.getCreativeSize());
 
         RenderingTestUtils.getBannerEventListener(bannerView).onPrebidSdkWin();
+        RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
 
-        assertEquals(320, bannerView.getCreativeWidth());
-        assertEquals(50, bannerView.getCreativeHeight());
+        assertEquals(new AdSize(320, 50), bannerView.getCreativeSize());
     }
 
     @Test
-    public void creativeSize_WhenRefreshFindsNoBid_KeepsDisplayedCreativeSize() {
+    public void creativeSize_WhenRefreshFindsNoBid_KeepsDisplayedCreativeSize() throws IllegalAccessException {
         displayPrebidAd(300, 250, null);
+        RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
 
         RenderingTestUtils.getBidRequesterListener(bannerView).onError(new AdException(AdException.NO_BIDS, "No bids"));
         RenderingTestUtils.getBannerEventListener(bannerView).onPrebidSdkWin();
 
         verify(mockBannerListener).onAdFailed(eq(bannerView), any(AdException.class));
-        assertEquals(300, bannerView.getCreativeWidth());
-        assertEquals(250, bannerView.getCreativeHeight());
+        assertEquals(new AdSize(300, 250), bannerView.getCreativeSize());
     }
 
     @Test
-    public void creativeSize_WhenCreativeFailsToRender_IsZero() throws IllegalAccessException {
+    public void creativeSize_WhenCreativeFailsToRender_IsNull() throws IllegalAccessException {
         displayPrebidAd(320, 50, null);
+        final DisplayViewListener displayViewListener = RenderingTestUtils.getDisplayViewListener(bannerView);
 
-        RenderingTestUtils.getDisplayViewListener(bannerView).onAdFailed(new AdException(AdException.INTERNAL_ERROR, ""));
+        displayViewListener.onAdFailed(new AdException(AdException.INTERNAL_ERROR, ""));
+        assertNull(bannerView.getCreativeSize());
 
-        assertEquals(0, bannerView.getCreativeWidth());
-        assertEquals(0, bannerView.getCreativeHeight());
+        // The failed creative's size is discarded, not published by a later callback.
+        displayViewListener.onAdLoaded();
+        assertNull(bannerView.getCreativeSize());
     }
 
     @Test
-    public void creativeSize_WhenExpiredAdIsRemoved_IsZero() throws IllegalAccessException {
+    public void creativeSize_WhenExpiredAdIsRemoved_IsNull() throws IllegalAccessException {
         bannerView.setAutoRefreshDelay(30);
         displayPrebidAd(320, 50, 1);
         RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
@@ -858,8 +940,7 @@ public class BannerViewTest {
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
         verify(mockBannerListener).onAdExpired(bannerView);
-        assertEquals(0, bannerView.getCreativeWidth());
-        assertEquals(0, bannerView.getCreativeHeight());
+        assertNull(bannerView.getCreativeSize());
     }
 
     @Test
@@ -870,39 +951,26 @@ public class BannerViewTest {
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
         verify(mockBannerListener).onAdExpired(bannerView);
-        assertEquals(320, bannerView.getCreativeWidth());
-        assertEquals(50, bannerView.getCreativeHeight());
+        assertEquals(new AdSize(320, 50), bannerView.getCreativeSize());
     }
 
     @Test
-    public void creativeSize_AfterDestroy_IsZero() {
+    public void creativeSize_AfterDestroy_IsNull() throws IllegalAccessException {
         displayPrebidAd(320, 50, null);
+        RenderingTestUtils.getDisplayViewListener(bannerView).onAdLoaded();
 
         bannerView.destroy();
 
-        assertEquals(0, bannerView.getCreativeWidth());
-        assertEquals(0, bannerView.getCreativeHeight());
+        assertNull(bannerView.getCreativeSize());
     }
 
+    /**
+     * Receives a bid and lets Prebid win the ad server request, so its creative starts loading.
+     */
     private void displayPrebidAd(int width, int height, Integer expirationTimeSeconds) {
         registerFakeRenderer();
-        RenderingTestUtils.getBidRequesterListener(bannerView)
-                .onFetchCompleted(mockBidResponse(width, height, expirationTimeSeconds));
+        receiveBid(width, height, expirationTimeSeconds);
         RenderingTestUtils.getBannerEventListener(bannerView).onPrebidSdkWin();
-    }
-
-    private BidResponse mockBidResponse(int width, int height, Integer expirationTimeSeconds) {
-        final Bid mockBid = mock(Bid.class);
-        when(mockBid.getWidth()).thenReturn(width);
-        when(mockBid.getHeight()).thenReturn(height);
-        when(mockBid.getAdm()).thenReturn("adm");
-
-        final BidResponse mockBidResponse = mock(BidResponse.class);
-        when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
-        when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(expirationTimeSeconds);
-        when(mockBidResponse.getPreferredPluginRendererName()).thenReturn(PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME);
-        when(mockBidResponse.getWinningBidWidthHeightPairDips(any())).thenReturn(Pair.create(width, height));
-        return mockBidResponse;
     }
 
     /**

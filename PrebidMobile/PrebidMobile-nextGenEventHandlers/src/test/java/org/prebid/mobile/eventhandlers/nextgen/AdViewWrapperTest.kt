@@ -44,6 +44,7 @@ import org.prebid.mobile.test.utils.WhiteBox
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import com.google.android.libraries.ads.mobile.sdk.banner.AdSize as NextSize
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
@@ -129,6 +130,31 @@ class AdViewWrapperTest {
         advanceUntilIdle()
 
         verify(mockListener, times(1))?.onEvent(AdEvent.Loaded())
+    }
+
+    @Test
+    fun adSize_BeforeAdLoaded_IsNull() {
+        Assert.assertNull(adViewWrapper.adSize)
+    }
+
+    @Test
+    fun adSize_AfterAdLoaded_IsLoadedAdSize() {
+        val ad: BannerAd = Mockito.mock()
+        Mockito.`when`(ad.adSize).thenReturn(NextSize(300, 250))
+
+        adViewWrapper.onAdLoaded(ad)
+
+        Assert.assertEquals(AdSize(300, 250), adViewWrapper.adSize)
+    }
+
+    @Test
+    fun adSize_WhenSdkThrows_IsNull() {
+        val ad: BannerAd = Mockito.mock()
+        Mockito.`when`(ad.adSize).thenThrow(RuntimeException("Test"))
+
+        adViewWrapper.onAdLoaded(ad)
+
+        Assert.assertNull(adViewWrapper.adSize)
     }
 
     @Test
