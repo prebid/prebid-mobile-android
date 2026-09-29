@@ -3,7 +3,7 @@ apply from: '../android.gradle'
 android {
     namespace "org.prebid.mobile.admob.adapters"
     defaultConfig {
-        minSdkVersion 23
+        minSdkVersion 24
     }
     testOptions {
         unitTests.all {

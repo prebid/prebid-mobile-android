@@ -452,7 +452,7 @@ public class UtilsTest extends TestCase {
         View closeView = Utils.createCloseView(activity);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
 
-        assertEquals(Gravity.END | Gravity.TOP, params.gravity);
+        assertEquals(Gravity.RIGHT | Gravity.TOP, params.gravity);
         assertEquals(FrameLayout.LayoutParams.WRAP_CONTENT, params.width);
         assertEquals(FrameLayout.LayoutParams.WRAP_CONTENT, params.height);
     }
@@ -464,7 +464,7 @@ public class UtilsTest extends TestCase {
         View closeView = Utils.createCloseView(activity, null);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
 
-        assertEquals(Gravity.END | Gravity.TOP, params.gravity);
+        assertEquals(Gravity.RIGHT | Gravity.TOP, params.gravity);
         assertEquals(FrameLayout.LayoutParams.WRAP_CONTENT, params.width);
         assertEquals(FrameLayout.LayoutParams.WRAP_CONTENT, params.height);
     }
@@ -478,7 +478,7 @@ public class UtilsTest extends TestCase {
         View closeView = Utils.createCloseView(activity, properties);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
 
-        assertEquals(Gravity.END | Gravity.TOP, params.gravity);
+        assertEquals(Gravity.RIGHT | Gravity.TOP, params.gravity);
         assertEquals(FrameLayout.LayoutParams.WRAP_CONTENT, params.width);
         assertEquals(FrameLayout.LayoutParams.WRAP_CONTENT, params.height);
     }
@@ -492,7 +492,7 @@ public class UtilsTest extends TestCase {
         View closeView = Utils.createCloseView(activity, properties);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
 
-        assertEquals(Gravity.END | Gravity.TOP, params.gravity);
+        assertEquals(Gravity.RIGHT | Gravity.TOP, params.gravity);
         assertEquals(216, params.width);
         assertEquals(216, params.height);
         assertEquals(43, closeView.getPaddingTop());
@@ -507,7 +507,7 @@ public class UtilsTest extends TestCase {
         View closeView = Utils.createCloseView(activity, properties);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
 
-        assertEquals(Gravity.START | Gravity.TOP, params.gravity);
+        assertEquals(Gravity.LEFT | Gravity.TOP, params.gravity);
     }
 
     @Test
@@ -519,7 +519,7 @@ public class UtilsTest extends TestCase {
         View closeView = Utils.createCloseView(activity, properties);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
 
-        assertEquals(Gravity.END | Gravity.TOP, params.gravity);
+        assertEquals(Gravity.RIGHT | Gravity.TOP, params.gravity);
     }
 
     @Test
@@ -529,7 +529,17 @@ public class UtilsTest extends TestCase {
         View closeView = Utils.createCloseView(activity, null);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
 
-        assertEquals(Gravity.END | Gravity.TOP, params.gravity);
+        assertEquals(Gravity.RIGHT | Gravity.TOP, params.gravity);
+    }
+
+    @Test
+    public void createSoundView_PositionsControlAtTopRight() {
+        Activity activity = Robolectric.buildActivity(Activity.class).get();
+
+        View soundView = Utils.createSoundView(activity);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) soundView.getLayoutParams();
+
+        assertEquals(Gravity.RIGHT | Gravity.TOP, params.gravity);
     }
 
     @Test
