@@ -490,7 +490,7 @@ public class UtilTest extends BaseSetup {
 
 
 class BaseSetup {
-    public static final int testSDK = 23;
+    public static final int testSDK = 24;
 
     protected MockWebServer server;
     protected Scheduler uiScheduler, bgScheduler;
