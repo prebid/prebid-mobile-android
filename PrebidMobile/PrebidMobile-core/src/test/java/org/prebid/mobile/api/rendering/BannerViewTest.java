@@ -703,10 +703,10 @@ public class BannerViewTest {
     }
 
     @Test
-    public void whenStopRefresh_BidLoaderCancelRefresh() {
+    public void whenStopRefresh_BidLoaderStopRefresh() {
         bannerView.stopRefresh();
 
-        verify(mockBidLoader, times(1)).cancelRefresh();
+        verify(mockBidLoader, times(1)).stopRefresh();
     }
 
     @Test

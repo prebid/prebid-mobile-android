@@ -96,7 +96,7 @@ public abstract class AdUnit {
     public void resumeAutoRefresh() {
         LogUtil.verbose("Resuming auto refresh...");
         if (bidLoader != null) {
-            bidLoader.setupRefreshTimer();
+            bidLoader.resumeRefresh();
         }
     }
 
@@ -106,7 +106,7 @@ public abstract class AdUnit {
     public void stopAutoRefresh() {
         LogUtil.verbose("Stopping auto refresh...");
         if (bidLoader != null) {
-            bidLoader.cancelRefresh();
+            bidLoader.stopRefresh();
         }
     }
 
@@ -175,6 +175,11 @@ public abstract class AdUnit {
 
         if (Util.supportedAdObject(adObject) || allowNullableAdObject) {
             this.adObject = adObject;
+            if (bidLoader != null) {
+                // Only the latest fetch drives auto refresh. The previous loader is not destroyed,
+                // so a response it is still waiting for reaches its listener, but it never refreshes again.
+                bidLoader.stopRefresh();
+            }
             bidLoader = new BidLoader(
                     configuration,
                     createBidListener(listener)

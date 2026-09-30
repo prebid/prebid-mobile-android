@@ -19,6 +19,7 @@ package org.prebid.mobile.rendering.bidding.loader;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
@@ -145,6 +146,63 @@ public class BidLoaderTest {
     public void whenCancelRefresh_CancelRefreshTimerTask() {
         bidLoader.cancelRefresh();
         verify(mockTimerTask).cancelRefreshTimer();
+    }
+
+    @Test
+    public void whenSetupRefreshTimer_ScheduleRefreshTask() {
+        bidLoader.setupRefreshTimer();
+        verify(mockTimerTask).scheduleRefreshTask(60000);
+    }
+
+    @Test
+    public void whenStopRefresh_CancelRefreshTimerTaskAndDoNotScheduleAgain() {
+        bidLoader.stopRefresh();
+        verify(mockTimerTask).cancelRefreshTimer();
+
+        bidLoader.setupRefreshTimer();
+        verify(mockTimerTask, never()).scheduleRefreshTask(anyInt());
+    }
+
+    @Test
+    public void whenStopRefreshDuringRequest_ResponseStillDeliveredButDoesNotScheduleRefresh() throws Exception {
+        ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        BaseNetworkTask.GetUrlResult responseResult = new BaseNetworkTask.GetUrlResult();
+        responseResult.responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json");
+
+        bidLoader.stopRefresh();
+        responseHandler.onResponse(responseResult);
+
+        verify(bidRequesterListener).onFetchCompleted(any());
+        verify(mockTimerTask, never()).scheduleRefreshTask(anyInt());
+    }
+
+    @Test
+    public void whenStopRefreshDuringRequest_ErrorStillDeliveredButDoesNotScheduleRefresh() {
+        ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+
+        bidLoader.stopRefresh();
+        responseHandler.onError("error", 0);
+
+        verify(bidRequesterListener).onError(any());
+        verify(mockTimerTask, never()).scheduleRefreshTask(anyInt());
+    }
+
+    @Test
+    public void whenResumeRefresh_ScheduleRefreshTask() {
+        bidLoader.stopRefresh();
+        bidLoader.resumeRefresh();
+        verify(mockTimerTask).scheduleRefreshTask(60000);
+    }
+
+    @Test
+    public void whenLoadAfterStopRefresh_RefreshIsEnabledAgain() {
+        PrebidMobileReflection.setFlagsThatSdkIsInitialized();
+        bidLoader.stopRefresh();
+
+        bidLoader.load();
+        bidLoader.setupRefreshTimer();
+
+        verify(mockTimerTask).scheduleRefreshTask(60000);
     }
 
     @Test

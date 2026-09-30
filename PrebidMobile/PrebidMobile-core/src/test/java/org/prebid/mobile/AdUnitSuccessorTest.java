@@ -18,8 +18,12 @@
 package org.prebid.mobile;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
@@ -31,10 +35,19 @@ import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.reflection.AdUnitReflection;
+import org.prebid.mobile.reflection.Reflection;
+import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
+import org.prebid.mobile.rendering.networking.BaseNetworkTask;
+import org.prebid.mobile.rendering.networking.ResponseHandler;
+import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
+import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
+import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
@@ -63,10 +76,65 @@ public class AdUnitSuccessorTest {
         AdUnitReflection.setBidLoader(adUnit, mockBidLoader);
 
         adUnit.resumeAutoRefresh();
-        verify(mockBidLoader).setupRefreshTimer();
+        verify(mockBidLoader).resumeRefresh();
 
         adUnit.stopAutoRefresh();
-        verify(mockBidLoader).cancelRefresh();
+        verify(mockBidLoader).stopRefresh();
+    }
+
+    @Test
+    public void testFetchDemandAgainStopsRefreshOfThePreviousLoader() {
+        withFetchDemandPreconditions(() -> {
+            AdUnit adUnit = new BannerAdUnit(testConfigId, width, height);
+            adUnit.setAutoRefreshInterval(30);
+            AdUnitReflection.setBidLoader(adUnit, mockBidLoader);
+
+            adUnit.fetchDemand(bidInfo -> {});
+
+            assertNotSame("fetchDemand() must replace the loader", mockBidLoader, AdUnitReflection.getBidLoader(adUnit));
+            // Only the latest fetch may drive auto refresh. The previous loader keeps a response
+            // that is still in flight, so it is not destroyed, but it must not refresh again.
+            verify(mockBidLoader).stopRefresh();
+            verify(mockBidLoader, never()).destroy();
+        });
+    }
+
+    @Test
+    public void testStopAutoRefreshDuringRequestIsNotUndoneByTheResponse() {
+        withFetchDemandPreconditions(() -> {
+            AdUnit adUnit = new BannerAdUnit(testConfigId, width, height);
+            adUnit.setAutoRefreshInterval(30);
+            adUnit.fetchDemand(bidInfo -> {});
+            BidLoader bidLoader = AdUnitReflection.getBidLoader(adUnit);
+            RefreshTimerTask mockTimerTask = mock(RefreshTimerTask.class);
+            WhiteBox.setInternalState(bidLoader, "refreshTimerTask", mockTimerTask);
+
+            // The app stops refresh while the bid request is still in flight
+            adUnit.stopAutoRefresh();
+            BaseNetworkTask.GetUrlResult result = new BaseNetworkTask.GetUrlResult();
+            result.responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json");
+            ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+            responseHandler.onResponse(result);
+
+            verify(mockTimerTask, never()).scheduleRefreshTask(anyInt());
+        });
+    }
+
+    // Satisfies the checks at the start of fetchDemand(). The SDK stays uninitialized, so the
+    // loader that fetchDemand() creates never sends a real request.
+    private void withFetchDemandPreconditions(Runnable body) {
+        Host previousHost = PrebidMobile.getPrebidServerHost();
+        PrebidMobileReflection.setFlagsThatSdkIsNotInitialized();
+        PrebidMobileReflection.setHost("https://prebid.test/openrtb2/auction");
+        PrebidMobile.setPrebidServerAccountId("id");
+        PrebidContextHolder.setContext(RuntimeEnvironment.getApplication());
+        try {
+            body.run();
+        } finally {
+            Reflection.setStaticVariableTo(PrebidMobile.class, "host", previousHost);
+            PrebidMobile.setPrebidServerAccountId(null);
+            PrebidContextHolder.clearContext();
+        }
     }
 
     @Test

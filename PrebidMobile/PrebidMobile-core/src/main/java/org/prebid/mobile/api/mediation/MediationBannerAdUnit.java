@@ -156,7 +156,7 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
      */
     public void resumeRefresh() {
         if (bidLoader != null) {
-            bidLoader.setupRefreshTimer();
+            bidLoader.resumeRefresh();
         }
     }
 
@@ -166,7 +166,7 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
      */
     public void stopRefresh() {
         if (bidLoader != null) {
-            bidLoader.cancelRefresh();
+            bidLoader.stopRefresh();
         }
     }
 
