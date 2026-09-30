@@ -154,6 +154,20 @@ internal class AdViewWrapper private constructor(
     val view: View
         get() = adView
 
+    /**
+     * Size, in dp, of the loaded creative, or null before an ad loads or when the SDK does not
+     * report one. Special sizes such as fluid can have non positive dimensions; BannerView reports
+     * them as a creative of unknown size.
+     */
+    val adSize: AdSize?
+        get() = try {
+            val nextSize: NextSize? = ad?.adSize
+            nextSize?.let { AdSize(it.width, it.height) }
+        } catch (throwable: Throwable) {
+            LogUtil.error(TAG, Log.getStackTraceString(throwable))
+            null
+        }
+
     private fun List<AdSize>.toNextAdSizes(): List<NextSize> {
         val list = mutableListOf<NextSize>()
         for (adSize in this) {

@@ -114,7 +114,9 @@ class NextGenBannerEventHandlerTest {
         // can't mock a final view class
         val mockPublisherAdView = Mockito.mock(AdViewWrapper::class.java)
         val mockView = Mockito.mock(View::class.java)
+        val creativeSize = AdSize(300, 250)
         Mockito.`when`(mockPublisherAdView.view).thenReturn(mockView)
+        Mockito.`when`(mockPublisherAdView.adSize).thenReturn(creativeSize)
 
         WhiteBox.field(NextGenBannerEventHandler::class.java, "requestBanner")
             .set(bannerEventHandler, mockPublisherAdView)
@@ -122,7 +124,7 @@ class NextGenBannerEventHandlerTest {
         bannerEventHandler.onEvent(AdEvent.Loaded())
 
         Mockito.verify<BannerEventListener>(mockBannerEventListener, Mockito.times(1))
-            .onAdServerWin(ArgumentMatchers.eq(mockView))
+            .onAdServerWin(ArgumentMatchers.eq(mockView), ArgumentMatchers.eq(creativeSize))
     }
 
     @Test
@@ -132,7 +134,26 @@ class NextGenBannerEventHandlerTest {
             .invoke(bannerEventHandler)
 
         Mockito.verify<BannerEventListener>(mockBannerEventListener, Mockito.times(1))
-            .onAdServerWin(ArgumentMatchers.any())
+            .onAdServerWin(ArgumentMatchers.any(), ArgumentMatchers.any())
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun onAppEventTimeout_PassCreativeSizeToOnAdServerWin() {
+        val mockPublisherAdView = Mockito.mock(AdViewWrapper::class.java)
+        val mockView = Mockito.mock(View::class.java)
+        val creativeSize = AdSize(320, 50)
+        Mockito.`when`(mockPublisherAdView.view).thenReturn(mockView)
+        Mockito.`when`(mockPublisherAdView.adSize).thenReturn(creativeSize)
+
+        WhiteBox.field(NextGenBannerEventHandler::class.java, "requestBanner")
+            .set(bannerEventHandler, mockPublisherAdView)
+
+        WhiteBox.method(NextGenBannerEventHandler::class.java, "handleAppEventTimeout")
+            .invoke(bannerEventHandler)
+
+        Mockito.verify<BannerEventListener>(mockBannerEventListener, Mockito.times(1))
+            .onAdServerWin(ArgumentMatchers.eq(mockView), ArgumentMatchers.eq(creativeSize))
     }
 
     @Test

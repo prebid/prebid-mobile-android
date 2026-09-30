@@ -39,6 +39,11 @@ import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
  * to make a request to GAM SDK and pass the targeting parameters. This class also creates the GAM's
  * PublisherAdViews, initializes them and listens for the callback methods. And pass the GAM ad event to
  * Prebid Rendering SDK via BannerEventListener.
+ * <p>
+ * When GAM wins, the size of the creative it served is reported to the banner, see
+ * {@code BannerView.getCreativeSize()}. Refresh is expected to be driven by the Prebid banner. If
+ * refresh is configured on the GAM ad unit itself, GAM reloads the displayed ad in place without
+ * notifying the banner, so the banner keeps reporting the size of the creative GAM first served.
  */
 public class GamBannerEventHandler implements BannerEventHandler, GamAdEventListener {
 
@@ -203,7 +208,7 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
             requestBanner = null;
             recycleCurrentBanner();
             embeddedBanner = gamBannerView;
-            bannerEventListener.onAdServerWin(getView(gamBannerView));
+            bannerEventListener.onAdServerWin(getView(gamBannerView), getAdSize(gamBannerView));
         }
     }
 
@@ -243,11 +248,16 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
         recycleCurrentBanner();
         embeddedBanner = gamBannerView;
         isExpectingAppEvent = false;
-        bannerEventListener.onAdServerWin(getView(gamBannerView));
+        bannerEventListener.onAdServerWin(getView(gamBannerView), getAdSize(gamBannerView));
     }
 
     private View getView(PublisherAdViewWrapper gamBannerView) {
         return gamBannerView != null ? gamBannerView.getView() : null;
+    }
+
+    @Nullable
+    private AdSize getAdSize(PublisherAdViewWrapper gamBannerView) {
+        return gamBannerView != null ? gamBannerView.getAdSize() : null;
     }
 
     private void handleAdFailure(int errorCode) {
