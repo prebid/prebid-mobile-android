@@ -18,6 +18,9 @@ package org.prebid.mobile.api.mediation;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
+import android.widget.FrameLayout;
+import androidx.annotation.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +33,8 @@ import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
+import org.prebid.mobile.rendering.bidding.display.MediationBannerView;
+import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
@@ -41,6 +46,7 @@ import org.robolectric.annotation.Config;
 import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -143,6 +149,92 @@ public class MediationBannerAdUnitTest {
         mediationBannerAdUnit.setAdUnitFormats(EnumSet.noneOf(AdUnitFormat.class));
         assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), mediationBannerAdUnit.adUnitConfig.getAdFormats());
     }
+
+    //region ================= Auto refresh vs. video creatives
+    @Test
+    public void canPerformRefreshWhileVideoIsPlaying_SkipTheTick() throws Exception {
+        givenMediatedAdViewWithPrebidVideo(true);
+
+        assertFalse(getBidRefreshListener().canPerformRefresh());
+    }
+
+    @Test
+    public void canPerformRefreshAfterVideoFinished_AllowTheTick() throws Exception {
+        givenMediatedAdViewWithPrebidVideo(false);
+        when(mockScreenStateReceiver.isScreenOn()).thenReturn(true);
+
+        assertTrue(getBidRefreshListener().canPerformRefresh());
+    }
+
+    @Test
+    public void canPerformRefreshAfterAdFailed_AllowTheTickEvenIfVideoReportsPlaying() throws Exception {
+        givenMediatedAdViewWithPrebidVideo(true);
+        WhiteBox.field(MediationBannerAdUnit.class, "adFailed").set(mediationBannerAdUnit, true);
+
+        assertTrue(getBidRefreshListener().canPerformRefresh());
+    }
+
+    @Test
+    public void isVideoPlayingWithoutPrebidViewInTheHierarchy_False() {
+        // Another demand partner won in the mediation SDK, so there is no Prebid creative to guard.
+        FrameLayout mediatedAdView = new FrameLayout(context);
+        mediatedAdView.addView(new FrameLayout(context));
+        givenMediationDelegateReturning(mediatedAdView);
+
+        assertFalse(mediationBannerAdUnit.isVideoPlaying());
+    }
+
+    @Test
+    public void isVideoPlayingWithoutAdView_False() {
+        givenMediationDelegateReturning(null);
+
+        assertFalse(mediationBannerAdUnit.isVideoPlaying());
+    }
+
+    @Test
+    public void isVideoPlayingWithDefaultDelegate_False() {
+        // A custom delegate that does not implement getAdView() opts out of the gate.
+        WhiteBox.setInternalState(mediationBannerAdUnit, "mediationDelegate", new MockMediationUtils());
+
+        assertFalse(mediationBannerAdUnit.isVideoPlaying());
+    }
+
+    /**
+     * Mirrors what the adapters build: the mediation SDK's ad view wraps the
+     * {@link MediationBannerView} the Prebid adapter rendered into.
+     */
+    private void givenMediatedAdViewWithPrebidVideo(boolean isVideoPlaying) {
+        MediationBannerView prebidView = mock(MediationBannerView.class);
+        when(prebidView.isVideoPlaying()).thenReturn(isVideoPlaying);
+
+        FrameLayout mediatedAdView = new FrameLayout(context);
+        FrameLayout intermediateContainer = new FrameLayout(context);
+        mediatedAdView.addView(intermediateContainer);
+        intermediateContainer.addView(prebidView);
+
+        givenMediationDelegateReturning(mediatedAdView);
+    }
+
+    private void givenMediationDelegateReturning(@Nullable View adView) {
+        PrebidMediationDelegate delegate = mock(PrebidMediationDelegate.class);
+        when(delegate.getAdView()).thenReturn(adView);
+        when(delegate.canPerformRefresh()).thenReturn(true);
+
+        WhiteBox.setInternalState(mediationBannerAdUnit, "mediationDelegate", delegate);
+    }
+
+    private BidLoader.BidRefreshListener getBidRefreshListener() throws Exception {
+        // initBidLoader() builds a BidLoader and registers the refresh gate on it.
+        WhiteBox.method(MediationBannerAdUnit.class, "initBidLoader").invoke(mediationBannerAdUnit);
+
+        final BidLoader bidLoader = (BidLoader) WhiteBox
+                .field(MediationBaseAdUnit.class, "bidLoader")
+                .get(mediationBannerAdUnit);
+        return (BidLoader.BidRefreshListener) WhiteBox
+                .field(BidLoader.class, "bidRefreshListener")
+                .get(bidLoader);
+    }
+    //endregion ============== Auto refresh vs. video creatives
 
     @Test
     public void setAdPosition_EqualsGetAdPosition() {
