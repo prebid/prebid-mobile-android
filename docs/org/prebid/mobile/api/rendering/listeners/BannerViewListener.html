@@ -285,6 +285,14 @@ public interface <span class="typeNameLabel"><a href=BannerViewListener.html>Ban
                                             <td class="colLast">Executed when modal window (e.g.</td>
                                         </tr>
                                         
+                                        <tr id="i5" class="rowColor">
+                                            <td class="colFirst"><code>void</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=BannerViewListener.html#onAdExpired(org.prebid.mobile.api.rendering.BannerView)>onAdExpired</a>(<a href=../BannerView.html>BannerView</a> bannerView) </code>
+                                            </th>
+                                            <td class="colLast">Executed when the loaded ad expires (<code>bid.exp</code>) before an impression is tracked.</td>
+                                        </tr>
+                                        
                                         </tbody>
                                     </table>
                                 </div>
@@ -457,12 +465,42 @@ public interface <span class="typeNameLabel"><a href=BannerViewListener.html>Ban
                                     <!--   -->
                                 </a>
                                 <ul class=
-                                              "blockListLast"
+                                              "blockList"
                                           >
                                     <li class="blockList">
                                         <h4>onAdClosed</h4>
                                         <pre class="methodSignature"> abstract void <a href=BannerViewListener.html#onAdClosed(org.prebid.mobile.api.rendering.BannerView)>onAdClosed</a>(<a href=../BannerView.html>BannerView</a> bannerView)</pre>
                                         <div class="block"><p>Executed when modal window (e.g. browser) on top of bannerView is closed.</p></div>
+
+                                        <dl>
+
+                                        
+                                            <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
+                                            <dd><code>bannerView</code> - view of the corresponding event.</dd>
+                                            
+                                            
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="onAdExpired(org.prebid.mobile.api.rendering.BannerView)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockListLast"
+                                          >
+                                    <li class="blockList">
+                                        <h4>onAdExpired</h4>
+                                        <pre class="methodSignature"> void <a href=BannerViewListener.html#onAdExpired(org.prebid.mobile.api.rendering.BannerView)>onAdExpired</a>(<a href=../BannerView.html>BannerView</a> bannerView)</pre>
+                                        <div class="block"><p>Executed when the loaded ad expires (<code>bid.exp</code>) before an impression is tracked. With auto-refresh enabled, the expired ad is replaced with a new one; otherwise it stays on screen.</p></div>
 
                                         <dl>
 

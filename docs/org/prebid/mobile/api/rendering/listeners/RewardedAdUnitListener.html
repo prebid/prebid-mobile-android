@@ -293,6 +293,14 @@ public interface <span class="typeNameLabel"><a href=RewardedAdUnitListener.html
                                             <td class="colLast">Executed when user receives reward.</td>
                                         </tr>
                                         
+                                        <tr id="i6" class="altColor">
+                                            <td class="colFirst"><code>void</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=RewardedAdUnitListener.html#onAdExpired(org.prebid.mobile.api.rendering.RewardedAdUnit)>onAdExpired</a>(<a href=../RewardedAdUnit.html>RewardedAdUnit</a> rewardedAdUnit) </code>
+                                            </th>
+                                            <td class="colLast">Executed when the loaded ad expires (<code>bid.exp</code>) before an impression is tracked.</td>
+                                        </tr>
+                                        
                                         </tbody>
                                     </table>
                                 </div>
@@ -495,7 +503,7 @@ public interface <span class="typeNameLabel"><a href=RewardedAdUnitListener.html
                                     <!--   -->
                                 </a>
                                 <ul class=
-                                              "blockListLast"
+                                              "blockList"
                                           >
                                     <li class="blockList">
                                         <h4>onUserEarnedReward</h4>
@@ -513,6 +521,36 @@ public interface <span class="typeNameLabel"><a href=RewardedAdUnitListener.html
                                             
                                             
                                             <dd><code>reward</code> - the reward object.</dd>
+                                            
+                                            
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="onAdExpired(org.prebid.mobile.api.rendering.RewardedAdUnit)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockListLast"
+                                          >
+                                    <li class="blockList">
+                                        <h4>onAdExpired</h4>
+                                        <pre class="methodSignature"> void <a href=RewardedAdUnitListener.html#onAdExpired(org.prebid.mobile.api.rendering.RewardedAdUnit)>onAdExpired</a>(<a href=../RewardedAdUnit.html>RewardedAdUnit</a> rewardedAdUnit)</pre>
+                                        <div class="block"><p>Executed when the loaded ad expires (<code>bid.exp</code>) before an impression is tracked. The ad can still be shown, or replaced by calling <a href=../RewardedAdUnit.html#loadAd()>loadAd</a>.</p></div>
+
+                                        <dl>
+
+                                        
+                                            <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
+                                            <dd><code>rewardedAdUnit</code> - view of the corresponding event.</dd>
                                             
                                             
                                         

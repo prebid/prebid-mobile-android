@@ -300,12 +300,28 @@ public class <span class="typeNameLabel"><a href=PrebidMobilePluginRegister.html
                                         <tr id="i5" class="rowColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=PrebidMobilePluginRegister.html#registerEventListener(org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener,java.lang.String)>registerEventListener</a>(<a href=PluginEventListener.html>PluginEventListener</a> pluginEventListener, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> listenerKey) </code>
+                                            <th class="colSecond" scope="row"><code><a href=PrebidMobilePluginRegister.html#unregisterAllPlugins()>unregisterAllPlugins</a>() </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
                                         <tr id="i6" class="altColor">
+                                            <td class="colFirst"><code><a href=PrebidMobilePluginRenderer.html>PrebidMobilePluginRenderer</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=PrebidMobilePluginRegister.html#getDefaultPluginRenderer()>getDefaultPluginRenderer</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i7" class="rowColor">
+                                            <td class="colFirst"><code>void</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=PrebidMobilePluginRegister.html#registerEventListener(org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener,java.lang.String)>registerEventListener</a>(<a href=PluginEventListener.html>PluginEventListener</a> pluginEventListener, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> listenerKey) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i8" class="altColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PrebidMobilePluginRegister.html#unregisterEventListener(java.lang.String)>unregisterEventListener</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> listenerKey) </code>
@@ -313,7 +329,7 @@ public class <span class="typeNameLabel"><a href=PrebidMobilePluginRegister.html
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i7" class="rowColor">
+                                        <tr id="i9" class="rowColor">
                                             <td class="colFirst"><code><a href=https://developer.android.com/reference/kotlin/java/util/List.html>List</a>&lt;<a href=PrebidMobilePluginRenderer.html>PrebidMobilePluginRenderer</a>&gt;</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PrebidMobilePluginRegister.html#getRTBListOfRenderersFor(org.prebid.mobile.configuration.AdUnitConfiguration)>getRTBListOfRenderersFor</a>(AdUnitConfiguration adUnitConfiguration) </code>
@@ -321,10 +337,18 @@ public class <span class="typeNameLabel"><a href=PrebidMobilePluginRegister.html
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i8" class="altColor">
+                                        <tr id="i10" class="altColor">
                                             <td class="colFirst"><code><a href=PrebidMobilePluginRenderer.html>PrebidMobilePluginRenderer</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PrebidMobilePluginRegister.html#getPluginForPreferredRenderer(org.prebid.mobile.rendering.bidding.data.bid.BidResponse)>getPluginForPreferredRenderer</a>(BidResponse bidResponse) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i11" class="rowColor">
+                                            <td class="colFirst"><code><a href=PrebidMobilePluginRenderer.html>PrebidMobilePluginRenderer</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=PrebidMobilePluginRegister.html#getPluginForPreferredRenderer(org.prebid.mobile.rendering.bidding.data.bid.BidResponse,org.prebid.mobile.configuration.AdUnitConfiguration)>getPluginForPreferredRenderer</a>(BidResponse bidResponse, AdUnitConfiguration adUnitConfiguration) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
@@ -488,6 +512,52 @@ public class <span class="typeNameLabel"><a href=PrebidMobilePluginRegister.html
                                     </li>
                                 </ul>
                                 
+                                <a id="unregisterAllPlugins()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>unregisterAllPlugins</h4>
+                                        <pre class="methodSignature"> void <a href=PrebidMobilePluginRegister.html#unregisterAllPlugins()>unregisterAllPlugins</a>()</pre>
+                                        <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="getDefaultPluginRenderer()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>getDefaultPluginRenderer</h4>
+                                        <pre class="methodSignature"> <a href=PrebidMobilePluginRenderer.html>PrebidMobilePluginRenderer</a> <a href=PrebidMobilePluginRegister.html#getDefaultPluginRenderer()>getDefaultPluginRenderer</a>()</pre>
+                                        <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
                                 <a id="registerEventListener(org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener,java.lang.String)">
                                     <!--   -->
                                 </a>
@@ -561,11 +631,34 @@ public class <span class="typeNameLabel"><a href=PrebidMobilePluginRegister.html
                                     <!--   -->
                                 </a>
                                 <ul class=
-                                              "blockListLast"
+                                              "blockList"
                                           >
                                     <li class="blockList">
                                         <h4>getPluginForPreferredRenderer</h4>
                                         <pre class="methodSignature"> <a href=PrebidMobilePluginRenderer.html>PrebidMobilePluginRenderer</a> <a href=PrebidMobilePluginRegister.html#getPluginForPreferredRenderer(org.prebid.mobile.rendering.bidding.data.bid.BidResponse)>getPluginForPreferredRenderer</a>(BidResponse bidResponse)</pre>
+                                        <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="getPluginForPreferredRenderer(org.prebid.mobile.rendering.bidding.data.bid.BidResponse,org.prebid.mobile.configuration.AdUnitConfiguration)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockListLast"
+                                          >
+                                    <li class="blockList">
+                                        <h4>getPluginForPreferredRenderer</h4>
+                                        <pre class="methodSignature"> <a href=PrebidMobilePluginRenderer.html>PrebidMobilePluginRenderer</a> <a href=PrebidMobilePluginRegister.html#getPluginForPreferredRenderer(org.prebid.mobile.rendering.bidding.data.bid.BidResponse,org.prebid.mobile.configuration.AdUnitConfiguration)>getPluginForPreferredRenderer</a>(BidResponse bidResponse, AdUnitConfiguration adUnitConfiguration)</pre>
                                         <div class="block"></div>
 
                                         <dl>

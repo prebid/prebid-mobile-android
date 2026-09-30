@@ -285,6 +285,14 @@ public interface <span class="typeNameLabel"><a href=InterstitialAdUnitListener.
                                             <td class="colLast">Executed when interstitialAdUnit is closed.</td>
                                         </tr>
                                         
+                                        <tr id="i5" class="rowColor">
+                                            <td class="colFirst"><code>void</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=InterstitialAdUnitListener.html#onAdExpired(org.prebid.mobile.api.rendering.InterstitialAdUnit)>onAdExpired</a>(<a href=../InterstitialAdUnit.html>InterstitialAdUnit</a> interstitialAdUnit) </code>
+                                            </th>
+                                            <td class="colLast">Executed when the loaded ad expires (<code>bid.exp</code>) before an impression is tracked.</td>
+                                        </tr>
+                                        
                                         </tbody>
                                     </table>
                                 </div>
@@ -457,12 +465,42 @@ public interface <span class="typeNameLabel"><a href=InterstitialAdUnitListener.
                                     <!--   -->
                                 </a>
                                 <ul class=
-                                              "blockListLast"
+                                              "blockList"
                                           >
                                     <li class="blockList">
                                         <h4>onAdClosed</h4>
                                         <pre class="methodSignature"> abstract void <a href=InterstitialAdUnitListener.html#onAdClosed(org.prebid.mobile.api.rendering.InterstitialAdUnit)>onAdClosed</a>(<a href=../InterstitialAdUnit.html>InterstitialAdUnit</a> interstitialAdUnit)</pre>
                                         <div class="block"><p>Executed when interstitialAdUnit is closed.</p></div>
+
+                                        <dl>
+
+                                        
+                                            <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
+                                            <dd><code>interstitialAdUnit</code> - view of the corresponding event.</dd>
+                                            
+                                            
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="onAdExpired(org.prebid.mobile.api.rendering.InterstitialAdUnit)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockListLast"
+                                          >
+                                    <li class="blockList">
+                                        <h4>onAdExpired</h4>
+                                        <pre class="methodSignature"> void <a href=InterstitialAdUnitListener.html#onAdExpired(org.prebid.mobile.api.rendering.InterstitialAdUnit)>onAdExpired</a>(<a href=../InterstitialAdUnit.html>InterstitialAdUnit</a> interstitialAdUnit)</pre>
+                                        <div class="block"><p>Executed when the loaded ad expires (<code>bid.exp</code>) before an impression is tracked. The ad can still be shown, or replaced by calling <a href=../BaseInterstitialAdUnit.html#loadAd()>loadAd</a>.</p></div>
 
                                         <dl>
 

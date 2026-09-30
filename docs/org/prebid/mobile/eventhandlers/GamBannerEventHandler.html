@@ -180,6 +180,12 @@ public class <span class="typeNameLabel"><a href=GamBannerEventHandler.html>GamB
                                             <th class="colLast" scope="col">Description</th>
                                         </tr>
                                         
+                                        <tr class="altColor">
+                                            <td class="colFirst"><code>public  <a href=AdManagerRequestConfiguration.html>AdManagerRequestConfiguration</a></code></td>
+                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#adManagerRequestConfiguration>adManagerRequestConfiguration</a></code></th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
                                     </table>
                                 </div>
                             </li>
@@ -260,9 +266,9 @@ public class <span class="typeNameLabel"><a href=GamBannerEventHandler.html>GamB
                                         </tr>
                                         
                                         <tr id="i0" class="altColor">
-                                            <td class="colFirst"><code>static <a href=https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html>Array</a>&lt;<a href=../AdSize.html>AdSize</a>&gt;</code>
+                                            <td class="colFirst"><code><a href=AdManagerRequestConfiguration.html>AdManagerRequestConfiguration</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#convertGamAdSize(kotlin.Array)>convertGamAdSize</a>(<a href=https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html>Array</a>&lt;AdSize&gt; sizes) </code>
+                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#getAdManagerRequestConfiguration()>getAdManagerRequestConfiguration</a>() </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
@@ -270,15 +276,15 @@ public class <span class="typeNameLabel"><a href=GamBannerEventHandler.html>GamB
                                         <tr id="i1" class="rowColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#onEvent(org.prebid.mobile.eventhandlers.AdEvent)>onEvent</a>(<a href=AdEvent.html>AdEvent</a> adEvent) </code>
+                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#setAdManagerRequestConfiguration(org.prebid.mobile.eventhandlers.AdManagerRequestConfiguration)>setAdManagerRequestConfiguration</a>(<a href=AdManagerRequestConfiguration.html>AdManagerRequestConfiguration</a> adManagerRequestConfiguration) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
                                         <tr id="i2" class="altColor">
-                                            <td class="colFirst"><code><a href=https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html>Array</a>&lt;<a href=../AdSize.html>AdSize</a>&gt;</code>
+                                            <td class="colFirst"><code>static <a href=https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html>Array</a>&lt;<a href=../AdSize.html>AdSize</a>&gt;</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#getAdSizeArray()>getAdSizeArray</a>() </code>
+                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#convertGamAdSize(kotlin.Array)>convertGamAdSize</a>(<a href=https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html>Array</a>&lt;AdSize&gt; sizes) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
@@ -286,15 +292,15 @@ public class <span class="typeNameLabel"><a href=GamBannerEventHandler.html>GamB
                                         <tr id="i3" class="rowColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#requestAdWithBid(org.prebid.mobile.rendering.bidding.data.bid.Bid)>requestAdWithBid</a>(Bid bid) </code>
+                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#onEvent(org.prebid.mobile.eventhandlers.AdEvent)>onEvent</a>(<a href=AdEvent.html>AdEvent</a> adEvent) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
                                         <tr id="i4" class="altColor">
-                                            <td class="colFirst"><code>void</code>
+                                            <td class="colFirst"><code><a href=https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html>Array</a>&lt;<a href=../AdSize.html>AdSize</a>&gt;</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#trackImpression()>trackImpression</a>() </code>
+                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#getAdSizeArray()>getAdSizeArray</a>() </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
@@ -302,12 +308,28 @@ public class <span class="typeNameLabel"><a href=GamBannerEventHandler.html>GamB
                                         <tr id="i5" class="rowColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#destroy()>destroy</a>() </code>
+                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#requestAdWithBid(org.prebid.mobile.rendering.bidding.data.bid.Bid)>requestAdWithBid</a>(Bid bid) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
                                         <tr id="i6" class="altColor">
+                                            <td class="colFirst"><code>void</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#trackImpression()>trackImpression</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i7" class="rowColor">
+                                            <td class="colFirst"><code>void</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#destroy()>destroy</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i8" class="altColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=GamBannerEventHandler.html#setBannerEventListener(org.prebid.mobile.rendering.bidding.listeners.BannerEventListener)>setBannerEventListener</a>(BannerEventListener bannerViewListener) </code>
@@ -385,6 +407,52 @@ public class <span class="typeNameLabel"><a href=GamBannerEventHandler.html>GamB
                                 <!--   -->
                             </a>
                                 <h3>Method Detail</h3>
+                                
+                                <a id="getAdManagerRequestConfiguration()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>getAdManagerRequestConfiguration</h4>
+                                        <pre class="methodSignature"> <a href=AdManagerRequestConfiguration.html>AdManagerRequestConfiguration</a> <a href=GamBannerEventHandler.html#getAdManagerRequestConfiguration()>getAdManagerRequestConfiguration</a>()</pre>
+                                        <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="setAdManagerRequestConfiguration(org.prebid.mobile.eventhandlers.AdManagerRequestConfiguration)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>setAdManagerRequestConfiguration</h4>
+                                        <pre class="methodSignature"> void <a href=GamBannerEventHandler.html#setAdManagerRequestConfiguration(org.prebid.mobile.eventhandlers.AdManagerRequestConfiguration)>setAdManagerRequestConfiguration</a>(<a href=AdManagerRequestConfiguration.html>AdManagerRequestConfiguration</a> adManagerRequestConfiguration)</pre>
+                                        <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
                                 
                                 <a id="convertGamAdSize(kotlin.Array)">
                                     <!--   -->

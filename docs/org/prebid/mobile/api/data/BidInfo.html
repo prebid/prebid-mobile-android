@@ -328,6 +328,14 @@ public class <span class="typeNameLabel"><a href=BidInfo.html>BidInfo</a></span>
                                         </tr>
                                         
                                         <tr id="i5" class="rowColor">
+                                            <td class="colFirst"><code>boolean</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=BidInfo.html#isTopBidFiltered()>isTopBidFiltered</a>() </code>
+                                            </th>
+                                            <td class="colLast"><code>true</code> when <a href=../../PrebidMobile.html#setFilterOutUncachedBids(boolean)>setFilterOutUncachedBids</a> removed the bid Prebid Server designated as the winner because it had no successful Prebid Cache entry, and a lower-priced cached bid was promoted in its place.</td>
+                                        </tr>
+                                        
+                                        <tr id="i6" class="altColor">
                                             <td class="colFirst"><code>static <a href=BidInfo.html>BidInfo</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=BidInfo.html#create(org.prebid.mobile.ResultCode,org.prebid.mobile.rendering.bidding.data.bid.BidResponse,org.prebid.mobile.configuration.AdUnitConfiguration)>create</a>(<a href=../../ResultCode.html>ResultCode</a> resultCode, BidResponse bidResponse, AdUnitConfiguration configuration) </code>
@@ -481,6 +489,29 @@ public class <span class="typeNameLabel"><a href=BidInfo.html>BidInfo</a></span>
                                         <h4>getExp</h4>
                                         <pre class="methodSignature"> <a href=https://developer.android.com/reference/kotlin/java/lang/Integer.html>Integer</a> <a href=BidInfo.html#getExp()>getExp</a>()</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="isTopBidFiltered()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>isTopBidFiltered</h4>
+                                        <pre class="methodSignature"> boolean <a href=BidInfo.html#isTopBidFiltered()>isTopBidFiltered</a>()</pre>
+                                        <div class="block"><p><code>true</code> when <a href=../../PrebidMobile.html#setFilterOutUncachedBids(boolean)>setFilterOutUncachedBids</a> removed the bid Prebid Server designated as the winner because it had no successful Prebid Cache entry, and a lower-priced cached bid was promoted in its place. </p><p> The demand is still valid and its targeting is applied, so <a href=BidInfo.html#getResultCode()>getResultCode</a> stays <a href=../../ResultCode.html#SUCCESS>SUCCESS</a>. Use this flag only to track the yield impact of the filtering.</p></div>
 
                                         <dl>
 

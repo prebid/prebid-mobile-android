@@ -274,6 +274,14 @@ public enum <span class="typeNameLabel"><a href=AdFormat.html>AdFormat</a></span
                                         </tr>
                                         
                                         <tr id="i1" class="rowColor">
+                                            <td class="colFirst"><code>static <a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=AdUnitFormat.html>AdUnitFormat</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=AdFormat.html#toSet(java.util.EnumSet)>toSet</a>(<a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=AdFormat.html>AdFormat</a>&gt; adFormats) </code>
+                                            </th>
+                                            <td class="colLast">Maps internal ad formats back to the public <a href=AdUnitFormat.html>AdUnitFormat</a> values.</td>
+                                        </tr>
+                                        
+                                        <tr id="i2" class="altColor">
                                             <td class="colFirst"><code>static <a href=https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html>Array</a>&lt;<a href=AdFormat.html>AdFormat</a>&gt;</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=AdFormat.html#values()>values</a>() </code>
@@ -281,7 +289,7 @@ public enum <span class="typeNameLabel"><a href=AdFormat.html>AdFormat</a></span
                                             <td class="colLast">Returns an array containing the constants of this enum type, in the order they're declared.</td>
                                         </tr>
                                         
-                                        <tr id="i2" class="altColor">
+                                        <tr id="i3" class="rowColor">
                                             <td class="colFirst"><code>static <a href=AdFormat.html>AdFormat</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=AdFormat.html#valueOf(java.lang.String)>valueOf</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> name) </code>
@@ -343,6 +351,29 @@ public enum <span class="typeNameLabel"><a href=AdFormat.html>AdFormat</a></span
                                         <h4>fromSet</h4>
                                         <pre class="methodSignature"> static <a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=AdFormat.html>AdFormat</a>&gt; <a href=AdFormat.html#fromSet(java.util.EnumSet,boolean)>fromSet</a>(<a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=AdUnitFormat.html>AdUnitFormat</a>&gt; adUnitFormats, boolean isInterstitial)</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="toSet(java.util.EnumSet)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>toSet</h4>
+                                        <pre class="methodSignature"> static <a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=AdUnitFormat.html>AdUnitFormat</a>&gt; <a href=AdFormat.html#toSet(java.util.EnumSet)>toSet</a>(<a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=AdFormat.html>AdFormat</a>&gt; adFormats)</pre>
+                                        <div class="block"><p>Maps internal ad formats back to the public <a href=AdUnitFormat.html>AdUnitFormat</a> values. <a href=AdFormat.html#BANNER>BANNER</a> and <a href=AdFormat.html#INTERSTITIAL>INTERSTITIAL</a> both map to <a href=AdUnitFormat.html#BANNER>BANNER</a>, <a href=AdFormat.html#VAST>VAST</a> maps to <a href=AdUnitFormat.html#VIDEO>VIDEO</a>. <a href=AdFormat.html#NATIVE>NATIVE</a> has no public counterpart and is skipped.</p></div>
 
                                         <dl>
 

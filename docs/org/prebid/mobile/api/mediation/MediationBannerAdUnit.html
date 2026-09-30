@@ -276,6 +276,22 @@ extends <a href=MediationBaseAdUnit.html>MediationBaseAdUnit</a>
                                         </tr>
                                         
                                         <tr id="i3" class="rowColor">
+                                            <td class="colFirst"><code>void</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=MediationBannerAdUnit.html#setAdUnitFormats(java.util.EnumSet)>setAdUnitFormats</a>(<a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=../data/AdUnitFormat.html>AdUnitFormat</a>&gt; adUnitFormats) </code>
+                                            </th>
+                                            <td class="colLast">Sets the ad unit formats requested on a single impression.</td>
+                                        </tr>
+                                        
+                                        <tr id="i4" class="altColor">
+                                            <td class="colFirst"><code><a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=../data/AdUnitFormat.html>AdUnitFormat</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=MediationBannerAdUnit.html#getAdUnitFormats()>getAdUnitFormats</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i5" class="rowColor">
                                             <td class="colFirst"><code>final void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=MediationBannerAdUnit.html#setRefreshInterval(int)>setRefreshInterval</a>(int seconds) </code>
@@ -283,7 +299,7 @@ extends <a href=MediationBaseAdUnit.html>MediationBaseAdUnit</a>
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i4" class="altColor">
+                                        <tr id="i6" class="altColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=MediationBannerAdUnit.html#setAdPosition(org.prebid.mobile.rendering.models.AdPosition)>setAdPosition</a>(AdPosition adPosition) </code>
@@ -291,7 +307,7 @@ extends <a href=MediationBaseAdUnit.html>MediationBaseAdUnit</a>
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i5" class="rowColor">
+                                        <tr id="i7" class="rowColor">
                                             <td class="colFirst"><code>AdPosition</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=MediationBannerAdUnit.html#getAdPosition()>getAdPosition</a>() </code>
@@ -299,7 +315,7 @@ extends <a href=MediationBaseAdUnit.html>MediationBaseAdUnit</a>
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i6" class="altColor">
+                                        <tr id="i8" class="altColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=MediationBannerAdUnit.html#resumeRefresh()>resumeRefresh</a>() </code>
@@ -307,7 +323,7 @@ extends <a href=MediationBaseAdUnit.html>MediationBaseAdUnit</a>
                                             <td class="colLast">Resumes auto refresh if it was stopped.</td>
                                         </tr>
                                         
-                                        <tr id="i7" class="rowColor">
+                                        <tr id="i9" class="rowColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=MediationBannerAdUnit.html#stopRefresh()>stopRefresh</a>() </code>
@@ -315,7 +331,7 @@ extends <a href=MediationBaseAdUnit.html>MediationBaseAdUnit</a>
                                             <td class="colLast">Stops automatic refreshing.</td>
                                         </tr>
                                         
-                                        <tr id="i8" class="altColor">
+                                        <tr id="i10" class="altColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=MediationBannerAdUnit.html#onAdFailed()>onAdFailed</a>() </code>
@@ -466,6 +482,52 @@ extends <a href=MediationBaseAdUnit.html>MediationBaseAdUnit</a>
                                     <li class="blockList">
                                         <h4>addAdditionalSizes</h4>
                                         <pre class="methodSignature"> final void <a href=MediationBannerAdUnit.html#addAdditionalSizes(kotlin.Array)>addAdditionalSizes</a>(<a href=https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html>Array</a>&lt;<a href=../../AdSize.html>AdSize</a>&gt; sizes)</pre>
+                                        <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="setAdUnitFormats(java.util.EnumSet)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>setAdUnitFormats</h4>
+                                        <pre class="methodSignature"> void <a href=MediationBannerAdUnit.html#setAdUnitFormats(java.util.EnumSet)>setAdUnitFormats</a>(<a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=../data/AdUnitFormat.html>AdUnitFormat</a>&gt; adUnitFormats)</pre>
+                                        <div class="block"><p>Sets the ad unit formats requested on a single impression. </p><p> Defaults to <a href=../data/AdUnitFormat.html#BANNER>BANNER</a>. Pass <a href=../data/AdUnitFormat.html#VIDEO>VIDEO</a> for an outstream video banner, or both values to let display and video demand compete on the same impression. </p><p> A null or empty set is ignored and the current value is kept. </p><p> Unlike <code>BannerView</code>, a mediation ad unit is not told whether the Prebid bid actually won in the primary ad server, so auto refresh keeps running when video is requested. Call <a href=MediationBannerAdUnit.html#stopRefresh()>stopRefresh</a> and <a href=MediationBannerAdUnit.html#resumeRefresh()>resumeRefresh</a> around video playback if the refresh interval is shorter than the creatives being served.</p></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="getAdUnitFormats()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>getAdUnitFormats</h4>
+                                        <pre class="methodSignature"> <a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=../data/AdUnitFormat.html>AdUnitFormat</a>&gt; <a href=MediationBannerAdUnit.html#getAdUnitFormats()>getAdUnitFormats</a>()</pre>
                                         <div class="block"></div>
 
                                         <dl>

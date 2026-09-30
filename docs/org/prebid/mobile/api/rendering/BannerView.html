@@ -1307,7 +1307,7 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=BannerView.html#setVideoPlacementType(org.prebid.mobile.api.data.VideoPlacementType)>setVideoPlacementType</a>(<a href=../data/VideoPlacementType.html>VideoPlacementType</a> videoPlacement) </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Sets the video placement type and, unless the formats were explicitly configured through <a href=BannerView.html#setAdUnitFormats(java.util.EnumSet)>setAdUnitFormats</a>, switches the ad unit to a video only request.</td>
                                         </tr>
                                         
                                         <tr id="i11" class="rowColor">
@@ -1321,15 +1321,15 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                         <tr id="i12" class="altColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=BannerView.html#setAdPosition(org.prebid.mobile.rendering.models.AdPosition)>setAdPosition</a>(AdPosition adPosition) </code>
+                                            <th class="colSecond" scope="row"><code><a href=BannerView.html#setAdUnitFormats(java.util.EnumSet)>setAdUnitFormats</a>(<a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=../data/AdUnitFormat.html>AdUnitFormat</a>&gt; adUnitFormats) </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Sets the ad unit formats requested on a single impression.</td>
                                         </tr>
                                         
                                         <tr id="i13" class="rowColor">
-                                            <td class="colFirst"><code>AdPosition</code>
+                                            <td class="colFirst"><code><a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=../data/AdUnitFormat.html>AdUnitFormat</a>&gt;</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=BannerView.html#getAdPosition()>getAdPosition</a>() </code>
+                                            <th class="colSecond" scope="row"><code><a href=BannerView.html#getAdUnitFormats()>getAdUnitFormats</a>() </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
@@ -1337,12 +1337,28 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                         <tr id="i14" class="altColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=BannerView.html#setPbAdSlot(java.lang.String)>setPbAdSlot</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> adSlot) </code>
+                                            <th class="colSecond" scope="row"><code><a href=BannerView.html#setAdPosition(org.prebid.mobile.rendering.models.AdPosition)>setAdPosition</a>(AdPosition adPosition) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
                                         <tr id="i15" class="rowColor">
+                                            <td class="colFirst"><code>AdPosition</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=BannerView.html#getAdPosition()>getAdPosition</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i16" class="altColor">
+                                            <td class="colFirst"><code>void</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=BannerView.html#setPbAdSlot(java.lang.String)>setPbAdSlot</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> adSlot) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i17" class="rowColor">
                                             <td class="colFirst"><code><a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=BannerView.html#getPbAdSlot()>getPbAdSlot</a>() </code>
@@ -1350,7 +1366,7 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i16" class="altColor">
+                                        <tr id="i18" class="altColor">
                                             <td class="colFirst"><code><a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=BannerView.html#getImpOrtbConfig()>getImpOrtbConfig</a>() </code>
@@ -1358,7 +1374,7 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i17" class="rowColor">
+                                        <tr id="i19" class="rowColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=BannerView.html#setImpOrtbConfig(java.lang.String)>setImpOrtbConfig</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> ortbConfig) </code>
@@ -1366,7 +1382,7 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                             <td class="colLast">Sets imp level OpenRTB config JSON string that will be merged with the original imp object in the bid request.</td>
                                         </tr>
                                         
-                                        <tr id="i18" class="altColor">
+                                        <tr id="i20" class="altColor">
                                             <td class="colFirst"><code><a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=BannerView.html#getGlobalOrtbConfig()>getGlobalOrtbConfig</a>() </code>
@@ -1374,7 +1390,7 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i19" class="rowColor">
+                                        <tr id="i21" class="rowColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=BannerView.html#setGlobalOrtbConfig(java.lang.String)>setGlobalOrtbConfig</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> ortbConfig) </code>
@@ -1382,7 +1398,7 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                             <td class="colLast">Sets the global OpenRTB configuration string for the ad unit.</td>
                                         </tr>
                                         
-                                        <tr id="i20" class="altColor">
+                                        <tr id="i22" class="altColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=BannerView.html#setBannerVideoListener(org.prebid.mobile.api.rendering.listeners.BannerVideoListener)>setBannerVideoListener</a>(<a href=listeners/BannerVideoListener.html>BannerVideoListener</a> bannerVideoListener) </code>
@@ -1390,7 +1406,7 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i21" class="rowColor">
+                                        <tr id="i23" class="rowColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=BannerView.html#setEventHandler(org.prebid.mobile.rendering.bidding.interfaces.BannerEventHandler)>setEventHandler</a>(BannerEventHandler eventHandler) </code>
@@ -1740,7 +1756,7 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                     <li class="blockList">
                                         <h4>setVideoPlacementType</h4>
                                         <pre class="methodSignature"> void <a href=BannerView.html#setVideoPlacementType(org.prebid.mobile.api.data.VideoPlacementType)>setVideoPlacementType</a>(<a href=../data/VideoPlacementType.html>VideoPlacementType</a> videoPlacement)</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>Sets the video placement type and, unless the formats were explicitly configured through <a href=BannerView.html#setAdUnitFormats(java.util.EnumSet)>setAdUnitFormats</a>, switches the ad unit to a video only request.</p></div>
 
                                         <dl>
 
@@ -1763,6 +1779,52 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                     <li class="blockList">
                                         <h4>getVideoPlacementType</h4>
                                         <pre class="methodSignature"> <a href=../data/VideoPlacementType.html>VideoPlacementType</a> <a href=BannerView.html#getVideoPlacementType()>getVideoPlacementType</a>()</pre>
+                                        <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="setAdUnitFormats(java.util.EnumSet)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>setAdUnitFormats</h4>
+                                        <pre class="methodSignature"> void <a href=BannerView.html#setAdUnitFormats(java.util.EnumSet)>setAdUnitFormats</a>(<a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=../data/AdUnitFormat.html>AdUnitFormat</a>&gt; adUnitFormats)</pre>
+                                        <div class="block"><p>Sets the ad unit formats requested on a single impression. </p><p> Defaults to <a href=../data/AdUnitFormat.html#BANNER>BANNER</a>. Pass <a href=../data/AdUnitFormat.html#VIDEO>VIDEO</a> for an outstream video banner, or both values to let display and video demand compete on the same impression. </p><p> A null or empty set is ignored and the current value is kept. </p><p> Auto refresh is deferred while a video creative is playing and resumes once playback finishes, so a video is never torn down mid playback.</p></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="getAdUnitFormats()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>getAdUnitFormats</h4>
+                                        <pre class="methodSignature"> <a href=https://developer.android.com/reference/kotlin/java/util/EnumSet.html>EnumSet</a>&lt;<a href=../data/AdUnitFormat.html>AdUnitFormat</a>&gt; <a href=BannerView.html#getAdUnitFormats()>getAdUnitFormats</a>()</pre>
                                         <div class="block"></div>
 
                                         <dl>

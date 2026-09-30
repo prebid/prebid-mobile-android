@@ -140,7 +140,7 @@ var pathtoroot = "../../../../../";
 public class <span class="typeNameLabel"><a href=DisplayView.html>DisplayView</a></span>
 extends <a href=https://developer.android.com/reference/kotlin/android/widget/FrameLayout.html>FrameLayout</a>
                     </pre>
-                    <div class="block"><p>Internal view for <a href=BannerView.html>BannerView</a>.</p></div>
+                    <div class="block"><p>Internal view for <a href=BannerView.html>BannerView</a>. </p><p> Renders against its own copy of the ad unit's configuration. The creative pipeline rewrites the configuration it is given, so sharing the ad unit's instance would narrow a multiformat ad unit to the winning creative's format and break the following auctions.</p></div>
 
                     <dl>
 
@@ -1211,6 +1211,14 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                         </tr>
                                         
                                         <tr id="i0" class="altColor">
+                                            <td class="colFirst"><code>boolean</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=DisplayView.html#isVideoPlaying()>isVideoPlaying</a>() </code>
+                                            </th>
+                                            <td class="colLast">True while the rendered creative is a video that is currently playing.</td>
+                                        </tr>
+                                        
+                                        <tr id="i1" class="rowColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=DisplayView.html#destroy()>destroy</a>() </code>
@@ -1218,7 +1226,7 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i1" class="rowColor">
+                                        <tr id="i2" class="altColor">
                                             <td class="colFirst"><code><a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=DisplayView.html#getImpOrtbConfig()>getImpOrtbConfig</a>() </code>
@@ -1226,7 +1234,7 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i2" class="altColor">
+                                        <tr id="i3" class="rowColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=DisplayView.html#setImpOrtbConfig(java.lang.String)>setImpOrtbConfig</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> ortbConfig) </code>
@@ -1234,7 +1242,7 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i3" class="rowColor">
+                                        <tr id="i4" class="altColor">
                                             <td class="colFirst"><code><a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=DisplayView.html#getGlobalOrtbConfig()>getGlobalOrtbConfig</a>() </code>
@@ -1242,7 +1250,7 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i4" class="altColor">
+                                        <tr id="i5" class="rowColor">
                                             <td class="colFirst"><code>void</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=DisplayView.html#setGlobalOrtbConfig(java.lang.String)>setGlobalOrtbConfig</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> ortbConfig) </code>
@@ -1331,6 +1339,29 @@ extends <a href=https://developer.android.com/reference/kotlin/android/widget/Fr
                                 <!--   -->
                             </a>
                                 <h3>Method Detail</h3>
+                                
+                                <a id="isVideoPlaying()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>isVideoPlaying</h4>
+                                        <pre class="methodSignature"> boolean <a href=DisplayView.html#isVideoPlaying()>isVideoPlaying</a>()</pre>
+                                        <div class="block"><p>True while the rendered creative is a video that is currently playing. A creative that does not report playback, such as an HTML creative or a third party plugin renderer, reports false.</p></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
                                 
                                 <a id="destroy()">
                                     <!--   -->

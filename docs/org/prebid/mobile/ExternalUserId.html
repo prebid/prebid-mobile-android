@@ -117,7 +117,7 @@ var pathtoroot = "../../../";
 public class <span class="typeNameLabel"><a href=ExternalUserId.html>ExternalUserId</a></span>
 
                     </pre>
-                    <div class="block"><p>User id object from an external third-party source for additional targeting. <a href=https://github.com/InteractiveAdvertisingBureau/openrtb/blob/main/extensions/2.x_official_extensions/eids.md.html>OpenRTB extended identifiers</a>.</p></div>
+                    <div class="block"><p>User id object from an external third-party source for additional targeting. <a href=https://github.com/InteractiveAdvertisingBureau/openrtb2.x/blob/main/2.6.md#3227---object-eid-.html>OpenRTB 2.6 EID object</a>, <a href=https://github.com/InteractiveAdvertisingBureau/openrtb/blob/main/extensions/2.x_official_extensions/eids.md.html>OpenRTB 2.5 extended identifiers</a>.</p></div>
 
                     <dl>
 
@@ -180,13 +180,13 @@ public class <span class="typeNameLabel"><a href=ExternalUserId.html>ExternalUse
                                         </tr>
                                         
                                         <tr class="altColor">
-                                            <td class="colFirst"><code>public  <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a></code></td>
+                                            <td class="colFirst"><code>public final <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a></code></td>
                                             <th class="colSecond" scope="row"><code><a href=ExternalUserId.html#source>source</a></code></th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
                                         <tr class="rowColor">
-                                            <td class="colFirst"><code>public  <a href=https://developer.android.com/reference/kotlin/java/util/List.html>List</a>&lt;<a href=ExternalUserId.UniqueId.html>ExternalUserId.UniqueId</a>&gt;</code></td>
+                                            <td class="colFirst"><code>public final <a href=https://developer.android.com/reference/kotlin/java/util/List.html>List</a>&lt;<a href=ExternalUserId.UniqueId.html>ExternalUserId.UniqueId</a>&gt;</code></td>
                                             <th class="colSecond" scope="row"><code><a href=ExternalUserId.html#uniqueIds>uniqueIds</a></code></th>
                                             <td class="colLast"></td>
                                         </tr>
@@ -194,6 +194,24 @@ public class <span class="typeNameLabel"><a href=ExternalUserId.html>ExternalUse
                                         <tr class="altColor">
                                             <td class="colFirst"><code>public  <a href=https://developer.android.com/reference/kotlin/java/util/Map.html>Map</a>&lt;<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a>, <a href=https://developer.android.com/reference/kotlin/java/lang/Object.html>Object</a>&gt;</code></td>
                                             <th class="colSecond" scope="row"><code><a href=ExternalUserId.html#ext>ext</a></code></th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr class="rowColor">
+                                            <td class="colFirst"><code>public  <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a></code></td>
+                                            <th class="colSecond" scope="row"><code><a href=ExternalUserId.html#inserter>inserter</a></code></th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr class="altColor">
+                                            <td class="colFirst"><code>public  <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a></code></td>
+                                            <th class="colSecond" scope="row"><code><a href=ExternalUserId.html#matcher>matcher</a></code></th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr class="rowColor">
+                                            <td class="colFirst"><code>public  <a href=https://developer.android.com/reference/kotlin/java/lang/Integer.html>Integer</a></code></td>
+                                            <th class="colSecond" scope="row"><code><a href=ExternalUserId.html#mm>mm</a></code></th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
@@ -309,6 +327,54 @@ public class <span class="typeNameLabel"><a href=ExternalUserId.html>ExternalUse
                                         </tr>
                                         
                                         <tr id="i4" class="altColor">
+                                            <td class="colFirst"><code><a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ExternalUserId.html#getInserter()>getInserter</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i5" class="rowColor">
+                                            <td class="colFirst"><code>void</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ExternalUserId.html#setInserter(java.lang.String)>setInserter</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> inserter) </code>
+                                            </th>
+                                            <td class="colLast">Canonical domain of the entity that added this ID to the request.</td>
+                                        </tr>
+                                        
+                                        <tr id="i6" class="altColor">
+                                            <td class="colFirst"><code><a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ExternalUserId.html#getMatcher()>getMatcher</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i7" class="rowColor">
+                                            <td class="colFirst"><code>void</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ExternalUserId.html#setMatcher(java.lang.String)>setMatcher</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> matcher) </code>
+                                            </th>
+                                            <td class="colLast">Technology that provided the match method in <code>mm</code>.</td>
+                                        </tr>
+                                        
+                                        <tr id="i8" class="altColor">
+                                            <td class="colFirst"><code><a href=https://developer.android.com/reference/kotlin/java/lang/Integer.html>Integer</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ExternalUserId.html#getMm()>getMm</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i9" class="rowColor">
+                                            <td class="colFirst"><code>void</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ExternalUserId.html#setMm(java.lang.Integer)>setMm</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/Integer.html>Integer</a> mm) </code>
+                                            </th>
+                                            <td class="colLast">Match method used by the matcher, from the AdCOM 1.0 list &quot;ID Match Methods&quot;.</td>
+                                        </tr>
+                                        
+                                        <tr id="i10" class="altColor">
                                             <td class="colFirst"><code><a href=https://developer.android.com/reference/kotlin/org/json/JSONObject.html>JSONObject</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=ExternalUserId.html#getJson()>getJson</a>() </code>
@@ -449,6 +515,144 @@ public class <span class="typeNameLabel"><a href=ExternalUserId.html>ExternalUse
                                         <h4>setExt</h4>
                                         <pre class="methodSignature"> void <a href=ExternalUserId.html#setExt(java.util.Map)>setExt</a>(<a href=https://developer.android.com/reference/kotlin/java/util/Map.html>Map</a>&lt;<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a>, <a href=https://developer.android.com/reference/kotlin/java/lang/Object.html>Object</a>&gt; ext)</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="getInserter()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>getInserter</h4>
+                                        <pre class="methodSignature"> <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> <a href=ExternalUserId.html#getInserter()>getInserter</a>()</pre>
+                                        <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="setInserter(java.lang.String)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>setInserter</h4>
+                                        <pre class="methodSignature"> void <a href=ExternalUserId.html#setInserter(java.lang.String)>setInserter</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> inserter)</pre>
+                                        <div class="block"><p>Canonical domain of the entity that added this ID to the request. ORTB: <code>user.eids[].inserter</code></p></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="getMatcher()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>getMatcher</h4>
+                                        <pre class="methodSignature"> <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> <a href=ExternalUserId.html#getMatcher()>getMatcher</a>()</pre>
+                                        <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="setMatcher(java.lang.String)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>setMatcher</h4>
+                                        <pre class="methodSignature"> void <a href=ExternalUserId.html#setMatcher(java.lang.String)>setMatcher</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> matcher)</pre>
+                                        <div class="block"><p>Technology that provided the match method in <code>mm</code>. ORTB: <code>user.eids[].matcher</code></p></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="getMm()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>getMm</h4>
+                                        <pre class="methodSignature"> <a href=https://developer.android.com/reference/kotlin/java/lang/Integer.html>Integer</a> <a href=ExternalUserId.html#getMm()>getMm</a>()</pre>
+                                        <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="setMm(java.lang.Integer)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>setMm</h4>
+                                        <pre class="methodSignature"> void <a href=ExternalUserId.html#setMm(java.lang.Integer)>setMm</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/Integer.html>Integer</a> mm)</pre>
+                                        <div class="block"><p>Match method used by the matcher, from the AdCOM 1.0 list &quot;ID Match Methods&quot;. ORTB: <code>user.eids[].mm</code></p></div>
 
                                         <dl>
 

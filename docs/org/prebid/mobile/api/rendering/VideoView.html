@@ -1284,6 +1284,14 @@ extends BaseAdView
                                             <td class="colLast"></td>
                                         </tr>
                                         
+                                        <tr id="i10" class="altColor">
+                                            <td class="colFirst"><code>boolean</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=VideoView.html#isVideoPlaybackInProgress()>isVideoPlaybackInProgress</a>() </code>
+                                            </th>
+                                            <td class="colLast">True once playback has started and until it finishes, including while the video is paused.</td>
+                                        </tr>
+                                        
                                         </tbody>
                                     </table>
                                 </div>
@@ -1573,12 +1581,35 @@ extends BaseAdView
                                     <!--   -->
                                 </a>
                                 <ul class=
-                                              "blockListLast"
+                                              "blockList"
                                           >
                                     <li class="blockList">
                                         <h4>notifyErrorListeners</h4>
                                         <pre class="methodSignature"> void <a href=VideoView.html#notifyErrorListeners(org.prebid.mobile.api.exceptions.AdException)>notifyErrorListeners</a>(<a href=../exceptions/AdException.html>AdException</a> adException)</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="isVideoPlaybackInProgress()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockListLast"
+                                          >
+                                    <li class="blockList">
+                                        <h4>isVideoPlaybackInProgress</h4>
+                                        <pre class="methodSignature"> boolean <a href=VideoView.html#isVideoPlaybackInProgress()>isVideoPlaybackInProgress</a>()</pre>
+                                        <div class="block"><p>True once playback has started and until it finishes, including while the video is paused. Callers use it to avoid tearing the creative down mid playback. Replaying through &quot;watch again&quot; moves the view back to PLAYBACK_NOT_STARTED and then to PLAYING, so a replay is covered as well.</p></div>
 
                                         <dl>
 
