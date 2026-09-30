@@ -16,6 +16,8 @@
 
 package org.prebid.mobile;
 
+import org.prebid.mobile.api.eid.ExtendedId;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -32,7 +34,7 @@ import java.util.Map;
  * <a href="https://github.com/InteractiveAdvertisingBureau/openrtb2.x/blob/main/2.6.md#3227---object-eid-">OpenRTB 2.6 EID object</a>,
  * <a href="https://github.com/InteractiveAdvertisingBureau/openrtb/blob/main/extensions/2.x_official_extensions/eids.md">OpenRTB 2.5 extended identifiers</a>.
  */
-public class ExternalUserId {
+public class ExternalUserId implements ExtendedId {
 
     private static final String TAG = "ExternalUserId";
 
@@ -50,7 +52,10 @@ public class ExternalUserId {
     private Integer mm;
 
     /**
-     * Default constructor.
+     * Creates an external user ID for a given source.
+     *
+     * @param source    identifier of the ID source (e.g. {@code "criteo.com"}, {@code "pubcid.org"})
+     * @param uniqueIds one or more unique identifiers from this source
      */
     public ExternalUserId(@NonNull String source, @NonNull List<UniqueId> uniqueIds) {
         this.source = source;
@@ -58,6 +63,7 @@ public class ExternalUserId {
     }
 
     @NonNull
+    @Override
     public String getSource() {
         return source;
     }
@@ -113,6 +119,7 @@ public class ExternalUserId {
     }
 
     @Nullable
+    @Override
     public JSONObject getJson() {
         if (source == null || source.isEmpty()) {
             LogUtil.warning(TAG, "Empty source");
@@ -156,6 +163,11 @@ public class ExternalUserId {
         @Nullable
         private Map<String, Object> ext;
 
+        /**
+         * @param id    the user identifier string
+         * @param atype agent type that produced this ID
+         *              (see <a href="https://github.com/InteractiveAdvertisingBureau/openrtb/blob/main/extensions/2.x_official_extensions/eids.md">OpenRTB EIDs spec</a>)
+         */
         public UniqueId(@NonNull String id, @NonNull Integer atype) {
             this.id = id;
             this.atype = atype;
