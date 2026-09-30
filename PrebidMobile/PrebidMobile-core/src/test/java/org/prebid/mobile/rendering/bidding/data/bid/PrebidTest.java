@@ -27,8 +27,10 @@ import org.junit.After;
 import org.junit.Test;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 
 import java.io.IOException;
 
@@ -41,6 +43,7 @@ public class PrebidTest {
         PrebidMobile.setFilterOutUncachedBids(false);
         PrebidMobile.setUseCacheForReportingWithRenderingApi(false);
         PrebidMobile.clearStoredBidResponses();
+        PrebidMobile.unregisterPluginRenderer(testPluginRenderer());
     }
     @Test
     public void whenFromJSONObjectAndJSONObjectPassed_ReturnParsedPrebid()
@@ -89,6 +92,7 @@ public class PrebidTest {
         expected.put("storedrequest", storedRequest.toJSONObject());
         expected.put("cache", cache);
         expected.put("targeting", new JSONObject());
+        expected.put("sdk", getExpectedSdkObject());
 
         AdUnitConfiguration config = new AdUnitConfiguration();
         config.setIsOriginalAdUnit(true);
@@ -147,7 +151,7 @@ public class PrebidTest {
         config.addAdFormat(AdFormat.BANNER);
         config.addAdFormat(AdFormat.VAST);
         assertEquals(
-                "{\"storedrequest\":{\"id\":\"test\"},\"cache\":{\"bids\":{}},\"targeting\":{\"includeformat\":true}}",
+                "{\"storedrequest\":{\"id\":\"test\"},\"cache\":{\"bids\":{}},\"targeting\":{\"includeformat\":true},\"sdk\":{\"usepxratio\":true}}",
                 Prebid.getJsonObjectForBidRequest("test", false, config).toString()
         );
     }
@@ -158,9 +162,31 @@ public class PrebidTest {
         config.setIsOriginalAdUnit(true);
         config.addAdFormat(AdFormat.BANNER);
         assertEquals(
-                "{\"storedrequest\":{\"id\":\"test\"},\"cache\":{\"bids\":{}},\"targeting\":{}}",
+                "{\"storedrequest\":{\"id\":\"test\"},\"cache\":{\"bids\":{}},\"targeting\":{},\"sdk\":{\"usepxratio\":true}}",
                 Prebid.getJsonObjectForBidRequest("test", false, config).toString()
         );
+    }
+
+    @Test
+    public void whenGetJsonObjectForBidRequestAndPluginRendererPresent_SdkContainsRendererAndUsePxRatio()
+    throws JSONException {
+        // given
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setIsOriginalAdUnit(false);
+        PrebidMobile.registerPluginRenderer(testPluginRenderer());
+
+        // when
+        JSONObject prebid = Prebid.getJsonObjectForBidRequest("test", false, config);
+
+        // then
+        JSONObject sdk = prebid.getJSONObject("sdk");
+        JSONArray renderers = sdk.getJSONArray("renderers");
+        JSONObject renderer = renderers.getJSONObject(0);
+
+        assertEquals(true, sdk.getBoolean("usepxratio"));
+        assertEquals(1, renderers.length());
+        assertEquals("TestPluginRenderer", renderer.getString("name"));
+        assertEquals("1.0", renderer.getString("version"));
     }
 
     @Test
@@ -178,6 +204,7 @@ public class PrebidTest {
 
         JSONObject expectedTargeting = new JSONObject();
         expected.put("targeting", expectedTargeting);
+        expected.put("sdk", getExpectedSdkObject());
 
         AdUnitConfiguration config = new AdUnitConfiguration();
         config.setIsOriginalAdUnit(true);
@@ -198,6 +225,7 @@ public class PrebidTest {
         JSONObject expectedTargeting = new JSONObject();
         expectedTargeting.put("includebidderkeys", true);
         expected.put("targeting", expectedTargeting);
+        expected.put("sdk", getExpectedSdkObject());
 
         AdUnitConfiguration config = new AdUnitConfiguration();
         config.setIsOriginalAdUnit(true);
@@ -219,9 +247,20 @@ public class PrebidTest {
         expectedTargeting.put("includewinners", true);
 
         expected.put("targeting", expectedTargeting);
+        expected.put("sdk", getExpectedSdkObject());
 
         AdUnitConfiguration config = new AdUnitConfiguration();
         config.setIsOriginalAdUnit(true);
         assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false, config).toString());
+    }
+
+    private static JSONObject getExpectedSdkObject() throws JSONException {
+        JSONObject expectedSdk = new JSONObject();
+        expectedSdk.put("usepxratio", true);
+        return expectedSdk;
+    }
+
+    private static PrebidMobilePluginRenderer testPluginRenderer() {
+        return FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, null, true, "TestPluginRenderer", "1.0");
     }
 }

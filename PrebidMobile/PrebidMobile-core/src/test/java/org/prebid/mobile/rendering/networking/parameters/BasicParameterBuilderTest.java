@@ -1105,7 +1105,6 @@ public class BasicParameterBuilderTest {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsOriginalAdUnit(true);
         configuration.setAdFormat(AdFormat.BANNER);
-        String unwantedObjectNodeKey = "sdk";
 
         BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
         AdRequestInput adRequestInput = new AdRequestInput();
@@ -1118,7 +1117,8 @@ public class BasicParameterBuilderTest {
 
         // Then
         JSONObject prebidObj = (JSONObject) adRequestInput.getBidRequest().getExt().getMap().get("prebid");
-        assertFalse(prebidObj.has(unwantedObjectNodeKey));
+        JSONObject sdkObj = prebidObj.getJSONObject("sdk");
+        assertTrue(sdkObj.getBoolean("usepxratio"));
         assertEquals(actualBidRequest, bidRequest.getJsonObject().toString());
     }
 
@@ -1128,7 +1128,6 @@ public class BasicParameterBuilderTest {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsOriginalAdUnit(false);
         configuration.setAdFormat(AdFormat.BANNER);
-        String unwantedObjectNodeKey = "sdk";
 
         BasicParameterBuilder builder = new BasicParameterBuilder(configuration, context.getResources(), false);
         AdRequestInput adRequestInput = new AdRequestInput();
@@ -1141,7 +1140,8 @@ public class BasicParameterBuilderTest {
 
         // Then
         JSONObject prebidObj = (JSONObject) adRequestInput.getBidRequest().getExt().getMap().get("prebid");
-        assertFalse(prebidObj.has(unwantedObjectNodeKey));
+        JSONObject sdkObj = prebidObj.getJSONObject("sdk");
+        assertTrue(sdkObj.getBoolean("usepxratio"));
         assertEquals(actualBidRequest, bidRequest.getJsonObject().toString());
     }
 
