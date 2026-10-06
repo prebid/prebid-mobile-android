@@ -33,6 +33,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
+import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.bidding.interfaces.RewardedEventHandler;
 import org.prebid.mobile.rendering.bidding.interfaces.StandaloneRewardedVideoEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
@@ -413,6 +414,44 @@ public class RewardedAdUnitTest {
         verify(mockRewardedAdUnitListener, times(1)).onAdClosed(rewardedAdUnit);
     }
     //endregion ================= EventListener tests
+
+    //region ================= Reward tests
+    @Test
+    public void whenControllerClosesWithoutReportingReward_DoNotGrantReward() {
+        rewardedAdUnit.controllerListener.onInterstitialDisplayed();
+        rewardedAdUnit.controllerListener.onInterstitialClosed();
+
+        verify(mockRewardedAdUnitListener).onAdClosed(rewardedAdUnit);
+        verify(mockRewardedAdUnitListener, never()).onUserEarnedReward(any(), any());
+    }
+
+    @Test
+    public void whenControllerReportsReward_GrantRewardOnce() {
+        rewardedAdUnit.controllerListener.onInterstitialDisplayed();
+        rewardedAdUnit.controllerListener.onUserEarnedReward();
+        rewardedAdUnit.controllerListener.onUserEarnedReward();
+        rewardedAdUnit.controllerListener.onInterstitialClosed();
+
+        InOrder inOrder = inOrder(mockRewardedAdUnitListener);
+        inOrder.verify(mockRewardedAdUnitListener).onUserEarnedReward(eq(rewardedAdUnit), any());
+        inOrder.verify(mockRewardedAdUnitListener).onAdClosed(rewardedAdUnit);
+        verify(mockRewardedAdUnitListener, times(1)).onUserEarnedReward(any(), any());
+    }
+
+    @Test
+    public void whenPrebidRendererClosesBeforeReward_GrantRewardAfterClose() throws AdException {
+        InterstitialController prebidController = new InterstitialController(context, rewardedAdUnit.controllerListener);
+        WhiteBox.setInternalState(prebidController, "config", rewardedAdUnit.config);
+        InterstitialViewListener viewListener =
+                (InterstitialViewListener) WhiteBox.getInternalState(prebidController, "interstitialViewListener");
+
+        viewListener.onAdClosed(mock(InterstitialView.class));
+
+        InOrder inOrder = inOrder(mockRewardedAdUnitListener);
+        inOrder.verify(mockRewardedAdUnitListener).onAdClosed(rewardedAdUnit);
+        inOrder.verify(mockRewardedAdUnitListener).onUserEarnedReward(eq(rewardedAdUnit), any());
+    }
+    //endregion ================= Reward tests
 
     private void receiveBid(Integer expirationTimeSeconds) {
         BidResponse mockBidResponse = mock(BidResponse.class);
