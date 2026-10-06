@@ -33,6 +33,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
+import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.bidding.interfaces.RewardedEventHandler;
 import org.prebid.mobile.rendering.bidding.interfaces.StandaloneRewardedVideoEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
@@ -319,6 +320,24 @@ public class RewardedAdUnitTest {
         verify(mockRewardedEventHandler).destroy();
         verify(mockBidLoader).destroy();
         verify(mockInterstitialController).destroy();
+    }
+
+    @Test
+    public void destroyFromOnAdClosedWithPrebidRenderer_CloseWithoutReward() throws AdException {
+        InterstitialController prebidController = new InterstitialController(context, rewardedAdUnit.controllerListener);
+        WhiteBox.setInternalState(prebidController, "config", rewardedAdUnit.config);
+        WhiteBox.setInternalState(rewardedAdUnit, "interstitialController", prebidController);
+        InterstitialViewListener viewListener =
+                (InterstitialViewListener) WhiteBox.getInternalState(prebidController, "interstitialViewListener");
+        doAnswer(invocation -> {
+            rewardedAdUnit.destroy();
+            return null;
+        }).when(mockRewardedAdUnitListener).onAdClosed(rewardedAdUnit);
+
+        viewListener.onAdClosed(mock(InterstitialView.class));
+
+        verify(mockRewardedAdUnitListener).onAdClosed(rewardedAdUnit);
+        verify(mockRewardedAdUnitListener, never()).onUserEarnedReward(any(), any());
     }
 
     //region ======================= BidRequestListener tests
