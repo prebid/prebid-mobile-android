@@ -61,30 +61,41 @@ public class MediationBannerView extends FrameLayout implements PrebidDestroyabl
             @NonNull Context context,
             @NonNull BidResponse bidResponse
     ) {
+        if (adUnitConfiguration != null
+                && PluginRendererFactory.preferredRendererSendsWinNotice(bidResponse, adUnitConfiguration)) {
+            addBannerAdView(context, bidResponse);
+            return;
+        }
+
         WinNotifier winNotifier = new WinNotifier();
-        winNotifier.notifyWin(bidResponse, () -> {
-            if (adUnitConfiguration == null || displayViewListener == null) {
-                return;
-            }
+        winNotifier.notifyWin(bidResponse, () -> addBannerAdView(context, bidResponse));
+    }
 
-            adView = PluginRendererFactory.createBannerAdView(
-                    context,
-                    displayViewListener,
-                    displayVideoListener,
-                    adUnitConfiguration,
-                    bidResponse
-            );
+    private void addBannerAdView(
+            @NonNull Context context,
+            @NonNull BidResponse bidResponse
+    ) {
+        if (adUnitConfiguration == null || displayViewListener == null) {
+            return;
+        }
 
-            if (adView == null) {
-                displayViewListener.onAdFailed(new AdException(
-                        AdException.INTERNAL_ERROR,
-                        "Renderer returned null banner view"
-                ));
-                return;
-            }
+        adView = PluginRendererFactory.createBannerAdView(
+                context,
+                displayViewListener,
+                displayVideoListener,
+                adUnitConfiguration,
+                bidResponse
+        );
 
-            addView(adView);
-        });
+        if (adView == null) {
+            displayViewListener.onAdFailed(new AdException(
+                    AdException.INTERNAL_ERROR,
+                    "Renderer returned null banner view"
+            ));
+            return;
+        }
+
+        addView(adView);
     }
 
     @Override
