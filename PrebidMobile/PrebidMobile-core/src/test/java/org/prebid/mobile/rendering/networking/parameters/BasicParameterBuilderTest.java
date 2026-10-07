@@ -1004,23 +1004,32 @@ public class BasicParameterBuilderTest {
 
         Video video = imp.getVideo();
         assertNotNull(video);
-        assertNotNull(video.w);
-        assertNotNull(video.h);
-        assertEquals(new Integer(5), video.placement);
+        assertEquals(new Integer(320), video.w);
+        assertEquals(new Integer(480), video.h);
+        // With explicit VideoParameters the rendering path now honors them in
+        // full (same values testOriginalApiVideoParameters_full asserts) instead
+        // of the rendering-API defaults. See the isOriginalAdUnit() ||
+        // getVideoParameters() != null gate in setVideoImpValues().
+        assertEquals(new Integer(2), video.placement);
+        assertEquals(new Integer(4), video.plcmt);
+        assertEquals(new Integer(101), video.minduration);
+        assertEquals(new Integer(102), video.maxduration);
+        assertEquals(new Integer(201), video.minbitrate);
+        assertEquals(new Integer(202), video.maxbitrate);
+        assertEquals(new Integer(0), video.startDelay);
         assertEquals(new Integer(1), video.linearity);
-        assertEquals(new Integer(1), video.playbackend);
+        assertArrayEquals(new String[]{"Mime1", "Mime2"}, video.mimes);
+        assertArrayEquals(new int[]{11, 12}, video.protocols);
+        assertArrayEquals(new int[]{21, 22}, video.api);
+        assertArrayEquals(new int[]{31, 32}, video.playbackmethod);
         assertArrayEquals(new int[]{3}, video.delivery);
-        assertArrayEquals(new String[]{"video/mp4", "video/3gpp", "video/webm", "video/mkv"}, video.mimes);
-        assertArrayEquals(new int[]{2, 5}, video.protocols);
+        assertEquals(Integer.valueOf(1), video.skippable);
 
-        assertNull(video.minduration);
-        assertNull(video.maxduration);
-        assertNull(video.api);
-        assertNull(video.minbitrate);
-        assertNull(video.maxbitrate);
-        assertNull(video.playbackmethod);
+        // The rendering-API defaults (SDK mimes/protocols, playbackend,
+        // interstitial plcmt) are not applied once VideoParameters are set.
+        assertNull(video.playbackend);
+        assertNull(video.battr);
         assertNull(video.pos);
-        assertNull(video.startDelay);
     }
 
     @Test
@@ -1080,23 +1089,30 @@ public class BasicParameterBuilderTest {
 
         Video video = imp.getVideo();
         assertNotNull(video);
-        assertNotNull(video.w);
-        assertNotNull(video.h);
-        assertEquals(new Integer(5), video.placement);
+        assertEquals(new Integer(320), video.w);
+        assertEquals(new Integer(480), video.h);
+        // Explicit VideoParameters are honored in full — see the comment in
+        // testRenderingApiVideoParameters_interstitial_full above.
+        assertEquals(new Integer(2), video.placement);
+        assertEquals(new Integer(4), video.plcmt);
+        assertEquals(new Integer(101), video.minduration);
+        assertEquals(new Integer(102), video.maxduration);
+        assertEquals(new Integer(201), video.minbitrate);
+        assertEquals(new Integer(202), video.maxbitrate);
+        assertEquals(new Integer(0), video.startDelay);
         assertEquals(new Integer(1), video.linearity);
-        assertEquals(new Integer(2), video.playbackend);
+        assertArrayEquals(new String[]{"Mime1", "Mime2"}, video.mimes);
+        assertArrayEquals(new int[]{11, 12}, video.protocols);
+        assertArrayEquals(new int[]{21, 22}, video.api);
+        assertArrayEquals(new int[]{31, 32}, video.playbackmethod);
         assertArrayEquals(new int[]{3}, video.delivery);
-        assertArrayEquals(new String[]{"video/mp4", "video/3gpp", "video/webm", "video/mkv"}, video.mimes);
-        assertArrayEquals(new int[]{2, 5}, video.protocols);
+        assertEquals(Integer.valueOf(1), video.skippable);
 
-        assertNull(video.minduration);
-        assertNull(video.maxduration);
-        assertNull(video.api);
-        assertNull(video.minbitrate);
-        assertNull(video.maxbitrate);
-        assertNull(video.playbackmethod);
+        // The rendering-API defaults (SDK mimes/protocols, playbackend,
+        // interstitial plcmt) are not applied once VideoParameters are set.
+        assertNull(video.playbackend);
+        assertNull(video.battr);
         assertNull(video.pos);
-        assertNull(video.startDelay);
     }
 
     @Test
