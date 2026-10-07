@@ -1,0 +1,9 @@
+{
+  "guard": "manifest-surface",
+  "description": "Merged manifest surface (permissions, features, queries, exported components, uses-library) across every shipped module's src/main manifest. Any change fails until --update-manifest-baseline re-records it in the same PR.",
+  "entries": [
+    "permission:android.permission.ACCESS_NETWORK_STATE",
+    "permission:android.permission.INTERNET",
+    "uses-library:org.apache.http.legacy required=false"
+  ]
+}

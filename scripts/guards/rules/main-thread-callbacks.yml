@@ -1,0 +1,36 @@
+# Guard: ast-rule-ratchet / main-thread-callbacks (count-ratcheted)
+#
+# SDK convention: listener callbacks that publishers implement are
+# delivered on the main thread. This rule flags on*() calls on
+# *[lL]istener-named receivers that are not visibly inside one of the
+# sanctioned dispatch wrappers (TasksManager.executeOnMainThread, a
+# main-Looper Handler post, View.post, runOnUiThread).
+#
+# Existing findings are grandfathered as a count in
+# baselines/ast-rule-counts.json; the count may only shrink. The rule is
+# calibrated against this codebase's idioms, but a growth failure can
+# still be a false positive (e.g. a call already on the main thread by
+# construction) — the justified baseline update is the escape hatch.
+id: main-thread-callbacks
+language: java
+severity: warning
+message: Listener callback not visibly dispatched to the main thread.
+note: Wrap in TasksManager.getInstance().executeOnMainThread(() -> ...), post to a main-Looper Handler, or document why off-main delivery is intended.
+files:
+  - "PrebidMobile/*/src/main/**"
+rule:
+  pattern: $LISTENER.$METHOD($$$)
+  not:
+    inside:
+      stopBy: end
+      any:
+        - pattern: $TM.executeOnMainThread($$$)
+        - pattern: $H.post($$$)
+        - pattern: $H.postDelayed($$$)
+        - pattern: runOnUiThread($$$)
+        - pattern: $A.runOnUiThread($$$)
+constraints:
+  LISTENER:
+    regex: '(^|\.)\w*[lL]istener$'
+  METHOD:
+    regex: '^on[A-Z]'

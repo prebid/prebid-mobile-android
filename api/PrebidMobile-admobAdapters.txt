@@ -1,0 +1,60 @@
+// Signature format: 4.0
+package org.prebid.mobile.admob {
+
+  public class AdMobMediationBannerUtils implements org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate {
+    ctor public AdMobMediationBannerUtils(android.os.Bundle!, com.google.android.gms.ads.AdView!);
+    method public boolean canPerformRefresh();
+    method public void handleKeywordsUpdate(java.util.HashMap<java.lang.String!,java.lang.String!>?);
+    method public void setResponseToLocalExtras(org.prebid.mobile.rendering.bidding.data.bid.BidResponse?);
+  }
+
+  public class AdMobMediationInterstitialUtils implements org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate {
+    ctor public AdMobMediationInterstitialUtils(android.os.Bundle!);
+    method public boolean canPerformRefresh();
+    method public void handleKeywordsUpdate(java.util.HashMap<java.lang.String!,java.lang.String!>?);
+    method public void setResponseToLocalExtras(org.prebid.mobile.rendering.bidding.data.bid.BidResponse?);
+  }
+
+  public class AdMobMediationRewardedUtils implements org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate {
+    ctor public AdMobMediationRewardedUtils(android.os.Bundle!);
+    method public boolean canPerformRefresh();
+    method public void handleKeywordsUpdate(java.util.HashMap<java.lang.String!,java.lang.String!>?);
+    method public void setResponseToLocalExtras(org.prebid.mobile.rendering.bidding.data.bid.BidResponse?);
+  }
+
+  public class PrebidBannerAdapter extends org.prebid.mobile.admob.PrebidBaseAdapter {
+    ctor public PrebidBannerAdapter();
+    field public static final String EXTRA_RESPONSE_ID = "PrebidBannerAdapterExtraId";
+  }
+
+  public abstract class PrebidBaseAdapter extends com.google.android.gms.ads.mediation.Adapter {
+    ctor public PrebidBaseAdapter();
+    method protected String? getResponseIdAndCheckParameters(com.google.android.gms.ads.mediation.MediationAdConfiguration, String, org.prebid.mobile.admob.OnLoadFailure);
+    method public com.google.android.gms.ads.VersionInfo getSDKVersionInfo();
+    method public com.google.android.gms.ads.VersionInfo getVersionInfo();
+    method public void initialize(android.content.Context, com.google.android.gms.ads.mediation.InitializationCompleteCallback, java.util.List<com.google.android.gms.ads.mediation.MediationConfiguration!>);
+    field protected static final String TAG = "PrebidAdapter";
+  }
+
+  public class PrebidInterstitialAdapter extends org.prebid.mobile.admob.PrebidBaseAdapter {
+    ctor public PrebidInterstitialAdapter();
+    field public static final String EXTRA_RESPONSE_ID = "PrebidInterstitialAdapterExtraId";
+  }
+
+  public class PrebidNativeAdMapper extends com.google.android.gms.ads.mediation.UnifiedNativeAdMapper {
+    ctor public PrebidNativeAdMapper(org.prebid.mobile.PrebidNativeAd!);
+    method public void configure(com.google.android.gms.ads.mediation.MediationNativeAdConfiguration!, com.google.android.gms.ads.mediation.MediationAdLoadCallback<com.google.android.gms.ads.mediation.UnifiedNativeAdMapper!,com.google.android.gms.ads.mediation.MediationNativeAdCallback!>!);
+  }
+
+  public class PrebidNativeAdapter extends org.prebid.mobile.admob.PrebidBaseAdapter {
+    ctor public PrebidNativeAdapter();
+    method public void loadNativeAd(com.google.android.gms.ads.mediation.MediationNativeAdConfiguration, com.google.android.gms.ads.mediation.MediationAdLoadCallback<com.google.android.gms.ads.mediation.UnifiedNativeAdMapper!,com.google.android.gms.ads.mediation.MediationNativeAdCallback!>);
+  }
+
+  @Keep public class PrebidRewardedAdapter extends org.prebid.mobile.admob.PrebidBaseAdapter {
+    ctor public PrebidRewardedAdapter();
+    field public static final String EXTRA_RESPONSE_ID = "PrebidRewardedAdapterExtraId";
+  }
+
+}
+

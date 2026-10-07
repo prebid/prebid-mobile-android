@@ -1,0 +1,46 @@
+name: Structural Guards
+
+# Fast, deterministic architecture checks (see docs/guards/README.md).
+# Runs on ubuntu in ~1 minute — intentionally separate from the Gradle
+# build/test pipeline in PR_checks.yml so guard results land early and
+# cheap. The one build-backed guard (public-api-baseline) is skipped here
+# (GUARDS_SKIP_BUILD=1) and runs with the full toolchain in lint.yml.
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  guards:
+    name: Run Structural Guards
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install ast-grep (pinned)
+        # Keep in sync with PINNED_VERSION in
+        # scripts/guards/checks/ast_rule_ratchet.py — version drift changes
+        # finding counts and breaks the ast-rule-ratchet.
+        run: npm install -g @ast-grep/cli@0.45.1
+
+      - name: Run Guard Unit Tests
+        # Self-tests for the guard implementations themselves — a weakened
+        # detector fails here rather than passing silently.
+        run: |
+          python3 -m unittest discover -s scripts/guards/tests
+          python3 -m unittest discover -s scripts/lint/tests
+
+      - name: Run Structural Guards
+        env:
+          GUARDS_SKIP_BUILD: "1"
+        run: ./scripts/guards/run-guards.sh
