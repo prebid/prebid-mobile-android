@@ -433,6 +433,44 @@ public class RewardedAdUnitTest {
     }
     //endregion ================= EventListener tests
 
+    //region ================= Reward tests
+    @Test
+    public void whenControllerClosesWithoutReportingReward_DoNotGrantReward() {
+        rewardedAdUnit.controllerListener.onInterstitialDisplayed();
+        rewardedAdUnit.controllerListener.onInterstitialClosed();
+
+        verify(mockRewardedAdUnitListener).onAdClosed(rewardedAdUnit);
+        verify(mockRewardedAdUnitListener, never()).onUserEarnedReward(any(), any());
+    }
+
+    @Test
+    public void whenControllerReportsReward_GrantRewardOnce() {
+        rewardedAdUnit.controllerListener.onInterstitialDisplayed();
+        rewardedAdUnit.controllerListener.onUserEarnedReward();
+        rewardedAdUnit.controllerListener.onUserEarnedReward();
+        rewardedAdUnit.controllerListener.onInterstitialClosed();
+
+        InOrder inOrder = inOrder(mockRewardedAdUnitListener);
+        inOrder.verify(mockRewardedAdUnitListener).onUserEarnedReward(eq(rewardedAdUnit), any());
+        inOrder.verify(mockRewardedAdUnitListener).onAdClosed(rewardedAdUnit);
+        verify(mockRewardedAdUnitListener, times(1)).onUserEarnedReward(any(), any());
+    }
+
+    @Test
+    public void whenPrebidRendererClosesBeforeReward_GrantRewardAfterClose() throws AdException {
+        InterstitialController prebidController = new InterstitialController(context, rewardedAdUnit.controllerListener);
+        WhiteBox.setInternalState(prebidController, "config", rewardedAdUnit.config);
+        InterstitialViewListener viewListener =
+                (InterstitialViewListener) WhiteBox.getInternalState(prebidController, "interstitialViewListener");
+
+        viewListener.onAdClosed(mock(InterstitialView.class));
+
+        InOrder inOrder = inOrder(mockRewardedAdUnitListener);
+        inOrder.verify(mockRewardedAdUnitListener).onAdClosed(rewardedAdUnit);
+        inOrder.verify(mockRewardedAdUnitListener).onUserEarnedReward(eq(rewardedAdUnit), any());
+    }
+    //endregion ================= Reward tests
+
     private void receiveBid(Integer expirationTimeSeconds) {
         BidResponse mockBidResponse = mock(BidResponse.class);
         when(mockBidResponse.getExpirationTimeSeconds()).thenReturn(expirationTimeSeconds);
