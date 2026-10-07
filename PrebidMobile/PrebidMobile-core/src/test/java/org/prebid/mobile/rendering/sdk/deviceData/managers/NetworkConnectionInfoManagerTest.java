@@ -129,7 +129,16 @@ public class NetworkConnectionInfoManagerTest {
         assertEquals(UserParameters.ConnectionType.OFFLINE, networkConnectionManager.getConnectionType());
     }
 
-    /** An active, internet-capable default network with the permission granted. */
+    @Test
+    @Config(sdk = 29)
+    public void whenNetworkIsNotValidated_reportsOffline() {
+        NetworkCapabilities capabilities = grantedNetworkWithCapabilities();
+        when(capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)).thenReturn(false);
+
+        assertEquals(UserParameters.ConnectionType.OFFLINE, networkConnectionManager.getConnectionType());
+    }
+
+    /** An active, validated, internet-capable default network with the permission granted. */
     private NetworkCapabilities grantedNetworkWithCapabilities() {
         Network network = mock(Network.class);
         NetworkCapabilities capabilities = mock(NetworkCapabilities.class);
@@ -139,6 +148,7 @@ public class NetworkConnectionInfoManagerTest {
         when(connectivityManager.getActiveNetwork()).thenReturn(network);
         when(connectivityManager.getNetworkCapabilities(network)).thenReturn(capabilities);
         when(capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)).thenReturn(true);
+        when(capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)).thenReturn(true);
 
         return capabilities;
     }
