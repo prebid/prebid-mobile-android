@@ -3,7 +3,11 @@ package org.prebid.mobile.rendering.bidding.display;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -18,6 +22,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockedConstruction;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.rendering.PrebidDestroyable;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
@@ -26,6 +31,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
+import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -176,6 +182,57 @@ public class MediationBannerViewTest {
 
         assertEquals(0, bannerView.getChildCount());
         assertTrue(mockBannerView.destroyed);
+    }
+
+    @Test
+    public void constructor_customRenderer_sendsWinNoticeBeforeCreatingView() {
+        PrebidMobilePluginRenderer customRenderer = registerCustomRenderer(new View(context));
+
+        try (MockedConstruction<WinNotifier> winNotifiers = mockConstruction(
+                WinNotifier.class,
+                (winNotifier, constructionContext) -> doAnswer(invocation -> {
+                    ((WinNotifier.WinNotifierListener) invocation.getArgument(1)).onResult();
+                    return null;
+                }).when(winNotifier).notifyWin(any(), any())
+        )) {
+            MediationBannerView bannerView = new MediationBannerView(
+                    context, mockDisplayViewListener, adUnitConfiguration, mockBidResponse
+            );
+
+            assertEquals(1, winNotifiers.constructed().size());
+            verify(winNotifiers.constructed().get(0)).notifyWin(eq(mockBidResponse), any());
+            assertEquals(1, bannerView.getChildCount());
+        }
+        verify(customRenderer).createBannerAdView(any(), any(), any(), any(), any());
+    }
+
+    @Test
+    public void constructor_customRendererSendsWinNoticeItself_skipsWinNotice() {
+        PrebidMobilePluginRenderer customRenderer = registerCustomRenderer(new View(context));
+        doReturn(true).when(customRenderer).sendsWinNotice();
+
+        try (MockedConstruction<WinNotifier> winNotifiers = mockConstruction(WinNotifier.class)) {
+            MediationBannerView bannerView = new MediationBannerView(
+                    context, mockDisplayViewListener, adUnitConfiguration, mockBidResponse
+            );
+
+            assertTrue(winNotifiers.constructed().isEmpty());
+            assertEquals(1, bannerView.getChildCount());
+        }
+        verify(customRenderer).createBannerAdView(any(), any(), any(), any(), any());
+    }
+
+    private PrebidMobilePluginRenderer registerCustomRenderer(View bannerView) {
+        PrebidMobilePluginRenderer customRenderer = spy(
+                FakePrebidMobilePluginRenderer.getFakePrebidRenderer(
+                        null, bannerView, true,
+                        CUSTOM_RENDERER_NAME, CUSTOM_RENDERER_VERSION
+                )
+        );
+        registerPlugin(customRenderer);
+        when(mockBidResponse.getPreferredPluginRendererName()).thenReturn(CUSTOM_RENDERER_NAME);
+        when(mockBidResponse.getPreferredPluginRendererVersion()).thenReturn(CUSTOM_RENDERER_VERSION);
+        return customRenderer;
     }
 
     private void registerPlugin(PrebidMobilePluginRenderer renderer) {

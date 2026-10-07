@@ -77,24 +77,34 @@ public class DisplayView extends FrameLayout {
             @NonNull Context context,
             @NonNull BidResponse bidResponse
     ) {
+        if (PluginRendererFactory.preferredRendererSendsWinNotice(bidResponse, adUnitConfiguration)) {
+            addBannerAdView(context, bidResponse);
+            return;
+        }
+
         WinNotifier winNotifier = new WinNotifier();
-        winNotifier.notifyWin(bidResponse, () -> {
-            adView = PluginRendererFactory.createBannerAdView(
-                    context,
-                    displayViewListener,
-                    displayVideoListener,
-                    adUnitConfiguration,
-                    bidResponse
-            );
-            if (adView != null) {
-                addView(adView);
-            } else {
-                displayViewListener.onAdFailed(new AdException(
-                        AdException.INTERNAL_ERROR,
-                        "Renderer returned null banner view"
-                ));
-            }
-        });
+        winNotifier.notifyWin(bidResponse, () -> addBannerAdView(context, bidResponse));
+    }
+
+    private void addBannerAdView(
+            @NonNull Context context,
+            @NonNull BidResponse bidResponse
+    ) {
+        adView = PluginRendererFactory.createBannerAdView(
+                context,
+                displayViewListener,
+                displayVideoListener,
+                adUnitConfiguration,
+                bidResponse
+        );
+        if (adView != null) {
+            addView(adView);
+        } else {
+            displayViewListener.onAdFailed(new AdException(
+                    AdException.INTERNAL_ERROR,
+                    "Renderer returned null banner view"
+            ));
+        }
     }
 
     /**

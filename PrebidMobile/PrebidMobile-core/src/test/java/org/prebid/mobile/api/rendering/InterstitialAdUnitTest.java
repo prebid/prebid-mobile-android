@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.MockedConstruction;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.PrebidMobile;
@@ -31,6 +32,7 @@ import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -42,6 +44,7 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
+import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
@@ -435,6 +438,32 @@ public class InterstitialAdUnitTest {
 
         verify(spyEventListener, times(1)).onPrebidSdkWin();
         verify(mockInterstitialController, times(1)).loadAd(any(), any());
+    }
+
+    @Test
+    public void onPrebidSdkWin_pluginRendererOwnController_sendsWinNoticeAndLoadsAd() {
+        final BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getWinningBid()).thenReturn(mock(Bid.class));
+        when(mockBidResponse.getPreferredPluginRendererName()).thenReturn("CustomRenderer");
+        when(mockBidResponse.getPreferredPluginRendererVersion()).thenReturn("2.0");
+
+        final PrebidMobileInterstitialControllerInterface pluginController = mock(PrebidMobileInterstitialControllerInterface.class);
+        final PrebidMobilePluginRenderer pluginRenderer = spy(
+                FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, null, true, "CustomRenderer", "2.0")
+        );
+        doReturn(pluginController).when(pluginRenderer).createInterstitialController(any(), any(), any(), any());
+        PrebidMobile.registerPluginRenderer(pluginRenderer);
+        WhiteBox.setInternalState(interstitialAdUnit, "bidResponse", mockBidResponse);
+
+        try (MockedConstruction<WinNotifier> winNotifiers = mockConstruction(WinNotifier.class)) {
+            RenderingTestUtils.getInterstitialEventListener(interstitialAdUnit).onPrebidSdkWin();
+
+            assertEquals(1, winNotifiers.constructed().size());
+            verify(winNotifiers.constructed().get(0)).notifyWin(eq(mockBidResponse), any());
+        } finally {
+            PrebidMobilePluginRegister.getInstance().unregisterPlugin(pluginRenderer);
+        }
+        verify(pluginController).loadAd(any(), eq(mockBidResponse));
     }
 
     @Test

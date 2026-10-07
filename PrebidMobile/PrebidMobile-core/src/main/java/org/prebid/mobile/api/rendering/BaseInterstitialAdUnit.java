@@ -27,11 +27,10 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
-import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.display.PluginRendererFactory;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
@@ -247,10 +246,13 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     protected void loadPrebidAd() {
-        PrebidMobilePluginRenderer plugin = PrebidMobilePluginRegister.getInstance().getPluginForPreferredRenderer(bidResponse);
-        if (plugin != null) {
-            interstitialController = plugin.createInterstitialController(getContext(), controllerListener, config, bidResponse);
-        }
+        // The factory sends the win notice when a plugin renderer's controller draws the ad.
+        interstitialController = PluginRendererFactory.createInterstitialController(
+                getContext(),
+                controllerListener,
+                config,
+                bidResponse
+        );
         if (interstitialController == null) {
             notifyErrorListener(new AdException(
                     AdException.INTERNAL_ERROR,
