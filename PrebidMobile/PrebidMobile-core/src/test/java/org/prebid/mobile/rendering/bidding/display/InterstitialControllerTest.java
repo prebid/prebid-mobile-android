@@ -96,6 +96,20 @@ public class InterstitialControllerTest {
         verify(mockInterstitialView, times(1)).destroy();
     }
 
+    @Test
+    public void destroyFromCloseCallback_DoNotNotifyUserEarnedReward() {
+        WhiteBox.setInternalState(interstitialController, "config", new AdUnitConfiguration());
+        doAnswer(invocation -> {
+            interstitialController.destroy();
+            return null;
+        }).when(mockListener).onInterstitialClosed();
+
+        getInterstitialViewListener().onAdClosed(mock(InterstitialView.class));
+
+        verify(mockListener).onInterstitialClosed();
+        verify(mockListener, never()).onUserEarnedReward();
+    }
+
     //region ===================== InterstitialViewListener tests
     @Test
     public void adDidLoad_NotifyInterstitialReadyForDisplay() {
