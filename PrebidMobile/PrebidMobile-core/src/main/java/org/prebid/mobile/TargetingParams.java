@@ -20,15 +20,15 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.prebid.mobile.api.eid.ExtendedId;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
-import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.UserConsentUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -51,8 +51,7 @@ public class TargetingParams {
     private static String openRtbConfig;
     private static Pair<Float, Float> userLatLon;
     private static Ext userExt;
-    private static Boolean sendSharedId = false;
-    
+
     /**
      * Location decimal precision for geo-targeting. Default is null (no precision limit).
      * Valid values: null (no limit), 0-6 decimal places
@@ -61,10 +60,10 @@ public class TargetingParams {
     private static Integer locationDecimalPrecision = null;
 
 
-    private static final Map<String, ExternalUserId> externalUserIdMap = new HashMap<>();
     private static final Set<String> accessControlList = new HashSet<>();
     private static final Set<String> userKeywordsSet = new HashSet<>();
     private static final Map<String, Set<String>> extDataDictionary = new HashMap<>();
+    private static final ExtendedIdRegistry extendedIdRegistry = ExtendedIdRegistry.getInstance();
 
     private TargetingParams() {
     }
@@ -95,7 +94,7 @@ public class TargetingParams {
     /**
      * Sets the decimal precision for location coordinates (latitude/longitude) in geo-targeting.
      * This helps control the precision of location data sent in ad requests for privacy purposes.
-     * 
+     *
      * <p>Precision levels and their practical meaning:</p>
      * <ul>
      *   <li>null = No precision limit (default, maintains current behavior)</li>
@@ -107,9 +106,9 @@ public class TargetingParams {
      *   <li>5 = ~1.1 m precision</li>
      *   <li>6 = ~0.11 m precision (maximum recommended)</li>
      * </ul>
-     * 
+     *
      * <p>Values outside the 0-6 range will be clamped to valid range.</p>
-     * 
+     *
      * @param precision Number of decimal places to keep, or null for no limit
      */
     public static void setLocationDecimalPrecision(@Nullable Integer precision) {
@@ -118,7 +117,7 @@ public class TargetingParams {
             precision = Math.max(Math.min(precision, 6), 0);
         }
         TargetingParams.locationDecimalPrecision = precision;
-        
+
         // Log precision changes for debugging
         if (originalPrecision != null && !originalPrecision.equals(precision)) {
             LogUtil.debug("Location precision clamped from " + originalPrecision + " to " + precision);
@@ -127,7 +126,7 @@ public class TargetingParams {
 
     /**
      * Gets the current decimal precision setting for location coordinates.
-     * 
+     *
      * @return Current precision setting (null for no limit, 0-6 for decimal places)
      */
     @Nullable
@@ -178,53 +177,113 @@ public class TargetingParams {
     /* -------------------- Ids -------------------- */
 
     /**
-     * Sets external user ids. Set null for clearing.
-     * See: {@link ExternalUserId}.
+     * Adds or refreshes a single static external user ID, keyed by its {@code source}.
+     * Only the entry with the same {@code source} is replaced; IDs from other sources stay in place,
+     * so independent integrations can each manage their own EID without overwriting the others.
+     * The backing store is thread-safe.
+     * <p>
+     * Prefer this over {@link #setExternalUserIds(List)}, which replaces the whole list.
+     * For dynamic or asynchronous IDs (e.g. an identity vendor SDK that refreshes tokens),
+     * implement {@link org.prebid.mobile.api.eid.ExtendedIdProvider} and register it via
+     * {@link PrebidMobile#registerExtendedIdProvider}; identity vendors may supply ready-made
+     * providers that can be registered directly without a custom implementation.
+     *
+     * @see #removeExternalUserId(String)
+     * @see #clearExternalUserIds()
      */
-    public static void setExternalUserIds(@Nullable List<ExternalUserId> userIds) {
-        externalUserIdMap.clear();
-
-        if (userIds == null) return;
-
-        for (ExternalUserId userId : userIds) {
-            if (userId == null) continue;
-            externalUserIdMap.put(userId.getSource(), userId);
-        }
+    public static void addExternalUserId(@NonNull ExternalUserId userId) {
+        extendedIdRegistry.addStaticExternalUserId(userId);
     }
 
     /**
-     * Returns external user ids.
+     * Replaces all static external user IDs with the provided list. Pass {@code null} to clear.
+     *
+     * @deprecated Replaces the whole list, so it can overwrite IDs set by other integrations.
+     *             Prefer {@link #addExternalUserId(ExternalUserId)} to add or refresh a single ID
+     *             by source, {@link #removeExternalUserId(String)} to remove one, or
+     *             {@link #clearExternalUserIds()} to remove all.
      */
+    @Deprecated
+    public static void setExternalUserIds(@Nullable List<ExternalUserId> userIds) {
+        extendedIdRegistry.setStaticExternalUserIds(userIds);
+    }
+
+    /**
+     * Removes the static external user ID with the given {@code source}. No-op if none matches.
+     * Does not affect IDs from other sources or from registered providers.
+     */
+    public static void removeExternalUserId(@NonNull String source) {
+        extendedIdRegistry.removeStaticExternalUserId(source);
+    }
+
+    /**
+     * Removes all static external user IDs. Does not affect provider-supplied EIDs.
+     */
+    public static void clearExternalUserIds() {
+        extendedIdRegistry.clearStaticExternalUserIds();
+    }
+
+    /**
+     * Returns only the static external user ids set via {@link #setExternalUserIds(List)} or
+     * {@link #addExternalUserId(ExternalUserId)}.
+     * <p>
+     * Does not include EIDs from registered providers (e.g. SharedId or identity vendor providers).
+     *
+     * @deprecated Use {@link #getExtendedIds()} to read all EIDs, including provider-supplied ones.
+     */
+    @Deprecated
     public static List<ExternalUserId> getExternalUserIds() {
-        return new ArrayList<>(externalUserIdMap.values());
+        return extendedIdRegistry.getStaticExternalUserIds();
+    }
+
+    /**
+     * Returns all external user IDs that will be sent in auction requests: static IDs plus IDs from
+     * every registered {@link org.prebid.mobile.api.eid.ExtendedIdProvider}, in no particular order.
+     * Every ID from every source is included; the server resolves any duplicates.
+     */
+    @NonNull
+    public static List<ExtendedId> getExtendedIds() {
+        return extendedIdRegistry.getAllExtendedIds();
     }
 
     /**
      * When true, the SharedID external user id is added to outgoing auction requests.
      * App developers are encouraged to consult with their legal team before enabling this feature.
-     *
+     * <p>
      * See `TargetingParams.sharedId` for details.
      *
      * @param sendSharedId the Boolean flag to determine if the SharedID external user id
      *                     is to be added to outgoing auction requests
      */
     public static void setSendSharedId(Boolean sendSharedId) {
-        TargetingParams.sendSharedId = sendSharedId;
+        SharedId sharedIdProvider = SharedId.getInstance();
+        if (Boolean.TRUE.equals(sendSharedId)) {
+            extendedIdRegistry.addProvider(sharedIdProvider);
+        } else if (extendedIdRegistry.hasProvider(sharedIdProvider)) {
+            extendedIdRegistry.removeProvider(sharedIdProvider);
+        }
     }
 
-    public static Boolean getSendSharedId() { return sendSharedId; }
+    public static Boolean getSendSharedId() {
+        return extendedIdRegistry.hasProvider(SharedId.getInstance());
+    }
 
     /**
-     * A randomly generated Prebid-owned first-party identifier
-     *
+     * A randomly generated Prebid-owned first-party identifier.
+     * <p>
      * Unless reset, SharedID remains consistent throughout the current app session. The same id may also persist
      * indefinitely across multiple app sessions if local storage access is allowed. SharedID values are NOT consistent
      * across different apps on the same device.
+     * <p>
+     * Note: SharedId is only sent with auction requests if {@link #setSendSharedId(Boolean)} is set to true.
      *
-     * Note: SharedId is only sent with auction requests if `TargetingParams.sendSharedId` is set to true.
+     * @deprecated Use {@link #getExtendedIds()} to retrieve all EIDs including SharedId when
+     *             {@link #setSendSharedId(Boolean)} is enabled, or
+     *             {@code SharedId.getInstance().getIdentifier()} to get the SharedId value directly.
      */
+    @Deprecated
     public static ExternalUserId getSharedId() {
-        return SharedId.getIdentifier();
+        return SharedId.getInstance().getIdentifier();
     }
 
     /**
@@ -232,7 +291,7 @@ public class TargetingParams {
      * return a new randomized value.
      */
     public static void resetSharedId() {
-        SharedId.resetIdentifier();
+        SharedId.getInstance().resetIdentifier();
     }
 
     /* -------------------- Context and application data -------------------- */
@@ -519,6 +578,7 @@ public class TargetingParams {
     /**
      * Sets global OpenRTB JSON string for merging with the original request.
      * Expected format: {@code "{"new_field": "value"}"}.
+     *
      * @param config JSON OpenRTB string.
      */
     public static void setGlobalOrtbConfig(String config) {
