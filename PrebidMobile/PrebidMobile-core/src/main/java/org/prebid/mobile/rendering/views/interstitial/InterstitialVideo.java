@@ -438,8 +438,11 @@ public class InterstitialVideo extends AdBaseDialog {
                 adViewContainer.removeView(lytCountDownCircle);
 
                 if (isRewarded && !hasEndCard) {
+                    // Only a VAST with a ClickThrough has a learn-more view.
                     View learnMore = adViewContainer.findViewById(R.id.tv_learn_more);
-                    learnMore.setVisibility(View.VISIBLE);
+                    if (learnMore != null) {
+                        learnMore.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         };
