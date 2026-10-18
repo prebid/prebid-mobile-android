@@ -1,6 +1,7 @@
 package com.applovin.mediation.adapters.prebid.utils;
 
 import android.util.Log;
+import android.view.View;
 import androidx.annotation.Nullable;
 import com.applovin.mediation.adapters.PrebidMaxMediationAdapter;
 import com.applovin.mediation.ads.MaxAdView;
@@ -57,5 +58,11 @@ public class MaxMediationBannerUtils implements PrebidMediationDelegate {
 
     @Override
     public void handleKeywordsUpdate(@Nullable HashMap<String, String> keywords) {}
+
+    @Nullable
+    @Override
+    public View getAdView() {
+        return adViewReference.get();
+    }
 
 }
