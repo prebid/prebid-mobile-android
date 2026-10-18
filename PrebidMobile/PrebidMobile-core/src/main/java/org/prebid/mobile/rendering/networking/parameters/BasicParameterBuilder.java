@@ -223,118 +223,149 @@ public class BasicParameterBuilder extends ParameterBuilder {
             video.pos = adConfiguration.getAdPositionValue();
         }
 
-        if (adConfiguration.isOriginalAdUnit()) {
-            VideoParameters videoParameters = adConfiguration.getVideoParameters();
-            if (videoParameters != null) {
-                video.minduration = videoParameters.getMinDuration();
-                video.maxduration = videoParameters.getMaxDuration();
+        if (!adConfiguration.isOriginalAdUnit()) {
+            setRenderingApiVideoDefaults(video);
+        }
 
-                video.minbitrate = videoParameters.getMinBitrate();
-                video.maxbitrate = videoParameters.getMaxBitrate();
-                video.linearity = videoParameters.getLinearity();
-                if (videoParameters.getPlacement() != null) {
-                    video.placement = videoParameters.getPlacement().getValue();
-                } else if (adConfiguration.isPlacementTypeValid()){
-                    video.placement = adConfiguration.getPlacementTypeValue();
-                }
-                if (videoParameters.getPlcmt() != null) {
-                    video.plcmt = videoParameters.getPlcmt().getValue();
-                }
+        // Applied on top of the rendering API defaults, so a publisher's VideoParameters win
+        // over them, the way PBMPrebidParameterBuilder does it on iOS.
+        applyVideoParameters(video);
 
-                if (videoParameters.getStartDelay() != null) {
-                    video.startDelay = videoParameters.getStartDelay().getValue();
-                }
-
-                List<Signals.PlaybackMethod> playbackObjects = videoParameters.getPlaybackMethod();
-                if (playbackObjects != null) {
-                    int size = playbackObjects.size();
-                    int[] playbackMethods = new int[size];
-
-                    for (int i = 0; i < size; i++) {
-                        playbackMethods[i] = playbackObjects.get(i).getValue();
-                    }
-
-                    video.playbackmethod = playbackMethods;
-                }
-
-                List<Signals.Api> apiObjects = videoParameters.getApi();
-                if (apiObjects != null && apiObjects.size() > 0) {
-                    int size = apiObjects.size();
-                    int[] apiArray = new int[size];
-                    for (int i = 0; i < size; i++) {
-                        apiArray[i] = apiObjects.get(i).getValue();
-                    }
-                    video.api = apiArray;
-                }
-
-                List<String> mimesObjects = videoParameters.getMimes();
-                if (mimesObjects != null && mimesObjects.size() > 0) {
-                    int size = mimesObjects.size();
-                    String[] mimesArray = new String[size];
-                    for (int i = 0; i < size; i++) {
-                        mimesArray[i] = mimesObjects.get(i);
-                    }
-                    video.mimes = mimesArray;
-                }
-
-                List<Signals.Protocols> protocolsObjects = videoParameters.getProtocols();
-                if (protocolsObjects != null && protocolsObjects.size() > 0) {
-                    int size = protocolsObjects.size();
-                    int[] protocolsArray = new int[size];
-                    for (int i = 0; i < size; i++) {
-                        protocolsArray[i] = protocolsObjects.get(i).getValue();
-                    }
-                    video.protocols = protocolsArray;
-                }
-
-                List<Signals.CreativeAttribute> battrObjects = videoParameters.getBattr();
-                if (battrObjects != null && battrObjects.size() > 0) {
-                    int size = battrObjects.size();
-                    int[] battrsArray = new int[size];
-                    for (int i = 0; i < size; i++) {
-                        battrsArray[i] = battrObjects.get(i).getValue();
-                    }
-                    video.battr = battrsArray;
-                }
-
-                Boolean skippable = videoParameters.getSkippable();
-                if (skippable != null) {
-                    video.skippable = skippable ? 1 : 0;
-                }
-            }
-            if (video.placement == null && adConfiguration.isPlacementTypeValid()) {
-                video.placement = adConfiguration.getPlacementTypeValue();
-            }
-        } else {
-            //Common values for all video reqs
-            video.mimes = SUPPORTED_VIDEO_MIME_TYPES;
-            video.protocols = SUPPORTED_VIDEO_PROTOCOLS;
-            video.linearity = VIDEO_LINEARITY_LINEAR;
-
-            //Interstitial video specific values
-            if (adConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
-                video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Video Completion or when Terminated by User
-            } else {
-                //Non-interstitial: could be 2 or 3, depending on playback end event
-                //2 - On Leaving Viewport or when Terminated by User
-                //3 - On Leaving Viewport Continues as a Floating/Slider Unit until Video Completion or when Terminated by User
-                video.playbackend = 2;
-            }
-
-            if (adConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
-                video.plcmt = Signals.Plcmt.Interstitial.getValue();
-            }
-            if (!adConfiguration.isPlacementTypeValid()) {
-                video.placement = PlacementType.INTERSTITIAL.getValue();
-            } else {
-                video.placement = adConfiguration.getPlacementTypeValue();
-            }
+        if (video.placement == null && adConfiguration.isPlacementTypeValid()) {
+            video.placement = adConfiguration.getPlacementTypeValue();
         }
 
         setVideoDimensions(video);
         video.delivery = new int[]{VIDEO_DELIVERY_DOWNLOAD};
 
         imp.video = video;
+    }
+
+    /**
+     * Values the rendering API is able to play back itself. They are defaults: anything the
+     * publisher set through {@link VideoParameters} overrides them.
+     */
+    private void setRenderingApiVideoDefaults(@NonNull Video video) {
+        //Common values for all video reqs
+        video.mimes = SUPPORTED_VIDEO_MIME_TYPES;
+        video.protocols = SUPPORTED_VIDEO_PROTOCOLS;
+        video.linearity = VIDEO_LINEARITY_LINEAR;
+
+        //Interstitial video specific values
+        if (adConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
+            video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Video Completion or when Terminated by User
+        } else {
+            //Non-interstitial: could be 2 or 3, depending on playback end event
+            //2 - On Leaving Viewport or when Terminated by User
+            //3 - On Leaving Viewport Continues as a Floating/Slider Unit until Video Completion or when Terminated by User
+            video.playbackend = 2;
+        }
+
+        if (adConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
+            video.plcmt = Signals.Plcmt.Interstitial.getValue();
+        }
+        if (!adConfiguration.isPlacementTypeValid()) {
+            video.placement = PlacementType.INTERSTITIAL.getValue();
+        } else {
+            video.placement = adConfiguration.getPlacementTypeValue();
+        }
+    }
+
+    /**
+     * Copies whatever the publisher set on {@link VideoParameters} onto the video imp. A field
+     * that was not set leaves the imp untouched, so this can run over the rendering API defaults.
+     */
+    private void applyVideoParameters(@NonNull Video video) {
+        VideoParameters videoParameters = adConfiguration.getVideoParameters();
+        if (videoParameters == null) {
+            return;
+        }
+
+        if (videoParameters.getMinDuration() != null) {
+            video.minduration = videoParameters.getMinDuration();
+        }
+        if (videoParameters.getMaxDuration() != null) {
+            video.maxduration = videoParameters.getMaxDuration();
+        }
+
+        if (videoParameters.getMinBitrate() != null) {
+            video.minbitrate = videoParameters.getMinBitrate();
+        }
+        if (videoParameters.getMaxBitrate() != null) {
+            video.maxbitrate = videoParameters.getMaxBitrate();
+        }
+
+        if (videoParameters.getLinearity() != null) {
+            video.linearity = videoParameters.getLinearity();
+        }
+
+        if (videoParameters.getPlacement() != null) {
+            video.placement = videoParameters.getPlacement().getValue();
+        }
+        if (videoParameters.getPlcmt() != null) {
+            video.plcmt = videoParameters.getPlcmt().getValue();
+        }
+
+        if (videoParameters.getStartDelay() != null) {
+            video.startDelay = videoParameters.getStartDelay().getValue();
+        }
+
+        List<Signals.PlaybackMethod> playbackObjects = videoParameters.getPlaybackMethod();
+        if (playbackObjects != null) {
+            int size = playbackObjects.size();
+            int[] playbackMethods = new int[size];
+
+            for (int i = 0; i < size; i++) {
+                playbackMethods[i] = playbackObjects.get(i).getValue();
+            }
+
+            video.playbackmethod = playbackMethods;
+        }
+
+        List<Signals.Api> apiObjects = videoParameters.getApi();
+        if (apiObjects != null && apiObjects.size() > 0) {
+            int size = apiObjects.size();
+            int[] apiArray = new int[size];
+            for (int i = 0; i < size; i++) {
+                apiArray[i] = apiObjects.get(i).getValue();
+            }
+            video.api = apiArray;
+        }
+
+        List<String> mimesObjects = videoParameters.getMimes();
+        if (mimesObjects != null && mimesObjects.size() > 0) {
+            int size = mimesObjects.size();
+            String[] mimesArray = new String[size];
+            for (int i = 0; i < size; i++) {
+                mimesArray[i] = mimesObjects.get(i);
+            }
+            video.mimes = mimesArray;
+        }
+
+        List<Signals.Protocols> protocolsObjects = videoParameters.getProtocols();
+        if (protocolsObjects != null && protocolsObjects.size() > 0) {
+            int size = protocolsObjects.size();
+            int[] protocolsArray = new int[size];
+            for (int i = 0; i < size; i++) {
+                protocolsArray[i] = protocolsObjects.get(i).getValue();
+            }
+            video.protocols = protocolsArray;
+        }
+
+        List<Signals.CreativeAttribute> battrObjects = videoParameters.getBattr();
+        if (battrObjects != null && battrObjects.size() > 0) {
+            int size = battrObjects.size();
+            int[] battrsArray = new int[size];
+            for (int i = 0; i < size; i++) {
+                battrsArray[i] = battrObjects.get(i).getValue();
+            }
+            video.battr = battrsArray;
+        }
+
+        Boolean skippable = videoParameters.getSkippable();
+        if (skippable != null) {
+            video.skippable = skippable ? 1 : 0;
+        }
     }
 
     private void setVideoDimensions(@NonNull Video video) {
