@@ -98,17 +98,17 @@ public class MediationBannerAdUnitTest {
     }
 
     @Test
-    public void whenStopRefresh_BidLoaderCancelRefresh() {
+    public void whenStopRefresh_BidLoaderStopRefresh() {
         mediationBannerAdUnit.stopRefresh();
 
-        verify(mockBidLoader, times(1)).cancelRefresh();
+        verify(mockBidLoader, times(1)).stopRefresh();
     }
 
     @Test
-    public void whenResumeRefresh_BidLoaderSetupsNewTimer() {
+    public void whenResumeRefresh_BidLoaderResumeRefresh() {
         mediationBannerAdUnit.resumeRefresh();
 
-        verify(mockBidLoader, times(1)).setupRefreshTimer();
+        verify(mockBidLoader, times(1)).resumeRefresh();
     }
 
     @Test
