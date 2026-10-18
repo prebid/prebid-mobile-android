@@ -1,0 +1,7 @@
+{
+  "guard": "skiplist-ratchet",
+  "description": "Enumerated skipped-test identifiers (Class#method; bare Class for a class-level @Ignore; gradle:<pattern> for Gradle unit-test excludes). Shrink-only: never add a skip to make CI pass; update with --update-skiplist-baseline when un-skipping.",
+  "entries": [
+    "RefreshTimerTaskTest#testIfRefreshTimerWorkedWhenIntervalNotExpired"
+  ]
+}

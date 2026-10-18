@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Android Lint rule set for the diff-scoped lint gate (scripts/lint/run-lint.sh).
+
+  Everything is ignored by default and checks are enabled EXPLICITLY, so an
+  AGP/Lint version bump can never silently introduce or drop a check — the
+  same determinism requirement that pins ast-grep for the guards.
+
+  One owner per rule: checks a structural guard already enforces are left
+  ignored here, so two systems can never report disagreeing counts —
+    StaticFieldLeak        → guard: ast-rule-ratchet / static-context-leak
+    UseValueOf/StopShip    → guard: fixme-ratchet owns marker policy
+  See docs/lint/README.md.
+-->
+<lint>
+    <issue id="all" severity="ignore" />
+
+    <!-- Correctness: API levels -->
+    <issue id="NewApi" severity="error" />
+    <issue id="InlinedApi" severity="error" />
+    <issue id="ObsoleteSdkInt" severity="warning" />
+
+    <!-- Correctness: resources and lifecycle -->
+    <issue id="Recycle" severity="error" />
+    <issue id="MissingSuperCall" severity="error" />
+    <issue id="WrongThread" severity="error" />
+    <issue id="WrongConstant" severity="error" />
+    <issue id="CheckResult" severity="error" />
+    <issue id="ReferenceType" severity="error" />
+    <issue id="ResourceType" severity="error" />
+
+    <!-- Leaks (StaticFieldLeak deliberately absent: guard-owned) -->
+    <issue id="HandlerLeak" severity="error" />
+    <issue id="Wakelock" severity="error" />
+    <issue id="WakelockTimeout" severity="warning" />
+
+    <!-- Security: an ad SDK renders untrusted content in publishers' apps -->
+    <issue id="SetJavaScriptEnabled" severity="warning" />
+    <issue id="JavascriptInterface" severity="error" />
+    <issue id="AddJavascriptInterface" severity="error" />
+    <issue id="SecureRandom" severity="error" />
+    <issue id="TrustAllX509TrustManager" severity="error" />
+    <issue id="BadHostnameVerifier" severity="error" />
+    <issue id="SSLCertificateSocketFactoryGetInsecure" severity="error" />
+    <issue id="UnsafeDynamicallyLoadedCode" severity="error" />
+    <issue id="HardcodedDebugMode" severity="error" />
+
+    <!-- Internationalization traps in shared library code -->
+    <issue id="DefaultLocale" severity="error" />
+    <issue id="SimpleDateFormat" severity="warning" />
+
+    <!-- Threading / synchronization -->
+    <issue id="ApplySharedPref" severity="warning" />
+    <issue id="CommitPrefEdits" severity="warning" />
+
+    <!-- Manifest hygiene (the manifest-surface guard freezes the merged
+         surface; these catch per-file mistakes before they reach it) -->
+    <issue id="ExportedReceiver" severity="error" />
+    <issue id="ExportedService" severity="error" />
+    <issue id="ExportedContentProvider" severity="error" />
+</lint>

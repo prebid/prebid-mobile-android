@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#
+# Opt-in pre-push hook: runs the structural guards before every push.
+#
+# Enable (one-time, per clone):
+#   git config core.hooksPath .githooks
+#
+# The fast-tier guards take seconds and are the same checks CI runs on
+# every PR (.github/workflows/guards.yml) — failing here just fails
+# faster. The build-backed public-api-baseline guard is skipped for speed
+# (GUARDS_SKIP_BUILD=1); CI's lint workflow remains authoritative for it,
+# as it is for any guard whose tool is missing locally (ast-grep).
+#
+# Bypass for a genuine emergency (CI will still catch it):
+#   git push --no-verify
+
+set -u
+ROOT="$(git rev-parse --show-toplevel)"
+
+echo "pre-push: running structural guards (bypass with --no-verify)…"
+if ! GUARDS_SKIP_BUILD=1 "$ROOT/scripts/guards/run-guards.sh"; then
+    echo ""
+    echo "pre-push: push blocked — a structural guard failed."
+    echo "See docs/guards/README.md for how to fix each guard."
+    exit 1
+fi
+exit 0

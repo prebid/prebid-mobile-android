@@ -1,0 +1,19 @@
+# Guard: ast-rule-ratchet / empty-catch (count-ratcheted in run-guards.sh)
+#
+# A swallowed exception turns unexpected state into silent misbehavior a
+# publisher sees as a broken ad with no log line. Catch blocks must do
+# SOMETHING: log through LogUtil, recover, or rethrow. Existing findings
+# are grandfathered as a count in baselines/ast-rule-counts.json; the
+# count may only shrink.
+id: empty-catch
+language: java
+severity: warning
+message: Empty catch block swallows the exception silently.
+note: Log through LogUtil (at least debug level), recover, or rethrow — silence is not handling.
+files:
+  - "PrebidMobile/*/src/main/**"
+rule:
+  kind: catch_clause
+  has:
+    kind: block
+    regex: '^\{\s*\}$'

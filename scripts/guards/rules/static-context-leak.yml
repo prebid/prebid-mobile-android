@@ -1,0 +1,24 @@
+# Guard: ast-rule-ratchet / static-context-leak (count-ratcheted)
+#
+# A static field holding a Context, Activity, View, or WebView outlives
+# the component that created it — the classic Android memory leak, and
+# in an SDK it leaks the PUBLISHER'S activity. Hold a WeakReference (see
+# PrebidContextHolder) or scope the object to a lifecycle instead.
+# An AST rule, not grep: only field declarations match, never locals or
+# method signatures.
+id: static-context-leak
+language: java
+severity: warning
+message: Static field retains a Context/Activity/View beyond its lifecycle.
+note: Hold a WeakReference (PrebidContextHolder is the sanctioned pattern) or scope the reference to a lifecycle.
+files:
+  - "PrebidMobile/*/src/main/**"
+rule:
+  kind: field_declaration
+  all:
+    - has:
+        kind: modifiers
+        regex: '\bstatic\b'
+    - has:
+        field: type
+        regex: '^(Context|Activity|View|WebView|ViewGroup|FrameLayout)$'

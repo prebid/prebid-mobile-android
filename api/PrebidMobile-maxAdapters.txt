@@ -1,0 +1,107 @@
+// Signature format: 4.0
+package com.applovin.mediation.adapters {
+
+  public class PrebidMaxMediationAdapter extends com.applovin.mediation.adapters.MediationAdapterBase implements com.applovin.mediation.adapter.MaxAdViewAdapter com.applovin.mediation.adapter.MaxInterstitialAdapter com.applovin.mediation.adapter.MaxNativeAdAdapter com.applovin.mediation.adapter.MaxRewardedAdapter {
+    ctor public PrebidMaxMediationAdapter(com.applovin.sdk.AppLovinSdk!);
+    method public String! getAdapterVersion();
+    method public String! getSdkVersion();
+    method public void initialize(com.applovin.mediation.adapter.parameters.MaxAdapterInitializationParameters!, android.app.Activity!, com.applovin.mediation.adapter.MaxAdapter.OnCompletionListener!);
+    method public void loadAdViewAd(com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters!, com.applovin.mediation.MaxAdFormat!, android.app.Activity!, com.applovin.mediation.adapter.listeners.MaxAdViewAdapterListener!);
+    method public void loadInterstitialAd(com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters!, android.app.Activity!, com.applovin.mediation.adapter.listeners.MaxInterstitialAdapterListener!);
+    method public void loadRewardedAd(com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters!, android.app.Activity!, com.applovin.mediation.adapter.listeners.MaxRewardedAdapterListener!);
+    method public void onDestroy();
+    method public void showInterstitialAd(com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters!, android.app.Activity!, com.applovin.mediation.adapter.listeners.MaxInterstitialAdapterListener!);
+    method public void showRewardedAd(com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters!, android.app.Activity!, com.applovin.mediation.adapter.listeners.MaxRewardedAdapterListener!);
+    field public static final String! EXTRA_KEYWORDS_ID;
+    field public static final String! EXTRA_RESPONSE_ID;
+    field public static final String TAG;
+  }
+
+}
+
+package com.applovin.mediation.adapters.prebid {
+
+  public class ListenersCreator {
+    ctor public ListenersCreator();
+    method public static org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener! createBannerListener(com.applovin.mediation.adapter.listeners.MaxAdViewAdapterListener!, com.applovin.mediation.adapters.prebid.ListenersCreator.OnBannerAdViewLoaded!);
+    method public static org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener! createInterstitialListener(com.applovin.mediation.adapter.listeners.MaxInterstitialAdapterListener!);
+  }
+
+  public static interface ListenersCreator.OnBannerAdViewLoaded {
+    method public void run();
+  }
+
+  public class ParametersChecker {
+    ctor public ParametersChecker();
+    method public static org.prebid.mobile.rendering.bidding.data.bid.BidResponse? getBidResponse(String?, com.applovin.mediation.adapters.prebid.ParametersChecker.OnError!);
+    method public static org.prebid.mobile.PrebidNativeAd? getNativeAd(com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters!, com.applovin.mediation.adapters.prebid.ParametersChecker.OnError!);
+    method public static String? getResponseIdAndCheckKeywords(com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters!, com.applovin.mediation.adapters.prebid.ParametersChecker.OnError!);
+  }
+
+  public static interface ParametersChecker.OnError {
+    method public void onError(int, String!);
+  }
+
+  public class PrebidMaxNativeAd extends com.applovin.mediation.nativeAds.MaxNativeAd {
+    ctor public PrebidMaxNativeAd(com.applovin.mediation.nativeAds.MaxNativeAd.Builder!, org.prebid.mobile.PrebidNativeAd!, com.applovin.mediation.adapter.listeners.MaxNativeAdAdapterListener!);
+    method public void prepareViewForInteraction(com.applovin.mediation.nativeAds.MaxNativeAdView!);
+  }
+
+}
+
+package com.applovin.mediation.adapters.prebid.managers {
+
+  public class MaxBannerManager {
+    ctor public MaxBannerManager();
+    method public void destroy();
+    method public void loadAd(com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters!, com.applovin.mediation.MaxAdFormat!, android.app.Activity!, com.applovin.mediation.adapter.listeners.MaxAdViewAdapterListener!);
+  }
+
+  public class MaxInterstitialManager {
+    ctor public MaxInterstitialManager();
+    method public void destroy();
+    method public void loadAd(com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters!, android.app.Activity!, com.applovin.mediation.adapter.listeners.MaxInterstitialAdapterListener!);
+    method public void showAd();
+  }
+
+  public class MaxNativeManager {
+    ctor public MaxNativeManager();
+    method public void destroy();
+    method public void loadAd(com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters!, android.app.Activity!, com.applovin.mediation.adapter.listeners.MaxNativeAdAdapterListener!);
+  }
+
+  public class MaxRewardedManager {
+    ctor public MaxRewardedManager();
+    method public org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener! createRewardedListener();
+    method public void destroy();
+    method public void loadAd(com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters!, android.app.Activity!, com.applovin.mediation.adapter.listeners.MaxRewardedAdapterListener!);
+    method public void showAd();
+  }
+
+}
+
+package com.applovin.mediation.adapters.prebid.utils {
+
+  public class MaxMediationBannerUtils implements org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate {
+    ctor public MaxMediationBannerUtils(com.applovin.mediation.ads.MaxAdView!);
+    method public boolean canPerformRefresh();
+    method public void handleKeywordsUpdate(java.util.HashMap<java.lang.String!,java.lang.String!>?);
+    method public void setResponseToLocalExtras(org.prebid.mobile.rendering.bidding.data.bid.BidResponse?);
+  }
+
+  public class MaxMediationInterstitialUtils implements org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate {
+    ctor public MaxMediationInterstitialUtils(com.applovin.mediation.ads.MaxInterstitialAd!);
+    method public boolean canPerformRefresh();
+    method public void handleKeywordsUpdate(java.util.HashMap<java.lang.String!,java.lang.String!>?);
+    method public void setResponseToLocalExtras(org.prebid.mobile.rendering.bidding.data.bid.BidResponse?);
+  }
+
+  public class MaxMediationRewardedUtils implements org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate {
+    ctor public MaxMediationRewardedUtils(com.applovin.mediation.ads.MaxRewardedAd!);
+    method public boolean canPerformRefresh();
+    method public void handleKeywordsUpdate(java.util.HashMap<java.lang.String!,java.lang.String!>?);
+    method public void setResponseToLocalExtras(org.prebid.mobile.rendering.bidding.data.bid.BidResponse?);
+  }
+
+}
+

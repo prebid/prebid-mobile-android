@@ -1,0 +1,122 @@
+// Metalava wiring for the public-api-baseline guard.
+//
+// Generates one API signature file per published library module into api/
+// (api/PrebidMobile-core.txt, …). The committed files are the reviewable
+// public-API lockfile: scripts/guards/checks/api_baseline.py regenerates
+// them into a temp directory and fails on any drift.
+//
+//   ./gradlew generateApiSignatures                    # regenerate into api/
+//   ./gradlew generateApiSignatures -PmetalavaOutputDir=/tmp/x   # elsewhere
+//
+// Metalava (https://android.googlesource.com/platform/tools/metalava/) is
+// AndroidX's own API-tracking tool: PSI-based, Java + Kotlin, understands
+// implicitly-public members, nested types, enum constants, and annotation
+// visibility — strictly better than a hand-written source parser.
+
+def metalavaModules = [
+        "PrebidMobile-core",
+        "PrebidMobile-gamEventHandlers",
+        "PrebidMobile-admobAdapters",
+        "PrebidMobile-maxAdapters",
+        "PrebidMobile-nextGenEventHandlers",
+]
+
+configurations {
+    metalava {
+        // A bare configuration on the root project has no JVM attributes, and
+        // Guava's -jre/-android variant split then fails to resolve. Declare a
+        // standard-JVM runtime consumer explicitly.
+        attributes {
+            attribute(Usage.USAGE_ATTRIBUTE,
+                    objects.named(Usage, Usage.JAVA_RUNTIME))
+            attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE,
+                    objects.named(TargetJvmEnvironment, TargetJvmEnvironment.STANDARD_JVM))
+        }
+    }
+}
+
+dependencies {
+    // Pinned: a Metalava bump can reformat signature files, which would show
+    // up as a fake API diff. Bump deliberately, regenerating api/ in the
+    // same change.
+    metalava "com.android.tools.metalava:metalava:1.0.0-alpha15"
+}
+
+def signatureOutputDir = project.hasProperty("metalavaOutputDir")
+        ? file(project.property("metalavaOutputDir"))
+        : file("${rootDir}/api")
+
+metalavaModules.each { moduleName ->
+    def moduleProject = project(":${moduleName}")
+
+    moduleProject.afterEvaluate {
+        def android = moduleProject.android
+
+        def task = moduleProject.tasks.register("generateApiSignature", JavaExec) {
+            group = "verification"
+            description = "Generate the Metalava API signature file for ${moduleName}"
+            classpath = rootProject.configurations.metalava
+            mainClass = "com.android.tools.metalava.Driver"
+
+            def sourceDirs = android.sourceSets.getByName("main").java.srcDirs
+                    .findAll { it.exists() }
+            def outputFile = new File(signatureOutputDir, "${moduleName}.txt")
+
+            // The release compile classpath as class jars, so Metalava can see
+            // supertypes from AARs and sibling modules. A lazy FileCollection:
+            // declaring it as a task input makes Gradle BUILD the sibling
+            // modules' classes first (a clean CI clone has no intermediates).
+            def dependencyJars = moduleProject.configurations
+                    .getByName("releaseCompileClasspath")
+                    .incoming.artifactView { config ->
+                        config.attributes { attrs ->
+                            attrs.attribute(
+                                    Attribute.of("artifactType", String),
+                                    "android-classes-jar")
+                        }
+                        config.lenient(true)
+                    }.files
+
+            inputs.files(dependencyJars).withPropertyName("dependencyClasspath")
+            sourceDirs.each { inputs.dir(it) }
+            outputs.file(outputFile)
+            doFirst {
+                // android.jar for the compile SDK; read at execution time, when
+                // AGP has definitely populated it.
+                def bootClasspath = android.bootClasspath
+
+                def fullClasspath = (bootClasspath + dependencyJars.files)
+                        .findAll { it.exists() }
+                        .join(File.pathSeparator)
+
+                args = [
+                        "--quiet",
+                        "--format=4.0",
+                        // This task snapshots the surface; it is not an API
+                        // linter. These issues all fire on pre-existing debt
+                        // (public methods taking package-private types, hidden
+                        // abstract methods, @Deprecated without a Javadoc tag —
+                        // the last one is the deprecation-hygiene guard's
+                        // ratchet, already grandfathered there) and must not
+                        // block signature generation.
+                        "--hide", "ReferencesHidden",
+                        "--hide", "HiddenTypeParameter",
+                        "--hide", "HiddenAbstractMethod",
+                        "--hide", "DeprecationMismatch",
+                        "--source-path", sourceDirs.join(File.pathSeparator),
+                        "--classpath", fullClasspath,
+                        "--api", outputFile.absolutePath,
+                ]
+            }
+        }
+
+        rootProject.tasks.named("generateApiSignatures").configure {
+            dependsOn(task)
+        }
+    }
+}
+
+tasks.register("generateApiSignatures") {
+    group = "verification"
+    description = "Generate Metalava API signature files for all published modules into api/"
+}

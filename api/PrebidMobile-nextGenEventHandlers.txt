@@ -1,0 +1,81 @@
+// Signature format: 4.0
+package org.prebid.mobile.eventhandlers.nextgen {
+
+  public abstract sealed exhaustive class AdEvent {
+  }
+
+  public static final class AdEvent.AppEvent extends org.prebid.mobile.eventhandlers.nextgen.AdEvent {
+    ctor public AdEvent.AppEvent();
+  }
+
+  public static final class AdEvent.Clicked extends org.prebid.mobile.eventhandlers.nextgen.AdEvent {
+    ctor public AdEvent.Clicked();
+  }
+
+  public static final class AdEvent.Closed extends org.prebid.mobile.eventhandlers.nextgen.AdEvent {
+    ctor public AdEvent.Closed();
+  }
+
+  public static final class AdEvent.Displayed extends org.prebid.mobile.eventhandlers.nextgen.AdEvent {
+    ctor public AdEvent.Displayed();
+  }
+
+  public static final class AdEvent.Failed extends org.prebid.mobile.eventhandlers.nextgen.AdEvent {
+    ctor public AdEvent.Failed();
+    ctor public AdEvent.Failed(optional int errorCode);
+    method @InaccessibleFromKotlin public int getErrorCode();
+    property public int errorCode;
+  }
+
+  public static final class AdEvent.Loaded extends org.prebid.mobile.eventhandlers.nextgen.AdEvent {
+    ctor public AdEvent.Loaded();
+  }
+
+  public static final class AdEvent.Reward extends org.prebid.mobile.eventhandlers.nextgen.AdEvent {
+    ctor public AdEvent.Reward();
+  }
+
+  public final class NextGenBannerEventHandler implements org.prebid.mobile.rendering.bidding.interfaces.BannerEventHandler {
+    ctor public NextGenBannerEventHandler(android.content.Context context, String adUnitId, org.prebid.mobile.AdSize... adSizes);
+    method public void destroy();
+    method public org.prebid.mobile.AdSize?[] getAdSizeArray();
+    method public void onEvent(org.prebid.mobile.eventhandlers.nextgen.AdEvent adEvent);
+    method public void requestAdWithBid(org.prebid.mobile.rendering.bidding.data.bid.Bid? bid);
+    method public void setBannerEventListener(org.prebid.mobile.rendering.bidding.listeners.BannerEventListener bannerViewListener);
+    method public void trackImpression();
+    field public static final org.prebid.mobile.eventhandlers.nextgen.NextGenBannerEventHandler.Companion Companion;
+  }
+
+  public static final class NextGenBannerEventHandler.Companion {
+  }
+
+  public final class NextGenInterstitialEventHandler implements org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler {
+    ctor public NextGenInterstitialEventHandler(android.app.Activity activity, String adUnitId);
+    method public void destroy();
+    method public void onEvent(org.prebid.mobile.eventhandlers.nextgen.AdEvent adEvent);
+    method public void requestAdWithBid(org.prebid.mobile.rendering.bidding.data.bid.Bid? bid);
+    method public void setInterstitialEventListener(org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener? interstitialEventListener);
+    method public void show();
+    method public void trackImpression();
+    field public static final org.prebid.mobile.eventhandlers.nextgen.NextGenInterstitialEventHandler.Companion Companion;
+  }
+
+  public static final class NextGenInterstitialEventHandler.Companion {
+  }
+
+  public final class NextGenRewardedEventHandler implements org.prebid.mobile.rendering.bidding.interfaces.RewardedEventHandler {
+    ctor public NextGenRewardedEventHandler(android.app.Activity activity, String adUnitId);
+    method public void destroy();
+    method public void onEvent(org.prebid.mobile.eventhandlers.nextgen.AdEvent adEvent);
+    method public void requestAdWithBid(org.prebid.mobile.rendering.bidding.data.bid.Bid? bid);
+    method public void setRewardedEventListener(org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener listener);
+    method public void show();
+    method public void trackImpression();
+    field public static final org.prebid.mobile.eventhandlers.nextgen.NextGenRewardedEventHandler.Companion Companion;
+  }
+
+  public static final class NextGenRewardedEventHandler.Companion {
+  }
+
+}
+
