@@ -32,6 +32,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 
+import androidx.annotation.NonNull;
+
 import com.google.common.collect.Sets;
 
 import org.assertj.core.util.Lists;
@@ -45,6 +47,8 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.BannerParameters;
+import org.prebid.mobile.EidsPlacement;
+import org.prebid.mobile.api.eid.ExtendedId;
 import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.NativeTitleAsset;
 import org.prebid.mobile.PrebidMobile;
@@ -54,6 +58,7 @@ import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.rendering.PrebidRenderer;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
+import org.prebid.mobile.api.eid.ExtendedIdProvider;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -752,6 +757,79 @@ public class BasicParameterBuilderTest {
         JSONObject secondUserExt = secondRequest.getBidRequest().getUser().getJsonObject().getJSONObject("ext");
         assertEquals("value", secondUserExt.getString("custom"));
         assertFalse(secondUserExt.has("eids"));
+    }
+
+    @Test
+    public void whenExtendedIdProviderSuppliesOpenRtb26Eid_provenanceFieldsReachUserEids() throws JSONException {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdFormat(AdFormat.BANNER);
+        adConfiguration.addSize(new AdSize(320, 50));
+
+        ExternalUserId eid = new ExternalUserId(
+                "id5-sync.com",
+                List.of(new ExternalUserId.UniqueId("id5-value", 1))
+        );
+        eid.setInserter("prebid.org");
+        eid.setMatcher("id5-sync.com");
+        eid.setMm(3);
+
+        ExtendedIdProvider provider = new ExtendedIdProvider() {
+            @NonNull
+            @Override
+            public Info getProviderInfo() {
+                return new Info("test-provider", "1.0");
+            }
+
+            @NonNull
+            @Override
+            public List<ExtendedId> getExtendedIds() {
+                return List.of(eid);
+            }
+
+            @Override
+            public void onRegister() {}
+
+            @Override
+            public void onUnregister() {}
+        };
+
+        PrebidMobile.setEidsPlacement(EidsPlacement.COMPATIBLE);
+        PrebidMobile.registerExtendedIdProvider(provider);
+        try {
+            AdRequestInput adRequestInput = new AdRequestInput();
+            new BasicParameterBuilder(adConfiguration, context.getResources(), browserActivityAvailable)
+                    .appendBuilderParameters(adRequestInput);
+
+            // getJsonObject() runs placeEids(), which promotes EIDs to user.eids (OpenRTB 2.6).
+            JSONObject user = adRequestInput.getBidRequest().getJsonObject().getJSONObject("user");
+
+            // Look up by source: EID order across providers is unspecified.
+            JSONObject userEid = findEidBySource(user.getJSONArray("eids"), "id5-sync.com");
+            assertNotNull(userEid);
+            assertEquals("prebid.org", userEid.getString("inserter"));
+            assertEquals("id5-sync.com", userEid.getString("matcher"));
+            assertEquals(3, userEid.getInt("mm"));
+            assertEquals("id5-value", userEid.getJSONArray("uids").getJSONObject(0).getString("id"));
+
+            // COMPATIBLE placement mirrors the same provenance fields into user.ext.eids (OpenRTB 2.5).
+            JSONObject extEid = findEidBySource(user.getJSONObject("ext").getJSONArray("eids"), "id5-sync.com");
+            assertNotNull(extEid);
+            assertEquals("prebid.org", extEid.getString("inserter"));
+            assertEquals("id5-sync.com", extEid.getString("matcher"));
+            assertEquals(3, extEid.getInt("mm"));
+        } finally {
+            PrebidMobile.unregisterExtendedIdProvider(provider);
+        }
+    }
+
+    private static JSONObject findEidBySource(JSONArray eids, String source) throws JSONException {
+        for (int i = 0; i < eids.length(); i++) {
+            JSONObject eid = eids.getJSONObject(i);
+            if (source.equals(eid.optString("source"))) {
+                return eid;
+            }
+        }
+        return null;
     }
 
     @Test

@@ -116,6 +116,16 @@ public class SdkInitializer {
         return null;
     }
 
+    /**
+     * Resets SDK initialization state so that {@link #init} can be invoked again.
+     * Useful in test teardown to get a clean slate between test cases.
+     */
+    @VisibleForTesting
+    public static void reset() {
+        PrebidContextHolder.clearContext();
+        InitializationNotifier.reset();
+    }
+
     protected static class UserConsentFetcherTask implements Runnable {
 
         @Override

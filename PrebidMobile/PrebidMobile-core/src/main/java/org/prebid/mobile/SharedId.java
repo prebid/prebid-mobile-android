@@ -16,24 +16,76 @@
 
 package org.prebid.mobile;
 
+import org.prebid.mobile.api.eid.ExtendedId;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.prebid.mobile.api.eid.ExtendedIdProvider;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class SharedId {
-    static final String TAG = SharedId.class.getSimpleName();
+public class SharedId implements ExtendedIdProvider {
 
+    static final String TAG = SharedId.class.getSimpleName();
     static final String PB_SharedIdKey = "PB_SharedIdKey";
+
+    private static final SharedId INSTANCE = new SharedId();
+    private static final Info INFO = new Info("sharedId", PrebidMobile.SDK_VERSION);
+
     private static ExternalUserId sessionId = null;
 
-    static ExternalUserId getIdentifier() {
+    private SharedId() {
+    }
+
+    /**
+     * Returns the singleton instance.
+     */
+    @NonNull
+    public static SharedId getInstance() {
+        return INSTANCE;
+    }
+
+    @NonNull
+    @Override
+    public Info getProviderInfo() {
+        return INFO;
+    }
+
+    /**
+     * Returns the current SharedId as a singleton list.
+     * Called by the registry on every bid request — delegates to {@link #getIdentifier()},
+     * which checks the current consent state each time.
+     */
+    @NonNull
+    @Override
+    public List<ExtendedId> getExtendedIds() {
+        return Collections.singletonList(getIdentifier());
+    }
+
+    @Override
+    public void onRegister() {
+        // do nothing
+    }
+
+    @Override
+    public void onUnregister() {
+        // do nothing
+    }
+
+    /**
+     * Returns the current SharedId, reusing the session value when present, otherwise the value from
+     * persistent storage (when device access consent allows), otherwise a newly generated one.
+     */
+    @NonNull
+    public ExternalUserId getIdentifier() {
         Boolean persistentStorageAllowed = TargetingParams.getDeviceAccessConsent();
 
         // If sharedId was used previously in this session, then use that id
@@ -69,7 +121,7 @@ public class SharedId {
         return eid;
     }
 
-    static void resetIdentifier() {
+    void resetIdentifier() {
         sessionId = null;
         storeSharedId(null);
     }
