@@ -51,6 +51,8 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.prebid.mobile.rendering.video.VideoAdEvent.Event.AD_IMPRESSION;
@@ -240,6 +242,183 @@ public class CreativeModelsMakerVastTest {
                 errorMessage.getValue().getMessage(),
                 containsString("Video duration can't be more then ad unit max video duration")
         );
+    }
+
+    // An ad may have several Linear creatives. The video and everything that belongs to it come from
+    // the first Linear with a media file the SDK can play.
+    @Test
+    public void testMakeModels_unsupportedLinearBeforeSupportedLinear() throws Exception {
+        String xml = vast(inlineAd("1",
+                linear("vpaid", "application/javascript", "00:00:10", 640, 480),
+                linear("mp4", "video/mp4", "00:00:15", 640, 480)
+        ));
+
+        CreativeModelsMaker.Result result = makeModels(xml);
+
+        assertEquals(1, result.creativeModels.size());
+        VideoCreativeModel videoModel = (VideoCreativeModel) result.creativeModels.get(0);
+        assertEquals("https://example.com/mp4.media", videoModel.getMediaUrl());
+        assertEquals(15_000, videoModel.getMediaDuration());
+        assertEquals(5_000, videoModel.getSkipOffset());
+        assertEquals("https://example.com/mp4/clickThrough", videoModel.getVastClickthroughUrl());
+        HashMap<VideoAdEvent.Event, ArrayList<String>> videoEventUrls = videoModel.getVideoEventUrls();
+        assertEquals(Arrays.asList("https://example.com/mp4/start"), videoEventUrls.get(VideoAdEvent.Event.AD_START));
+        assertEquals(Arrays.asList("https://example.com/mp4/click"), videoEventUrls.get(VideoAdEvent.Event.AD_CLICK));
+    }
+
+    @Test
+    public void testMakeModels_supportedLinearBeforeUnsupportedLinear() throws Exception {
+        String xml = vast(inlineAd("1",
+                linear("mp4", "video/mp4", "00:00:15", 640, 480),
+                linear("vpaid", "application/javascript", "00:00:10", 640, 480)
+        ));
+
+        CreativeModelsMaker.Result result = makeModels(xml);
+
+        VideoCreativeModel videoModel = (VideoCreativeModel) result.creativeModels.get(0);
+        assertEquals("https://example.com/mp4.media", videoModel.getMediaUrl());
+        assertEquals(15_000, videoModel.getMediaDuration());
+        assertEquals(Arrays.asList("https://example.com/mp4/start"), videoModel.getVideoEventUrls().get(VideoAdEvent.Event.AD_START));
+    }
+
+    // The media file used to be picked from all the Linear creatives and the duration from the first one.
+    @Test
+    public void testMakeModels_twoPlayableLinears() throws Exception {
+        String xml = vast(inlineAd("1",
+                linear("small", "video/mp4", "00:00:15", 640, 480),
+                linear("big", "video/mp4", "00:00:30", 1280, 720)
+        ));
+
+        CreativeModelsMaker.Result result = makeModels(xml);
+
+        VideoCreativeModel videoModel = (VideoCreativeModel) result.creativeModels.get(0);
+        assertEquals("https://example.com/small.media", videoModel.getMediaUrl());
+        assertEquals(15_000, videoModel.getMediaDuration());
+        assertEquals(Arrays.asList("https://example.com/small/start"), videoModel.getVideoEventUrls().get(VideoAdEvent.Event.AD_START));
+    }
+
+    // The same across ads: the first ad has no playable Linear, the second one does.
+    // Everything in the models has to come from the ad that gets rendered.
+    @Test
+    public void testMakeModels_unplayableAdBeforePlayableAd() throws Exception {
+        String xml = vast(
+                inlineAd("1",
+                        linear("vpaid", "application/javascript", "00:00:10", 640, 480),
+                        companion("https://example.com/companion-1.png")
+                ),
+                inlineAd("2",
+                        linear("mp4", "video/mp4", "00:00:15", 640, 480),
+                        companion("https://example.com/companion-2.png")
+                )
+        );
+
+        CreativeModelsMaker.Result result = makeModels(xml);
+
+        assertEquals(2, result.creativeModels.size());
+        VideoCreativeModel videoModel = (VideoCreativeModel) result.creativeModels.get(0);
+        assertEquals("https://example.com/mp4.media", videoModel.getMediaUrl());
+        assertEquals(15_000, videoModel.getMediaDuration());
+        HashMap<VideoAdEvent.Event, ArrayList<String>> videoEventUrls = videoModel.getVideoEventUrls();
+        assertEquals(Arrays.asList("https://example.com/imp/2"), videoEventUrls.get(AD_IMPRESSION));
+        assertEquals(Arrays.asList("https://example.com/error/2"), videoEventUrls.get(VideoAdEvent.Event.AD_ERROR));
+        assertEquals(Arrays.asList("https://example.com/mp4/start"), videoEventUrls.get(VideoAdEvent.Event.AD_START));
+
+        String endCardHtml = result.creativeModels.get(1).getHtml();
+        assertTrue(endCardHtml.contains("https://example.com/companion-2.png"));
+        assertFalse(endCardHtml.contains("https://example.com/companion-1.png"));
+    }
+
+    // The wrapper keeps contributing its own ad while the second ad of the wrapped response is rendered.
+    @Test
+    public void testMakeModels_wrapperThenPlayableSecondAd() throws Exception {
+        String wrapperXml = vast(
+                "<Ad id=\"w\"><Wrapper><AdSystem>test</AdSystem>"
+                + "<VASTAdTagURI><![CDATA[https://example.com/wrapped]]></VASTAdTagURI>"
+                + "<Impression><![CDATA[https://example.com/imp/w]]></Impression>"
+                + "<Creatives><Creative><Linear><TrackingEvents>"
+                + "<Tracking event=\"start\"><![CDATA[https://example.com/w/start]]></Tracking>"
+                + "</TrackingEvents></Linear></Creative></Creatives>"
+                + "</Wrapper></Ad>"
+        );
+        String wrappedXml = vast(
+                inlineAd("1", linear("vpaid", "application/javascript", "00:00:10", 640, 480)),
+                inlineAd("2", linear("mp4", "video/mp4", "00:00:15", 640, 480))
+        );
+        AdResponseParserVast rootParser = new AdResponseParserVast(wrapperXml);
+        AdResponseParserVast latestParser = new AdResponseParserVast(wrappedXml);
+        rootParser.setWrapper(latestParser);
+
+        CreativeModelsMaker.Result result = makeModels(rootParser, latestParser);
+
+        VideoCreativeModel videoModel = (VideoCreativeModel) result.creativeModels.get(0);
+        assertEquals("https://example.com/mp4.media", videoModel.getMediaUrl());
+        assertEquals(15_000, videoModel.getMediaDuration());
+        HashMap<VideoAdEvent.Event, ArrayList<String>> videoEventUrls = videoModel.getVideoEventUrls();
+        assertEquals(Arrays.asList("https://example.com/imp/w", "https://example.com/imp/2"), videoEventUrls.get(AD_IMPRESSION));
+        assertEquals(Arrays.asList("https://example.com/w/start", "https://example.com/mp4/start"), videoEventUrls.get(VideoAdEvent.Event.AD_START));
+    }
+
+    // Without a playable Linear the first one is still used, and the load fails later for the missing media file.
+    @Test
+    public void testMakeModels_noSupportedMedia() throws Exception {
+        String xml = vast(
+                inlineAd("1", linear("vpaid", "application/javascript", "00:00:10", 640, 480)),
+                inlineAd("2", linear("flv", "video/x-flv", "00:00:15", 640, 480))
+        );
+
+        CreativeModelsMaker.Result result = makeModels(xml);
+
+        VideoCreativeModel videoModel = (VideoCreativeModel) result.creativeModels.get(0);
+        assertNull(videoModel.getMediaUrl());
+        assertEquals(10_000, videoModel.getMediaDuration());
+        assertEquals(Arrays.asList("https://example.com/imp/1"), videoModel.getVideoEventUrls().get(AD_IMPRESSION));
+    }
+
+    private CreativeModelsMaker.Result makeModels(String inlineXml) throws Exception {
+        AdResponseParserVast parser = new AdResponseParserVast(inlineXml);
+        return makeModels(parser, parser);
+    }
+
+    private CreativeModelsMaker.Result makeModels(AdResponseParserVast rootParser, AdResponseParserVast latestParser) {
+        new CreativeModelsMakerVast(null, mockListener).makeModels(adConfiguration, rootParser, latestParser);
+
+        ArgumentCaptor<CreativeModelsMaker.Result> argumentCaptor = ArgumentCaptor.forClass(CreativeModelsMaker.Result.class);
+        verify(mockListener).onCreativeModelReady(argumentCaptor.capture());
+        return argumentCaptor.getValue();
+    }
+
+    private static String vast(String... ads) {
+        return "<VAST version=\"3.0\">" + String.join("", ads) + "</VAST>";
+    }
+
+    private static String inlineAd(String id, String... creatives) {
+        return "<Ad id=\"" + id + "\"><InLine><AdSystem>test</AdSystem><AdTitle>t</AdTitle>"
+               + "<Error><![CDATA[https://example.com/error/" + id + "]]></Error>"
+               + "<Impression><![CDATA[https://example.com/imp/" + id + "]]></Impression>"
+               + "<Creatives>" + String.join("", creatives) + "</Creatives>"
+               + "</InLine></Ad>";
+    }
+
+    // Every URL of the creative starts with https://example.com/<name>, so the tests can tell where it came from.
+    private static String linear(String name, String mimeType, String duration, int width, int height) {
+        String base = "https://example.com/" + name;
+        return "<Creative><Linear skipoffset=\"00:00:05\">"
+               + "<Duration>" + duration + "</Duration>"
+               + "<TrackingEvents><Tracking event=\"start\"><![CDATA[" + base + "/start]]></Tracking></TrackingEvents>"
+               + "<VideoClicks>"
+               + "<ClickThrough><![CDATA[" + base + "/clickThrough]]></ClickThrough>"
+               + "<ClickTracking><![CDATA[" + base + "/click]]></ClickTracking>"
+               + "</VideoClicks>"
+               + "<MediaFiles><MediaFile delivery=\"progressive\" type=\"" + mimeType + "\" width=\"" + width + "\" height=\"" + height + "\">"
+               + "<![CDATA[" + base + ".media]]></MediaFile></MediaFiles>"
+               + "</Linear></Creative>";
+    }
+
+    private static String companion(String imageUrl) {
+        return "<Creative><CompanionAds><Companion width=\"300\" height=\"250\">"
+               + "<StaticResource creativeType=\"image/png\"><![CDATA[" + imageUrl + "]]></StaticResource>"
+               + "<CompanionClickThrough><![CDATA[https://example.com/companion/click]]></CompanionClickThrough>"
+               + "</Companion></CompanionAds></Creative>";
     }
 
     private List<AdResponseParserBase> getVastParsers(BaseNetworkTask.GetUrlResult adResponse) throws NoSuchFieldException, IllegalAccessException {

@@ -36,6 +36,7 @@ import org.prebid.mobile.rendering.video.vast.Creative;
 import org.prebid.mobile.rendering.video.vast.Extension;
 import org.prebid.mobile.rendering.video.vast.Impression;
 import org.prebid.mobile.rendering.video.vast.InLine;
+import org.prebid.mobile.rendering.video.vast.Linear;
 import org.prebid.mobile.rendering.video.vast.MediaFile;
 import org.prebid.mobile.rendering.video.vast.VAST;
 import org.xmlpull.v1.XmlPullParser;
@@ -224,65 +225,119 @@ public class AdResponseParserVast extends AdResponseParserBase {
     //Returns the best media file fit for the device
     public String getMediaFileUrl(AdResponseParserVast parserVast, int index) {
         String myBestMediaFileURL = null;
-        ArrayList<MediaFile> eligibleMediaFiles = new ArrayList<>();
         /**
          * Here we use a recursion pattern to traverse the nested VAST nodes "parserVast",
          * until we reach the last nested node, which should be InLine,
-         * and then we get its meduaFile URL. Note that index is hardcoded in the call
-         * as 0 for the first Ad node. So we have to figure out a solution for Ad pods.
+         * and then we get its meduaFile URL.
          */
         if (wrappedVASTXml != null) {
             wrappedVASTXml.getMediaFileUrl(wrappedVASTXml, index);
         }
         /**
          * Now that we have reached the last node, we can get its mediaFileUrl.
-         * Note that index is hardcoded in the call
-         * as 0 for the first Ad node. So we have to figure out a solution for Ad pods.
+         * The index selects the ad, see getPlayableAdIndex(). Only one ad is rendered,
+         * so we still have to figure out a solution for Ad pods.
          */
         else {
 
             Ad ad = parserVast.vast.getAds().get(index);
 
-            for (Creative creative : ad.getInline().getCreatives()) {
+            Linear linear = findPlayableLinear(ad.getInline());
+            if (linear == null) {
+                return myBestMediaFileURL;
+            }
+            ArrayList<MediaFile> eligibleMediaFiles = getSupportedMediaFiles(linear);
 
-                if (creative.getLinear() != null) {
+            // choose the one with the highest resolution amongst all
+            MediaFile best = eligibleMediaFiles.get(0);
+            int bestValues = (Utils.isBlank(best.getWidth())
+                              ? 0
+                              : Integer.parseInt(best.getWidth())) * (Utils.isBlank(best.getHeight())
+                                                                      ? 0
+                                                                      : Integer.parseInt(best.getHeight()));
+            myBestMediaFileURL = best.getValue();
 
-                    for (MediaFile mediaFile : creative.getLinear().getMediaFiles()) {
-                        if (supportedVideoFormat(mediaFile.getType())) {
-                            eligibleMediaFiles.add(mediaFile);
-                        }
-                    }
-
-                    if (eligibleMediaFiles.size() == 0) {
-                        return myBestMediaFileURL;
-                    }
-
-                    // choose the one with the highest resolution amongst all
-                    MediaFile best = eligibleMediaFiles.get(0);
-                    int bestValues = (Utils.isBlank(best.getWidth())
-                                      ? 0
-                                      : Integer.parseInt(best.getWidth())) * (Utils.isBlank(best.getHeight())
-                                                                              ? 0
-                                                                              : Integer.parseInt(best.getHeight()));
+            for (int i = 0; i < eligibleMediaFiles.size(); i++) {
+                MediaFile current = eligibleMediaFiles.get(i);
+                int currentValues = (Utils.isBlank(current.getWidth())
+                                     ? 0
+                                     : Integer.parseInt(current.getWidth())) * (Utils.isBlank(current.getHeight())
+                                                                                ? 0
+                                                                                : Integer.parseInt(current.getHeight()));
+                if (currentValues > bestValues) {
+                    bestValues = currentValues;
+                    best = current;
                     myBestMediaFileURL = best.getValue();
-
-                    for (int i = 0; i < eligibleMediaFiles.size(); i++) {
-                        MediaFile current = eligibleMediaFiles.get(i);
-                        int currentValues = (Utils.isBlank(current.getWidth())
-                                             ? 0
-                                             : Integer.parseInt(current.getWidth())) * (Utils.isBlank(current.getHeight())
-                                                                                        ? 0
-                                                                                        : Integer.parseInt(current.getHeight()));
-                        if (currentValues > bestValues) {
-                            bestValues = currentValues;
-                            best = current;
-                            myBestMediaFileURL = best.getValue();
-                        }
-                    }
                 }
             }
         }
         return myBestMediaFileURL;
+    }
+
+    /**
+     * Returns the index of the first ad of this response with a Linear creative that has a media file
+     * the SDK can play, or 0 if there is none.
+     */
+    public int getPlayableAdIndex() {
+        ArrayList<Ad> ads = vast.getAds();
+        if (ads != null) {
+            for (int i = 0; i < ads.size(); i++) {
+                if (findPlayableLinear(ads.get(i).getInline()) != null) {
+                    return i;
+                }
+            }
+        }
+        return 0;
+    }
+
+    // An ad may have several Linear creatives, and the first one may have no media file the SDK can play.
+    // The video, its duration, skip offset, trackers and clicks all come from the Linear that is played:
+    // the first one with a supported media file. Without such a Linear, the first one is used and
+    // the ad fails to load for the missing media file, as before.
+    @Nullable
+    private static Linear findLinear(@Nullable InLine inline) {
+        Linear playableLinear = findPlayableLinear(inline);
+        if (playableLinear != null || inline == null || inline.getCreatives() == null) {
+            return playableLinear;
+        }
+        for (Creative creative : inline.getCreatives()) {
+            if (creative.getLinear() != null) {
+                return creative.getLinear();
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private static Linear findPlayableLinear(@Nullable InLine inline) {
+        if (inline == null || inline.getCreatives() == null) {
+            return null;
+        }
+        for (Creative creative : inline.getCreatives()) {
+            Linear linear = creative.getLinear();
+            if (linear != null && !getSupportedMediaFiles(linear).isEmpty()) {
+                return linear;
+            }
+        }
+        return null;
+    }
+
+    private static ArrayList<MediaFile> getSupportedMediaFiles(@NonNull Linear linear) {
+        ArrayList<MediaFile> mediaFiles = new ArrayList<>();
+        if (linear.getMediaFiles() != null) {
+            for (MediaFile mediaFile : linear.getMediaFiles()) {
+                if (supportedVideoFormat(mediaFile.getType())) {
+                    mediaFiles.add(mediaFile);
+                }
+            }
+        }
+        return mediaFiles;
+    }
+
+    // The index passed to the helpers below selects the ad of the last response in the wrapper chain.
+    // Wrapper responses contribute their first ad.
+    private static int getAdIndex(AdResponseParserVast parserVast, int index) {
+        return parserVast.wrappedVASTXml == null ? index : 0;
     }
 
     @VisibleForTesting
@@ -299,8 +354,9 @@ public class AdResponseParserVast extends AdResponseParserBase {
     }
 
     public ArrayList<Impression> getImpressions(AdResponseParserVast parserVast, int index) {
-        if (getImpressionEvents(parserVast.vast, index) != null) {
-            impressions.addAll(getImpressionEvents(parserVast.vast, index));
+        ArrayList<Impression> impressionEvents = getImpressionEvents(parserVast.vast, getAdIndex(parserVast, index));
+        if (impressionEvents != null) {
+            impressions.addAll(impressionEvents);
         }
 
         /**
@@ -318,12 +374,10 @@ public class AdResponseParserVast extends AdResponseParserBase {
         Ad ad = vast.getAds().get(index);
         if (ad.getInline() != null) {
 
-            for (Creative creative : ad.getInline().getCreatives()) {
+            Linear linear = findLinear(ad.getInline());
+            if (linear != null) {
 
-                if (creative.getLinear() != null) {
-
-                    return creative.getLinear().getTrackingEvents();
-                }
+                return linear.getTrackingEvents();
             }
         }
         else if (ad.getWrapper() != null && ad.getWrapper().getCreatives() != null) {
@@ -359,8 +413,9 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
     public ArrayList<org.prebid.mobile.rendering.video.vast.Tracking> getAllTrackings(AdResponseParserVast parserVast, int index) {
 
-        if (getTrackingEvents(parserVast.vast, index) != null) {
-            trackings.addAll(getTrackingEvents(parserVast.vast, index));
+        ArrayList<org.prebid.mobile.rendering.video.vast.Tracking> trackingEvents = getTrackingEvents(parserVast.vast, getAdIndex(parserVast, index));
+        if (trackingEvents != null) {
+            trackings.addAll(trackingEvents);
         }
 
         /**
@@ -399,15 +454,10 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
             Ad ad = parserVast.vast.getAds().get(index);
 
-            if (ad != null && ad.getInline() != null) {
+            Linear linear = ad != null ? findLinear(ad.getInline()) : null;
+            if (linear != null) {
 
-                for (Creative creative : ad.getInline().getCreatives()) {
-
-                    if (creative.getLinear() != null) {
-
-                        return creative.getLinear().getSkipOffset();
-                    }
-                }
+                return linear.getSkipOffset();
             }
         }
         return null;
@@ -421,15 +471,10 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
             Ad ad = parserVast.vast.getAds().get(index);
 
-            if (ad != null && ad.getInline() != null) {
+            Linear linear = ad != null ? findLinear(ad.getInline()) : null;
+            if (linear != null) {
 
-                for (Creative creative : ad.getInline().getCreatives()) {
-
-                    if (creative.getLinear() != null) {
-
-                        return creative.getLinear().getDuration().getValue();
-                    }
-                }
+                return linear.getDuration().getValue();
             }
         }
         return null;
@@ -470,7 +515,7 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
     public String getError(AdResponseParserVast parserVast, int index) {
 
-        Ad ad = parserVast.vast.getAds().get(index);
+        Ad ad = parserVast.vast.getAds().get(getAdIndex(parserVast, index));
 
         if (ad != null && ad.getInline() != null && ad.getInline().getError() != null) {
             return ad.getInline().getError().getValue();
@@ -487,15 +532,10 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
             Ad ad = parserVast.vast.getAds().get(index);
 
-            for (Creative creative : ad.getInline().getCreatives()) {
+            Linear linear = findLinear(ad.getInline());
+            if (linear != null && linear.getVideoClicks() != null && linear.getVideoClicks().getClickThrough() != null) {
 
-                if (creative.getLinear() != null && creative.getLinear()
-                                                            .getVideoClicks() != null && creative.getLinear()
-                                                                                                 .getVideoClicks()
-                                                                                                 .getClickThrough() != null) {
-
-                    return creative.getLinear().getVideoClicks().getClickThrough().getValue();
-                }
+                return linear.getVideoClicks().getClickThrough().getValue();
             }
         }
         return null;
@@ -507,12 +547,10 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
         if (ad.getInline() != null) {
 
-            for (Creative creative : ad.getInline().getCreatives()) {
+            Linear linear = findLinear(ad.getInline());
+            if (linear != null && linear.getVideoClicks() != null) {
 
-                if (creative.getLinear() != null && creative.getLinear().getVideoClicks() != null && creative.getLinear().getVideoClicks().getClickTrackings() != null) {
-
-                    return creative.getLinear().getVideoClicks().getClickTrackings();
-                }
+                return linear.getVideoClicks().getClickTrackings();
             }
         }
         else if (ad.getWrapper() != null && ad.getWrapper().getCreatives() != null) {
@@ -530,7 +568,7 @@ public class AdResponseParserVast extends AdResponseParserBase {
     }
 
     public ArrayList<ClickTracking> getClickTrackings(AdResponseParserVast parserVast, int index) {
-        ArrayList<ClickTracking> clickTrackingsList = findClickTrackings(parserVast.vast, index);
+        ArrayList<ClickTracking> clickTrackingsList = findClickTrackings(parserVast.vast, getAdIndex(parserVast, index));
         if (clickTrackingsList != null) {
             clickTrackings.addAll(clickTrackingsList);
         }
