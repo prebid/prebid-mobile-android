@@ -106,14 +106,16 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
              * We pre parse the impressions and trackings for faster reading at
              * video time. DO NOT REMOVE THESE LINES
              */
-            rootVastParser.getAllTrackings(rootVastParser, 0);
-            rootVastParser.getImpressions(rootVastParser, 0);
-            rootVastParser.getClickTrackings(rootVastParser, 0);
-            final String videoErrorUrl = rootVastParser.getError(rootVastParser, 0);
-            final String vastClickThroughUrl = rootVastParser.getClickThroughUrl(rootVastParser, 0);
-            final String videoDuration = latestVastWrapperParser.getVideoDuration(latestVastWrapperParser, 0);
-            final String skipOffset = latestVastWrapperParser.getSkipOffset(latestVastWrapperParser, 0);
-            final AdVerifications adVerifications = rootVastParser.getAdVerification(latestVastWrapperParser, 0);
+            // The ad to render: the first one in the last response with a Linear creative that can be played.
+            final int adIndex = latestVastWrapperParser.getPlayableAdIndex();
+            rootVastParser.getAllTrackings(rootVastParser, adIndex);
+            rootVastParser.getImpressions(rootVastParser, adIndex);
+            rootVastParser.getClickTrackings(rootVastParser, adIndex);
+            final String videoErrorUrl = rootVastParser.getError(rootVastParser, adIndex);
+            final String vastClickThroughUrl = rootVastParser.getClickThroughUrl(rootVastParser, adIndex);
+            final String videoDuration = latestVastWrapperParser.getVideoDuration(latestVastWrapperParser, adIndex);
+            final String skipOffset = latestVastWrapperParser.getSkipOffset(latestVastWrapperParser, adIndex);
+            final AdVerifications adVerifications = rootVastParser.getAdVerification(latestVastWrapperParser, adIndex);
 
             checkVideoDuration(Utils.getMsFrom(videoDuration));
 
@@ -127,7 +129,7 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
 
             videoModel.setName(VIDEO_CREATIVE_TAG);
 
-            videoModel.setMediaUrl(latestVastWrapperParser.getMediaFileUrl(latestVastWrapperParser, 0));
+            videoModel.setMediaUrl(latestVastWrapperParser.getMediaFileUrl(latestVastWrapperParser, adIndex));
             videoModel.setMediaDuration(Utils.getMsFrom(videoDuration));
             videoModel.setSkipOffset(Utils.getMsFrom(skipOffset));
             videoModel.setAdVerifications(adVerifications);
@@ -172,7 +174,7 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
             // Create CompanionAd object
             Companion companionAd = AdResponseParserVast.getCompanionAd(latestVastWrapperParser.getVast()
                                                                                                .getAds()
-                                                                                               .get(0)
+                                                                                               .get(adIndex)
                                                                                                .getInline());
             if (companionAd != null) {
                 switch (AdResponseParserVast.getCompanionResourceFormat(companionAd)) {
