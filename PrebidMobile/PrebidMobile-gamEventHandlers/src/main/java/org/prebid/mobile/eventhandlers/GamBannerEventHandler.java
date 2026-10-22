@@ -202,8 +202,7 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
             PublisherAdViewWrapper gamBannerView = requestBanner;
             requestBanner = null;
             recycleCurrentBanner();
-            embeddedBanner = gamBannerView;
-            bannerEventListener.onAdServerWin(getView(gamBannerView));
+            handleAdServerWin(gamBannerView);
         }
     }
 
@@ -241,9 +240,19 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
         PublisherAdViewWrapper gamBannerView = requestBanner;
         requestBanner = null;
         recycleCurrentBanner();
-        embeddedBanner = gamBannerView;
         isExpectingAppEvent = false;
+        handleAdServerWin(gamBannerView);
+    }
+
+    private void handleAdServerWin(PublisherAdViewWrapper gamBannerView) {
+        embeddedBanner = gamBannerView;
         bannerEventListener.onAdServerWin(getView(gamBannerView));
+        // Manual impressions are enabled on every request, so GAM counts nothing for its own
+        // winning ad until this is called. GMA renders that ad itself, so it never reaches
+        // trackImpression().
+        if (gamBannerView != null) {
+            gamBannerView.recordManualImpression();
+        }
     }
 
     private View getView(PublisherAdViewWrapper gamBannerView) {

@@ -129,6 +129,7 @@ public class GamBannerEventHandlerTest {
         bannerEventHandler.onEvent(AdEvent.LOADED);
 
         verify(mockBannerEventListener, times(1)).onAdServerWin(eq(mockView));
+        verify(mockPublisherAdView, times(1)).recordManualImpression();
     }
 
     @Test
@@ -136,6 +137,29 @@ public class GamBannerEventHandlerTest {
         WhiteBox.method(GamBannerEventHandler.class, "handleAppEventTimeout").invoke(bannerEventHandler);
 
         verify(mockBannerEventListener, times(1)).onAdServerWin(any());
+    }
+
+    @Test
+    public void onAppEventTimeout_RecordManualImpressionOnAdServerWin() throws Exception {
+        final PublisherAdViewWrapper mockPublisherAdView = mock(PublisherAdViewWrapper.class);
+        WhiteBox.field(GamBannerEventHandler.class, "requestBanner").set(bannerEventHandler, mockPublisherAdView);
+
+        WhiteBox.method(GamBannerEventHandler.class, "handleAppEventTimeout").invoke(bannerEventHandler);
+
+        verify(mockPublisherAdView, times(1)).recordManualImpression();
+    }
+
+    @Test
+    public void onPrebidWin_RecordManualImpressionOnlyOnTrackImpression() throws Exception {
+        final PublisherAdViewWrapper mockPublisherAdView = mock(PublisherAdViewWrapper.class);
+        WhiteBox.field(GamBannerEventHandler.class, "requestBanner").set(bannerEventHandler, mockPublisherAdView);
+        changeExpectingAppEventStatus(true);
+
+        bannerEventHandler.onEvent(AdEvent.APP_EVENT_RECEIVED);
+        verify(mockPublisherAdView, times(0)).recordManualImpression();
+
+        bannerEventHandler.trackImpression();
+        verify(mockPublisherAdView, times(1)).recordManualImpression();
     }
 
     @Test
