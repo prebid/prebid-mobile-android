@@ -43,7 +43,7 @@ public class InLine extends VASTParserBase
 	private Advertiser advertiser;
 	private Pricing pricing;
 	private Survey survey;
-	private Error error;
+	private ArrayList<Error> errors = new ArrayList<>();
 	private ArrayList<Impression> impressions;
 	private ArrayList<Creative> creatives;
 	private Extensions extensions;
@@ -97,7 +97,7 @@ public class InLine extends VASTParserBase
 			else if (name != null && name.equals(VAST_ERROR))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_ERROR);
-				error = new Error(p);
+				errors.add(new Error(p));
 				p.require(XmlPullParser.END_TAG, null, VAST_ERROR);
 			}
 			else if (name != null && name.equals(VAST_IMPRESSION))
@@ -158,8 +158,15 @@ public class InLine extends VASTParserBase
 		return survey;
 	}
 
+	/**
+	 * @return the last {@code <Error>} element, or null. VAST 4 allows several, see {@link #getErrors()}.
+	 */
 	public Error getError() {
-		return error;
+		return errors.isEmpty() ? null : errors.get(errors.size() - 1);
+	}
+
+	public ArrayList<Error> getErrors() {
+		return errors;
 	}
 
 	public ArrayList<Impression> getImpressions() {

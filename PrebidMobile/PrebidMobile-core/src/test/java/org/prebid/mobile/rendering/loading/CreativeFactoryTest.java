@@ -19,9 +19,11 @@ package org.prebid.mobile.rendering.loading;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -29,7 +31,9 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.models.AbstractCreative;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.HTMLCreative;
+import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
+import org.prebid.mobile.rendering.video.OmEventTracker;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
@@ -38,18 +42,25 @@ import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowPausedAsyncTask;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.prebid.mobile.rendering.models.CreativeModelsMakerVast.HTML_CREATIVE_TAG;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class CreativeFactoryTest {
+
+    // A media URL without a scheme: its download fails without a network request.
+    private static final String UNREACHABLE_MEDIA_URL = "unreachable/video.mp4";
 
     private Context mockContext;
     private CreativeModel mockModel;
@@ -224,6 +235,152 @@ public class CreativeFactoryTest {
 
         creativeFactory.destroy();
 
-        verify(mockHandler).removeCallbacks(null);
+        verify(mockHandler).removeCallbacksAndMessages(null);
+    }
+
+    @Test
+    public void vastCreativeWithoutMediaUrl_requestsErrorUrlsWith403() throws Exception {
+        TrackingManager mockTrackingManager = mock(TrackingManager.class);
+        CreativeFactory creativeFactory = createVastFactory(mockTrackingManager, "");
+
+        creativeFactory.start();
+
+        verify(mockTrackingManager).fireEventTrackingURLs(errorUrlsWithCode(403));
+        verify(mockListener).onFailure(any(AdException.class));
+    }
+
+    @Test
+    public void vastCreativeMediaFileDownloadFailed_requestsErrorUrlsWith401() throws Exception {
+        TrackingManager mockTrackingManager = mock(TrackingManager.class);
+        List<Runnable> downloads = queueDownloads();
+        CreativeFactory creativeFactory = createVastFactory(mockTrackingManager, UNREACHABLE_MEDIA_URL);
+        startWithMockTimeout(creativeFactory);
+
+        runDownloads(downloads);
+
+        verify(mockTrackingManager).fireEventTrackingURLs(errorUrlsWithCode(401));
+        verify(mockListener).onFailure(any(AdException.class));
+    }
+
+    @Test
+    public void vastCreativeTimeout_requestsErrorUrlsWith304() throws Exception {
+        TrackingManager mockTrackingManager = mock(TrackingManager.class);
+        queueDownloads();
+        CreativeFactory creativeFactory = createVastFactory(mockTrackingManager, UNREACHABLE_MEDIA_URL);
+        Runnable timeout = startWithMockTimeout(creativeFactory);
+
+        timeout.run();
+
+        verify(mockTrackingManager).fireEventTrackingURLs(errorUrlsWithCode(304));
+        verify(mockListener).onFailure(any(AdException.class));
+    }
+
+    @Test
+    public void vastCreativeFailuresAfterTimeout_requestOnly304() throws Exception {
+        TrackingManager mockTrackingManager = mock(TrackingManager.class);
+        List<Runnable> downloads = queueDownloads();
+        CreativeFactory creativeFactory = createVastFactory(mockTrackingManager, UNREACHABLE_MEDIA_URL);
+        Runnable timeout = startWithMockTimeout(creativeFactory);
+
+        timeout.run();
+        runDownloads(downloads);
+        ((VideoCreative) creativeFactory.getCreative()).onFailure(new AdException(AdException.INTERNAL_ERROR, "player"));
+
+        verify(mockTrackingManager).fireEventTrackingURLs(errorUrlsWithCode(304));
+        verifyNoMoreInteractions(mockTrackingManager);
+    }
+
+    @Test
+    public void vastCreativeTimeoutAfterReady_requestsNothing() throws Exception {
+        TrackingManager mockTrackingManager = mock(TrackingManager.class);
+        queueDownloads();
+        CreativeFactory creativeFactory = createVastFactory(mockTrackingManager, UNREACHABLE_MEDIA_URL);
+        Runnable timeout = startWithMockTimeout(creativeFactory);
+        AbstractCreative creative = creativeFactory.getCreative();
+
+        creative.getResolutionListener().creativeReady(creative);
+        timeout.run();
+
+        verify(mockListener).onSuccess();
+        verify(mockListener, never()).onFailure(any());
+        verifyNoInteractions(mockTrackingManager);
+    }
+
+    // The player is prepared when the ad is displayed, after the creative was reported ready.
+    // Its failure is still reported, so it requests the Error URIs.
+    @Test
+    public void vastCreativePlayerFailedAfterReady_requestsErrorUrlsWith405Once() throws Exception {
+        TrackingManager mockTrackingManager = mock(TrackingManager.class);
+        queueDownloads();
+        CreativeFactory creativeFactory = createVastFactory(mockTrackingManager, UNREACHABLE_MEDIA_URL);
+        startWithMockTimeout(creativeFactory);
+        VideoCreative creative = (VideoCreative) creativeFactory.getCreative();
+
+        creative.getResolutionListener().creativeReady(creative);
+        creative.onFailure(new AdException(AdException.INTERNAL_ERROR, "player"));
+        creative.onFailure(new AdException(AdException.INTERNAL_ERROR, "player again"));
+
+        verify(mockTrackingManager).fireEventTrackingURLs(errorUrlsWithCode(405));
+        verifyNoMoreInteractions(mockTrackingManager);
+        verify(mockListener, times(2)).onFailure(any(AdException.class));
+    }
+
+    @Test
+    public void vastCreativeDestroyedBeforeTimeout_requestsNothing() throws Exception {
+        TrackingManager mockTrackingManager = mock(TrackingManager.class);
+        queueDownloads();
+        CreativeFactory creativeFactory = createVastFactory(mockTrackingManager, UNREACHABLE_MEDIA_URL);
+        creativeFactory.start();
+
+        creativeFactory.destroy();
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(PrebidMobile.getCreativeFactoryTimeoutPreRenderContent() + 1));
+
+        verify(mockListener, never()).onFailure(any());
+        verifyNoInteractions(mockTrackingManager);
+    }
+
+    private CreativeFactory createVastFactory(TrackingManager trackingManager, String mediaUrl) throws AdException {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdFormat(AdFormat.VAST);
+        VideoCreativeModel videoModel = new VideoCreativeModel(trackingManager, mock(OmEventTracker.class), adConfiguration);
+        videoModel.setMediaUrl(mediaUrl);
+        videoModel.getVideoEventUrls().put(VideoAdEvent.Event.AD_ERROR, new ArrayList<>(Arrays.asList(
+                "https://example.com/error/inline?code=[ERRORCODE]",
+                "https://example.com/error/wrapper?code=%5BERRORCODE%5D"
+        )));
+        return new CreativeFactory(mockContext, videoModel, mockListener, mockOmAdSessionManager, mockInterstitialManager);
+    }
+
+    private static List<String> errorUrlsWithCode(int code) {
+        return Arrays.asList(
+                "https://example.com/error/inline?code=" + code,
+                "https://example.com/error/wrapper?code=" + code
+        );
+    }
+
+    // Starts the factory with its timeout posted to a mock handler and returns the timeout.
+    private static Runnable startWithMockTimeout(CreativeFactory creativeFactory) throws IllegalAccessException {
+        Handler mockHandler = mock(Handler.class);
+        WhiteBox.field(CreativeFactory.class, "timeoutHandler").set(creativeFactory, mockHandler);
+
+        creativeFactory.start();
+
+        ArgumentCaptor<Runnable> timeout = ArgumentCaptor.forClass(Runnable.class);
+        verify(mockHandler).postDelayed(timeout.capture(), anyLong());
+        return timeout.getValue();
+    }
+
+    // Holds the media file downloads until runDownloads() is called.
+    private static List<Runnable> queueDownloads() {
+        List<Runnable> downloads = new ArrayList<>();
+        ShadowPausedAsyncTask.overrideExecutor(downloads::add);
+        return downloads;
+    }
+
+    private static void runDownloads(List<Runnable> downloads) {
+        for (Runnable download : downloads) {
+            download.run();
+        }
+        shadowOf(Looper.getMainLooper()).idle();
     }
 }
