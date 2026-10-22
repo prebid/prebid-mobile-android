@@ -109,7 +109,7 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
             rootVastParser.getAllTrackings(rootVastParser, 0);
             rootVastParser.getImpressions(rootVastParser, 0);
             rootVastParser.getClickTrackings(rootVastParser, 0);
-            final String videoErrorUrl = rootVastParser.getError(rootVastParser, 0);
+            final ArrayList<String> videoErrorUrls = rootVastParser.getErrorUrls(rootVastParser, 0);
             final String vastClickThroughUrl = rootVastParser.getClickThroughUrl(rootVastParser, 0);
             final String videoDuration = latestVastWrapperParser.getVideoDuration(latestVastWrapperParser, 0);
             final String skipOffset = latestVastWrapperParser.getSkipOffset(latestVastWrapperParser, 0);
@@ -154,10 +154,8 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
             }
             videoModel.getVideoEventUrls().put(VideoAdEvent.Event.AD_CLICK, clickTrackingUrls);
 
-            //put error vastURL into element
-            ArrayList<String> errorUrls = new ArrayList<>();
-            errorUrls.add(videoErrorUrl);
-            videoModel.getVideoEventUrls().put(VideoAdEvent.Event.AD_ERROR, errorUrls);
+            //put error urls into element: the InLine ad's, then those of the Wrappers that led to it
+            videoModel.getVideoEventUrls().put(VideoAdEvent.Event.AD_ERROR, videoErrorUrls);
 
             //put click through url into element
             videoModel.setVastClickthroughUrl(vastClickThroughUrl);
