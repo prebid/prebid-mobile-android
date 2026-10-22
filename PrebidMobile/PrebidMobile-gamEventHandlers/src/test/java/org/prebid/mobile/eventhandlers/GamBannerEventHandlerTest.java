@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -35,6 +36,7 @@ import android.view.View;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.AdSize;
@@ -130,6 +132,9 @@ public class GamBannerEventHandlerTest {
 
         verify(mockBannerEventListener, times(1)).onAdServerWin(eq(mockView));
         verify(mockPublisherAdView, times(1)).recordManualImpression();
+        InOrder inOrder = inOrder(mockBannerEventListener, mockPublisherAdView);
+        inOrder.verify(mockBannerEventListener).onAdServerWin(eq(mockView));
+        inOrder.verify(mockPublisherAdView).recordManualImpression();
     }
 
     @Test
