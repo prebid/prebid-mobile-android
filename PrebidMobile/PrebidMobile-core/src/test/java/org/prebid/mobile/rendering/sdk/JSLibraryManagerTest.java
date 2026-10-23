@@ -27,6 +27,8 @@ public class JSLibraryManagerTest {
     private JsScriptsDownloader mockDownloader;
 
     private final List<Runnable> diskTasks = new ArrayList<>();
+    private int createdDownloaders = 0;
+    private RuntimeException createDownloaderError;
 
     private JSLibraryManager manager;
 
@@ -34,7 +36,7 @@ public class JSLibraryManagerTest {
     public void setUp() {
         mockManager = MockitoAnnotations.openMocks(this);
 
-        manager = new JSLibraryManager(mockDownloader, diskTasks::add);
+        manager = new JSLibraryManager(this::createDownloader, diskTasks::add);
     }
 
     @After
@@ -47,6 +49,7 @@ public class JSLibraryManagerTest {
         boolean loaded = manager.checkIfScriptsDownloadedAndStartDownloadingIfNot();
 
         assertFalse(loaded);
+        assertEquals(0, createdDownloaders);
         verifyNoInteractions(mockDownloader);
         assertEquals(1, diskTasks.size());
     }
@@ -91,9 +94,45 @@ public class JSLibraryManagerTest {
     }
 
     @Test
+    public void checkScripts_createDownloaderFails_nextCheckTriesAgain() {
+        createDownloaderError = new RuntimeException("No files dir");
+        manager.checkIfScriptsDownloadedAndStartDownloadingIfNot();
+        runDiskTasks();
+        createDownloaderError = null;
+        when(mockDownloader.areScriptsDownloadedAlready()).thenReturn(true);
+        when(mockDownloader.readFile(JsScriptData.openMeasurementData)).thenReturn("omsdk");
+        when(mockDownloader.readFile(JsScriptData.mraidData)).thenReturn("mraid");
+
+        boolean loaded = manager.checkIfScriptsDownloadedAndStartDownloadingIfNot();
+        runDiskTasks();
+
+        assertFalse(loaded);
+        assertEquals(2, createdDownloaders);
+        assertEquals("omsdk", manager.getOMSDKScript());
+        assertEquals("mraid", manager.getMRAIDScript());
+    }
+
+    @Test
+    public void checkScripts_readFails_keepsScriptsEmpty() {
+        when(mockDownloader.areScriptsDownloadedAlready()).thenReturn(true);
+        when(mockDownloader.readFile(JsScriptData.openMeasurementData)).thenReturn(null);
+        when(mockDownloader.readFile(JsScriptData.mraidData)).thenReturn("mraid");
+        manager.checkIfScriptsDownloadedAndStartDownloadingIfNot();
+        runDiskTasks();
+
+        boolean loaded = manager.checkIfScriptsDownloadedAndStartDownloadingIfNot();
+
+        assertFalse(loaded);
+        assertEquals("", manager.getOMSDKScript());
+        assertEquals("", manager.getMRAIDScript());
+        assertEquals(1, diskTasks.size());
+    }
+
+    @Test
     public void startScriptReadingTask_doesNotTouchDiskOnCallingThread() {
         manager.startScriptReadingTask();
 
+        assertEquals(0, createdDownloaders);
         verifyNoInteractions(mockDownloader);
         assertEquals(1, diskTasks.size());
     }
@@ -107,6 +146,14 @@ public class JSLibraryManagerTest {
 
         verify(mockDownloader, never()).downloadScripts(any());
         verify(mockDownloader, never()).readFile(any());
+    }
+
+    private JsScriptsDownloader createDownloader() {
+        createdDownloaders++;
+        if (createDownloaderError != null) {
+            throw createDownloaderError;
+        }
+        return mockDownloader;
     }
 
     private void runDiskTasks() {

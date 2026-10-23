@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.sdk;
 
 import android.content.Context;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.LogUtil;
@@ -42,9 +43,11 @@ public class JSLibraryManager {
 
     private volatile String MRAIDscript = "";
     private volatile String OMSDKscirpt = "";
+    private final DownloaderFactory downloaderFactory;
     /**
-     * Used only on {@link #diskExecutor}.
+     * Used only on {@link #diskExecutor}, see {@link #getDownloader()}.
      */
+    @Nullable
     private JsScriptsDownloader scriptsDownloader;
     /**
      * Runs one task at a time, in order.
@@ -52,17 +55,18 @@ public class JSLibraryManager {
     private final Executor diskExecutor;
 
     private JSLibraryManager(Context context) {
+        Context applicationContext = context.getApplicationContext();
+        Context storageContext = applicationContext != null ? applicationContext : context;
+        downloaderFactory = () -> JsScriptsDownloader.createDownloader(storageContext);
         diskExecutor = createDiskExecutor();
-        // Creating the downloader reads the disk (Context.getFilesDir()).
-        runOnDiskThread(() -> scriptsDownloader = JsScriptsDownloader.createDownloader(context));
     }
 
     @VisibleForTesting
     JSLibraryManager(
-            JsScriptsDownloader scriptsDownloader,
+            DownloaderFactory downloaderFactory,
             Executor diskExecutor
     ) {
-        this.scriptsDownloader = scriptsDownloader;
+        this.downloaderFactory = downloaderFactory;
         this.diskExecutor = diskExecutor;
     }
 
@@ -86,18 +90,21 @@ public class JSLibraryManager {
             return true;
         }
 
+        // Queued duplicates are harmless: they return once the scripts are loaded,
+        // and JsScriptsDownloader skips a file that is downloading or downloaded.
         runOnDiskThread(() -> {
             if (areScriptsLoaded()) {
                 return;
             }
 
-            if (scriptsDownloader.areScriptsDownloadedAlready()) {
-                readScripts();
+            JsScriptsDownloader downloader = getDownloader();
+            if (downloader.areScriptsDownloadedAlready()) {
+                readScripts(downloader);
                 return;
             }
 
-            scriptsDownloader.downloadScripts(
-                    (path) -> new JsScriptsDownloader.ScriptDownloadListener(path, scriptsDownloader.storage)
+            downloader.downloadScripts(
+                    (path) -> new JsScriptsDownloader.ScriptDownloadListener(path, downloader.storage)
             );
         });
         return false;
@@ -109,8 +116,13 @@ public class JSLibraryManager {
         }
 
         runOnDiskThread(() -> {
-            if (!areScriptsLoaded() && scriptsDownloader.areScriptsDownloadedAlready()) {
-                readScripts();
+            if (areScriptsLoaded()) {
+                return;
+            }
+
+            JsScriptsDownloader downloader = getDownloader();
+            if (downloader.areScriptsDownloadedAlready()) {
+                readScripts(downloader);
             }
         });
     }
@@ -127,9 +139,24 @@ public class JSLibraryManager {
         return !OMSDKscirpt.isEmpty() && !MRAIDscript.isEmpty();
     }
 
-    private void readScripts() {
-        String openMeasurementScript = scriptsDownloader.readFile(JsScriptData.openMeasurementData);
-        String mraidScript = scriptsDownloader.readFile(JsScriptData.mraidData);
+    /**
+     * Creating the downloader reads the disk (Context.getFilesDir()). If it fails,
+     * the next task tries again.
+     */
+    private JsScriptsDownloader getDownloader() {
+        if (scriptsDownloader == null) {
+            scriptsDownloader = downloaderFactory.create();
+        }
+        return scriptsDownloader;
+    }
+
+    private void readScripts(JsScriptsDownloader downloader) {
+        String openMeasurementScript = downloader.readFile(JsScriptData.openMeasurementData);
+        String mraidScript = downloader.readFile(JsScriptData.mraidData);
+        if (openMeasurementScript == null || mraidScript == null) {
+            LogUtil.error(TAG, "Can't read JS scripts");
+            return;
+        }
 
         OMSDKscirpt = openMeasurementScript;
         MRAIDscript = mraidScript;
@@ -155,6 +182,13 @@ public class JSLibraryManager {
         );
         executor.allowCoreThreadTimeOut(true);
         return executor;
+    }
+
+    @VisibleForTesting
+    interface DownloaderFactory {
+
+        JsScriptsDownloader create();
+
     }
 
 }
