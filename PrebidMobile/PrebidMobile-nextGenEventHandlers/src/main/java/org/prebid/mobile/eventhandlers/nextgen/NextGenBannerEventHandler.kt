@@ -148,7 +148,7 @@ class NextGenBannerEventHandler(
             requestBanner = null
             recycleCurrentBanner()
             embeddedBanner = bannerView
-            bannerEventListener?.onAdServerWin(bannerView?.view)
+            bannerEventListener?.onAdServerWin(bannerView?.view, bannerView?.adSize)
         }
     }
 
@@ -192,7 +192,7 @@ class NextGenBannerEventHandler(
         recycleCurrentBanner()
         embeddedBanner = bannerView
         isExpectingAppEvent = false
-        bannerEventListener?.onAdServerWin(bannerView?.view)
+        bannerEventListener?.onAdServerWin(bannerView?.view, bannerView?.adSize)
     }
 
     private fun handleAdFailure(errorCode: Int) {

@@ -17,12 +17,29 @@
 package org.prebid.mobile.rendering.bidding.listeners;
 
 import android.view.View;
+import androidx.annotation.Nullable;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.api.exceptions.AdException;
 
 public interface BannerEventListener {
     void onPrebidSdkWin();
 
-    void onAdServerWin(View view);
+    /**
+     * The ad server won and its creative is ready to be displayed.
+     *
+     * @param view   the ad server's creative view.
+     * @param adSize size, in dp, of the creative the ad server served, or null when the event
+     *               handler does not know it.
+     */
+    void onAdServerWin(View view, @Nullable AdSize adSize);
+
+    /**
+     * @deprecated Use {@link #onAdServerWin(View, AdSize)}, which also reports the served size.
+     */
+    @Deprecated
+    default void onAdServerWin(View view) {
+        onAdServerWin(view, null);
+    }
 
     void onAdFailed(AdException exception);
 
