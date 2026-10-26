@@ -309,6 +309,14 @@ public interface <span class="typeNameLabel"><a href=PrebidMobilePluginRenderer.
                                             <td class="colLast">Returns true only if the given ad unit could be renderer by the plugin</td>
                                         </tr>
                                         
+                                        <tr id="i8" class="altColor">
+                                            <td class="colFirst"><code>boolean</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=PrebidMobilePluginRenderer.html#sendsWinNotice()>sendsWinNotice</a>() </code>
+                                            </th>
+                                            <td class="colLast">Returns true if the renderer, or the ad SDK it wraps, sends the win notice for its ads itself.</td>
+                                        </tr>
+                                        
                                         </tbody>
                                     </table>
                                 </div>
@@ -518,12 +526,35 @@ public interface <span class="typeNameLabel"><a href=PrebidMobilePluginRenderer.
                                     <!--   -->
                                 </a>
                                 <ul class=
-                                              "blockListLast"
+                                              "blockList"
                                           >
                                     <li class="blockList">
                                         <h4>isSupportRenderingFor</h4>
                                         <pre class="methodSignature"> abstract boolean <a href=PrebidMobilePluginRenderer.html#isSupportRenderingFor(org.prebid.mobile.configuration.AdUnitConfiguration)>isSupportRenderingFor</a>(AdUnitConfiguration adUnitConfiguration)</pre>
                                         <div class="block"><p>Returns true only if the given ad unit could be renderer by the plugin</p></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="sendsWinNotice()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockListLast"
+                                          >
+                                    <li class="blockList">
+                                        <h4>sendsWinNotice</h4>
+                                        <pre class="methodSignature"> boolean <a href=PrebidMobilePluginRenderer.html#sendsWinNotice()>sendsWinNotice</a>()</pre>
+                                        <div class="block"><p>Returns true if the renderer, or the ad SDK it wraps, sends the win notice for its ads itself. </p><p> When a plugin renderer creates the ad, Prebid sends the bid's win notice: <code>nurl</code>, the Prebid Cache URLs and <code>ext.prebid.events.win</code>. Return true so that Prebid does not send it a second time. The default returns false, and Prebid sends the win notice.</p></div>
 
                                         <dl>
 
