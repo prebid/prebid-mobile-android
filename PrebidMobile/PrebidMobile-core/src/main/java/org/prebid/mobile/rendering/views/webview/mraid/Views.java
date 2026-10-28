@@ -39,6 +39,40 @@ public class Views {
     }
 
     /**
+     * Depth first search of the view hierarchy below the given view for the first view of the
+     * given type. The view itself is not considered a match.
+     *
+     * @param view root of the hierarchy to search. A null view, or one that is not a container,
+     *             yields no match.
+     * @param type the class to look for
+     * @return the first matching descendant, or null when there is none
+     */
+    @Nullable
+    public static <T extends View> T findFirstDescendantOfType(
+            @Nullable View view,
+            Class<T> type
+    ) {
+        if (!(view instanceof ViewGroup)) {
+            return null;
+        }
+
+        final ViewGroup viewGroup = (ViewGroup) view;
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            final View child = viewGroup.getChildAt(i);
+            if (type.isInstance(child)) {
+                return type.cast(child);
+            }
+
+            final T match = findFirstDescendantOfType(child, type);
+            if (match != null) {
+                return match;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Finds the topmost view in the current Activity or current view hierarchy.
      *
      * @param context If an Activity Context, used to obtain the Activity's DecorView. This is

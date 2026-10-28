@@ -17,16 +17,20 @@
 package org.prebid.mobile.api.mediation;
 
 import android.content.Context;
+import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
+import org.prebid.mobile.rendering.bidding.display.MediationBannerView;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
+import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
 import java.util.EnumSet;
 
@@ -89,11 +93,35 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
                 return true;
             }
 
+            // A video creative must not be torn down mid playback. The tick is skipped and the
+            // timer rescheduled, so refreshing resumes once playback finishes.
+            if (isVideoPlaying()) {
+                LogUtil.debug(TAG, "Video is playing, skipping the refresh.");
+                return false;
+            }
+
             boolean isViewVisible = mediationDelegate.canPerformRefresh();
             boolean canRefresh = screenStateReceiver.isScreenOn() && isViewVisible;
             LogUtil.debug(TAG, "Can perform refresh: " + canRefresh);
             return canRefresh;
         });
+    }
+
+    /**
+     * True while a Prebid video creative rendered inside the mediated ad view is playing.
+     * <p>
+     * The adapters hand the {@link MediationBannerView} they render to the mediation SDK, which
+     * embeds it in the ad view {@link PrebidMediationDelegate#getAdView()} returns. Reading the
+     * state off that view on every refresh tick means the gate follows whatever is actually on
+     * screen: it clears when the video finishes or when the mediation SDK replaces the creative,
+     * and it reports false when another demand partner won, without the ad unit having to learn
+     * the auction's outcome.
+     */
+    @VisibleForTesting
+    boolean isVideoPlaying() {
+        final View adView = mediationDelegate.getAdView();
+        final MediationBannerView prebidView = Views.findFirstDescendantOfType(adView, MediationBannerView.class);
+        return prebidView != null && prebidView.isVideoPlaying();
     }
 
     /**
@@ -120,10 +148,10 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
      * <p>
      * A null or empty set is ignored and the current value is kept.
      * <p>
-     * Unlike {@code BannerView}, a mediation ad unit is not told whether the Prebid bid actually
-     * won in the primary ad server, so auto refresh keeps running when video is requested. Call
-     * {@link #stopRefresh()} and {@link #resumeRefresh()} around video playback if the refresh
-     * interval is shorter than the creatives being served.
+     * Auto refresh skips a tick while a Prebid video creative is playing inside the mediated ad
+     * view, so a video is never torn down mid playback. That gate needs
+     * {@link PrebidMediationDelegate#getAdView()}; a custom delegate that does not implement it
+     * has to call {@link #stopRefresh()} and {@link #resumeRefresh()} around playback instead.
      */
     public void setAdUnitFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats) {
         if (adUnitFormats == null || adUnitFormats.isEmpty()) {
