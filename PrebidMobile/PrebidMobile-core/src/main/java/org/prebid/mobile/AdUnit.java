@@ -218,6 +218,32 @@ public abstract class AdUnit {
     }
 
     /**
+     * Loads ad, applies keywords to the ad object, and calls listener with bid info data.
+     * Like {@link #fetchDemand(Object, OnCompleteListener)}, but returns the full {@link BidInfo}
+     * (including the price, currency, creative id and ad id of the attached bid) instead of only
+     * the result code.
+     *
+     * @param adObject AdMob's ({@code AdManagerAdRequest} or {@code AdManagerAdRequest.Builder})
+     *                 or AppLovin's ({@code MaxNativeAdLoader}) ad object
+     * @param listener callback when operation is completed (success or fail)
+     */
+    public void fetchDemandBidInfo(Object adObject, OnFetchDemandResult listener) {
+        // Not a fetchDemand overload: an implicitly typed lambda fits both OnCompleteListener and
+        // OnFetchDemandResult, so existing fetchDemand(adObject, resultCode -> ...) calls would no
+        // longer compile.
+        if (listener == null) {
+            LogUtil.error("Parameter OnFetchDemandResult in fetchDemandBidInfo() must be not null.");
+            return;
+        }
+
+        fetchDemand(adObject, resultCode -> {
+            BidInfo bidInfo = BidInfo.create(resultCode, bidResponse, configuration);
+            Util.saveCacheId(bidInfo.getNativeCacheId(), this.adObject);
+            listener.onComplete(bidInfo);
+        });
+    }
+
+    /**
      * Applies the native visibility tracker for tracking `burl` url.
      *
      * @param adView the ad view object (f.e. {@code AdManagerAdView})
