@@ -29,8 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerParameters;
-import org.prebid.mobile.DataObject;
-import org.prebid.mobile.ExternalUserId;
+import org.prebid.mobile.api.eid.ExtendedId;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
@@ -190,13 +189,10 @@ public class BasicParameterBuilder extends ParameterBuilder {
             user.ext.put(publisherUserExt.getJsonObject());
         }
 
-        List<ExternalUserId> extendedIds = TargetingParams.getExternalUserIds();
-        if (TargetingParams.getSendSharedId()) {
-            extendedIds.add(TargetingParams.getSharedId());
-        }
+        List<ExtendedId> extendedIds = TargetingParams.getExtendedIds();
         if (extendedIds != null && extendedIds.size() > 0) {
             JSONArray idsJson = new JSONArray();
-            for (ExternalUserId id : extendedIds) {
+            for (ExtendedId id : extendedIds) {
                 if (id != null) {
                     JSONObject idJson = id.getJson();
                     if (idJson != null) {

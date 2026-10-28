@@ -1,5 +1,7 @@
 package org.prebid.mobile;
 
+import org.prebid.mobile.api.eid.ExtendedId;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -23,6 +25,8 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.List;
+
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
 public class SharedIdTest {
@@ -37,7 +41,7 @@ public class SharedIdTest {
 
         Context context = Robolectric.buildActivity(Activity.class).create().get();
         PrebidMobile.initializeSdk(context, "https://prebid-server-test-j.prebid.org/openrtb2/auction", null);
-        SharedId.resetIdentifier();
+        SharedId.getInstance().resetIdentifier();
     }
 
     @After
@@ -52,8 +56,8 @@ public class SharedIdTest {
 
     @Test
     public void sharedIdReturnsSameIdentifierWithinSession() throws Exception {
-        ExternalUserId id1 = SharedId.getIdentifier();
-        ExternalUserId id2 = SharedId.getIdentifier();
+        ExternalUserId id1 = SharedId.getInstance().getIdentifier();
+        ExternalUserId id2 = SharedId.getInstance().getIdentifier();
 
         assertNotNull(id1);
         assertNotNull(id2);
@@ -63,11 +67,11 @@ public class SharedIdTest {
     @Test
     public void sharedIdGeneratesNewIdentifierAfterReset() throws Exception {
         when(TargetingParams.getDeviceAccessConsent()).thenReturn(true);
-        ExternalUserId id1 = SharedId.getIdentifier();
+        ExternalUserId id1 = SharedId.getInstance().getIdentifier();
         assertNotNull(id1);
 
-        SharedId.resetIdentifier();
-        ExternalUserId id2 = SharedId.getIdentifier();
+        SharedId.getInstance().resetIdentifier();
+        ExternalUserId id2 = SharedId.getInstance().getIdentifier();
         assertNotNull(id2);
 
         assertNotEquals(id1, id2);
@@ -80,7 +84,7 @@ public class SharedIdTest {
         SharedPreferences prefsMock = mockSharedPreferences();
         when(prefsMock.getString(any(), any())).thenReturn(storedId);
 
-        ExternalUserId id = SharedId.getIdentifier();
+        ExternalUserId id = SharedId.getInstance().getIdentifier();
         ExternalUserId.UniqueId uniqueId = id.getUniqueIds().get(0);
         assertEquals(storedId, uniqueId.getId());
     }
@@ -90,9 +94,18 @@ public class SharedIdTest {
         when(SharedId.fetchSharedId()).thenReturn(null);
         when(TargetingParams.getDeviceAccessConsent()).thenReturn(true);
 
-        ExternalUserId id = SharedId.getIdentifier();
+        ExternalUserId id = SharedId.getInstance().getIdentifier();
         ExternalUserId.UniqueId uniqueId = id.getUniqueIds().get(0);
         assertNotNull(uniqueId.getId());
+    }
+
+    @Test
+    public void getExtendedIds_returnsSingletonListWithCurrentIdentifier() {
+        ExternalUserId identifier = SharedId.getInstance().getIdentifier();
+        List<ExtendedId> extendedIds = SharedId.getInstance().getExtendedIds();
+
+        assertEquals(1, extendedIds.size());
+        assertEquals(identifier, extendedIds.get(0));
     }
 
     private SharedPreferences mockSharedPreferences() {
