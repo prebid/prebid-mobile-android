@@ -38,6 +38,7 @@ import org.prebid.mobile.rendering.video.vast.Impression;
 import org.prebid.mobile.rendering.video.vast.InLine;
 import org.prebid.mobile.rendering.video.vast.MediaFile;
 import org.prebid.mobile.rendering.video.vast.VAST;
+import org.prebid.mobile.rendering.video.vast.Wrapper;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -205,8 +206,7 @@ public class AdResponseParserVast extends AdResponseParserBase {
     }
 
     /**
-     * Returns the {@code <VAST>}-level {@code <Error>} URIs of this response and of every response it wraps.
-     * They report a response without ads.
+     * Returns response-level no-ad Error URIs and the Error URIs of the wrappers actually followed.
      */
     public List<String> getNoAdsErrorUrls() {
         List<String> urls = new ArrayList<>();
@@ -214,6 +214,14 @@ public class AdResponseParserVast extends AdResponseParserBase {
             urls.add(vast.getError().getValue());
         }
         if (wrappedVASTXml != null) {
+            Wrapper wrapper = getVastWrapper();
+            if (wrapper != null) {
+                for (org.prebid.mobile.rendering.video.vast.Error error : wrapper.getErrors()) {
+                    if (Utils.isNotBlank(error.getValue())) {
+                        urls.add(error.getValue());
+                    }
+                }
+            }
             urls.addAll(wrappedVASTXml.getNoAdsErrorUrls());
         }
 
@@ -230,14 +238,19 @@ public class AdResponseParserVast extends AdResponseParserBase {
     }
 
     public String getVastUrl() {
-        if (vast.getAds() != null)
+        Wrapper wrapper = getVastWrapper();
+        return wrapper == null ? null : wrapper.getVastUrl().getValue();
+    }
+
+    @Nullable
+    private Wrapper getVastWrapper() {
+        if (vast.getAds() != null) {
             for (Ad ad : vast.getAds()) {
-
                 if (ad.getWrapper() != null && ad.getWrapper().getVastUrl() != null) {
-
-                    return ad.getWrapper().getVastUrl().getValue();
+                    return ad.getWrapper();
                 }
             }
+        }
         return null;
     }
 

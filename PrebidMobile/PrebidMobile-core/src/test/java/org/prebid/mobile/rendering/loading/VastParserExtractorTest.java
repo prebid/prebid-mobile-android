@@ -175,6 +175,89 @@ public class VastParserExtractorTest {
     }
 
     @Test
+    public void extractNoAdsAfterNestedWrappers_FireAllWrapperErrorsAndRootError() {
+        try (MockedStatic<ServerConnection> serverConnection = mockStatic(ServerConnection.class)) {
+            vastParserExtractor.extract(wrapperVast("http://wrapper/one",
+                    "http://error/one?code=[ERRORCODE]", "http://error/two?code=%5berrorcode%5d", "  "));
+            respondToWrapper("http://wrapper/one", wrapperVast("http://wrapper/two", "http://error/three?code=[ERRORCODE]"));
+            serverConnection.verifyNoInteractions();
+            verify(mockListener, never()).onResult(any());
+
+            respondToWrapper("http://wrapper/two", noAdsVast("http://error/empty?code=[ERRORCODE]"));
+
+            serverConnection.verify(() -> ServerConnection.fireAndForget("http://error/one?code=303"));
+            serverConnection.verify(() -> ServerConnection.fireAndForget("http://error/two?code=303"));
+            serverConnection.verify(() -> ServerConnection.fireAndForget("http://error/three?code=303"));
+            serverConnection.verify(() -> ServerConnection.fireAndForget("http://error/empty?code=303"));
+            serverConnection.verifyNoMoreInteractions();
+        }
+        assertNoAdsFailure();
+    }
+
+    @Test
+    public void extractNoAdsWithoutRootError_FireWrapperError() {
+        try (MockedStatic<ServerConnection> serverConnection = mockStatic(ServerConnection.class)) {
+            vastParserExtractor.extract(wrapperVast("http://wrapper/vast", "http://error/wrapper?code=[ERRORCODE]"));
+            respondToWrapper("http://wrapper/vast", "<VAST version=\"4.3\"/>");
+
+            serverConnection.verify(() -> ServerConnection.fireAndForget("http://error/wrapper?code=303"));
+            serverConnection.verifyNoMoreInteractions();
+        }
+        assertNoAdsFailure();
+    }
+
+    @Test
+    public void extractSuccessfulWrappedResponse_DoesNotFireWrapperErrors() {
+        try (MockedStatic<ServerConnection> serverConnection = mockStatic(ServerConnection.class)) {
+            vastParserExtractor.extract(wrapperVast("http://wrapper/vast", "http://error/wrapper?code=[ERRORCODE]"));
+            respondToWrapper("http://wrapper/vast", defaultResponseString);
+
+            serverConnection.verifyNoInteractions();
+        }
+        ArgumentCaptor<VastExtractorResult> result = ArgumentCaptor.forClass(VastExtractorResult.class);
+        verify(mockListener).onResult(result.capture());
+        assertFalse(result.getValue().hasException());
+    }
+
+    @Test
+    public void extractNoAds_FireOnlyFollowedWrapperErrors() {
+        String vast = "<VAST version=\"4.3\">"
+                + wrapperAd("http://wrapper/followed", "http://error/followed?code=[ERRORCODE]")
+                + wrapperAd("http://wrapper/ignored", "http://error/ignored?code=[ERRORCODE]")
+                + "</VAST>";
+        try (MockedStatic<ServerConnection> serverConnection = mockStatic(ServerConnection.class)) {
+            vastParserExtractor.extract(vast);
+            respondToWrapper("http://wrapper/followed", "<VAST version=\"4.3\"/>");
+
+            serverConnection.verify(() -> ServerConnection.fireAndForget("http://error/followed?code=303"));
+            serverConnection.verifyNoMoreInteractions();
+        }
+        verify(mockAsyncVastLoader, never()).loadVast(eq("http://wrapper/ignored"), any());
+        assertNoAdsFailure();
+    }
+
+    private void respondToWrapper(String url, String xml) {
+        ArgumentCaptor<ResponseHandler> responseHandler = ArgumentCaptor.forClass(ResponseHandler.class);
+        verify(mockAsyncVastLoader).loadVast(eq(url), responseHandler.capture());
+        BaseNetworkTask.GetUrlResult response = new BaseNetworkTask.GetUrlResult();
+        response.responseString = xml;
+        responseHandler.getValue().onResponse(response);
+    }
+
+    private static String wrapperVast(String url, String... errorUrls) {
+        return "<VAST version=\"4.3\">" + wrapperAd(url, errorUrls) + "</VAST>";
+    }
+
+    private static String wrapperAd(String url, String... errorUrls) {
+        StringBuilder xml = new StringBuilder("<Ad id=\"1\"><Wrapper><AdSystem>test</AdSystem>");
+        for (String errorUrl : errorUrls) {
+            xml.append("<Error><![CDATA[").append(errorUrl).append("]]></Error>");
+        }
+        return xml.append("<VASTAdTagURI><![CDATA[").append(url)
+                .append("]]></VASTAdTagURI></Wrapper></Ad>").toString();
+    }
+
+    @Test
     public void cancel_CancelRunningTask() {
         vastParserExtractor.cancel();
 

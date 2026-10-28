@@ -125,7 +125,7 @@ public class VastParserExtractor {
         latestVastWrapperParser = adResponseParserVast;
 
         // A response without ads, either the initial one or one after wrappers, ends the load.
-        // Report it to the <VAST>-level Error URI of every response in the chain.
+        // Report it to response-level Error URIs and to each wrapper followed in the chain.
         if (latestVastWrapperParser.hasNoAds()) {
             for (String errorUrl : rootVastParser.getNoAdsErrorUrls()) {
                 TrackingManager.getInstance().fireEventTrackingURL(replaceErrorCodeMacro(errorUrl, NO_ADS_ERROR_CODE));
