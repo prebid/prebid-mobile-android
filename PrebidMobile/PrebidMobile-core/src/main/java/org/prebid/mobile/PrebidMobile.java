@@ -101,6 +101,8 @@ public class PrebidMobile {
 
     private static boolean pbsDebug = false;
     private static boolean shareGeoLocation = false;
+    // ALPHA2 preserves existing behavior; planned to default to ALPHA3 in 4.0.
+    private static GeoCountryFormat geoCountryFormat = GeoCountryFormat.ALPHA2;
     private static boolean assignNativeAssetID = false;
 
     /**
@@ -245,6 +247,27 @@ public class PrebidMobile {
      */
     public static boolean isShareGeoLocation() {
         return shareGeoLocation;
+    }
+
+    /**
+     * Format for the auto-detected {@code device.geo.country} sent in the bid
+     * request. The OS telephony/geocoder sources return ISO-3166-1 alpha-2
+     * ("US") while the OpenRTB spec requires alpha-3 ("USA").
+     *
+     * Defaults to {@link GeoCountryFormat#ALPHA2} to preserve existing behavior;
+     * set {@link GeoCountryFormat#ALPHA3} to send the spec-compliant format. The
+     * default is planned to change to {@code ALPHA3} in Prebid SDK 4.0.
+     */
+    public static void setGeoCountryFormat(@Nullable GeoCountryFormat format) {
+        PrebidMobile.geoCountryFormat = (format != null) ? format : GeoCountryFormat.ALPHA2;
+    }
+
+    /**
+     * {@link #setGeoCountryFormat(GeoCountryFormat)}
+     */
+    @NonNull
+    public static GeoCountryFormat getGeoCountryFormat() {
+        return geoCountryFormat;
     }
 
     /**
