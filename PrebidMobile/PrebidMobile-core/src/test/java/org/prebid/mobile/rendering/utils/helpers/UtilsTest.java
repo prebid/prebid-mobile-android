@@ -388,6 +388,12 @@ public class UtilsTest extends TestCase {
     }
 
     @Test
+    public void isVastWithSelfClosingRoot_ReturnTrue() {
+        assertTrue(Utils.isVast("<VAST version=\"4.3\"/>"));
+        assertTrue(Utils.isVast("<VAST version='3.0' />"));
+    }
+
+    @Test
     public void isVastWithHtmlData_ReturnFalse() throws IOException {
         String html = ResourceUtils.convertResourceToString("ad_contains_iframe");
         assertFalse(Utils.isVast(html));
