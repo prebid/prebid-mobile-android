@@ -19,10 +19,15 @@ package org.prebid.mobile.rendering.sdk.deviceData.managers;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -82,5 +87,23 @@ public class LastKnownLocationInfoManagerTest {
         when(location.getAccuracy()).thenReturn((float) 0);
         when(currentLocation.getAccuracy()).thenReturn((float) 0);
         assertTrue(locationImpl.isBetterLocation(location, currentLocation));
+    }
+
+    @Test
+    public void withCoarsePermissionOnly_UsesNetworkProviderOnly() {
+        Context mockContext = mock(Context.class);
+        LocationManager mockLocationManager = mock(LocationManager.class);
+        Location mockNetworkLocation = mock(Location.class);
+
+        when(mockContext.getSystemService(Context.LOCATION_SERVICE)).thenReturn(mockLocationManager);
+        when(mockContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)).thenReturn(PackageManager.PERMISSION_DENIED);
+        when(mockContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)).thenReturn(PackageManager.PERMISSION_GRANTED);
+        when(mockLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)).thenReturn(mockNetworkLocation);
+
+        LastKnownLocationInfoManager manager = new LastKnownLocationInfoManager(mockContext);
+
+        assertTrue(manager.isLocationAvailable());
+        verify(mockLocationManager, never()).getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        verify(mockLocationManager).getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
     }
 }
