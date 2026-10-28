@@ -29,6 +29,10 @@ public class PrebidAdUnit {
     protected boolean activateInterstitialPrebidImpressionTracker = false;
     protected WeakReference<View> adViewReference = new WeakReference<>(null);
 
+    // Every fetchDemand() creates a new inner ad unit, so the interval is kept here and applied to each one.
+    @Nullable
+    private Integer autoRefreshIntervalSeconds;
+
     /**
      * Default constructor.
      */
@@ -70,6 +74,7 @@ public class PrebidAdUnit {
     public void setAutoRefreshInterval(
             @IntRange(from = AUTO_REFRESH_DELAY_MIN / 1000, to = AUTO_REFRESH_DELAY_MAX / 1000) int seconds
     ) {
+        autoRefreshIntervalSeconds = seconds;
         if (adUnit != null) {
             adUnit.setAutoRefreshInterval(seconds);
         }
@@ -139,6 +144,9 @@ public class PrebidAdUnit {
         }
 
         adUnit = new MultiformatAdUnitFacade(configId, request);
+        if (autoRefreshIntervalSeconds != null) {
+            adUnit.setAutoRefreshInterval(autoRefreshIntervalSeconds);
+        }
         adUnit.activatePrebidImpressionTracker(adViewReference.get());
         if (activateInterstitialPrebidImpressionTracker) {
             adUnit.activateInterstitialPrebidImpressionTracker();

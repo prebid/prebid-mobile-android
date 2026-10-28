@@ -345,7 +345,7 @@ public class BannerView extends FrameLayout {
     public void stopRefresh() {
         isRefreshStopped = true;
         if (bidLoader != null) {
-            bidLoader.cancelRefresh();
+            bidLoader.stopRefresh();
         }
     }
 
