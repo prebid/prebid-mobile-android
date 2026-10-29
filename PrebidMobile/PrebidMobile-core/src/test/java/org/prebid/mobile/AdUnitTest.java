@@ -19,8 +19,10 @@ package org.prebid.mobile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -37,6 +39,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.api.original.OnFetchDemandResult;
+import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.testutils.BaseSetup;
@@ -44,6 +47,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -110,6 +114,58 @@ public class AdUnitTest {
     }
 
     @Test
+    public void fetchDemandBidInfo_NativeAdUnit_CachesBidOnce() throws IOException {
+        NativeAdUnit adUnit = spy(new NativeAdUnit("configId"));
+        Bundle adObject = new Bundle();
+        stubFetchDemandWithBidListener(adUnit, adObject, createBidResponse(adUnit));
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        adUnit.fetchDemandBidInfo(adObject, listener);
+
+        BidInfo bidInfo = captureBidInfo(listener);
+        assertEquals(1, cachedEntryCount());
+        assertTrue(CacheManager.isValid(bidInfo.getNativeCacheId()));
+        assertEquals(bidInfo.getNativeCacheId(), adObject.getString(NativeAdUnit.BUNDLE_KEY_CACHE_ID));
+    }
+
+    @Test
+    public void fetchDemandWithBidInfoListener_NativeAdUnit_CachesBidOnce() throws IOException {
+        NativeAdUnit adUnit = spy(new NativeAdUnit("configId"));
+        stubFetchDemandWithBidListener(adUnit, null, createBidResponse(adUnit));
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        adUnit.fetchDemand(listener);
+
+        BidInfo bidInfo = captureBidInfo(listener);
+        assertEquals(1, cachedEntryCount());
+        assertTrue(CacheManager.isValid(bidInfo.getNativeCacheId()));
+    }
+
+    @Test
+    public void fetchDemandBidInfo_ValidationFailsAfterEarlierResponse_DoesNotReportEarlierBid() throws IOException {
+        PrebidMobile.setPrebidServerAccountId("");
+        BannerAdUnit adUnit = new BannerAdUnit("configId", 320, 50);
+        adUnit.bidResponse = createBidResponse(adUnit);
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        adUnit.fetchDemandBidInfo(new Object(), listener);
+
+        assertResultCodeOnly(captureBidInfo(listener), ResultCode.INVALID_ACCOUNT_ID);
+    }
+
+    @Test
+    public void fetchDemandWithBidInfoListener_ValidationFailsAfterEarlierResponse_DoesNotReportEarlierBid() throws IOException {
+        PrebidMobile.setPrebidServerAccountId("");
+        BannerAdUnit adUnit = new BannerAdUnit("configId", 320, 50);
+        adUnit.bidResponse = createBidResponse(adUnit);
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        adUnit.fetchDemand(listener);
+
+        assertResultCodeOnly(captureBidInfo(listener), ResultCode.INVALID_ACCOUNT_ID);
+    }
+
+    @Test
     public void fetchDemandBidInfo_NullListener_DoesNotFetch() {
         BannerAdUnit adUnit = spy(new BannerAdUnit("configId", 320, 50));
 
@@ -133,6 +189,41 @@ public class AdUnitTest {
             listener.onComplete(resultCode);
             return null;
         }).when(adUnit).fetchDemand(eq(adObject), any(OnCompleteListener.class));
+    }
+
+    // Stands in for the network fetch but runs the ad unit's own bid listener, so its side effects
+    // (keywords, native caching) happen as in a real fetch.
+    private static void stubFetchDemandWithBidListener(
+            AdUnit adUnit,
+            @Nullable Object adObject,
+            BidResponse bidResponse
+    ) {
+        doAnswer(invocation -> {
+            adUnit.adObject = adObject;
+            OnCompleteListener listener = invocation.getArgument(1);
+            adUnit.createBidListener(listener).onFetchCompleted(bidResponse);
+            return null;
+        }).when(adUnit).fetchDemand(adObject == null ? isNull() : eq(adObject), any(OnCompleteListener.class));
+    }
+
+    private static BidResponse createBidResponse(AdUnit adUnit) throws IOException {
+        return new BidResponse(
+                ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"),
+                adUnit.getConfiguration()
+        );
+    }
+
+    private static int cachedEntryCount() {
+        Map<String, String> savedValues = Reflection.getStaticFieldOf(CacheManager.class, "savedValues");
+        return savedValues.size();
+    }
+
+    private static void assertResultCodeOnly(BidInfo bidInfo, ResultCode resultCode) {
+        assertEquals(resultCode, bidInfo.getResultCode());
+        assertNull(bidInfo.getTargetingKeywords());
+        assertNull(bidInfo.getPrice());
+        assertNull(bidInfo.getCreativeId());
+        assertNull(bidInfo.getRequestId());
     }
 
     private static BidInfo captureBidInfo(OnFetchDemandResult listener) {

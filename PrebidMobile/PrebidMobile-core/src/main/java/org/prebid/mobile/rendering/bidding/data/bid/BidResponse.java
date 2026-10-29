@@ -76,6 +76,8 @@ public class BidResponse {
     private boolean topBidFiltered;
     @Nullable
     private Bid promotedWinningBid;
+    @Nullable
+    private String nativeCacheId;
 
     private long creationTime;
 
@@ -276,6 +278,20 @@ public class BidResponse {
      */
     public boolean isTopBidFiltered() {
         return topBidFiltered;
+    }
+
+    /**
+     * Id of the {@link org.prebid.mobile.CacheManager} entry that holds this response's winning bid
+     * for native rendering, or {@code null} until the bid is saved. Lets every caller that needs the
+     * cache id reuse one entry instead of saving the bid again.
+     */
+    @Nullable
+    public String getNativeCacheId() {
+        return nativeCacheId;
+    }
+
+    public void setNativeCacheId(@Nullable String nativeCacheId) {
+        this.nativeCacheId = nativeCacheId;
     }
 
     public String getPreferredPluginRendererName() {
