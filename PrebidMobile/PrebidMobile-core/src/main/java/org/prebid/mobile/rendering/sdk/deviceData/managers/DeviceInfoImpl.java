@@ -24,13 +24,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.hardware.display.DisplayManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.WindowManager;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
@@ -61,13 +65,29 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
 
         if (context != null) {
             telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            windowManager = getWindowManager(context);
             powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
             packageManager = context.getPackageManager();
 
             hasTelephony();
         }
+    }
+
+    @Nullable
+    private static WindowManager getWindowManager(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            DisplayManager displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
+            Display display = displayManager != null ? displayManager.getDisplay(Display.DEFAULT_DISPLAY) : null;
+            if (display == null) {
+                return null;
+            }
+
+            // SDK initialization uses an application context, which cannot provide visual services.
+            context = context.createDisplayContext(display)
+                             .createWindowContext(WindowManager.LayoutParams.TYPE_APPLICATION, null);
+        }
+        return (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
     }
 
     @Override
