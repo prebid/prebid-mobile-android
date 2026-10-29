@@ -26,9 +26,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
+import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
@@ -38,6 +42,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.io.IOException;
 import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
@@ -160,6 +165,21 @@ public class MediationBannerAdUnitTest {
 
         mediationBannerAdUnit.setAdPosition(AdPosition.UNKNOWN);
         assertEquals(AdPosition.UNKNOWN, mediationBannerAdUnit.getAdPosition());
+    }
+
+    @Test
+    public void fetchDemandBidInfo_ResponseReceived_ReturnsBidInfo() throws IOException {
+        PrebidMobileReflection.setHost("https://test.com");
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        mediationBannerAdUnit.fetchDemandBidInfo(listener);
+        MediationBaseAdUnitTest.bidRequesterListener(mediationBannerAdUnit)
+                .onFetchCompleted(MediationBaseAdUnitTest.createBidResponse(mediationBannerAdUnit));
+
+        BidInfo bidInfo = MediationBaseAdUnitTest.captureBidInfo(listener);
+        assertEquals(ResultCode.SUCCESS, bidInfo.getResultCode());
+        assertEquals(Double.valueOf(0.15), bidInfo.getPrice());
+        assertEquals("crid", bidInfo.getCreativeId());
     }
 
 }

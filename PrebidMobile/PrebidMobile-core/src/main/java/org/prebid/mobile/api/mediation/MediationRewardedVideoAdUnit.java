@@ -25,6 +25,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
+import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
@@ -55,6 +56,17 @@ public class MediationRewardedVideoAdUnit extends MediationBaseFullScreenAdUnit 
      */
     public void fetchDemand(@NonNull OnFetchCompleteListener listener) {
         super.fetchDemand(listener);
+    }
+
+    /**
+     * Loads ad and applies mediation delegate. Like {@link #fetchDemand(OnFetchCompleteListener)},
+     * but returns the full {@link org.prebid.mobile.api.data.BidInfo} (including the price,
+     * currency, creative id and ad id of the winning bid) instead of only the result.
+     *
+     * @param listener callback when operation is completed (success or fail)
+     */
+    public void fetchDemandBidInfo(@NonNull OnFetchDemandResult listener) {
+        super.fetchDemandBidInfo(listener);
     }
 
     @Override

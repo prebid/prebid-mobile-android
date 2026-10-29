@@ -77,8 +77,8 @@ open class AdMobBannerFragment : AdFragment() {
     }
 
     override fun loadAd() {
-        adUnit?.fetchDemand { result ->
-            Log.d("Prebid", "Fetch demand result: $result")
+        adUnit?.fetchDemandBidInfo { bidInfo ->
+            Log.d("Prebid", "Fetch demand result: ${bidInfo.resultCode}")
             bannerView?.loadAd(adRequest!!)
         }
     }

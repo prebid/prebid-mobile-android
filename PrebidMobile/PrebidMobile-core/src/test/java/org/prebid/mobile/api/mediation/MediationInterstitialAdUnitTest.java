@@ -17,6 +17,7 @@
 package org.prebid.mobile.api.mediation;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,14 +28,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
+import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
+import org.prebid.mobile.rendering.bidding.loader.BidLoader;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.io.IOException;
 import java.util.EnumSet;
 
 @RunWith(RobolectricTestRunner.class)
@@ -86,6 +94,22 @@ public class MediationInterstitialAdUnitTest {
             new MockMediationUtils()
         );
         assertEquals(EnumSet.of(AdFormat.VAST), mediationInterstitialAdUnit.adUnitConfig.getAdFormats());
+    }
+
+    @Test
+    public void fetchDemandBidInfo_ResponseReceived_ReturnsBidInfo() throws IOException {
+        PrebidMobileReflection.setHost("https://test.com");
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+        WhiteBox.setInternalState(mediationInterstitialAdUnit, "bidLoader", mock(BidLoader.class));
+
+        mediationInterstitialAdUnit.fetchDemandBidInfo(listener);
+        MediationBaseAdUnitTest.bidRequesterListener(mediationInterstitialAdUnit)
+                .onFetchCompleted(MediationBaseAdUnitTest.createBidResponse(mediationInterstitialAdUnit));
+
+        BidInfo bidInfo = MediationBaseAdUnitTest.captureBidInfo(listener);
+        assertEquals(ResultCode.SUCCESS, bidInfo.getResultCode());
+        assertEquals(Double.valueOf(0.15), bidInfo.getPrice());
+        assertEquals("crid", bidInfo.getCreativeId());
     }
 
 }

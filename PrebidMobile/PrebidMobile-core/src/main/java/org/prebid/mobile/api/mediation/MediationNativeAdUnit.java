@@ -9,6 +9,7 @@ import org.prebid.mobile.NativeEventTracker;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
+import org.prebid.mobile.api.original.OnFetchDemandResult;
 
 import java.util.Set;
 
@@ -48,6 +49,19 @@ public class MediationNativeAdUnit {
         nativeAdUnit.fetchDemand(adObject, resultCode ->
                 listener.onComplete(convertResultCode(resultCode))
         );
+    }
+
+    /**
+     * Loads ad and applies mediation delegate. Like {@link #fetchDemand(OnFetchCompleteListener)},
+     * but returns the full {@link org.prebid.mobile.api.data.BidInfo} (including the price,
+     * currency, creative id and ad id of the winning bid) instead of only the result.
+     *
+     * @param listener callback when operation is completed (success or fail)
+     */
+    public void fetchDemandBidInfo(
+            @NonNull OnFetchDemandResult listener
+    ) {
+        nativeAdUnit.fetchDemandBidInfo(adObject, listener);
     }
 
     public void destroy() {

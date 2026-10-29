@@ -26,9 +26,12 @@ import org.prebid.mobile.AdSize;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
+import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
@@ -53,14 +56,19 @@ public abstract class MediationBaseAdUnit {
     protected PrebidMediationDelegate mediationDelegate;
     protected BidLoader bidLoader;
 
+    @Nullable
+    private BidResponse lastBidResponse;
+
     private final BidRequesterListener bidRequesterListener = new BidRequesterListener() {
         @Override
         public void onFetchCompleted(BidResponse response) {
+            lastBidResponse = response;
             onResponseReceived(response);
         }
 
         @Override
         public void onError(AdException exception) {
+            lastBidResponse = null;
             onErrorReceived(exception);
         }
     };
@@ -79,6 +87,8 @@ public abstract class MediationBaseAdUnit {
     }
 
     protected void fetchDemand(@NonNull OnFetchCompleteListener listener) {
+        lastBidResponse = null;
+
         if (mediationDelegate == null) {
             LogUtil.error(TAG, "Demand fetch failed. Mediation delegate object must be not null");
             listener.onComplete(FetchDemandResult.INVALID_AD_OBJECT);
@@ -104,6 +114,17 @@ public abstract class MediationBaseAdUnit {
 
         onFetchCompleteListener = listener;
         bidLoader.load();
+    }
+
+    /**
+     * Like {@link #fetchDemand(OnFetchCompleteListener)}, but returns the full {@link BidInfo}.
+     * Its result code is the {@link ResultCode} matching the {@link FetchDemandResult} that
+     * {@code fetchDemand} reports.
+     */
+    protected void fetchDemandBidInfo(@NonNull OnFetchDemandResult listener) {
+        fetchDemand(result -> listener.onComplete(
+                BidInfo.create(toResultCode(result), lastBidResponse, adUnitConfig)
+        ));
     }
 
     public void setPbAdSlot(String adSlot) {
@@ -150,6 +171,36 @@ public abstract class MediationBaseAdUnit {
 
     protected void initBidLoader() {
         bidLoader = new BidLoader(adUnitConfig, bidRequesterListener);
+    }
+
+    private static ResultCode toResultCode(FetchDemandResult result) {
+        switch (result) {
+            case SUCCESS:
+                return ResultCode.SUCCESS;
+            case INVALID_ACCOUNT_ID:
+                return ResultCode.INVALID_ACCOUNT_ID;
+            case INVALID_CONFIG_ID:
+                return ResultCode.INVALID_CONFIG_ID;
+            case INVALID_SIZE:
+                return ResultCode.INVALID_SIZE;
+            case INVALID_CONTEXT:
+                return ResultCode.INVALID_CONTEXT;
+            case INVALID_AD_OBJECT:
+                return ResultCode.INVALID_AD_OBJECT;
+            case INVALID_HOST_URL:
+                return ResultCode.INVALID_HOST_URL;
+            case NETWORK_ERROR:
+                return ResultCode.NETWORK_ERROR;
+            case TIMEOUT:
+                return ResultCode.TIMEOUT;
+            case NO_BIDS:
+                return ResultCode.NO_BIDS;
+            case NO_CACHED_BIDS:
+                return ResultCode.NO_CACHED_BIDS;
+            case SERVER_ERROR:
+            default:
+                return ResultCode.PREBID_SERVER_ERROR;
+        }
     }
 
     private void cancelRefresh() {
