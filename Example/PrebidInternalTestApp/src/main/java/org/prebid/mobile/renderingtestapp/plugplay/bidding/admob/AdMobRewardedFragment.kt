@@ -60,8 +60,8 @@ open class AdMobRewardedFragment : AdFragment() {
             .addNetworkExtrasBundle(PrebidRewardedAdapter::class.java, extras!!)
             .build()
 
-        adUnit?.fetchDemand { result ->
-            Log.d("Prebid", "Fetch demand result: $result")
+        adUnit?.fetchDemandBidInfo { bidInfo ->
+            Log.d("Prebid", "Fetch demand result: ${bidInfo.resultCode}")
 
             RewardedAd.load(requireContext(), adUnitId, request, object : RewardedAdLoadCallback() {
                 override fun onAdLoaded(ad: RewardedAd) {

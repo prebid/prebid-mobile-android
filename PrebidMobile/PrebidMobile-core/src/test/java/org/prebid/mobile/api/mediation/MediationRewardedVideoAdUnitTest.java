@@ -23,8 +23,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.test.utils.WhiteBox;
@@ -32,6 +36,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.io.IOException;
 import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
@@ -65,6 +70,21 @@ public class MediationRewardedVideoAdUnitTest {
         assertEquals("config", adConfiguration.getConfigId());
         assertEquals(EnumSet.of(AdFormat.VAST), adConfiguration.getAdFormats());
         assertTrue(adConfiguration.isRewarded());
+    }
+
+    @Test
+    public void fetchDemandBidInfo_ResponseReceived_ReturnsBidInfo() throws IOException {
+        PrebidMobileReflection.setHost("https://test.com");
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        mopubRewardedAdUnit.fetchDemandBidInfo(listener);
+        MediationBaseAdUnitTest.bidRequesterListener(mopubRewardedAdUnit)
+                .onFetchCompleted(MediationBaseAdUnitTest.createBidResponse(mopubRewardedAdUnit));
+
+        BidInfo bidInfo = MediationBaseAdUnitTest.captureBidInfo(listener);
+        assertEquals(ResultCode.SUCCESS, bidInfo.getResultCode());
+        assertEquals(Double.valueOf(0.15), bidInfo.getPrice());
+        assertEquals("crid", bidInfo.getCreativeId());
     }
 
 }
