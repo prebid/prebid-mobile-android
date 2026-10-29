@@ -37,6 +37,7 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.configuration.NativeAdUnitConfiguration;
+import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.RobolectricTestRunner;
@@ -182,6 +183,37 @@ public class BidInfoTest {
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS);
 
         assertTrue(CacheManager.isValid(bidInfo.getNativeCacheId()));
+    }
+
+    @Test
+    public void createNativeBidInfo_BidAlreadyCached_ReusesCacheIdWithoutSaving() {
+        String cacheId = CacheManager.save("{\"adm\":\"native\"}");
+        BidResponse bidResponse = createNativeBidResponse(null);
+        when(bidResponse.getNativeCacheId()).thenReturn(cacheId);
+
+        BidInfo bidInfo = BidInfo.create(ResultCode.SUCCESS, bidResponse, createNativeConfiguration());
+
+        assertEquals(cacheId, bidInfo.getNativeCacheId());
+        assertEquals(cacheId, bidInfo.getTargetingKeywords().get(BidResponse.KEY_CACHE_ID));
+        HashMap<String, String> savedValues = Reflection.getStaticFieldOf(CacheManager.class, "savedValues");
+        assertEquals(1, savedValues.size());
+    }
+
+    @Test
+    public void createNativeBidInfoTwice_SameResponse_CachesBidOnce() throws IOException {
+        AdUnitConfiguration configuration = createNativeConfiguration();
+        BidResponse bidResponse = new BidResponse(
+                ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"),
+                configuration
+        );
+
+        BidInfo first = BidInfo.create(ResultCode.SUCCESS, bidResponse, configuration);
+        BidInfo second = BidInfo.create(ResultCode.SUCCESS, bidResponse, configuration);
+
+        assertNotNull(first.getNativeCacheId());
+        assertEquals(first.getNativeCacheId(), second.getNativeCacheId());
+        HashMap<String, String> savedValues = Reflection.getStaticFieldOf(CacheManager.class, "savedValues");
+        assertEquals(1, savedValues.size());
     }
 
     private static BidResponse createNativeBidResponse(Integer exp) {

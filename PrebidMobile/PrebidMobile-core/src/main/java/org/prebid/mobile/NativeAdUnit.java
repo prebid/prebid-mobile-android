@@ -53,6 +53,7 @@ public class NativeAdUnit extends AdUnit {
                         response.getWinningBidJson(),
                         expirationTimeSeconds != null ? expirationTimeSeconds.longValue() : null
                 );
+                response.setNativeCacheId(cacheId);
                 Util.saveCacheId(cacheId, adObject);
 
                 notifyWinEvent(response);
