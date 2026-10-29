@@ -98,7 +98,7 @@ public class AdUnitTest {
     public void fetchDemandBidInfo_NativeAdUnit_CachesWinningBidOnce() throws IOException {
         NativeAdUnit adUnit = spy(new NativeAdUnit("configId"));
         Bundle adObject = new Bundle();
-        stubFetchDemandThroughBidListener(adUnit, adObject, createNativeBidResponse(adUnit));
+        stubFetchDemandThroughBidListener(adUnit, adObject, createBidResponse(adUnit));
         OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
 
         adUnit.fetchDemandBidInfo(adObject, listener);
@@ -114,7 +114,7 @@ public class AdUnitTest {
     @Test
     public void fetchDemand_NativeAdUnitWithBidInfoListener_CachesWinningBidOnce() throws IOException {
         NativeAdUnit adUnit = spy(new NativeAdUnit("configId"));
-        stubFetchDemandThroughBidListener(adUnit, null, createNativeBidResponse(adUnit));
+        stubFetchDemandThroughBidListener(adUnit, null, createBidResponse(adUnit));
         OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
 
         adUnit.fetchDemand(listener);
@@ -123,6 +123,30 @@ public class AdUnitTest {
         Map<String, String> cachedBids = ReflectionHelpers.getStaticField(CacheManager.class, "savedValues");
         assertEquals(1, cachedBids.size());
         assertTrue(cachedBids.containsKey(bidInfo.getNativeCacheId()));
+    }
+
+    @Test
+    public void fetchDemandBidInfo_ValidationFailsAfterEarlierResponse_DoesNotReportEarlierBid() throws IOException {
+        PrebidMobile.setPrebidServerAccountId("");
+        BannerAdUnit adUnit = new BannerAdUnit("configId", 320, 50);
+        adUnit.bidResponse = createBidResponse(adUnit);
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        adUnit.fetchDemandBidInfo(new Object(), listener);
+
+        assertResultCodeOnly(captureBidInfo(listener), ResultCode.INVALID_ACCOUNT_ID);
+    }
+
+    @Test
+    public void fetchDemandWithBidInfoListener_ValidationFailsAfterEarlierResponse_DoesNotReportEarlierBid() throws IOException {
+        PrebidMobile.setPrebidServerAccountId("");
+        BannerAdUnit adUnit = new BannerAdUnit("configId", 320, 50);
+        adUnit.bidResponse = createBidResponse(adUnit);
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        adUnit.fetchDemand(listener);
+
+        assertResultCodeOnly(captureBidInfo(listener), ResultCode.INVALID_ACCOUNT_ID);
     }
 
     @Test
@@ -166,11 +190,19 @@ public class AdUnitTest {
         }).when(adUnit).fetchDemand(eq(adObject), any(OnCompleteListener.class));
     }
 
-    private static BidResponse createNativeBidResponse(NativeAdUnit adUnit) throws IOException {
+    private static BidResponse createBidResponse(AdUnit adUnit) throws IOException {
         return new BidResponse(
                 ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"),
                 adUnit.getConfiguration()
         );
+    }
+
+    private static void assertResultCodeOnly(BidInfo bidInfo, ResultCode resultCode) {
+        assertEquals(resultCode, bidInfo.getResultCode());
+        assertNull(bidInfo.getTargetingKeywords());
+        assertNull(bidInfo.getPrice());
+        assertNull(bidInfo.getCreativeId());
+        assertNull(bidInfo.getRequestId());
     }
 
     private static BidInfo captureBidInfo(OnFetchDemandResult listener) {

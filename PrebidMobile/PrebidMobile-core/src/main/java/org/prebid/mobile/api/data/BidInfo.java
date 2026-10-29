@@ -133,8 +133,12 @@ public class BidInfo {
 
     /**
      * The Prebid request id: the ORTB {@code BidResponse.id}, a UUID the SDK generates for each bid
-     * request. It identifies this request, not an auction. Unlike the bid fields, it is set
-     * whenever a response was received, even when no bid was designated.
+     * request. It identifies this request, not an auction. Unlike the bid fields, it is set for a
+     * {@link ResultCode#SUCCESS} result even when no bid was designated. It is {@code null} for any
+     * other result, including {@link ResultCode#NO_BIDS} and {@link ResultCode#NO_CACHED_BIDS}: the
+     * SDK reports those as errors without the response, even when the response was parsed (for
+     * example when {@link org.prebid.mobile.PrebidMobile#setFilterOutUncachedBids(boolean)} removed
+     * every bid).
      */
     @Nullable
     public String getRequestId() {
