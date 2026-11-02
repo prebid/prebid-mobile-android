@@ -20,13 +20,8 @@ import org.prebid.mobile.rendering.networking.WinNotifier;
 /**
  * Mediation banner container that lets adapters render through the preferred plugin renderer.
  * <p>
- * Renders from a copy of the mediation ad unit's configuration, which the bid response carries,
- * so the settings the publisher made on the ad unit (such as {@code isMuted} or
- * {@code isSoundButtonVisible}) reach the renderer although the adapters build a fresh
- * {@link AdUnitConfiguration} for every creative. The server side
- * {@code ext.prebid.passthrough[].adconfiguration} is applied on top of that copy, the way
- * {@link InterstitialController#loadAd(AdUnitConfiguration, BidResponse)} applies it for full
- * screen ads. The configuration the adapter passes is used only when the response carries none.
+ * Renders from a copy of the ad unit's configuration carried by the bid response, with the
+ * server side passthrough applied on top, so the publisher's settings reach the renderer.
  */
 public class MediationBannerView extends FrameLayout implements PrebidDestroyable {
 
