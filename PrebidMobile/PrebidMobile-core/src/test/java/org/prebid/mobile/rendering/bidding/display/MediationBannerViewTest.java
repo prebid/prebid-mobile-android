@@ -227,27 +227,28 @@ public class MediationBannerViewTest {
         verify(customRenderer).createBannerAdView(any(), any(), any(), any(), any());
     }
 
-    // The adapters hand the container a fresh configuration, so the mediation ad unit's isMuted
-    // and the server side ismuted reach the renderer only through the bid response's passthrough.
+    // The container renders from a copy of the mediation ad unit's configuration, which the
+    // response carries, with the server side ismuted applied on top of it.
     @Test
     public void constructor_appliesBidResponseRenderingControls_toTheRenderedConfiguration() throws Exception {
         PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
         when(mockBidResponse.getMobileSdkPassThrough()).thenReturn(passThroughWithIsMuted(true));
-        assertFalse("Sanity: the adapter's configuration starts unmuted", adUnitConfiguration.isMuted());
+        adUnitConfiguration.setIsMuted(false);
 
-        new MediationBannerView(context, mockDisplayViewListener, adUnitConfiguration, mockBidResponse);
+        new MediationBannerView(context, mockDisplayViewListener, freshAdapterConfiguration(), mockBidResponse);
 
         AdUnitConfiguration rendered = captureRenderedConfiguration(defaultRenderer);
         assertTrue(rendered.isMuted());
+        assertFalse("The server value must not be written back into the ad unit", adUnitConfiguration.isMuted());
     }
 
     @Test
-    public void constructor_bidResponseWithoutRenderingControls_keepsTheConfiguration() {
+    public void constructor_bidResponseWithoutRenderingControls_keepsTheAdUnitSetting() {
         PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
         when(mockBidResponse.getMobileSdkPassThrough()).thenReturn(null);
         adUnitConfiguration.setIsMuted(true);
 
-        new MediationBannerView(context, mockDisplayViewListener, adUnitConfiguration, mockBidResponse);
+        new MediationBannerView(context, mockDisplayViewListener, freshAdapterConfiguration(), mockBidResponse);
 
         AdUnitConfiguration rendered = captureRenderedConfiguration(defaultRenderer);
         assertTrue(rendered.isMuted());
