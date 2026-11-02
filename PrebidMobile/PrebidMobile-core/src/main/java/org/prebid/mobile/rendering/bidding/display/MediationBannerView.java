@@ -36,34 +36,34 @@ public class MediationBannerView extends FrameLayout implements PrebidDestroyabl
     private DisplayVideoListener displayVideoListener;
 
     /**
-     * @param fallbackConfiguration used only when {@code bidResponse} carries no ad unit
-     *                              configuration. A response from a {@code MediationBannerAdUnit}
-     *                              always does, and the view renders from a copy of that one.
+     * @param adUnitConfiguration used only when {@code bidResponse} carries no ad unit
+     *                            configuration. A response from a {@code MediationBannerAdUnit}
+     *                            always does, and the view renders from a copy of that one.
      */
     public MediationBannerView(
             @NonNull Context context,
             @NonNull DisplayViewListener displayViewListener,
-            @NonNull AdUnitConfiguration fallbackConfiguration,
+            @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse bidResponse
     ) {
-        this(context, displayViewListener, null, fallbackConfiguration, bidResponse);
+        this(context, displayViewListener, null, adUnitConfiguration, bidResponse);
     }
 
     /**
-     * @param fallbackConfiguration used only when {@code bidResponse} carries no ad unit
-     *                              configuration. A response from a {@code MediationBannerAdUnit}
-     *                              always does, and the view renders from a copy of that one.
+     * @param adUnitConfiguration used only when {@code bidResponse} carries no ad unit
+     *                            configuration. A response from a {@code MediationBannerAdUnit}
+     *                            always does, and the view renders from a copy of that one.
      */
     public MediationBannerView(
             @NonNull Context context,
             @NonNull DisplayViewListener displayViewListener,
             @Nullable DisplayVideoListener displayVideoListener,
-            @NonNull AdUnitConfiguration fallbackConfiguration,
+            @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse bidResponse
     ) {
         super(context);
 
-        this.adUnitConfiguration = PluginRendererFactory.mediationRenderingConfiguration(bidResponse, fallbackConfiguration);
+        this.adUnitConfiguration = PluginRendererFactory.mediationRenderingConfiguration(bidResponse, adUnitConfiguration);
         this.displayViewListener = displayViewListener;
         this.displayVideoListener = displayVideoListener;
 
