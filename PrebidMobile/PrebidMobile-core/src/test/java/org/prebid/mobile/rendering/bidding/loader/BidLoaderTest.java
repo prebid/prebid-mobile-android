@@ -87,6 +87,10 @@ public class BidLoaderTest {
     public void clean() {
         PrebidMobile.setFilterOutUncachedBids(false);
         PrebidMobile.setEventDelegate(null);
+        // The fixtures carry tmaxrequest, which the real handler folds into these statics.
+        WhiteBox.setStaticVariableTo(BidLoader.class, "sTimeoutHasChanged", false);
+        WhiteBox.setStaticVariableTo(PrebidMobile.class, "timeoutMillis", 2_000);
+        WhiteBox.setStaticVariableTo(PrebidMobile.class, "isTimeoutModified", false);
     }
 
     @Test

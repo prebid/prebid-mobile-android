@@ -480,8 +480,8 @@ public class BannerView extends FrameLayout {
     /**
      * Sets whether an outstream video creative starts muted. Defaults to false.
      * <p>
-     * Read when each video creative starts playing, so the value also applies to auto refreshed
-     * ads. The user can still unmute the creative on screen; that does not change this setting.
+     * Read when each video creative is loaded, so the value also applies to auto refreshed ads.
+     * The user can still unmute the creative on screen; that does not change this setting.
      * A server side {@code ismuted} in the bid response ({@code ext.prebid.passthrough[].adconfiguration})
      * overrides this value, as it does for interstitials. Has no effect on HTML banners.
      */
@@ -492,7 +492,7 @@ public class BannerView extends FrameLayout {
     /**
      * Sets whether an outstream video creative shows a mute/unmute button. Defaults to true.
      * <p>
-     * Read when each video creative is shown, so the value also applies to auto refreshed ads.
+     * Read when each video creative is loaded, so the value also applies to auto refreshed ads.
      * Has no effect on HTML banners.
      */
     public void setIsSoundButtonVisible(boolean isSoundButtonVisible) {
