@@ -56,8 +56,6 @@ public class VideoView extends BaseAdView {
 
     private State videoViewState = State.UNDEFINED;
 
-    private AdUnitConfiguration adUnitConfiguration;
-
     private boolean enableVideoPlayerClick;
     private boolean enableAutoPlay = true;
 
@@ -147,7 +145,6 @@ public class VideoView extends BaseAdView {
         AdUnitConfiguration adUnitConfiguration,
         BidResponse bidResponse
     ) {
-        this.adUnitConfiguration = adUnitConfiguration;
         adViewManager.loadBidTransaction(adUnitConfiguration, bidResponse);
     }
 
@@ -158,7 +155,6 @@ public class VideoView extends BaseAdView {
         stopVisibilityTracking();
         changeState(State.UNDEFINED);
 
-        adUnitConfiguration = adConfiguration;
         adViewManager.loadVideoTransaction(adConfiguration, vastXml);
     }
 
@@ -270,7 +266,6 @@ public class VideoView extends BaseAdView {
     }
 
     private void prepareAdConfiguration(AdUnitConfiguration adUnitConfiguration) {
-        this.adUnitConfiguration = adUnitConfiguration;
         adUnitConfiguration.setAutoRefreshDelay(0);
         adUnitConfiguration.setBuiltInVideo(true);
         adUnitConfiguration.setVideoInitialVolume(0.0f);
@@ -291,10 +286,11 @@ public class VideoView extends BaseAdView {
     }
 
     /**
-     * The volume control is drawn unless the configuration asks to hide it. A view loaded without
-     * a configuration keeps the control, which is the historical behavior.
+     * The volume control is drawn unless the configuration the creative was loaded with asks to
+     * hide it. A view without a loaded configuration keeps the control, the historical behavior.
      */
     private boolean isSoundButtonVisible() {
+        AdUnitConfiguration adUnitConfiguration = adViewManager.getAdConfiguration();
         return adUnitConfiguration == null || adUnitConfiguration.isSoundButtonVisible();
     }
 

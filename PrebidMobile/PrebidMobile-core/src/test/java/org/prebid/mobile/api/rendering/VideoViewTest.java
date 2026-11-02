@@ -389,7 +389,7 @@ public class VideoViewTest {
         when(mockAdViewManager.isNotShowingEndCard()).thenReturn(true);
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsSoundButtonVisible(false);
-        videoView.loadAd(configuration, mock(BidResponse.class));
+        when(mockAdViewManager.getAdConfiguration()).thenReturn(configuration);
 
         adViewManagerListener.viewReadyForImmediateDisplay(mockVideoCreativeView);
 
@@ -402,7 +402,7 @@ public class VideoViewTest {
         when(mockAdViewManager.isNotShowingEndCard()).thenReturn(true);
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsSoundButtonVisible(true);
-        videoView.loadAd(configuration, mock(BidResponse.class));
+        when(mockAdViewManager.getAdConfiguration()).thenReturn(configuration);
 
         adViewManagerListener.viewReadyForImmediateDisplay(mockVideoCreativeView);
 
