@@ -11,6 +11,7 @@ import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.configuration.PBSConfig;
 import org.prebid.mobile.core.BuildConfig;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 /**
  * A class responsible for parsing "prebidmobilesdk" pass through type from bid response.
@@ -138,6 +139,20 @@ public class MobileSdkPassThrough {
         return result;
     }
 
+
+    /**
+     * Applies the rendering controls carried by the bid response to the configuration a renderer
+     * is about to use. A response without a passthrough leaves the configuration untouched.
+     */
+    public static void applyTo(
+        @NonNull BidResponse bidResponse,
+        @NonNull AdUnitConfiguration adUnitConfiguration
+    ) {
+        MobileSdkPassThrough renderingControlSettings = bidResponse.getMobileSdkPassThrough();
+        if (renderingControlSettings != null) {
+            renderingControlSettings.modifyAdUnitConfiguration(adUnitConfiguration);
+        }
+    }
 
     public Boolean isMuted;
 

@@ -121,7 +121,7 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
     public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
         config = adUnitConfiguration;
         adUnitConfiguration.modifyUsingBidResponse(bidResponse);
-        setRenderingControlSettings(adUnitConfiguration, bidResponse);
+        MobileSdkPassThrough.applyTo(bidResponse, adUnitConfiguration);
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {
             impressionEventUrl = bidResponse.getImpressionEventUrl();
@@ -186,16 +186,6 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
         if (config == null) return null;
 
         return config.getRewardManager().getRewardedExt().getReward();
-    }
-
-    private void setRenderingControlSettings(
-        AdUnitConfiguration adUnitConfiguration,
-        BidResponse bidResponse
-    ) {
-        MobileSdkPassThrough renderingControlSettings = bidResponse.getMobileSdkPassThrough();
-        if (renderingControlSettings != null) {
-            renderingControlSettings.modifyAdUnitConfiguration(adUnitConfiguration);
-        }
     }
 
 }

@@ -62,18 +62,8 @@ public class MediationBannerView extends FrameLayout implements PrebidDestroyabl
         this.displayViewListener = displayViewListener;
         this.displayVideoListener = displayVideoListener;
 
-        applyRenderingControlSettings(adUnitConfiguration, bidResponse);
+        MobileSdkPassThrough.applyTo(bidResponse, adUnitConfiguration);
         createBannerAdView(context, bidResponse);
-    }
-
-    private static void applyRenderingControlSettings(
-            @NonNull AdUnitConfiguration adUnitConfiguration,
-            @NonNull BidResponse bidResponse
-    ) {
-        MobileSdkPassThrough renderingControlSettings = bidResponse.getMobileSdkPassThrough();
-        if (renderingControlSettings != null) {
-            renderingControlSettings.modifyAdUnitConfiguration(adUnitConfiguration);
-        }
     }
 
     private void createBannerAdView(

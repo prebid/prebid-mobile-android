@@ -6,8 +6,11 @@ import org.junit.Test;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.BuildConfig;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MobileSdkPassThroughTest {
 
@@ -119,6 +122,31 @@ public class MobileSdkPassThroughTest {
 
         assertNotNull(subject);
         assertNull(subject.isSoundButtonVisible);
+    }
+
+    @Test
+    public void applyTo_responseWithPassThrough_modifiesTheConfiguration() throws JSONException {
+        JSONObject jsonObject = new JSONObject(
+            "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\"ismuted\": true}}]}}");
+        BidResponse bidResponse = mock(BidResponse.class);
+        when(bidResponse.getMobileSdkPassThrough()).thenReturn(MobileSdkPassThrough.create(jsonObject));
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+
+        MobileSdkPassThrough.applyTo(bidResponse, adUnitConfiguration);
+
+        assertTrue(adUnitConfiguration.isMuted());
+    }
+
+    @Test
+    public void applyTo_responseWithoutPassThrough_keepsTheConfiguration() {
+        BidResponse bidResponse = mock(BidResponse.class);
+        when(bidResponse.getMobileSdkPassThrough()).thenReturn(null);
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setIsMuted(true);
+
+        MobileSdkPassThrough.applyTo(bidResponse, adUnitConfiguration);
+
+        assertTrue(adUnitConfiguration.isMuted());
     }
 
     @Test
