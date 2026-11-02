@@ -14,10 +14,18 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 
 /**
  * Mediation banner container that lets adapters render through the preferred plugin renderer.
+ * <p>
+ * The adapters build a fresh {@link AdUnitConfiguration} for every creative, so the rendering
+ * controls the publisher set on the mediation ad unit (such as {@code isMuted}) and the server
+ * side {@code ext.prebid.passthrough[].adconfiguration} reach the renderer only through the bid
+ * response. They are applied here, the way
+ * {@link InterstitialController#loadAd(AdUnitConfiguration, BidResponse)} applies them for full
+ * screen ads.
  */
 public class MediationBannerView extends FrameLayout implements PrebidDestroyable {
 
@@ -54,7 +62,18 @@ public class MediationBannerView extends FrameLayout implements PrebidDestroyabl
         this.displayViewListener = displayViewListener;
         this.displayVideoListener = displayVideoListener;
 
+        applyRenderingControlSettings(adUnitConfiguration, bidResponse);
         createBannerAdView(context, bidResponse);
+    }
+
+    private static void applyRenderingControlSettings(
+            @NonNull AdUnitConfiguration adUnitConfiguration,
+            @NonNull BidResponse bidResponse
+    ) {
+        MobileSdkPassThrough renderingControlSettings = bidResponse.getMobileSdkPassThrough();
+        if (renderingControlSettings != null) {
+            renderingControlSettings.modifyAdUnitConfiguration(adUnitConfiguration);
+        }
     }
 
     private void createBannerAdView(

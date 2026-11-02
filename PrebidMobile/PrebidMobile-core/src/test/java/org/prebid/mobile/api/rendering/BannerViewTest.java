@@ -254,6 +254,18 @@ public class BannerViewTest {
     }
 
     @Test
+    public void setIsMuted_updatesAdUnitConfig() throws IllegalAccessException {
+        assertFalse("Outstream video plays with sound unless the publisher asks otherwise",
+                getAdUnitConfig().isMuted());
+
+        bannerView.setIsMuted(true);
+        assertTrue(getAdUnitConfig().isMuted());
+
+        bannerView.setIsMuted(false);
+        assertFalse(getAdUnitConfig().isMuted());
+    }
+
+    @Test
     public void setAdUnitFormats_multiformat_autoRefreshStaysAvailable() {
         bannerView.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
 

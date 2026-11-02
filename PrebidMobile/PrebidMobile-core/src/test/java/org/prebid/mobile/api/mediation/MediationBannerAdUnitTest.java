@@ -41,6 +41,7 @@ import org.robolectric.annotation.Config;
 import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -142,6 +143,18 @@ public class MediationBannerAdUnitTest {
 
         mediationBannerAdUnit.setAdUnitFormats(EnumSet.noneOf(AdUnitFormat.class));
         assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), mediationBannerAdUnit.adUnitConfig.getAdFormats());
+    }
+
+    @Test
+    public void setIsMuted_updatesAdUnitConfig() {
+        assertFalse("Outstream video plays with sound unless the publisher asks otherwise",
+                mediationBannerAdUnit.adUnitConfig.isMuted());
+
+        mediationBannerAdUnit.setIsMuted(true);
+        assertTrue(mediationBannerAdUnit.adUnitConfig.isMuted());
+
+        mediationBannerAdUnit.setIsMuted(false);
+        assertFalse(mediationBannerAdUnit.adUnitConfig.isMuted());
     }
 
     @Test

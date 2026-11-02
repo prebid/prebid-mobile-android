@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.bidding.loader;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
@@ -315,6 +316,44 @@ public class BidLoaderTest {
         assertTrue(responseCaptor.getValue().isTopBidFiltered());
         assertEquals("runnerUpBid", responseCaptor.getValue().getWinningBid().getId());
         verify(bidRequesterListener, never()).onError(any());
+    }
+
+    // The mediation adapters render with a fresh configuration and only see the bid response, so the
+    // ad unit's rendering controls must travel inside the response's passthrough.
+    @Test
+    public void responseHandler_noServerPassThrough_carriesTheAdUnitIsMutedInTheResponse() throws Exception {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setIsMuted(true);
+        bidLoader = createBidLoader(config, bidRequesterListener);
+
+        BidResponse response = handleResponse("PrebidServerOneBidFromRubiconResponse.json");
+
+        assertNotNull(response.getMobileSdkPassThrough());
+        assertEquals(Boolean.TRUE, response.getMobileSdkPassThrough().isMuted);
+        assertTrue(config.isMuted());
+    }
+
+    @Test
+    public void responseHandler_serverIsMuted_overridesTheAdUnitSetting() throws Exception {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setIsMuted(false);
+        bidLoader = createBidLoader(config, bidRequesterListener);
+
+        BidResponse response = handleResponse("BidResponseTest/mobile_sdk_pass_through.json");
+
+        assertEquals(Boolean.TRUE, response.getMobileSdkPassThrough().isMuted);
+        assertTrue("A server side ismuted=1 mutes the ad unit", config.isMuted());
+    }
+
+    private BidResponse handleResponse(String resourceName) throws Exception {
+        ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        BaseNetworkTask.GetUrlResult responseResult = new BaseNetworkTask.GetUrlResult();
+        responseResult.responseString = ResourceUtils.convertResourceToString(resourceName);
+        responseHandler.onResponse(responseResult);
+
+        ArgumentCaptor<BidResponse> responseCaptor = ArgumentCaptor.forClass(BidResponse.class);
+        verify(bidRequesterListener).onFetchCompleted(responseCaptor.capture());
+        return responseCaptor.getValue();
     }
 
     private BidLoader createBidLoader(AdUnitConfiguration adConfiguration, BidRequesterListener requestListener) {

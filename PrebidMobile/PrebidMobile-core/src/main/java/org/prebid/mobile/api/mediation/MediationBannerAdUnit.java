@@ -152,6 +152,19 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
     }
 
     /**
+     * Sets whether an outstream video creative starts muted. Defaults to false.
+     * <p>
+     * Handed to the Prebid banner adapter with every winning bid, so the value also applies to
+     * auto refreshed ads. The user can still unmute the creative on screen; that does not change
+     * this setting. A server side {@code ismuted} in the bid response
+     * ({@code ext.prebid.passthrough[].adconfiguration}) overrides this value, as it does for
+     * interstitials. Has no effect on HTML banners or on ads the mediated SDK renders itself.
+     */
+    public void setIsMuted(boolean isMuted) {
+        adUnitConfig.setIsMuted(isMuted);
+    }
+
+    /**
      * Resumes auto refresh if it was stopped.
      */
     public void resumeRefresh() {
