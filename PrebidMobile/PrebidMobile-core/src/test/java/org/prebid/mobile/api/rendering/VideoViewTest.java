@@ -373,6 +373,7 @@ public class VideoViewTest {
     public void viewReadyForImmediateDisplay_notShowingEndCard_ShowVideoCreative() {
         final VideoCreativeView mockVideoCreativeView = mock(VideoCreativeView.class);
         when(mockAdViewManager.isNotShowingEndCard()).thenReturn(true);
+        when(mockAdViewManager.getAdConfiguration()).thenReturn(new AdUnitConfiguration());
 
         videoView.setVideoPlayerClick(true);
 

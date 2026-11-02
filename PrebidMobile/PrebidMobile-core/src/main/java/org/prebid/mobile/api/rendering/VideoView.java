@@ -287,12 +287,11 @@ public class VideoView extends BaseAdView {
 
     /**
      * The volume control is drawn unless the configuration the creative was loaded with hides it
-     * explicitly. A configuration that never set it, or no configuration at all, keeps the control,
-     * the historical behavior of banner video.
+     * explicitly. A configuration that never set it keeps the control, the historical behavior
+     * of banner video.
      */
     private boolean isSoundButtonVisible() {
-        AdUnitConfiguration adUnitConfiguration = adViewManager.getAdConfiguration();
-        return adUnitConfiguration == null || adUnitConfiguration.isSoundButtonVisible(true);
+        return adViewManager.getAdConfiguration().isSoundButtonVisible(true);
     }
 
     private void showEndCardCreative(View creativeView) {
