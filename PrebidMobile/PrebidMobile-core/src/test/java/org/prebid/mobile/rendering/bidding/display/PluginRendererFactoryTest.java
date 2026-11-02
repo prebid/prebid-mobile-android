@@ -112,6 +112,34 @@ public class PluginRendererFactoryTest {
         assertTrue(rendering.isMuted());
     }
 
+    // Mediation adapters only know the ad format; the publisher's settings live on the mediation
+    // ad unit's configuration, which the response carries.
+    @Test
+    public void mediationRenderingConfiguration_copiesTheAdUnitConfigurationOfTheResponse() {
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setIsSoundButtonVisible(true);
+        when(mockBidResponse.getAdUnitConfiguration()).thenReturn(adUnitConfiguration);
+        AdUnitConfiguration adapterConfiguration = new AdUnitConfiguration();
+
+        AdUnitConfiguration rendering = PluginRendererFactory.mediationRenderingConfiguration(mockBidResponse, adapterConfiguration);
+
+        assertNotSame(adUnitConfiguration, rendering);
+        assertNotSame(adapterConfiguration, rendering);
+        assertTrue(rendering.isSoundButtonVisible());
+    }
+
+    @Test
+    public void mediationRenderingConfiguration_responseWithoutAdUnitConfiguration_copiesTheAdapterConfiguration() {
+        when(mockBidResponse.getAdUnitConfiguration()).thenReturn(null);
+        AdUnitConfiguration adapterConfiguration = new AdUnitConfiguration();
+        adapterConfiguration.setIsMuted(true);
+
+        AdUnitConfiguration rendering = PluginRendererFactory.mediationRenderingConfiguration(mockBidResponse, adapterConfiguration);
+
+        assertNotSame(adapterConfiguration, rendering);
+        assertTrue(rendering.isMuted());
+    }
+
     @Test
     public void createInterstitialController_defaultRenderer_returnsController() {
         when(mockBidResponse.getPreferredPluginRendererName()).thenReturn(null);

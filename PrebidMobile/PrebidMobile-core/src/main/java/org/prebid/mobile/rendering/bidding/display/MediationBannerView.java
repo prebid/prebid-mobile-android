@@ -53,23 +53,11 @@ public class MediationBannerView extends FrameLayout implements PrebidDestroyabl
     ) {
         super(context);
 
-        this.adUnitConfiguration = renderingConfiguration(adUnitConfiguration, bidResponse);
+        this.adUnitConfiguration = PluginRendererFactory.mediationRenderingConfiguration(bidResponse, adUnitConfiguration);
         this.displayViewListener = displayViewListener;
         this.displayVideoListener = displayVideoListener;
 
         createBannerAdView(context, bidResponse);
-    }
-
-    @NonNull
-    private static AdUnitConfiguration renderingConfiguration(
-            @NonNull AdUnitConfiguration adapterConfiguration,
-            @NonNull BidResponse bidResponse
-    ) {
-        AdUnitConfiguration adUnitConfiguration = bidResponse.getAdUnitConfiguration();
-        return PluginRendererFactory.renderingConfiguration(
-                adUnitConfiguration != null ? adUnitConfiguration : adapterConfiguration,
-                bidResponse
-        );
     }
 
     private void createBannerAdView(

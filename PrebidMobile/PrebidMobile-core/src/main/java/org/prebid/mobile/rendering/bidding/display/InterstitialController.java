@@ -28,6 +28,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.interstitial.rewarded.Reward;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardManager;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 
@@ -145,10 +146,13 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
             }
             return;
         }
-        config = PluginRendererFactory.renderingConfiguration(new AdUnitConfiguration(), bidResponse);
+        config = PluginRendererFactory.mediationRenderingConfiguration(bidResponse, new AdUnitConfiguration());
         config.setRewarded(isRewarded);
         if (isRewarded) {
-            config.getRewardManager().setRewardListener(rewardListener);
+            // The reward manager is shared with the ad unit: start this load from a clean state.
+            RewardManager rewardManager = config.getRewardManager();
+            rewardManager.clear();
+            rewardManager.setRewardListener(rewardListener);
         }
         loadAd(config, bidResponse);
     }

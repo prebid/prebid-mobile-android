@@ -2,6 +2,8 @@ package com.applovin.mediation.adapters.prebid.managers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -154,7 +156,40 @@ public class MaxRewardedManagerTest {
     }
 
 
+    // The adapter renders from a copy of the mediation ad unit's configuration, which the response
+    // carries, so setIsMuted and setIsSoundButtonVisible on the ad unit reach the renderer.
+    @Test
+    public void loadAd_rendersFromACopyOfTheMediationAdUnitConfiguration() {
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setIsMuted(true);
+        adUnitConfiguration.setIsSoundButtonVisible(true);
+        buildAndCacheBidResponse(null, null, adUnitConfiguration);
+
+        final AdUnitConfiguration[] capturedConfig = {null};
+        PrebidMobilePluginRenderer capturingRenderer = mock(PrebidMobilePluginRenderer.class);
+        when(capturingRenderer.getName()).thenReturn(PREBID_MOBILE_RENDERER_NAME);
+        when(capturingRenderer.getVersion()).thenReturn("1.0");
+        when(capturingRenderer.isSupportRenderingFor(any())).thenReturn(true);
+        when(capturingRenderer.createInterstitialController(any(), any(), any(), any()))
+                .thenAnswer(invocation -> {
+                    capturedConfig[0] = invocation.getArgument(2);
+                    return mock(PrebidMobileInterstitialControllerInterface.class);
+                });
+        registerPlugin(capturingRenderer);
+
+        manager.loadAd(mockParams, activity, mockMaxListener);
+
+        assertNotNull(capturedConfig[0]);
+        assertNotSame("The ad unit's own configuration must not be handed to a renderer", adUnitConfiguration, capturedConfig[0]);
+        assertTrue(capturedConfig[0].isMuted());
+        assertTrue(capturedConfig[0].isSoundButtonVisible());
+    }
+
     private void buildAndCacheBidResponse(String rendererName, String rendererVersion) {
+        buildAndCacheBidResponse(rendererName, rendererVersion, new AdUnitConfiguration());
+    }
+
+    private void buildAndCacheBidResponse(String rendererName, String rendererVersion, AdUnitConfiguration adUnitConfiguration) {
         BidResponse mockResponse = mock(BidResponse.class);
         when(mockResponse.getId()).thenReturn(RESPONSE_ID);
         when(mockResponse.getPreferredPluginRendererName()).thenReturn(rendererName);
@@ -162,8 +197,7 @@ public class MaxRewardedManagerTest {
         HashMap<String, String> targeting = new HashMap<>();
         targeting.put(KEYWORD_KEY, KEYWORD_VALUE);
         when(mockResponse.getTargeting()).thenReturn(targeting);
-        AdUnitConfiguration config = new AdUnitConfiguration();
-        when(mockResponse.getAdUnitConfiguration()).thenReturn(config);
+        when(mockResponse.getAdUnitConfiguration()).thenReturn(adUnitConfiguration);
         BidResponseCache.getInstance().putBidResponse(RESPONSE_ID, mockResponse);
     }
 

@@ -20,6 +20,7 @@ import android.app.Activity;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -36,6 +37,10 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -63,6 +68,30 @@ public class InterstitialControllerTest {
         interstitialController.loadAd(mockAdUnitConfiguration, mockBidResponse);
 
         verify(mockInterstitialView, times(1)).loadAd(eq(mockAdUnitConfiguration), eq(mockBidResponse));
+    }
+
+    // The cache path renders from a copy of the ad unit configuration the response carries, so the
+    // publisher's settings apply, with the reward wiring of this load on top.
+    @Test
+    public void loadAdFromCache_rendersFromACopyOfTheAdUnitConfiguration() {
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setIsSoundButtonVisible(true);
+        adUnitConfiguration.getRewardManager().setUserRewardedAlready(true);
+        BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getAdUnitConfiguration()).thenReturn(adUnitConfiguration);
+        BidResponseCache.getInstance().putBidResponse("cached-response", mockBidResponse);
+        Runnable rewardListener = mock(Runnable.class);
+        interstitialController.setRewardListener(rewardListener);
+
+        interstitialController.loadAd("cached-response", true);
+
+        ArgumentCaptor<AdUnitConfiguration> rendered = ArgumentCaptor.forClass(AdUnitConfiguration.class);
+        verify(mockInterstitialView).loadAd(rendered.capture(), eq(mockBidResponse));
+        assertNotSame(adUnitConfiguration, rendered.getValue());
+        assertTrue(rendered.getValue().isSoundButtonVisible());
+        assertTrue(rendered.getValue().isRewarded());
+        assertSame(rewardListener, rendered.getValue().getRewardManager().getRewardListener());
+        assertFalse("Each load starts from a clean reward state", rendered.getValue().getRewardManager().getUserRewardedAlready());
     }
 
     @Test

@@ -51,6 +51,24 @@ public class PluginRendererFactory {
     }
 
     /**
+     * The rendering configuration for a mediation adapter. The adapter's own configuration knows
+     * only the ad format; the publisher's settings live on the mediation ad unit's configuration,
+     * which the bid response carries. That one is copied, with the server's rendering controls on
+     * top, and {@code adapterConfiguration} is copied instead only when the response carries none.
+     */
+    @NonNull
+    public static AdUnitConfiguration mediationRenderingConfiguration(
+            @NonNull BidResponse bidResponse,
+            @NonNull AdUnitConfiguration adapterConfiguration
+    ) {
+        AdUnitConfiguration adUnitConfiguration = bidResponse.getAdUnitConfiguration();
+        return renderingConfiguration(
+                adUnitConfiguration != null ? adUnitConfiguration : adapterConfiguration,
+                bidResponse
+        );
+    }
+
+    /**
      * Creates the renderer-owned banner view after the caller has completed win notification.
      * Mediation banner containers such as {@link MediationBannerView} and legacy DisplayView
      * call {@link WinNotifier} before invoking this method, unless

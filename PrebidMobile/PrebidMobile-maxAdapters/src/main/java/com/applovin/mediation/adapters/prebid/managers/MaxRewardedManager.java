@@ -19,6 +19,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.PluginRendererFactory;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.interstitial.rewarded.Reward;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardManager;
 
 public class MaxRewardedManager {
 
@@ -56,10 +57,14 @@ public class MaxRewardedManager {
 
         activity.runOnUiThread(() -> {
             InterstitialControllerListener prebidListener = createRewardedListener();
-            adUnitConfiguration = new AdUnitConfiguration();
+            // Rendered from a copy of the mediation ad unit's configuration, so the publisher's settings apply.
+            adUnitConfiguration = PluginRendererFactory.mediationRenderingConfiguration(bidResponse, new AdUnitConfiguration());
             adUnitConfiguration.setAdFormat(bidResponse.isVideo() ? AdFormat.VAST : AdFormat.INTERSTITIAL);
             adUnitConfiguration.setRewarded(true);
-            adUnitConfiguration.getRewardManager().setRewardListener(prebidListener::onUserEarnedReward);
+            // The reward manager is shared with the ad unit: start this load from a clean state.
+            RewardManager rewardManager = adUnitConfiguration.getRewardManager();
+            rewardManager.clear();
+            rewardManager.setRewardListener(prebidListener::onUserEarnedReward);
 
             interstitialController = PluginRendererFactory.createInterstitialController(
                     activity, prebidListener, adUnitConfiguration, bidResponse
