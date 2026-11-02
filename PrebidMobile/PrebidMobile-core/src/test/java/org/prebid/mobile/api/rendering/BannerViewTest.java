@@ -266,6 +266,18 @@ public class BannerViewTest {
     }
 
     @Test
+    public void setIsSoundButtonVisible_updatesAdUnitConfig() throws IllegalAccessException {
+        assertTrue("Banner video keeps its volume control unless the publisher hides it",
+                getAdUnitConfig().isSoundButtonVisible());
+
+        bannerView.setIsSoundButtonVisible(false);
+        assertFalse(getAdUnitConfig().isSoundButtonVisible());
+
+        bannerView.setIsSoundButtonVisible(true);
+        assertTrue(getAdUnitConfig().isSoundButtonVisible());
+    }
+
+    @Test
     public void setAdUnitFormats_multiformat_autoRefreshStaysAvailable() {
         bannerView.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
 

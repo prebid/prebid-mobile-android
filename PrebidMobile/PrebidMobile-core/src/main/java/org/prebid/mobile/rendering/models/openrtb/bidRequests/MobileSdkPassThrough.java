@@ -70,6 +70,9 @@ public class MobileSdkPassThrough {
         if (fromBid.isMuted == null) {
             fromBid.isMuted = fromRoot.isMuted;
         }
+        if (fromBid.isSoundButtonVisible == null) {
+            fromBid.isSoundButtonVisible = fromRoot.isSoundButtonVisible;
+        }
         if (fromBid.maxVideoDuration == null) {
             fromBid.maxVideoDuration = fromRoot.maxVideoDuration;
         }
@@ -111,6 +114,9 @@ public class MobileSdkPassThrough {
         if (result.isMuted == null) {
             result.isMuted = configuration.isMuted();
         }
+        if (result.isSoundButtonVisible == null) {
+            result.isSoundButtonVisible = configuration.isSoundButtonVisible();
+        }
         if (result.maxVideoDuration == null) {
             result.maxVideoDuration = configuration.getMaxVideoDuration();
         }
@@ -134,6 +140,8 @@ public class MobileSdkPassThrough {
 
 
     public Boolean isMuted;
+
+    public Boolean isSoundButtonVisible;
 
     public Integer maxVideoDuration;
     public Integer skipDelay;
@@ -188,6 +196,9 @@ public class MobileSdkPassThrough {
     public void modifyAdUnitConfiguration(AdUnitConfiguration adUnitConfiguration) {
         if (isMuted != null) {
             adUnitConfiguration.setIsMuted(isMuted);
+        }
+        if (isSoundButtonVisible != null) {
+            adUnitConfiguration.setIsSoundButtonVisible(isSoundButtonVisible);
         }
         if (maxVideoDuration != null) {
             adUnitConfiguration.setMaxVideoDuration(maxVideoDuration);

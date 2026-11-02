@@ -158,6 +158,18 @@ public class MediationBannerAdUnitTest {
     }
 
     @Test
+    public void setIsSoundButtonVisible_updatesAdUnitConfig() {
+        assertTrue("Banner video keeps its volume control unless the publisher hides it",
+                mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible());
+
+        mediationBannerAdUnit.setIsSoundButtonVisible(false);
+        assertFalse(mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible());
+
+        mediationBannerAdUnit.setIsSoundButtonVisible(true);
+        assertTrue(mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible());
+    }
+
+    @Test
     public void setAdPosition_EqualsGetAdPosition() {
         mediationBannerAdUnit.setAdPosition(null);
         assertEquals(AdPosition.UNDEFINED, mediationBannerAdUnit.getAdPosition());

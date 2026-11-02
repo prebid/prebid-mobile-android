@@ -384,6 +384,32 @@ public class VideoViewTest {
     }
 
     @Test
+    public void viewReadyForImmediateDisplay_soundButtonHidden_DoNotShowVolumeControls() {
+        final VideoCreativeView mockVideoCreativeView = mock(VideoCreativeView.class);
+        when(mockAdViewManager.isNotShowingEndCard()).thenReturn(true);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsSoundButtonVisible(false);
+        videoView.loadAd(configuration, mock(BidResponse.class));
+
+        adViewManagerListener.viewReadyForImmediateDisplay(mockVideoCreativeView);
+
+        verify(mockVideoCreativeView, never()).showVolumeControls();
+    }
+
+    @Test
+    public void viewReadyForImmediateDisplay_soundButtonVisible_ShowVolumeControls() {
+        final VideoCreativeView mockVideoCreativeView = mock(VideoCreativeView.class);
+        when(mockAdViewManager.isNotShowingEndCard()).thenReturn(true);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsSoundButtonVisible(true);
+        videoView.loadAd(configuration, mock(BidResponse.class));
+
+        adViewManagerListener.viewReadyForImmediateDisplay(mockVideoCreativeView);
+
+        verify(mockVideoCreativeView).showVolumeControls();
+    }
+
+    @Test
     public void viewReadyForImmediateDisplay_hasEndCard_ShowEndCard_noListenerInvocation() {
         final View mockView = mock(View.class);
         reset(mockView);

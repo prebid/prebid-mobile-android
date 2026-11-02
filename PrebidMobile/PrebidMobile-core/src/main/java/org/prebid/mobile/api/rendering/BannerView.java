@@ -489,6 +489,16 @@ public class BannerView extends FrameLayout {
         adUnitConfig.setIsMuted(isMuted);
     }
 
+    /**
+     * Sets whether an outstream video creative shows a mute/unmute button. Defaults to true.
+     * <p>
+     * Read when each video creative is shown, so the value also applies to auto refreshed ads.
+     * Has no effect on HTML banners.
+     */
+    public void setIsSoundButtonVisible(boolean isSoundButtonVisible) {
+        adUnitConfig.setIsSoundButtonVisible(isSoundButtonVisible);
+    }
+
     //endregion ==================== getters and setters
 
     private void reflectAttrs(AttributeSet attrs) {
@@ -554,6 +564,7 @@ public class BannerView extends FrameLayout {
         eventHandler.setBannerEventListener(bannerEventListener);
         adUnitConfig.setAdFormat(AdFormat.BANNER);
         adUnitConfig.addSizes(eventHandler.getAdSizeArray());
+        adUnitConfig.setIsSoundButtonVisible(true);
     }
 
     private void displayPrebidView() {

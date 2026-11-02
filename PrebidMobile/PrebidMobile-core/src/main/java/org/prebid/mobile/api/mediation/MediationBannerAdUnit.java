@@ -67,6 +67,7 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         adUnitConfig.addSize(adSize);
         adUnitConfig.setConfigId(configId);
         adUnitConfig.setAdFormat(AdFormat.BANNER);
+        adUnitConfig.setIsSoundButtonVisible(true);
     }
 
     /**
@@ -162,6 +163,16 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
      */
     public void setIsMuted(boolean isMuted) {
         adUnitConfig.setIsMuted(isMuted);
+    }
+
+    /**
+     * Sets whether an outstream video creative shows a mute/unmute button. Defaults to true.
+     * <p>
+     * Handed to the Prebid banner adapter with every winning bid, so the value also applies to
+     * auto refreshed ads. Has no effect on HTML banners or on ads the mediated SDK renders itself.
+     */
+    public void setIsSoundButtonVisible(boolean isSoundButtonVisible) {
+        adUnitConfig.setIsSoundButtonVisible(isSoundButtonVisible);
     }
 
     /**
