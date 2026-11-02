@@ -100,11 +100,14 @@ public class AdUnitConfiguration {
      * next auction.
      * <p>
      * {@code fingerprint} is carried over because plugin event listeners are registered under it.
-     * The mutable sub configurations are shared on purpose: the reward, banner, video and native
-     * settings are read back through the ad unit after rendering.
+     * {@code broadcastId} is not: each rendering registers its own event receiver under it, and a
+     * shared id would let the in-app browser's close broadcast reach every earlier rendering of
+     * the same ad unit that is still registered. The mutable sub configurations are shared on
+     * purpose: the reward, banner, video and native settings are read back through the ad unit
+     * after rendering.
      */
     public AdUnitConfiguration(@NonNull AdUnitConfiguration source) {
-        broadcastId = source.broadcastId;
+        broadcastId = Utils.generateRandomInt();
         fingerprint = source.fingerprint;
 
         isRewarded = source.isRewarded;
