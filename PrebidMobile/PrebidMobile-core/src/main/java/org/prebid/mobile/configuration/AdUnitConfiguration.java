@@ -257,16 +257,21 @@ public class AdUnitConfiguration {
     }
 
     /**
-     * True only when the publisher asked for the sound button. Full screen ads hide it otherwise.
+     * The full screen default: true only when the publisher asked for the sound button, as
+     * interstitial and rewarded ads hide it otherwise. A banner renderer must not use this
+     * getter, because banner video shows the button unless it was hidden explicitly; it reads
+     * {@link #isSoundButtonVisible(boolean) isSoundButtonVisible(true)} instead.
      */
     public boolean isSoundButtonVisible() {
         return isSoundButtonVisible(false);
     }
 
     /**
-     * The publisher's setting, or {@code defaultValue} when none was made. Banner video passes
-     * {@code true}: it has always shown the volume control, so only an explicit
-     * {@link #setIsSoundButtonVisible(boolean) setIsSoundButtonVisible(false)} hides it.
+     * The publisher's setting, or {@code defaultValue} when none was made. Pass the default of
+     * the ad type being rendered: {@code true} for banner video, which has always shown the
+     * volume control, so only an explicit
+     * {@link #setIsSoundButtonVisible(boolean) setIsSoundButtonVisible(false)} hides it;
+     * {@code false} for full screen ads, which {@link #isSoundButtonVisible()} does.
      */
     public boolean isSoundButtonVisible(boolean defaultValue) {
         return isSoundButtonVisible != null ? isSoundButtonVisible : defaultValue;
