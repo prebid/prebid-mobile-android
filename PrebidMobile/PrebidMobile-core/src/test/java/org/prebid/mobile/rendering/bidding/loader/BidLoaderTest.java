@@ -18,7 +18,7 @@ package org.prebid.mobile.rendering.bidding.loader;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -324,23 +324,22 @@ public class BidLoaderTest {
         verify(bidRequesterListener, never()).onError(any());
     }
 
-    // The mediation adapters render with a fresh configuration and only see the bid response, so the
-    // ad unit's rendering controls must travel inside the response's passthrough.
+    // The response carries only what the server sent. Renderers work on a copy of the ad unit's
+    // configuration taken at render time, so its own settings never travel in the passthrough.
     @Test
-    public void responseHandler_noServerPassThrough_carriesTheAdUnitIsMutedInTheResponse() throws Exception {
+    public void responseHandler_noServerPassThrough_leavesTheResponseWithoutOne() throws Exception {
         AdUnitConfiguration config = new AdUnitConfiguration();
         config.setIsMuted(true);
         bidLoader = createBidLoader(config, bidRequesterListener);
 
         BidResponse response = handleResponse("PrebidServerOneBidFromRubiconResponse.json");
 
-        assertNotNull(response.getMobileSdkPassThrough());
-        assertEquals(Boolean.TRUE, response.getMobileSdkPassThrough().isMuted);
+        assertNull(response.getMobileSdkPassThrough());
         assertTrue(config.isMuted());
     }
 
     @Test
-    public void responseHandler_serverIsMuted_overridesTheAdUnitSettingForThisResponseOnly() throws Exception {
+    public void responseHandler_serverIsMuted_staysOnTheResponse() throws Exception {
         AdUnitConfiguration config = new AdUnitConfiguration();
         config.setIsMuted(false);
         bidLoader = createBidLoader(config, bidRequesterListener);
@@ -362,7 +361,7 @@ public class BidLoaderTest {
         BidResponse next = handleResponse("PrebidServerOneBidFromRubiconResponse.json");
 
         assertEquals(Boolean.TRUE, muted.getMobileSdkPassThrough().isMuted);
-        assertEquals(Boolean.FALSE, next.getMobileSdkPassThrough().isMuted);
+        assertNull(next.getMobileSdkPassThrough());
     }
 
     private BidResponse handleResponse(String resourceName) throws Exception {

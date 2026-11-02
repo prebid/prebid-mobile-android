@@ -93,48 +93,6 @@ public class MobileSdkPassThrough {
     }
 
     /**
-     * Combines unified pass through object with rendering controls
-     * from ad unit configuration. Settings from ad unit configuration
-     * have lower priority.
-     */
-    @NonNull
-    public static MobileSdkPassThrough combine(
-        @Nullable MobileSdkPassThrough unifiedPassThrough,
-        @NonNull AdUnitConfiguration configuration
-    ) {
-        MobileSdkPassThrough result;
-        if (unifiedPassThrough == null) {
-            result = new MobileSdkPassThrough();
-        } else {
-            result = unifiedPassThrough;
-        }
-
-        if (result.isMuted == null) {
-            result.isMuted = configuration.isMuted();
-        }
-        if (result.maxVideoDuration == null) {
-            result.maxVideoDuration = configuration.getMaxVideoDuration();
-        }
-        if (result.skipDelay == null) {
-            result.skipDelay = configuration.getSkipDelay();
-        }
-        if (result.skipButtonArea == null) {
-            result.skipButtonArea = configuration.getSkipButtonArea();
-        }
-        if (result.skipButtonPosition == null) {
-            result.skipButtonPosition = configuration.getSkipButtonPosition();
-        }
-        if (result.closeButtonArea == null) {
-            result.closeButtonArea = configuration.getCloseButtonArea();
-        }
-        if (result.closeButtonPosition == null) {
-            result.closeButtonPosition = configuration.getCloseButtonPosition();
-        }
-        return result;
-    }
-
-
-    /**
      * Applies the rendering controls carried by the bid response to the configuration a renderer
      * is about to use. A response without a passthrough leaves the configuration untouched.
      */
@@ -163,8 +121,6 @@ public class MobileSdkPassThrough {
     public Integer preRenderTimeout = 0;
 
     private JSONObject configuration;
-
-    private MobileSdkPassThrough() {}
 
     private MobileSdkPassThrough(JSONObject passThrough) {
         try {
