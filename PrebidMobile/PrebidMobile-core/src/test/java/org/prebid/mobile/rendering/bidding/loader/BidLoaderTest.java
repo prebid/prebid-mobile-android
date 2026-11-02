@@ -17,9 +17,11 @@
 package org.prebid.mobile.rendering.bidding.loader;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
@@ -345,7 +347,7 @@ public class BidLoaderTest {
     }
 
     @Test
-    public void responseHandler_serverIsMuted_overridesTheAdUnitSetting() throws Exception {
+    public void responseHandler_serverIsMuted_overridesTheAdUnitSettingForThisResponseOnly() throws Exception {
         AdUnitConfiguration config = new AdUnitConfiguration();
         config.setIsMuted(false);
         bidLoader = createBidLoader(config, bidRequesterListener);
@@ -353,7 +355,21 @@ public class BidLoaderTest {
         BidResponse response = handleResponse("BidResponseTest/mobile_sdk_pass_through.json");
 
         assertEquals(Boolean.TRUE, response.getMobileSdkPassThrough().isMuted);
-        assertTrue("A server side ismuted=1 mutes the ad unit", config.isMuted());
+        assertFalse("The server value must not be written back into the ad unit", config.isMuted());
+    }
+
+    // A refreshing banner: the first bid asks for muted, the next one says nothing.
+    @Test
+    public void responseHandler_serverIsMuted_doesNotStickToTheNextResponse() throws Exception {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setIsMuted(false);
+        bidLoader = createBidLoader(config, bidRequesterListener);
+
+        BidResponse muted = handleResponse("BidResponseTest/mobile_sdk_pass_through.json");
+        BidResponse next = handleResponse("PrebidServerOneBidFromRubiconResponse.json");
+
+        assertEquals(Boolean.TRUE, muted.getMobileSdkPassThrough().isMuted);
+        assertEquals(Boolean.FALSE, next.getMobileSdkPassThrough().isMuted);
     }
 
     private BidResponse handleResponse(String resourceName) throws Exception {
@@ -363,7 +379,7 @@ public class BidLoaderTest {
         responseHandler.onResponse(responseResult);
 
         ArgumentCaptor<BidResponse> responseCaptor = ArgumentCaptor.forClass(BidResponse.class);
-        verify(bidRequesterListener).onFetchCompleted(responseCaptor.capture());
+        verify(bidRequesterListener, atLeastOnce()).onFetchCompleted(responseCaptor.capture());
         return responseCaptor.getValue();
     }
 

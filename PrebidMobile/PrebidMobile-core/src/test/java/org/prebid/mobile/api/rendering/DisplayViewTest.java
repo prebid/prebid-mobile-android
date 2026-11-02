@@ -1,6 +1,7 @@
 package org.prebid.mobile.api.rendering;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -16,6 +17,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +39,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
@@ -144,6 +147,22 @@ public class DisplayViewTest {
         rendered.setAdFormat(AdFormat.VAST);
 
         assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), adUnitConfiguration.getAdFormats());
+    }
+
+    // The bid response's ext.prebid.passthrough[].adconfiguration.ismuted applies to the copy the
+    // renderer gets, never to the ad unit's own configuration, so it holds for this creative only.
+    @Test
+    public void serverSideIsMuted_appliesToTheRenderedCopyOnly() throws Exception {
+        adUnitConfiguration.setIsMuted(false);
+        when(mockResponse.getMobileSdkPassThrough()).thenReturn(MobileSdkPassThrough.create(new JSONObject(
+                "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\"ismuted\":true}}]}}"
+        )));
+
+        displayView = new DisplayView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
+
+        AdUnitConfiguration rendered = captureRenderedConfiguration(null);
+        assertTrue("A server side ismuted=1 mutes this creative", rendered.isMuted());
+        assertFalse("The ad unit keeps its own setting for the next auction", adUnitConfiguration.isMuted());
     }
 
     @Test

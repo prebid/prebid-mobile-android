@@ -28,6 +28,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.PluginRendererFactory;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 
 /**
@@ -35,7 +36,8 @@ import org.prebid.mobile.rendering.networking.WinNotifier;
  * <p>
  * Renders against its own copy of the ad unit's configuration. The creative pipeline rewrites the
  * configuration it is given, so sharing the ad unit's instance would narrow a multiformat ad unit
- * to the winning creative's format and break the following auctions.
+ * to the winning creative's format and break the following auctions. The server side rendering
+ * controls of the bid response are applied to that copy, so they hold for this creative only.
  */
 public class DisplayView extends FrameLayout {
     private View adView;
@@ -49,12 +51,7 @@ public class DisplayView extends FrameLayout {
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse bidResponse
     ) {
-        super(context);
-
-        this.adUnitConfiguration = new AdUnitConfiguration(adUnitConfiguration);
-        this.displayViewListener = displayViewListener;
-
-        createBannerAdView(context, bidResponse);
+        this(context, displayViewListener, null, adUnitConfiguration, bidResponse);
     }
 
     public DisplayView(
@@ -70,6 +67,7 @@ public class DisplayView extends FrameLayout {
         this.displayViewListener = displayViewListener;
         this.displayVideoListener = displayVideoListener;
 
+        MobileSdkPassThrough.applyTo(bidResponse, this.adUnitConfiguration);
         createBannerAdView(context, bidResponse);
     }
 

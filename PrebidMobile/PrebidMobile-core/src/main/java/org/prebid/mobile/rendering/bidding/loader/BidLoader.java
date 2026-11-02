@@ -245,14 +245,14 @@ public class BidLoader {
     }
 
     /**
-     * Gets mobile sdk pass through object, combines it with user's ad unit
-     * rendering controls settings in configuration, modifies ad unit
-     * configuration, sets combined parameters to bid response.
+     * Combines the server's pass through object with the ad unit's own rendering controls and
+     * stores the result on the bid response. The ad unit configuration itself is left alone:
+     * a server override applies to the creatives rendered from this response and does not
+     * carry over to the next one. Renderers apply it through {@link MobileSdkPassThrough#applyTo}.
      */
     private void updateAdUnitConfiguration(@NonNull BidResponse bidResponse) {
         MobileSdkPassThrough serverParameters = bidResponse.getMobileSdkPassThrough();
         MobileSdkPassThrough combinedParameters = MobileSdkPassThrough.combine(serverParameters, adConfiguration);
-        combinedParameters.modifyAdUnitConfiguration(adConfiguration);
         bidResponse.setMobileSdkPassThrough(combinedParameters);
     }
 
