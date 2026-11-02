@@ -29,7 +29,6 @@ import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerList
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.interstitial.rewarded.Reward;
 import org.prebid.mobile.rendering.models.AdDetails;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 
 public class InterstitialController implements PrebidMobileInterstitialControllerInterface {
@@ -118,10 +117,14 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
         bidInterstitialView.setPubBackGroundOpacity(1.0f);
     }
 
+    /**
+     * @param adUnitConfiguration the configuration to render with. Ad units and adapters build it
+     *                            with {@link PluginRendererFactory#renderingConfiguration}, so the
+     *                            bid response's rendering controls are already applied.
+     */
     public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
         config = adUnitConfiguration;
         adUnitConfiguration.modifyUsingBidResponse(bidResponse);
-        MobileSdkPassThrough.applyTo(bidResponse, adUnitConfiguration);
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {
             impressionEventUrl = bidResponse.getImpressionEventUrl();
@@ -142,7 +145,7 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
             }
             return;
         }
-        config = new AdUnitConfiguration();
+        config = PluginRendererFactory.renderingConfiguration(new AdUnitConfiguration(), bidResponse);
         config.setRewarded(isRewarded);
         if (isRewarded) {
             config.getRewardManager().setRewardListener(rewardListener);

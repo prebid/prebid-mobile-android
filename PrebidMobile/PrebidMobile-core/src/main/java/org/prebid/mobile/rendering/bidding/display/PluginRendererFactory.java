@@ -17,6 +17,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 
 /**
@@ -30,6 +31,24 @@ import org.prebid.mobile.rendering.networking.WinNotifier;
  * Prebid's own {@link InterstitialController} sends it itself in {@code loadAd}.
  */
 public class PluginRendererFactory {
+
+    /**
+     * Builds the configuration a renderer works on for one bid response: a copy of the ad unit's
+     * configuration with the response's rendering controls
+     * ({@code ext.prebid.passthrough[].adconfiguration}) applied on top.
+     * <p>
+     * A renderer never gets the ad unit's own configuration. A server override therefore holds
+     * for this response only, and the creative pipeline's writes stay off the ad unit.
+     */
+    @NonNull
+    public static AdUnitConfiguration renderingConfiguration(
+            @NonNull AdUnitConfiguration adUnitConfiguration,
+            @NonNull BidResponse bidResponse
+    ) {
+        AdUnitConfiguration renderingConfiguration = new AdUnitConfiguration(adUnitConfiguration);
+        MobileSdkPassThrough.applyTo(bidResponse, renderingConfiguration);
+        return renderingConfiguration;
+    }
 
     /**
      * Creates the renderer-owned banner view after the caller has completed win notification.

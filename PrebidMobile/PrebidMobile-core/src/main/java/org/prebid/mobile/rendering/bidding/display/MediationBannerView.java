@@ -14,7 +14,6 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 
 /**
@@ -58,7 +57,6 @@ public class MediationBannerView extends FrameLayout implements PrebidDestroyabl
         this.displayViewListener = displayViewListener;
         this.displayVideoListener = displayVideoListener;
 
-        MobileSdkPassThrough.applyTo(bidResponse, this.adUnitConfiguration);
         createBannerAdView(context, bidResponse);
     }
 
@@ -68,10 +66,10 @@ public class MediationBannerView extends FrameLayout implements PrebidDestroyabl
             @NonNull BidResponse bidResponse
     ) {
         AdUnitConfiguration adUnitConfiguration = bidResponse.getAdUnitConfiguration();
-        if (adUnitConfiguration == null) {
-            return adapterConfiguration;
-        }
-        return new AdUnitConfiguration(adUnitConfiguration);
+        return PluginRendererFactory.renderingConfiguration(
+                adUnitConfiguration != null ? adUnitConfiguration : adapterConfiguration,
+                bidResponse
+        );
     }
 
     private void createBannerAdView(

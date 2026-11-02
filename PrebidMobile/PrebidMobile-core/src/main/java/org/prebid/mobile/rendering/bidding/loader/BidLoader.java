@@ -248,7 +248,8 @@ public class BidLoader {
      * Combines the server's pass through object with the ad unit's own rendering controls and
      * stores the result on the bid response. The ad unit configuration itself is left alone:
      * a server override applies to the creatives rendered from this response and does not
-     * carry over to the next one. Renderers apply it through {@link MobileSdkPassThrough#applyTo}.
+     * carry over to the next one. Renderers work on a copy that carries it, see
+     * {@link org.prebid.mobile.rendering.bidding.display.PluginRendererFactory#renderingConfiguration}.
      */
     private void updateAdUnitConfiguration(@NonNull BidResponse bidResponse) {
         MobileSdkPassThrough serverParameters = bidResponse.getMobileSdkPassThrough();

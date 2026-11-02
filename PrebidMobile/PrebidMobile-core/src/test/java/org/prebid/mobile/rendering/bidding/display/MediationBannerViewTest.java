@@ -3,7 +3,6 @@ package org.prebid.mobile.rendering.bidding.display;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -295,14 +294,17 @@ public class MediationBannerViewTest {
     }
 
     @Test
-    public void constructor_responseWithoutAdUnitConfiguration_rendersTheAdapterConfiguration() {
+    public void constructor_responseWithoutAdUnitConfiguration_rendersACopyOfTheAdapterConfiguration() {
         PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
         when(mockBidResponse.getAdUnitConfiguration()).thenReturn(null);
         AdUnitConfiguration adapterConfiguration = freshAdapterConfiguration();
+        adapterConfiguration.setIsMuted(true);
 
         new MediationBannerView(context, mockDisplayViewListener, adapterConfiguration, mockBidResponse);
 
-        assertSame(adapterConfiguration, captureRenderedConfiguration(defaultRenderer));
+        AdUnitConfiguration rendered = captureRenderedConfiguration(defaultRenderer);
+        assertNotSame(adapterConfiguration, rendered);
+        assertTrue(rendered.isMuted());
     }
 
     private static AdUnitConfiguration freshAdapterConfiguration() {

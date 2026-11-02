@@ -28,7 +28,6 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.PluginRendererFactory;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 
 /**
@@ -63,11 +62,10 @@ public class DisplayView extends FrameLayout {
     ) {
         super(context);
 
-        this.adUnitConfiguration = new AdUnitConfiguration(adUnitConfiguration);
+        this.adUnitConfiguration = PluginRendererFactory.renderingConfiguration(adUnitConfiguration, bidResponse);
         this.displayViewListener = displayViewListener;
         this.displayVideoListener = displayVideoListener;
 
-        MobileSdkPassThrough.applyTo(bidResponse, this.adUnitConfiguration);
         createBannerAdView(context, bidResponse);
     }
 
