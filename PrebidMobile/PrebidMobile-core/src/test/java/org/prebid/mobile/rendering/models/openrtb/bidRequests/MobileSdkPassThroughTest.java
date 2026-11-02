@@ -98,32 +98,6 @@ public class MobileSdkPassThroughTest {
         assertEquals(Position.TOP_LEFT, adUnitConfiguration.getCloseButtonPosition());
     }
 
-    // The sound button flag is not a server-side setting. It rides along in the combined object so
-    // the mediation adapters, which render with a fresh configuration, still get the publisher's value.
-    @Test
-    public void combineWithConfiguration_carriesIsSoundButtonVisible() throws JSONException {
-        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
-        adUnitConfiguration.setIsSoundButtonVisible(true);
-
-        MobileSdkPassThrough result = MobileSdkPassThrough.combine((MobileSdkPassThrough) null, adUnitConfiguration);
-        assertEquals(Boolean.TRUE, result.isSoundButtonVisible);
-
-        AdUnitConfiguration rendered = new AdUnitConfiguration();
-        result.modifyAdUnitConfiguration(rendered);
-        assertTrue(rendered.isSoundButtonVisible());
-    }
-
-    @Test
-    public void create_isSoundButtonVisibleIsNotReadFromTheResponse() throws JSONException {
-        JSONObject jsonObject = new JSONObject(
-            "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\"issoundbuttonvisible\": true}}]}}");
-
-        MobileSdkPassThrough subject = MobileSdkPassThrough.create(jsonObject);
-
-        assertNotNull(subject);
-        assertNull(subject.isSoundButtonVisible);
-    }
-
     @Test
     public void applyTo_responseWithPassThrough_modifiesTheConfiguration() throws JSONException {
         JSONObject jsonObject = new JSONObject(

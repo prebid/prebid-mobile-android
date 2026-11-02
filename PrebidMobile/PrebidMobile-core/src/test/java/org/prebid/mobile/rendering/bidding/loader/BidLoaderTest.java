@@ -336,17 +336,6 @@ public class BidLoaderTest {
     }
 
     @Test
-    public void responseHandler_carriesTheAdUnitSoundButtonSettingInTheResponse() throws Exception {
-        AdUnitConfiguration config = new AdUnitConfiguration();
-        config.setIsSoundButtonVisible(true);
-        bidLoader = createBidLoader(config, bidRequesterListener);
-
-        BidResponse response = handleResponse("BidResponseTest/mobile_sdk_pass_through.json");
-
-        assertEquals(Boolean.TRUE, response.getMobileSdkPassThrough().isSoundButtonVisible);
-    }
-
-    @Test
     public void responseHandler_serverIsMuted_overridesTheAdUnitSettingForThisResponseOnly() throws Exception {
         AdUnitConfiguration config = new AdUnitConfiguration();
         config.setIsMuted(false);

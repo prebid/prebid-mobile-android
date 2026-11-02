@@ -2,6 +2,8 @@ package org.prebid.mobile.rendering.bidding.display;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -250,6 +252,52 @@ public class MediationBannerViewTest {
 
         AdUnitConfiguration rendered = captureRenderedConfiguration(defaultRenderer);
         assertTrue(rendered.isMuted());
+    }
+
+    // The adapters pass a fresh configuration. The container renders from a copy of the ad unit's
+    // own configuration, which the response carries, so the publisher's settings reach the renderer.
+    @Test
+    public void constructor_rendersFromACopyOfTheAdUnitConfiguration() {
+        PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
+        adUnitConfiguration.setIsMuted(true);
+        adUnitConfiguration.setIsSoundButtonVisible(false);
+        AdUnitConfiguration adapterConfiguration = freshAdapterConfiguration();
+
+        new MediationBannerView(context, mockDisplayViewListener, adapterConfiguration, mockBidResponse);
+
+        AdUnitConfiguration rendered = captureRenderedConfiguration(defaultRenderer);
+        assertNotSame("The ad unit's own configuration must not be handed to a renderer", adUnitConfiguration, rendered);
+        assertNotSame(adapterConfiguration, rendered);
+        assertEquals(adUnitConfiguration.getFingerprint(), rendered.getFingerprint());
+        assertTrue(rendered.isMuted());
+        assertFalse("An explicit setIsSoundButtonVisible(false) must reach the renderer", rendered.isSoundButtonVisible());
+    }
+
+    @Test
+    public void constructor_adUnitShowsTheSoundButton_rendersWithIt() {
+        PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
+        adUnitConfiguration.setIsSoundButtonVisible(true);
+
+        new MediationBannerView(context, mockDisplayViewListener, freshAdapterConfiguration(), mockBidResponse);
+
+        assertTrue(captureRenderedConfiguration(defaultRenderer).isSoundButtonVisible());
+    }
+
+    @Test
+    public void constructor_responseWithoutAdUnitConfiguration_rendersTheAdapterConfiguration() {
+        PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
+        when(mockBidResponse.getAdUnitConfiguration()).thenReturn(null);
+        AdUnitConfiguration adapterConfiguration = freshAdapterConfiguration();
+
+        new MediationBannerView(context, mockDisplayViewListener, adapterConfiguration, mockBidResponse);
+
+        assertSame(adapterConfiguration, captureRenderedConfiguration(defaultRenderer));
+    }
+
+    private static AdUnitConfiguration freshAdapterConfiguration() {
+        AdUnitConfiguration adapterConfiguration = new AdUnitConfiguration();
+        adapterConfiguration.setAdFormat(AdFormat.BANNER);
+        return adapterConfiguration;
     }
 
     private static MobileSdkPassThrough passThroughWithIsMuted(boolean isMuted) throws Exception {

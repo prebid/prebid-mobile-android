@@ -20,12 +20,13 @@ import org.prebid.mobile.rendering.networking.WinNotifier;
 /**
  * Mediation banner container that lets adapters render through the preferred plugin renderer.
  * <p>
- * The adapters build a fresh {@link AdUnitConfiguration} for every creative, so the rendering
- * controls the publisher set on the mediation ad unit (such as {@code isMuted}) and the server
- * side {@code ext.prebid.passthrough[].adconfiguration} reach the renderer only through the bid
- * response. They are applied here, the way
- * {@link InterstitialController#loadAd(AdUnitConfiguration, BidResponse)} applies them for full
- * screen ads.
+ * Renders from a copy of the mediation ad unit's configuration, which the bid response carries,
+ * so the settings the publisher made on the ad unit (such as {@code isMuted} or
+ * {@code isSoundButtonVisible}) reach the renderer although the adapters build a fresh
+ * {@link AdUnitConfiguration} for every creative. The server side
+ * {@code ext.prebid.passthrough[].adconfiguration} is applied on top of that copy, the way
+ * {@link InterstitialController#loadAd(AdUnitConfiguration, BidResponse)} applies it for full
+ * screen ads. The configuration the adapter passes is used only when the response carries none.
  */
 public class MediationBannerView extends FrameLayout implements PrebidDestroyable {
 
@@ -58,12 +59,24 @@ public class MediationBannerView extends FrameLayout implements PrebidDestroyabl
     ) {
         super(context);
 
-        this.adUnitConfiguration = adUnitConfiguration;
+        this.adUnitConfiguration = renderingConfiguration(adUnitConfiguration, bidResponse);
         this.displayViewListener = displayViewListener;
         this.displayVideoListener = displayVideoListener;
 
-        MobileSdkPassThrough.applyTo(bidResponse, adUnitConfiguration);
+        MobileSdkPassThrough.applyTo(bidResponse, this.adUnitConfiguration);
         createBannerAdView(context, bidResponse);
+    }
+
+    @NonNull
+    private static AdUnitConfiguration renderingConfiguration(
+            @NonNull AdUnitConfiguration adapterConfiguration,
+            @NonNull BidResponse bidResponse
+    ) {
+        AdUnitConfiguration adUnitConfiguration = bidResponse.getAdUnitConfiguration();
+        if (adUnitConfiguration == null) {
+            return adapterConfiguration;
+        }
+        return new AdUnitConfiguration(adUnitConfiguration);
     }
 
     private void createBannerAdView(
