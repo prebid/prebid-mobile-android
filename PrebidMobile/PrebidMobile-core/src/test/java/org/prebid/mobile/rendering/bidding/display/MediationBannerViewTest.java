@@ -284,6 +284,17 @@ public class MediationBannerViewTest {
     }
 
     @Test
+    public void constructor_adUnitNeverSetTheSoundButton_keepsItUnsetForTheRenderer() {
+        PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
+
+        new MediationBannerView(context, mockDisplayViewListener, freshAdapterConfiguration(), mockBidResponse);
+
+        AdUnitConfiguration rendered = captureRenderedConfiguration(defaultRenderer);
+        assertTrue("Banner video keeps its volume control", rendered.isSoundButtonVisible(true));
+        assertFalse(rendered.isSoundButtonVisible());
+    }
+
+    @Test
     public void constructor_responseWithoutAdUnitConfiguration_rendersTheAdapterConfiguration() {
         PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
         when(mockBidResponse.getAdUnitConfiguration()).thenReturn(null);

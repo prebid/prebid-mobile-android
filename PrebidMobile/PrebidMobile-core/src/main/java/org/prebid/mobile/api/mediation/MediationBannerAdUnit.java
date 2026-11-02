@@ -67,7 +67,6 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         adUnitConfig.addSize(adSize);
         adUnitConfig.setConfigId(configId);
         adUnitConfig.setAdFormat(AdFormat.BANNER);
-        adUnitConfig.setIsSoundButtonVisible(true);
     }
 
     /**

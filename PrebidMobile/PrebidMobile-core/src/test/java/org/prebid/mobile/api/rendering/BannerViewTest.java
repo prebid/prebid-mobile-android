@@ -268,10 +268,10 @@ public class BannerViewTest {
     @Test
     public void setIsSoundButtonVisible_updatesAdUnitConfig() throws IllegalAccessException {
         assertTrue("Banner video keeps its volume control unless the publisher hides it",
-                getAdUnitConfig().isSoundButtonVisible());
+                getAdUnitConfig().isSoundButtonVisible(true));
 
         bannerView.setIsSoundButtonVisible(false);
-        assertFalse(getAdUnitConfig().isSoundButtonVisible());
+        assertFalse(getAdUnitConfig().isSoundButtonVisible(true));
 
         bannerView.setIsSoundButtonVisible(true);
         assertTrue(getAdUnitConfig().isSoundButtonVisible());

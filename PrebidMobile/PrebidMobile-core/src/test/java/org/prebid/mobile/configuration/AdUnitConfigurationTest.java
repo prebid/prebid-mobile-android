@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -223,6 +224,29 @@ public class AdUnitConfigurationTest {
 
         assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), subject.getAdFormats());
         assertFalse(subject.getSizes().contains(new AdSize(1, 1)));
+    }
+
+    @Test
+    public void soundButtonVisibility_unsetFollowsTheCallerDefault_setValueWins() {
+        assertFalse("Full screen ads hide the sound button unless asked", subject.isSoundButtonVisible());
+        assertTrue("Banner video shows it unless hidden", subject.isSoundButtonVisible(true));
+
+        subject.setIsSoundButtonVisible(false);
+        assertFalse(subject.isSoundButtonVisible(true));
+
+        subject.setIsSoundButtonVisible(true);
+        assertTrue(subject.isSoundButtonVisible());
+        assertTrue(subject.isSoundButtonVisible(false));
+    }
+
+    @Test
+    public void copyConstructor_keepsAnUnsetSoundButtonUnset() {
+        AdUnitConfiguration copy = new AdUnitConfiguration(subject);
+        assertTrue(copy.isSoundButtonVisible(true));
+        assertFalse(copy.isSoundButtonVisible(false));
+
+        subject.setIsSoundButtonVisible(false);
+        assertFalse(new AdUnitConfiguration(subject).isSoundButtonVisible(true));
     }
 
     @Test

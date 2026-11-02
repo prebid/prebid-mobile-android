@@ -564,7 +564,6 @@ public class BannerView extends FrameLayout {
         eventHandler.setBannerEventListener(bannerEventListener);
         adUnitConfig.setAdFormat(AdFormat.BANNER);
         adUnitConfig.addSizes(eventHandler.getAdSizeArray());
-        adUnitConfig.setIsSoundButtonVisible(true);
     }
 
     private void displayPrebidView() {

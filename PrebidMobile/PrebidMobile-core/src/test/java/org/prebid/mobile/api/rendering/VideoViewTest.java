@@ -396,6 +396,19 @@ public class VideoViewTest {
         verify(mockVideoCreativeView, never()).showVolumeControls();
     }
 
+    // A configuration that never set the flag, such as the one a plugin renderer or the public
+    // VideoView constructor builds, keeps the volume control banner video has always had.
+    @Test
+    public void viewReadyForImmediateDisplay_soundButtonNotSet_ShowVolumeControls() {
+        final VideoCreativeView mockVideoCreativeView = mock(VideoCreativeView.class);
+        when(mockAdViewManager.isNotShowingEndCard()).thenReturn(true);
+        when(mockAdViewManager.getAdConfiguration()).thenReturn(new AdUnitConfiguration());
+
+        adViewManagerListener.viewReadyForImmediateDisplay(mockVideoCreativeView);
+
+        verify(mockVideoCreativeView).showVolumeControls();
+    }
+
     @Test
     public void viewReadyForImmediateDisplay_soundButtonVisible_ShowVolumeControls() {
         final VideoCreativeView mockVideoCreativeView = mock(VideoCreativeView.class);

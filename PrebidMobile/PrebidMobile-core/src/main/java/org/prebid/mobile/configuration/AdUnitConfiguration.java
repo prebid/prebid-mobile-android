@@ -34,7 +34,12 @@ public class AdUnitConfiguration {
     private boolean isRewarded;
     private boolean isBuiltInVideo = false;
     private boolean isMuted = false;
-    private boolean isSoundButtonVisible = false;
+    /**
+     * Null until the publisher sets it. Interstitials hide the sound button unless asked for,
+     * banner video shows it unless hidden explicitly; see {@link #isSoundButtonVisible(boolean)}.
+     */
+    @Nullable
+    private Boolean isSoundButtonVisible;
     private boolean isOriginalAdUnit = false;
     private boolean hasEndCard = false;
 
@@ -248,8 +253,20 @@ public class AdUnitConfiguration {
         this.isSoundButtonVisible = isSoundButtonVisible;
     }
 
+    /**
+     * True only when the publisher asked for the sound button. Full screen ads hide it otherwise.
+     */
     public boolean isSoundButtonVisible() {
-        return isSoundButtonVisible;
+        return isSoundButtonVisible(false);
+    }
+
+    /**
+     * The publisher's setting, or {@code defaultValue} when none was made. Banner video passes
+     * {@code true}: it has always shown the volume control, so only an explicit
+     * {@link #setIsSoundButtonVisible(boolean) setIsSoundButtonVisible(false)} hides it.
+     */
+    public boolean isSoundButtonVisible(boolean defaultValue) {
+        return isSoundButtonVisible != null ? isSoundButtonVisible : defaultValue;
     }
 
     public void setAutoRefreshDelay(int autoRefreshDelayInSeconds) {

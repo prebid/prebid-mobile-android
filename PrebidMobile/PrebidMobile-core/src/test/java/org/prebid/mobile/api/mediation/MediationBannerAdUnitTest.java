@@ -160,10 +160,10 @@ public class MediationBannerAdUnitTest {
     @Test
     public void setIsSoundButtonVisible_updatesAdUnitConfig() {
         assertTrue("Banner video keeps its volume control unless the publisher hides it",
-                mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible());
+                mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible(true));
 
         mediationBannerAdUnit.setIsSoundButtonVisible(false);
-        assertFalse(mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible());
+        assertFalse(mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible(true));
 
         mediationBannerAdUnit.setIsSoundButtonVisible(true);
         assertTrue(mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible());
