@@ -39,7 +39,12 @@ public class PluginRendererFactory {
      * ({@code ext.prebid.passthrough[].adconfiguration}) applied on top.
      * <p>
      * A renderer never gets the ad unit's own configuration. A server override therefore holds
-     * for this response only, and the creative pipeline's writes stay off the ad unit.
+     * for this response only, and the creative pipeline's writes stay off the ad unit, except
+     * for the sub configurations the copy shares with it: the banner, video and native
+     * parameters, and the {@link RewardManager}, into which the creative pipeline writes the
+     * rewarded ext, the after reward listener and the "already rewarded" flag. The Rendering
+     * API's {@code RewardedAdUnit} reads the reward back through that shared manager; mediation
+     * copies get their own one from {@link #mediationRenderingConfiguration}.
      */
     @NonNull
     public static AdUnitConfiguration renderingConfiguration(
