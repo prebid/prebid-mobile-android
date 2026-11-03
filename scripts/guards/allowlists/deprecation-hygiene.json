@@ -1,0 +1,30 @@
+{
+  "guard": "deprecation-hygiene",
+  "description": "Deprecated declarations without a machine-readable replacement note when the guard landed. Shrink-only: add the Javadoc @deprecated tag (or Kotlin message) and delete the entry in the same PR.",
+  "entries": [
+    {
+      "entry": "PrebidMobile/PrebidMobile-core/src/main/java/org/prebid/mobile/configuration/AdUnitConfiguration.java#addSize",
+      "reason": "Javadoc names the replacement in prose but lacks the @deprecated tag."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-core/src/main/java/org/prebid/mobile/configuration/AdUnitConfiguration.java#addSizes",
+      "reason": "Javadoc names the replacement in prose but lacks the @deprecated tag."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-core/src/main/java/org/prebid/mobile/configuration/AdUnitConfiguration.java#getSizes",
+      "reason": "Javadoc names the replacement in prose but lacks the @deprecated tag."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-core/src/main/java/org/prebid/mobile/rendering/views/webview/mraid/BaseJSInterface.java#shouldUseCustomClose",
+      "reason": "MRAID 3 removed useCustomClose; no replacement note when the guard landed."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-core/src/main/java/org/prebid/mobile/rendering/views/webview/mraid/JSInterface.java#shouldUseCustomClose",
+      "reason": "MRAID 3 removed useCustomClose; no replacement note when the guard landed."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-core/src/main/java/org/prebid/mobile/rendering/views/webview/mraid/JsExecutor.java#executeOnViewableChange",
+      "reason": "Javadoc explains the MRAID 3 deprecation but lacks the @deprecated tag."
+    }
+  ]
+}

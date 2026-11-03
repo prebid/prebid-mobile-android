@@ -1,0 +1,66 @@
+{
+  "guard": "logging-hygiene",
+  "description": "Files with raw console output (android.util.Log calls, printStackTrace) predating the LogUtil-facade rule. Shrink-only: route the output through LogUtil and delete the entry in the same PR.",
+  "entries": [
+    {
+      "entry": "PrebidMobile/PrebidMobile-admobAdapters/src/main/java/org/prebid/mobile/admob/AdMobMediationBannerUtils.java",
+      "reason": "Raw android.util.Log calls predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-core/src/main/java/org/prebid/mobile/PrebidNativeAd.java",
+      "reason": "printStackTrace() predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-core/src/main/java/org/prebid/mobile/addendum/AdViewUtils.java",
+      "reason": "printStackTrace() predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-core/src/main/java/org/prebid/mobile/http/HTTPGet.java",
+      "reason": "printStackTrace() predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-core/src/main/java/org/prebid/mobile/rendering/bidding/data/bid/StoredRequest.java",
+      "reason": "printStackTrace() predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-core/src/main/java/org/prebid/mobile/rendering/models/openrtb/bidRequests/Native.java",
+      "reason": "printStackTrace() predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-core/src/main/java/org/prebid/mobile/rendering/utils/helpers/Utils.java",
+      "reason": "printStackTrace() predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-core/src/main/java/org/prebid/mobile/rendering/video/ExoPlayerView.java",
+      "reason": "printStackTrace() predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-maxAdapters/src/main/java/com/applovin/mediation/adapters/prebid/ParametersChecker.java",
+      "reason": "Raw android.util.Log calls predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-maxAdapters/src/main/java/com/applovin/mediation/adapters/prebid/managers/MaxBannerManager.java",
+      "reason": "Raw android.util.Log calls predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-maxAdapters/src/main/java/com/applovin/mediation/adapters/prebid/managers/MaxInterstitialManager.java",
+      "reason": "Raw android.util.Log calls predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-maxAdapters/src/main/java/com/applovin/mediation/adapters/prebid/managers/MaxNativeManager.java",
+      "reason": "Raw android.util.Log calls predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-maxAdapters/src/main/java/com/applovin/mediation/adapters/prebid/managers/MaxRewardedManager.java",
+      "reason": "Raw android.util.Log calls predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-maxAdapters/src/main/java/com/applovin/mediation/adapters/prebid/utils/MaxMediationBannerUtils.java",
+      "reason": "Raw android.util.Log calls predating the LogUtil-facade rule."
+    },
+    {
+      "entry": "PrebidMobile/PrebidMobile-nextGenEventHandlers/src/main/java/org/prebid/mobile/eventhandlers/nextgen/RewardedAdWrapper.kt",
+      "reason": "Raw android.util.Log calls predating the LogUtil-facade rule."
+    }
+  ]
+}
