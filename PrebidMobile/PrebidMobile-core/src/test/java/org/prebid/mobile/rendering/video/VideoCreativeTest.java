@@ -32,6 +32,7 @@ import org.prebid.mobile.rendering.listeners.CreativeViewListener;
 import org.prebid.mobile.rendering.models.AbstractCreative;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
+import org.prebid.mobile.rendering.views.VolumeControlView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
@@ -319,6 +320,91 @@ public class VideoCreativeTest {
         verify(videoCreativeView).setStartIsMutedProperty(false);
         verify(videoCreative, never()).unmute();
         verify(videoCreative, never()).mute();
+    }
+
+    @Test
+    public void whenMutedAndPlayerStartsAtFullVolume_DisplayMutesPlayer() throws AdException {
+        // Interstitial and rewarded video keep the default initial volume
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsMuted(true);
+
+        VideoCreativeView realVideoCreativeView = displayWithRealCreativeView(configuration);
+
+        assertEquals(0f, realVideoCreativeView.getVolume(), 0f);
+        realVideoCreativeView.showVolumeControls();
+        assertVolumeControlState(realVideoCreativeView, VolumeControlView.VolumeState.MUTED);
+    }
+
+    @Test
+    public void whenMutedAndPlayerStartsAtFullVolume_StartPlayerSilent() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsMuted(true);
+        when(mockModel.getAdConfiguration()).thenReturn(configuration);
+        VideoCreative spyVideoCreative = spy(videoCreative);
+
+        spyVideoCreative.display();
+
+        verify(mockVideoCreativeView).start(0f);
+    }
+
+    @Test
+    public void whenNotMutedAndPlayerStartsAtFullVolume_DisplayKeepsVolumeWithoutVolumeChange() throws AdException {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsMuted(false);
+
+        VideoCreativeView realVideoCreativeView = displayWithRealCreativeView(configuration);
+
+        assertEquals(ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME, realVideoCreativeView.getVolume(), 0f);
+        verify(mockOmAdSessionManager, never()).trackVolumeChange(anyFloat());
+        realVideoCreativeView.showVolumeControls();
+        assertVolumeControlState(realVideoCreativeView, VolumeControlView.VolumeState.UN_MUTED);
+    }
+
+    @Test
+    public void whenMutedAndPlayerStartsSilent_DisplayKeepsPlayerMuted() throws AdException {
+        // Outstream and banner video start silent
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setVideoInitialVolume(0f);
+        configuration.setIsMuted(true);
+
+        VideoCreativeView realVideoCreativeView = displayWithRealCreativeView(configuration);
+
+        assertEquals(0f, realVideoCreativeView.getVolume(), 0f);
+        realVideoCreativeView.showVolumeControls();
+        assertVolumeControlState(realVideoCreativeView, VolumeControlView.VolumeState.MUTED);
+    }
+
+    @Test
+    public void whenNotMutedAndPlayerStartsSilent_DisplayUnMutesPlayer() throws AdException {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setVideoInitialVolume(0f);
+        configuration.setIsMuted(false);
+
+        VideoCreativeView realVideoCreativeView = displayWithRealCreativeView(configuration);
+
+        assertEquals(ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME, realVideoCreativeView.getVolume(), 0f);
+        realVideoCreativeView.showVolumeControls();
+        assertVolumeControlState(realVideoCreativeView, VolumeControlView.VolumeState.UN_MUTED);
+    }
+
+    private VideoCreativeView displayWithRealCreativeView(AdUnitConfiguration configuration) throws AdException {
+        when(mockModel.getAdConfiguration()).thenReturn(configuration);
+        videoCreative.setCreativeViewListener(mock(CreativeViewListener.class));
+        VideoCreativeView realVideoCreativeView = new VideoCreativeView(context, videoCreative, configuration);
+        videoCreative.setCreativeView(realVideoCreativeView);
+        videoCreative.videoCreativeView = realVideoCreativeView;
+
+        videoCreative.display();
+
+        return realVideoCreativeView;
+    }
+
+    private static void assertVolumeControlState(
+        VideoCreativeView videoCreativeView,
+        VolumeControlView.VolumeState expectedState
+    ) {
+        VolumeControlView.VolumeState state = WhiteBox.getInternalState(videoCreativeView.getVolumeControlView(), "volumeState");
+        assertEquals(expectedState, state);
     }
 
 }
