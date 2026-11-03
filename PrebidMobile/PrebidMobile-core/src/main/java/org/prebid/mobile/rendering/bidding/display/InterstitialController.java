@@ -29,6 +29,7 @@ import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerList
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.interstitial.rewarded.Reward;
 import org.prebid.mobile.rendering.models.AdDetails;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 
 public class InterstitialController implements PrebidMobileInterstitialControllerInterface {
@@ -118,12 +119,14 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
     }
 
     /**
-     * @param adUnitConfiguration the configuration to render with. Ad units and adapters build it
-     *                            with {@link PluginRendererFactory#renderingConfiguration}, so the
-     *                            bid response's rendering controls are already applied.
+     * Applies the bid response's rendering controls to {@code adUnitConfiguration} and loads the
+     * ad. Ad units and adapters pass a copy built with
+     * {@link PluginRendererFactory#renderingConfiguration}, which carries them already; a caller
+     * that renders with its own configuration gets them here.
      */
     public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
         config = adUnitConfiguration;
+        MobileSdkPassThrough.applyTo(bidResponse, adUnitConfiguration);
         adUnitConfiguration.modifyUsingBidResponse(bidResponse);
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {

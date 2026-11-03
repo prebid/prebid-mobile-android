@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import android.app.Activity;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +33,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.models.AdDetails;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -69,6 +71,23 @@ public class InterstitialControllerTest {
         interstitialController.loadAd(mockAdUnitConfiguration, mockBidResponse);
 
         verify(mockInterstitialView, times(1)).loadAd(eq(mockAdUnitConfiguration), eq(mockBidResponse));
+    }
+
+    // loadAd is public: a caller that renders with its own configuration still gets the server's
+    // rendering controls.
+    @Test
+    public void loadAd_appliesTheServerRenderingControls() throws Exception {
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setIsMuted(false);
+        BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getMobileSdkPassThrough()).thenReturn(MobileSdkPassThrough.create(new JSONObject(
+                "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\"ismuted\":true}}]}}"
+        )));
+
+        interstitialController.loadAd(adUnitConfiguration, mockBidResponse);
+
+        verify(mockInterstitialView).loadAd(eq(adUnitConfiguration), eq(mockBidResponse));
+        assertTrue(adUnitConfiguration.isMuted());
     }
 
     // The cache path renders from a copy of the ad unit configuration the response carries, so the
