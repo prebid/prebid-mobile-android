@@ -17,7 +17,6 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.display.PluginRendererFactory;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
-import org.prebid.mobile.rendering.interstitial.rewarded.RewardManager;
 
 /**
  * Prebid rewarded adapter for AdMob integration.
@@ -57,10 +56,7 @@ public class PrebidRewardedAdapter extends PrebidBaseAdapter {
         AdUnitConfiguration config = PluginRendererFactory.mediationRenderingConfiguration(bidResponse, new AdUnitConfiguration());
         config.setAdFormat(bidResponse.isVideo() ? AdFormat.VAST : AdFormat.INTERSTITIAL);
         config.setRewarded(true);
-        // The reward manager is shared with the ad unit: start this load from a clean state.
-        RewardManager rewardManager = config.getRewardManager();
-        rewardManager.clear();
-        rewardManager.setRewardListener(prebidListener::onUserEarnedReward);
+        config.getRewardManager().setRewardListener(prebidListener::onUserEarnedReward);
 
         interstitialController = PluginRendererFactory.createInterstitialController(
                 configuration.getContext(), prebidListener, config, bidResponse

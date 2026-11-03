@@ -17,6 +17,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardManager;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 
@@ -55,6 +56,10 @@ public class PluginRendererFactory {
      * only the ad format; the publisher's settings live on the mediation ad unit's configuration,
      * which the bid response carries. That one is copied, with the server's rendering controls on
      * top, and {@code adapterConfiguration} is copied instead only when the response carries none.
+     * <p>
+     * The copy gets its own {@link RewardManager}: mediation never reads the reward back through
+     * the ad unit, and an adapter may load the next rewarded ad while one is still showing, so
+     * the two loads must not share reward state or listeners.
      */
     @NonNull
     public static AdUnitConfiguration mediationRenderingConfiguration(
@@ -62,10 +67,12 @@ public class PluginRendererFactory {
             @NonNull AdUnitConfiguration adapterConfiguration
     ) {
         AdUnitConfiguration adUnitConfiguration = bidResponse.getAdUnitConfiguration();
-        return renderingConfiguration(
+        AdUnitConfiguration renderingConfiguration = renderingConfiguration(
                 adUnitConfiguration != null ? adUnitConfiguration : adapterConfiguration,
                 bidResponse
         );
+        renderingConfiguration.setRewardManager(new RewardManager());
+        return renderingConfiguration;
     }
 
     /**

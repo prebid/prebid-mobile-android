@@ -128,6 +128,22 @@ public class PluginRendererFactoryTest {
         assertTrue(rendering.isSoundButtonVisible());
     }
 
+    // An adapter may load the next rewarded ad while one is showing: the two loads must not
+    // share reward listeners or the "already rewarded" state.
+    @Test
+    public void mediationRenderingConfiguration_givesTheCopyItsOwnRewardManager() {
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.getRewardManager().setUserRewardedAlready(true);
+        when(mockBidResponse.getAdUnitConfiguration()).thenReturn(adUnitConfiguration);
+
+        AdUnitConfiguration first = PluginRendererFactory.mediationRenderingConfiguration(mockBidResponse, new AdUnitConfiguration());
+        AdUnitConfiguration second = PluginRendererFactory.mediationRenderingConfiguration(mockBidResponse, new AdUnitConfiguration());
+
+        assertNotSame(adUnitConfiguration.getRewardManager(), first.getRewardManager());
+        assertNotSame(first.getRewardManager(), second.getRewardManager());
+        assertFalse(first.getRewardManager().getUserRewardedAlready());
+    }
+
     @Test
     public void mediationRenderingConfiguration_responseWithoutAdUnitConfiguration_copiesTheAdapterConfiguration() {
         when(mockBidResponse.getAdUnitConfiguration()).thenReturn(null);

@@ -39,6 +39,7 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -91,7 +92,10 @@ public class InterstitialControllerTest {
         assertTrue(rendered.getValue().isSoundButtonVisible());
         assertTrue(rendered.getValue().isRewarded());
         assertSame(rewardListener, rendered.getValue().getRewardManager().getRewardListener());
-        assertFalse("Each load starts from a clean reward state", rendered.getValue().getRewardManager().getUserRewardedAlready());
+        assertNotSame("Each load has its own reward state", adUnitConfiguration.getRewardManager(), rendered.getValue().getRewardManager());
+        assertFalse(rendered.getValue().getRewardManager().getUserRewardedAlready());
+        assertTrue("The ad unit's own reward state is left alone", adUnitConfiguration.getRewardManager().getUserRewardedAlready());
+        assertNull(adUnitConfiguration.getRewardManager().getRewardListener());
     }
 
     @Test
