@@ -22,12 +22,14 @@ import android.os.Looper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -414,6 +416,32 @@ public class RewardedAdUnitTest {
 
         verify(spyEventListener, times(1)).onPrebidSdkWin();
         verify(mockInterstitialController, times(1)).loadAd(any(), any());
+    }
+
+    // The Rendering API delivers the reward through the ad unit's own RewardManager: loadAd()
+    // wires the listener there, so the rendering copy must share that manager, not get its own.
+    @Test
+    public void onPrebidSdkWin_rendersFromACopyThatSharesTheAdUnitRewardManager() throws IllegalAccessException {
+        rewardedAdUnit.loadAd();
+        final BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getWinningBid()).thenReturn(mock(Bid.class));
+        final InterstitialController mockInterstitialController = mock(InterstitialController.class);
+        PrebidMobilePluginRenderer fakePrebidRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(mockInterstitialController, null, true, PREBID_MOBILE_RENDERER_NAME, "1.0");
+        PrebidMobile.registerPluginRenderer(fakePrebidRenderer);
+        WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
+
+        try {
+            RenderingTestUtils.getRewardedVideoEventListener(rewardedAdUnit).onPrebidSdkWin();
+        } finally {
+            PrebidMobilePluginRegister.getInstance().unregisterPlugin(fakePrebidRenderer);
+        }
+
+        ArgumentCaptor<AdUnitConfiguration> rendered = ArgumentCaptor.forClass(AdUnitConfiguration.class);
+        verify(mockInterstitialController).loadAd(rendered.capture(), eq(mockBidResponse));
+        assertNotSame(rewardedAdUnit.config, rendered.getValue());
+        assertSame("The reward fires on the copy's manager and is read back through the ad unit",
+                rewardedAdUnit.config.getRewardManager(), rendered.getValue().getRewardManager());
+        assertNotNull("loadAd() wired the reward listener on that manager", rendered.getValue().getRewardManager().getRewardListener());
     }
 
     @Test
