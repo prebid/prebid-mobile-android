@@ -25,15 +25,19 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.rendering.views.VolumeControlView;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
@@ -82,5 +86,56 @@ public class VideoCreativeViewTest {
 
         assertTrue(videoCreativeView.performClick());
         verify(mockCreative).onEvent(VideoAdEvent.Event.AD_CLICK);
+    }
+
+    @Test
+    public void volumeControlTaps_NotifyMuteAndUnMuteOncePerTap() {
+        videoCreativeView.setStartIsMutedProperty(false);
+        videoCreativeView.showVolumeControls();
+        VolumeControlView volumeControlView = videoCreativeView.getVolumeControlView();
+
+        volumeControlView.performClick();
+
+        verify(mockCreative, times(1)).onEvent(VideoAdEvent.Event.AD_MUTE);
+        verify(mockCreative, never()).onEvent(VideoAdEvent.Event.AD_UNMUTE);
+
+        volumeControlView.performClick();
+
+        verify(mockCreative, times(1)).onEvent(VideoAdEvent.Event.AD_MUTE);
+        verify(mockCreative, times(1)).onEvent(VideoAdEvent.Event.AD_UNMUTE);
+    }
+
+    @Test
+    public void startStateAndProgrammaticChanges_NotifyNoMuteOrUnMute() {
+        videoCreativeView.setStartIsMutedProperty(true);
+        videoCreativeView.showVolumeControls();
+
+        videoCreativeView.unMute();
+        videoCreativeView.mute();
+
+        verify(mockCreative, never()).onEvent(VideoAdEvent.Event.AD_MUTE);
+        verify(mockCreative, never()).onEvent(VideoAdEvent.Event.AD_UNMUTE);
+    }
+
+    @Test
+    public void programmaticMuteWhileVolumeControlShown_NextTapUnMutes() {
+        videoCreativeView.setStartIsMutedProperty(false);
+        videoCreativeView.showVolumeControls();
+        VolumeControlView volumeControlView = videoCreativeView.getVolumeControlView();
+
+        videoCreativeView.mute();
+
+        assertVolumeControlState(VolumeControlView.VolumeState.MUTED);
+
+        volumeControlView.performClick();
+
+        verify(mockCreative).onEvent(VideoAdEvent.Event.AD_UNMUTE);
+        verify(mockCreative, never()).onEvent(VideoAdEvent.Event.AD_MUTE);
+        assertVolumeControlState(VolumeControlView.VolumeState.UN_MUTED);
+    }
+
+    private void assertVolumeControlState(VolumeControlView.VolumeState expectedState) {
+        VolumeControlView.VolumeState state = WhiteBox.getInternalState(videoCreativeView.getVolumeControlView(), "volumeState");
+        assertEquals(expectedState, state);
     }
 }

@@ -34,6 +34,7 @@ import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.utils.constants.IntentActions;
 import org.prebid.mobile.rendering.utils.helpers.InsetsUtils;
+import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreativeView;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
@@ -294,9 +295,13 @@ public class InterstitialView extends BaseAdView implements ControlInsetsRefresh
         } else if (eventType == DialogEventListener.EventType.CLOSED) {
             handleActionClose();
         } else if (eventType == DialogEventListener.EventType.MUTE) {
+            // The dialog sends MUTE and UNMUTE on the user's taps on the sound button,
+            // which VAST tracks as mute and unmute events
             adViewManager.mute();
+            adViewManager.trackVideoEvent(VideoAdEvent.Event.AD_MUTE);
         } else if (eventType == DialogEventListener.EventType.UNMUTE) {
             adViewManager.unmute();
+            adViewManager.trackVideoEvent(VideoAdEvent.Event.AD_UNMUTE);
         }
     }
 

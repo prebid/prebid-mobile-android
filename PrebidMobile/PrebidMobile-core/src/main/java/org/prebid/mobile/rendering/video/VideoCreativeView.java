@@ -229,11 +229,14 @@ public class VideoCreativeView extends RelativeLayout {
         if (notContainsVolumeControl) {
             LayoutParams layoutParams = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             volumeControlView = new VolumeControlView(getContext(), isMuted ? VolumeControlView.VolumeState.MUTED : VolumeControlView.VolumeState.UN_MUTED);
+            // The listener only hears the user's taps, which VAST tracks as mute and unmute events
             volumeControlView.setVolumeControlListener(state -> {
                 if (state == VolumeControlView.VolumeState.MUTED) {
                     mute();
+                    videoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_MUTE);
                 } else {
                     unMute();
+                    videoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_UNMUTE);
                 }
             });
 
@@ -259,9 +262,9 @@ public class VideoCreativeView extends RelativeLayout {
         videoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_CLICK);
     }
 
-    private void updateVolumeControlView(VolumeControlView.VolumeState unMuted) {
+    private void updateVolumeControlView(VolumeControlView.VolumeState volumeState) {
         if (volumeControlView != null) {
-            volumeControlView.updateIcon(unMuted);
+            volumeControlView.setVolumeState(volumeState);
         }
     }
 
