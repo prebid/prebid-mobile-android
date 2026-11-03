@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Looper;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,9 +81,12 @@ public class InterstitialAdUnitTest {
     @Mock
     InterstitialController mockInterstitialController;
 
+    private PrebidMobilePluginRenderer defaultRendererBeforeTest;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        defaultRendererBeforeTest = PrebidMobilePluginRegister.getInstance().getDefaultPluginRenderer();
 
         context = Robolectric.buildActivity(Activity.class).create().get();
 
@@ -95,6 +99,19 @@ public class InterstitialAdUnitTest {
 
         final AdUnitConfiguration adUnitConfig = interstitialAdUnit.config;
         assertEquals(AdPosition.FULLSCREEN.getValue(), adUnitConfig.getAdPositionValue());
+    }
+
+    // Tests replace the default Prebid renderer in the global register: put back what was there.
+    @After
+    public void tearDown() {
+        PrebidMobilePluginRegister register = PrebidMobilePluginRegister.getInstance();
+        PrebidMobilePluginRenderer current = register.getDefaultPluginRenderer();
+        if (current != null) {
+            register.unregisterPlugin(current);
+        }
+        if (defaultRendererBeforeTest != null) {
+            register.registerPlugin(defaultRendererBeforeTest);
+        }
     }
 
     @Test
