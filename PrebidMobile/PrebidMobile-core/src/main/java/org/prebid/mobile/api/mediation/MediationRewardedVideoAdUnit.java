@@ -65,7 +65,8 @@ public class MediationRewardedVideoAdUnit extends MediationBaseFullScreenAdUnit 
      *
      * @param listener callback when operation is completed (success or fail)
      */
-    public void fetchDemandBidInfo(@NonNull OnFetchDemandResult listener) {
+    @Override
+    public final void fetchDemandBidInfo(@NonNull OnFetchDemandResult listener) {
         super.fetchDemandBidInfo(listener);
     }
 
