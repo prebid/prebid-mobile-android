@@ -28,6 +28,7 @@ import static org.mockito.Mockito.spy;
 
 import android.os.Bundle;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +36,7 @@ import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -65,6 +67,11 @@ public class MediationNativeAdUnitTest {
         nativeAdUnit = spy(new NativeAdUnit("config"));
         mediationNativeAdUnit = new MediationNativeAdUnit("config", adObject);
         WhiteBox.setInternalState(mediationNativeAdUnit, "nativeAdUnit", nativeAdUnit);
+    }
+
+    @After
+    public void tearDown() {
+        PrebidMobile.setPrebidServerAccountId(null);
     }
 
     @Test
@@ -101,6 +108,32 @@ public class MediationNativeAdUnitTest {
         assertNull(bidInfo.getPrice());
         assertNull(bidInfo.getNativeCacheId());
         assertNull(adObject.getString(NativeAdUnit.BUNDLE_KEY_CACHE_ID));
+    }
+
+    @Test
+    public void fetchDemandBidInfo_NoAccountId_ReturnsInvalidAccountId() {
+        PrebidMobile.setPrebidServerAccountId("");
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        mediationNativeAdUnit.fetchDemandBidInfo(listener);
+
+        BidInfo bidInfo = MediationBaseAdUnitTest.captureBidInfo(listener);
+        assertEquals(ResultCode.INVALID_ACCOUNT_ID, bidInfo.getResultCode());
+        assertNull(bidInfo.getNativeCacheId());
+        assertNull(adObject.getString(NativeAdUnit.BUNDLE_KEY_CACHE_ID));
+    }
+
+    @Test
+    public void fetchDemandBidInfo_NoConfigId_ReturnsInvalidConfigId() {
+        PrebidMobile.setPrebidServerAccountId("id");
+        mediationNativeAdUnit = new MediationNativeAdUnit("", adObject);
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        mediationNativeAdUnit.fetchDemandBidInfo(listener);
+
+        BidInfo bidInfo = MediationBaseAdUnitTest.captureBidInfo(listener);
+        assertEquals(ResultCode.INVALID_CONFIG_ID, bidInfo.getResultCode());
+        assertNull(bidInfo.getNativeCacheId());
     }
 
     // Stands in for the network fetch: completes through the ad unit's real bid listener, the
