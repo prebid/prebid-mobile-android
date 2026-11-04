@@ -128,7 +128,7 @@ public abstract class MediationBaseAdUnit {
         }
 
         fetchDemand(result -> listener.onComplete(
-                BidInfo.create(toResultCode(result), lastBidResponse, adUnitConfig)
+                BidInfo.create(result.toResultCode(), lastBidResponse, adUnitConfig)
         ));
     }
 
@@ -176,36 +176,6 @@ public abstract class MediationBaseAdUnit {
 
     protected void initBidLoader() {
         bidLoader = new BidLoader(adUnitConfig, bidRequesterListener);
-    }
-
-    private static ResultCode toResultCode(FetchDemandResult result) {
-        switch (result) {
-            case SUCCESS:
-                return ResultCode.SUCCESS;
-            case INVALID_ACCOUNT_ID:
-                return ResultCode.INVALID_ACCOUNT_ID;
-            case INVALID_CONFIG_ID:
-                return ResultCode.INVALID_CONFIG_ID;
-            case INVALID_SIZE:
-                return ResultCode.INVALID_SIZE;
-            case INVALID_CONTEXT:
-                return ResultCode.INVALID_CONTEXT;
-            case INVALID_AD_OBJECT:
-                return ResultCode.INVALID_AD_OBJECT;
-            case INVALID_HOST_URL:
-                return ResultCode.INVALID_HOST_URL;
-            case NETWORK_ERROR:
-                return ResultCode.NETWORK_ERROR;
-            case TIMEOUT:
-                return ResultCode.TIMEOUT;
-            case NO_BIDS:
-                return ResultCode.NO_BIDS;
-            case NO_CACHED_BIDS:
-                return ResultCode.NO_CACHED_BIDS;
-            case SERVER_ERROR:
-            default:
-                return ResultCode.PREBID_SERVER_ERROR;
-        }
     }
 
     private void cancelRefresh() {

@@ -16,6 +16,8 @@
 
 package org.prebid.mobile.api.data;
 
+import org.prebid.mobile.ResultCode;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,6 +78,39 @@ public enum FetchDemandResult {
 
     public static final String NO_BIDS_MESSAGE = "Failed to parse bids. No winning bids were found.";
     public static final String NO_CACHED_BIDS_MESSAGE = "No bids with successful Prebid Cache entries were found.";
+
+    /**
+     * Returns the {@link ResultCode} the original API reports for the same outcome.
+     */
+    public ResultCode toResultCode() {
+        switch (this) {
+            case SUCCESS:
+                return ResultCode.SUCCESS;
+            case INVALID_ACCOUNT_ID:
+                return ResultCode.INVALID_ACCOUNT_ID;
+            case INVALID_CONFIG_ID:
+                return ResultCode.INVALID_CONFIG_ID;
+            case INVALID_SIZE:
+                return ResultCode.INVALID_SIZE;
+            case INVALID_CONTEXT:
+                return ResultCode.INVALID_CONTEXT;
+            case INVALID_AD_OBJECT:
+                return ResultCode.INVALID_AD_OBJECT;
+            case INVALID_HOST_URL:
+                return ResultCode.INVALID_HOST_URL;
+            case NETWORK_ERROR:
+                return ResultCode.NETWORK_ERROR;
+            case TIMEOUT:
+                return ResultCode.TIMEOUT;
+            case NO_BIDS:
+                return ResultCode.NO_BIDS;
+            case NO_CACHED_BIDS:
+                return ResultCode.NO_CACHED_BIDS;
+            case SERVER_ERROR:
+            default:
+                return ResultCode.PREBID_SERVER_ERROR;
+        }
+    }
 
     public static FetchDemandResult parseErrorMessage(String msg) {
         Pattern storedRequestNotFound = Pattern.compile("^Invalid request: Stored Request with ID=\".*\" not found.");

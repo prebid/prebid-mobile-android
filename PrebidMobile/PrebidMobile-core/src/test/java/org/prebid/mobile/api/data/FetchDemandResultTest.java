@@ -17,11 +17,20 @@
 package org.prebid.mobile.api.data;
 
 import org.junit.Test;
+import org.prebid.mobile.ResultCode;
 
 import static org.junit.Assert.assertEquals;
 import static org.prebid.mobile.api.data.FetchDemandResult.*;
 
 public class FetchDemandResultTest {
+
+    @Test
+    public void toResultCode_MapsEveryResultToTheSameNamedCode() {
+        for (FetchDemandResult result : FetchDemandResult.values()) {
+            String expected = result == SERVER_ERROR ? "PREBID_SERVER_ERROR" : result.name();
+            assertEquals(ResultCode.valueOf(expected), result.toResultCode());
+        }
+    }
 
     @Test
     public void whenParseErrorMessageAndNoBidsMsg_NoBidsResult() {
