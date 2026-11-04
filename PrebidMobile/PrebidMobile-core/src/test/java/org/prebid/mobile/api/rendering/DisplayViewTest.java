@@ -179,6 +179,8 @@ public class DisplayViewTest {
     }
 
     private void registerPlugin(PrebidMobilePluginRenderer renderer) {
+        // A renderer whose name is already registered is ignored, so replace it.
+        PrebidMobile.unregisterPluginRenderer(renderer);
         PrebidMobile.registerPluginRenderer(renderer);
         registeredRenderers.add(renderer);
     }

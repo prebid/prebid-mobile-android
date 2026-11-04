@@ -10,6 +10,7 @@ import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.LogUtil.PrebidLogger;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.api.plugin.PluginCapability;
 import org.prebid.mobile.api.rendering.PrebidRenderer;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
@@ -54,7 +55,7 @@ public class SdkInitializer {
         }
 
         try {
-            PrebidMobile.registerPluginRenderer(new PrebidRenderer());
+            registerSdkRenderer();
 
             AppInfoManager.init(applicationContext);
 
@@ -72,6 +73,21 @@ public class SdkInitializer {
                 initializationNotifier,
                 Executors.newFixedThreadPool(2))
         ).start();
+    }
+
+    /**
+     * Registers the SDK's own renderer. Initialization can run more than once (e.g. after a failed
+     * attempt), so a renderer that is already registered is kept, without the duplicate warning.
+     */
+    @VisibleForTesting
+    static void registerSdkRenderer() {
+        PrebidRenderer renderer = new PrebidRenderer();
+
+        if (PrebidMobile.containsPlugin(renderer, PluginCapability.RENDERER)) {
+            return;
+        }
+
+        PrebidMobile.registerPlugin(renderer, PluginCapability.RENDERER);
     }
 
     @VisibleForTesting

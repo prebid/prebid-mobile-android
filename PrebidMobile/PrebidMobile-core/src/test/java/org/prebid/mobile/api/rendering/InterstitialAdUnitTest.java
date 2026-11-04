@@ -429,6 +429,8 @@ public class InterstitialAdUnitTest {
         final InterstitialEventListener spyEventListener = spy(RenderingTestUtils.getInterstitialEventListener(interstitialAdUnit));
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
         PrebidMobilePluginRenderer fakePrebidRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(mockInterstitialController, null, true, PREBID_MOBILE_RENDERER_NAME, "1.0");
+        // A renderer whose name is already registered is ignored, so replace it.
+        PrebidMobile.unregisterPluginRenderer(fakePrebidRenderer);
         PrebidMobile.registerPluginRenderer(fakePrebidRenderer);
 
         WhiteBox.setInternalState(interstitialAdUnit, "bidResponse", mockBidResponse);

@@ -28,12 +28,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.InitializationStatus;
+import org.prebid.mobile.api.plugin.PluginCapability;
+import org.prebid.mobile.api.plugin.PluginRegistry;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
+import org.prebid.mobile.testutils.RecordingLogger;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.LooperMode;
@@ -299,6 +304,31 @@ public class SdkInitializerTest {
         shadowOf(getMainLooper()).idle();
         sleep(1_000);
         shadowOf(getMainLooper()).idle();
+    }
+
+
+    @Test
+    public void registerSdkRenderer_repeatCall_keepsRendererWithoutWarning() {
+        PluginRegistry<PrebidMobilePluginRenderer> registry = PluginCapability.RENDERER.getRegistry();
+        List<PrebidMobilePluginRenderer> savedRenderers = registry.getActive();
+        registry.removeAll();
+        RecordingLogger logger = new RecordingLogger(LogUtil.WARN).install();
+        try {
+            SdkInitializer.registerSdkRenderer();
+            List<PrebidMobilePluginRenderer> afterFirstCall = registry.getActive();
+            SdkInitializer.registerSdkRenderer();
+
+            assertEquals(1, afterFirstCall.size());
+            assertEquals(PREBID_MOBILE_RENDERER_NAME, afterFirstCall.get(0).getName());
+            assertEquals(afterFirstCall, registry.getActive());
+            MatcherAssert.assertThat(logger.getMessages(), is(empty()));
+        } finally {
+            logger.uninstall();
+            registry.removeAll();
+            for (PrebidMobilePluginRenderer renderer : savedRenderers) {
+                registry.add(renderer);
+            }
+        }
     }
 
 
