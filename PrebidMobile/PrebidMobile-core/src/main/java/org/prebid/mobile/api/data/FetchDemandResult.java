@@ -16,6 +16,7 @@
 
 package org.prebid.mobile.api.data;
 
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.ResultCode;
 
 import java.util.regex.Matcher;
@@ -76,6 +77,8 @@ public enum FetchDemandResult {
      */
     NO_CACHED_BIDS;
 
+    private static final String TAG = "FetchDemandResult";
+
     public static final String NO_BIDS_MESSAGE = "Failed to parse bids. No winning bids were found.";
     public static final String NO_CACHED_BIDS_MESSAGE = "No bids with successful Prebid Cache entries were found.";
 
@@ -109,6 +112,45 @@ public enum FetchDemandResult {
             case SERVER_ERROR:
             default:
                 return ResultCode.PREBID_SERVER_ERROR;
+        }
+    }
+
+    /**
+     * Returns the {@link FetchDemandResult} for a {@link ResultCode} the original API reported, the
+     * inverse of {@link #toResultCode()}. Codes without a counterpart map to {@link #NETWORK_ERROR}.
+     */
+    public static FetchDemandResult fromResultCode(ResultCode resultCode) {
+        switch (resultCode) {
+            case SUCCESS:
+                return SUCCESS;
+            case INVALID_ACCOUNT_ID:
+                return INVALID_ACCOUNT_ID;
+            case INVALID_CONFIG_ID:
+                return INVALID_CONFIG_ID;
+            case INVALID_CONTEXT:
+                return INVALID_CONTEXT;
+            case INVALID_HOST_URL:
+                return INVALID_HOST_URL;
+            case INVALID_SIZE:
+                return INVALID_SIZE;
+            case INVALID_AD_OBJECT:
+                return INVALID_AD_OBJECT;
+            case NO_BIDS:
+                return NO_BIDS;
+            case NO_CACHED_BIDS:
+                return NO_CACHED_BIDS;
+            case PREBID_SERVER_ERROR:
+                return SERVER_ERROR;
+            case TIMEOUT:
+                return TIMEOUT;
+            case NETWORK_ERROR:
+                return NETWORK_ERROR;
+            case INVALID_NATIVE_REQUEST:
+                LogUtil.error(TAG, "Invalid native request!");
+                return NETWORK_ERROR;
+            default:
+                LogUtil.error(TAG, "Something went wrong!");
+                return NETWORK_ERROR;
         }
     }
 

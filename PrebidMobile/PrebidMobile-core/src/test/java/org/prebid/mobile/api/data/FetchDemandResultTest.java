@@ -33,6 +33,19 @@ public class FetchDemandResultTest {
     }
 
     @Test
+    public void fromResultCode_ReversesToResultCode() {
+        for (FetchDemandResult result : FetchDemandResult.values()) {
+            assertEquals(result, FetchDemandResult.fromResultCode(result.toResultCode()));
+        }
+    }
+
+    @Test
+    public void fromResultCode_CodesWithoutCounterpart_NetworkError() {
+        assertEquals(NETWORK_ERROR, FetchDemandResult.fromResultCode(ResultCode.INVALID_NATIVE_REQUEST));
+        assertEquals(NETWORK_ERROR, FetchDemandResult.fromResultCode(ResultCode.INVALID_PREBID_REQUEST_OBJECT));
+    }
+
+    @Test
     public void whenParseErrorMessageAndNoBidsMsg_NoBidsResult() {
         assertEquals(NO_BIDS, FetchDemandResult.parseErrorMessage("No bids"));
     }

@@ -2,11 +2,9 @@ package org.prebid.mobile.api.mediation;
 
 import androidx.annotation.NonNull;
 
-import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.NativeAsset;
 import org.prebid.mobile.NativeEventTracker;
-import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.api.original.OnFetchDemandResult;
@@ -17,8 +15,6 @@ import java.util.Set;
  * Mediation native ad unit for Rendering API with AdMob or AppLovin MAX.
  */
 public class MediationNativeAdUnit {
-
-    private static final String TAG = "MediationNativeAdUnit";
 
     private final Object adObject;
     private final NativeAdUnit nativeAdUnit;
@@ -47,7 +43,7 @@ public class MediationNativeAdUnit {
             @NonNull OnFetchCompleteListener listener
     ) {
         nativeAdUnit.fetchDemand(adObject, resultCode ->
-                listener.onComplete(convertResultCode(resultCode))
+                listener.onComplete(FetchDemandResult.fromResultCode(resultCode))
         );
     }
 
@@ -121,41 +117,6 @@ public class MediationNativeAdUnit {
 
     public void setDUrlSupport(boolean support) {
         nativeAdUnit.setDUrlSupport(support);
-    }
-
-    private FetchDemandResult convertResultCode(ResultCode originalResult) {
-        switch (originalResult) {
-            case SUCCESS:
-                return FetchDemandResult.SUCCESS;
-            case INVALID_ACCOUNT_ID:
-                return FetchDemandResult.INVALID_ACCOUNT_ID;
-            case INVALID_CONFIG_ID:
-                return FetchDemandResult.INVALID_CONFIG_ID;
-            case INVALID_CONTEXT:
-                return FetchDemandResult.INVALID_CONTEXT;
-            case INVALID_HOST_URL:
-                return FetchDemandResult.INVALID_HOST_URL;
-            case INVALID_SIZE:
-                return FetchDemandResult.INVALID_SIZE;
-            case INVALID_AD_OBJECT:
-                return FetchDemandResult.INVALID_AD_OBJECT;
-            case NO_BIDS:
-                return FetchDemandResult.NO_BIDS;
-            case NO_CACHED_BIDS:
-                return FetchDemandResult.NO_CACHED_BIDS;
-            case PREBID_SERVER_ERROR:
-                return FetchDemandResult.SERVER_ERROR;
-            case TIMEOUT:
-                return FetchDemandResult.TIMEOUT;
-            case NETWORK_ERROR:
-                return FetchDemandResult.NETWORK_ERROR;
-            case INVALID_NATIVE_REQUEST:
-                LogUtil.error(TAG, "Invalid native request!");
-                return FetchDemandResult.NETWORK_ERROR;
-            default:
-                LogUtil.error(TAG, "Something went wrong!");
-                return FetchDemandResult.NETWORK_ERROR;
-        }
     }
 
 }
