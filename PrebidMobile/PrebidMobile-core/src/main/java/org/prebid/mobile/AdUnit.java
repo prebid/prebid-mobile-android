@@ -211,9 +211,7 @@ public abstract class AdUnit {
         allowNullableAdObject = true;
 
         fetchDemand(null, resultCode -> {
-            BidInfo bidInfo = BidInfo.create(resultCode, bidResponse, configuration);
-            Util.saveCacheId(bidInfo.getNativeCacheId(), adObject);
-            listener.onComplete(bidInfo);
+            listener.onComplete(createBidInfo(resultCode));
         });
     }
 
@@ -237,9 +235,7 @@ public abstract class AdUnit {
         }
 
         fetchDemand(adObject, resultCode -> {
-            BidInfo bidInfo = BidInfo.create(resultCode, bidResponse, configuration);
-            Util.saveCacheId(bidInfo.getNativeCacheId(), this.adObject);
-            listener.onComplete(bidInfo);
+            listener.onComplete(createBidInfo(resultCode));
         });
     }
 
@@ -295,6 +291,14 @@ public abstract class AdUnit {
      */
     public void setGlobalOrtbConfig(@Nullable String ortbConfig) {
         configuration.setGlobalOrtbConfig(ortbConfig);
+    }
+
+    /**
+     * Builds the {@link BidInfo} reported for the last fetch.
+     */
+    @NonNull
+    protected BidInfo createBidInfo(@NonNull ResultCode resultCode) {
+        return BidInfo.create(resultCode, bidResponse, configuration);
     }
 
     protected BidRequesterListener createBidListener(OnCompleteListener originalListener) {

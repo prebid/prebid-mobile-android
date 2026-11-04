@@ -19,6 +19,7 @@ package org.prebid.mobile.api.mediation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -43,9 +44,11 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.util.ReflectionHelpers;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.function.Consumer;
 
 @RunWith(RobolectricTestRunner.class)
@@ -65,7 +68,7 @@ public class MediationNativeAdUnitTest {
     }
 
     @Test
-    public void fetchDemandBidInfo_ResponseReceived_ReturnsBidInfoAndSavesCacheIdToAdObject() throws IOException {
+    public void fetchDemandBidInfo_ResponseReceived_CachesWinningBidOnceAndSavesItsIdToAdObject() throws IOException {
         BidResponse bidResponse = new BidResponse(
                 ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"),
                 nativeAdUnit.getConfiguration()
@@ -79,7 +82,10 @@ public class MediationNativeAdUnitTest {
         assertEquals(ResultCode.SUCCESS, bidInfo.getResultCode());
         assertEquals(Double.valueOf(0.15), bidInfo.getPrice());
         assertEquals("crid", bidInfo.getCreativeId());
+        Map<String, String> cachedBids = ReflectionHelpers.getStaticField(CacheManager.class, "savedValues");
+        assertEquals(1, cachedBids.size());
         assertNotNull(bidInfo.getNativeCacheId());
+        assertTrue(cachedBids.containsKey(bidInfo.getNativeCacheId()));
         assertEquals(bidInfo.getNativeCacheId(), adObject.getString(NativeAdUnit.BUNDLE_KEY_CACHE_ID));
     }
 

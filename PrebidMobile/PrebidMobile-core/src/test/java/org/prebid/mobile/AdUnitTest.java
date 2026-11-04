@@ -19,6 +19,7 @@ package org.prebid.mobile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -42,8 +43,10 @@ import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.util.ReflectionHelpers;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -92,21 +95,34 @@ public class AdUnitTest {
     }
 
     @Test
-    public void fetchDemandBidInfo_NativeAdUnit_SavesBidInfoCacheIdToAdObject() throws IOException {
+    public void fetchDemandBidInfo_NativeAdUnit_CachesWinningBidOnce() throws IOException {
         NativeAdUnit adUnit = spy(new NativeAdUnit("configId"));
         Bundle adObject = new Bundle();
-        BidResponse bidResponse = new BidResponse(
-                ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"),
-                adUnit.getConfiguration()
-        );
-        stubFetchDemand(adUnit, adObject, bidResponse, ResultCode.SUCCESS);
+        stubFetchDemandThroughBidListener(adUnit, adObject, createNativeBidResponse(adUnit));
         OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
 
         adUnit.fetchDemandBidInfo(adObject, listener);
 
         BidInfo bidInfo = captureBidInfo(listener);
+        Map<String, String> cachedBids = ReflectionHelpers.getStaticField(CacheManager.class, "savedValues");
+        assertEquals(1, cachedBids.size());
         assertNotNull(bidInfo.getNativeCacheId());
+        assertTrue(cachedBids.containsKey(bidInfo.getNativeCacheId()));
         assertEquals(bidInfo.getNativeCacheId(), adObject.getString(NativeAdUnit.BUNDLE_KEY_CACHE_ID));
+    }
+
+    @Test
+    public void fetchDemand_NativeAdUnitWithBidInfoListener_CachesWinningBidOnce() throws IOException {
+        NativeAdUnit adUnit = spy(new NativeAdUnit("configId"));
+        stubFetchDemandThroughBidListener(adUnit, null, createNativeBidResponse(adUnit));
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        adUnit.fetchDemand(listener);
+
+        BidInfo bidInfo = captureBidInfo(listener);
+        Map<String, String> cachedBids = ReflectionHelpers.getStaticField(CacheManager.class, "savedValues");
+        assertEquals(1, cachedBids.size());
+        assertTrue(cachedBids.containsKey(bidInfo.getNativeCacheId()));
     }
 
     @Test
@@ -133,6 +149,28 @@ public class AdUnitTest {
             listener.onComplete(resultCode);
             return null;
         }).when(adUnit).fetchDemand(eq(adObject), any(OnCompleteListener.class));
+    }
+
+    // Stands in for the network fetch: completes through the ad unit's real bid listener, the
+    // way BidLoader does, so the native bid is cached as in production.
+    private static void stubFetchDemandThroughBidListener(
+            AdUnit adUnit,
+            @Nullable Object adObject,
+            BidResponse bidResponse
+    ) {
+        doAnswer(invocation -> {
+            adUnit.adObject = adObject;
+            OnCompleteListener listener = invocation.getArgument(1);
+            adUnit.createBidListener(listener).onFetchCompleted(bidResponse);
+            return null;
+        }).when(adUnit).fetchDemand(eq(adObject), any(OnCompleteListener.class));
+    }
+
+    private static BidResponse createNativeBidResponse(NativeAdUnit adUnit) throws IOException {
+        return new BidResponse(
+                ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"),
+                adUnit.getConfiguration()
+        );
     }
 
     private static BidInfo captureBidInfo(OnFetchDemandResult listener) {
