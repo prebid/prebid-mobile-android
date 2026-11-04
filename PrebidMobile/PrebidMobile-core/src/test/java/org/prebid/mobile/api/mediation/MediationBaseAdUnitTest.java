@@ -87,6 +87,8 @@ public class MediationBaseAdUnitTest {
     @After
     public void cleanup() {
         PrebidMobile.setPrebidServerAccountId(null);
+        // setHost changes the shared Host.CUSTOM url, so restore the default empty one
+        PrebidMobileReflection.setHost("");
     }
 
     @Test
