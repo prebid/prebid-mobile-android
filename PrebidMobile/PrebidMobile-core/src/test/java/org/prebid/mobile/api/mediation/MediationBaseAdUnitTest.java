@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -197,6 +198,15 @@ public class MediationBaseAdUnitTest {
         BidInfo bidInfo = captureBidInfo(listener);
         assertEquals(ResultCode.INVALID_ACCOUNT_ID, bidInfo.getResultCode());
         assertNull(bidInfo.getPrice());
+    }
+
+    @Test
+    public void fetchDemandBidInfo_NullListener_DoesNotFetch() {
+        PrebidMobile.setPrebidServerAccountId("id");
+
+        baseAdUnit.fetchDemandBidInfo(null);
+
+        verify(mockBidLoader, never()).load();
     }
 
     @Test

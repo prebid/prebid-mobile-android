@@ -122,6 +122,11 @@ public abstract class MediationBaseAdUnit {
      * {@code fetchDemand} reports.
      */
     protected void fetchDemandBidInfo(@NonNull OnFetchDemandResult listener) {
+        if (listener == null) {
+            LogUtil.error(TAG, "Parameter OnFetchDemandResult in fetchDemandBidInfo() must be not null.");
+            return;
+        }
+
         fetchDemand(result -> listener.onComplete(
                 BidInfo.create(toResultCode(result), lastBidResponse, adUnitConfig)
         ));
