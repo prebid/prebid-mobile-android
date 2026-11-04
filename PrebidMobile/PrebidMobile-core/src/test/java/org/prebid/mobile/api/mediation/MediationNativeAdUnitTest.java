@@ -16,54 +16,100 @@
 
 package org.prebid.mobile.api.mediation;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.spy;
 
 import android.os.Bundle;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.AdUnit;
+import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.NativeAdUnit;
+import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.api.data.BidInfo;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.original.OnFetchDemandResult;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
+import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.function.Consumer;
 
 @RunWith(RobolectricTestRunner.class)
 public class MediationNativeAdUnitTest {
 
     private Bundle adObject;
-    private NativeAdUnit mockNativeAdUnit;
+    private NativeAdUnit nativeAdUnit;
     private MediationNativeAdUnit mediationNativeAdUnit;
 
     @Before
     public void setUp() {
+        CacheManager.clear();
         adObject = new Bundle();
-        mockNativeAdUnit = mock(NativeAdUnit.class);
+        nativeAdUnit = spy(new NativeAdUnit("config"));
         mediationNativeAdUnit = new MediationNativeAdUnit("config", adObject);
-        WhiteBox.setInternalState(mediationNativeAdUnit, "nativeAdUnit", mockNativeAdUnit);
+        WhiteBox.setInternalState(mediationNativeAdUnit, "nativeAdUnit", nativeAdUnit);
     }
 
     @Test
-    public void fetchDemandBidInfo_PassesAdObjectAndReturnsBidInfo() {
-        BidInfo expected = BidInfo.create(ResultCode.SUCCESS, null, null);
-        doAnswer(invocation -> {
-            OnFetchDemandResult listener = invocation.getArgument(1);
-            listener.onComplete(expected);
-            return null;
-        }).when(mockNativeAdUnit).fetchDemandBidInfo(eq(adObject), any(OnFetchDemandResult.class));
+    public void fetchDemandBidInfo_ResponseReceived_ReturnsBidInfoAndSavesCacheIdToAdObject() throws IOException {
+        BidResponse bidResponse = new BidResponse(
+                ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"),
+                nativeAdUnit.getConfiguration()
+        );
+        stubFetchDemand(bidListener -> bidListener.onFetchCompleted(bidResponse));
         OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
 
         mediationNativeAdUnit.fetchDemandBidInfo(listener);
 
-        verify(mockNativeAdUnit).fetchDemandBidInfo(eq(adObject), any(OnFetchDemandResult.class));
-        assertSame(expected, MediationBaseAdUnitTest.captureBidInfo(listener));
+        BidInfo bidInfo = MediationBaseAdUnitTest.captureBidInfo(listener);
+        assertEquals(ResultCode.SUCCESS, bidInfo.getResultCode());
+        assertEquals(Double.valueOf(0.15), bidInfo.getPrice());
+        assertEquals("crid", bidInfo.getCreativeId());
+        assertNotNull(bidInfo.getNativeCacheId());
+        assertEquals(bidInfo.getNativeCacheId(), adObject.getString(NativeAdUnit.BUNDLE_KEY_CACHE_ID));
+    }
+
+    @Test
+    public void fetchDemandBidInfo_ErrorReceived_ReturnsResultCodeOnly() {
+        stubFetchDemand(bidListener -> bidListener.onError(new AdException(AdException.INTERNAL_ERROR, "No bids")));
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        mediationNativeAdUnit.fetchDemandBidInfo(listener);
+
+        BidInfo bidInfo = MediationBaseAdUnitTest.captureBidInfo(listener);
+        assertEquals(ResultCode.NO_BIDS, bidInfo.getResultCode());
+        assertNull(bidInfo.getPrice());
+        assertNull(bidInfo.getNativeCacheId());
+        assertNull(adObject.getString(NativeAdUnit.BUNDLE_KEY_CACHE_ID));
+    }
+
+    // Stands in for the network fetch: completes through the ad unit's real bid listener, the
+    // way BidLoader does, so the cache id and keywords reach the ad object as in production.
+    private void stubFetchDemand(Consumer<BidRequesterListener> completeFetch) {
+        doAnswer(invocation -> {
+            WhiteBox.setInternalState(nativeAdUnit, "adObject", invocation.getArgument(0));
+            Method createBidListener = WhiteBox.method(AdUnit.class, "createBidListener", OnCompleteListener.class);
+            BidRequesterListener bidListener = (BidRequesterListener) createBidListener.invoke(
+                    nativeAdUnit,
+                    (OnCompleteListener) invocation.getArgument(1)
+            );
+            completeFetch.accept(bidListener);
+            return null;
+        }).when(nativeAdUnit).fetchDemand(eq(adObject), any(OnCompleteListener.class));
     }
 
 }
