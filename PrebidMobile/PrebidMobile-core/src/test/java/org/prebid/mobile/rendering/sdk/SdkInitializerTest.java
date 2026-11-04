@@ -38,12 +38,14 @@ import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer
 import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
+import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.prebid.mobile.testutils.RecordingLogger;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.LooperMode;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -322,6 +324,35 @@ public class SdkInitializerTest {
             assertEquals(PREBID_MOBILE_RENDERER_NAME, afterFirstCall.get(0).getName());
             assertEquals(afterFirstCall, registry.getActive());
             MatcherAssert.assertThat(logger.getMessages(), is(empty()));
+        } finally {
+            logger.uninstall();
+            registry.removeAll();
+            for (PrebidMobilePluginRenderer renderer : savedRenderers) {
+                registry.add(renderer);
+            }
+        }
+    }
+
+
+    @Test
+    public void registerSdkRenderer_appRendererWithSdkName_staysDefaultAndWarns() {
+        PluginRegistry<PrebidMobilePluginRenderer> registry = PluginCapability.RENDERER.getRegistry();
+        List<PrebidMobilePluginRenderer> savedRenderers = registry.getActive();
+        registry.removeAll();
+        PrebidMobilePluginRenderer appRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(
+                null, null, true, PREBID_MOBILE_RENDERER_NAME, "1.0"
+        );
+        PrebidMobile.registerPlugin(appRenderer, PluginCapability.RENDERER);
+        RecordingLogger logger = new RecordingLogger(LogUtil.WARN).install();
+        try {
+            SdkInitializer.registerSdkRenderer();
+
+            assertEquals(Collections.singletonList(appRenderer), registry.getActive());
+            List<String> warnings = logger.getMessages();
+            assertEquals(1, warnings.size());
+            MatcherAssert.assertThat(warnings.get(0), startsWith(
+                    "The app registered " + appRenderer.getClass().getName() + " with the name " + PREBID_MOBILE_RENDERER_NAME
+            ));
         } finally {
             logger.uninstall();
             registry.removeAll();

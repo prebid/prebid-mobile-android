@@ -19,6 +19,7 @@ package org.prebid.mobile.api.plugin;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ import androidx.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -173,6 +175,53 @@ public class PluginRegistryTest {
     }
 
     @Test
+    public void add_onRegisterThrowsCheckedException_rollsBackRegistration() {
+        // Kotlin code can throw a checked exception without declaring it.
+        MockPlugin plugin = new MockPlugin("plugin");
+        plugin.onRegisterAction = () -> sneakyThrow(new IOException("onRegister failed"));
+
+        registry.add(plugin);
+
+        assertFalse(registry.contains(plugin));
+        assertTrue(registry.getActive().isEmpty());
+        plugin.onRegisterAction = null;
+        registry.add(plugin);
+        assertTrue(registry.contains(plugin));
+    }
+
+    @Test
+    public void add_onRegisterThrowsError_rollsBackRegistrationAndPropagates() {
+        MockPlugin plugin = new MockPlugin("plugin");
+        plugin.onRegisterAction = () -> {
+            throw new NoClassDefFoundError("com/vendor/OptionalDependency");
+        };
+
+        assertThrows(NoClassDefFoundError.class, () -> registry.add(plugin));
+
+        assertFalse(registry.contains(plugin));
+        assertTrue(registry.getActive().isEmpty());
+        // The identity is free again.
+        plugin.onRegisterAction = null;
+        registry.add(plugin);
+        assertTrue(registry.contains(plugin));
+    }
+
+    @Test
+    public void add_onRegisterThrowsError_doesNotUseCapacity() {
+        registry = makeRegistry(1);
+        MockPlugin failing = new MockPlugin("failing");
+        failing.onRegisterAction = () -> {
+            throw new NoClassDefFoundError("com/vendor/OptionalDependency");
+        };
+        MockPlugin other = new MockPlugin("other");
+
+        assertThrows(NoClassDefFoundError.class, () -> registry.add(failing));
+        registry.add(other);
+
+        assertEquals(Collections.singletonList("other"), names(registry.getActive()));
+    }
+
+    @Test
     public void add_assignsIncreasingSequenceAcrossRegistries() {
         PluginRegistry<MockPlugin> otherRegistry = makeRegistry(PluginRegistry.UNLIMITED);
 
@@ -275,15 +324,30 @@ public class PluginRegistryTest {
     }
 
     @Test
+    public void remove_onUnregisterThrowsCheckedException_isNotPropagated() {
+        MockPlugin plugin = new MockPlugin("plugin");
+        plugin.onUnregisterAction = () -> sneakyThrow(new IOException("onUnregister failed"));
+        registry.add(plugin);
+
+        registry.remove(plugin);
+
+        assertFalse(registry.contains(plugin));
+        assertTrue(registry.getActive().isEmpty());
+    }
+
+    @Test
     public void removeAll_removesEveryPlugin_evenIfOneOnUnregisterThrows() {
         MockPlugin first = new MockPlugin("first");
         MockPlugin throwing = new MockPlugin("throwing");
         MockPlugin last = new MockPlugin("last");
+        MockPlugin throwingChecked = new MockPlugin("throwingChecked");
         throwing.onUnregisterAction = () -> {
             throw new IllegalStateException("onUnregister failed");
         };
+        throwingChecked.onUnregisterAction = () -> sneakyThrow(new IOException("onUnregister failed"));
         registry.add(first);
         registry.add(throwing);
+        registry.add(throwingChecked);
         registry.add(last);
 
         registry.removeAll();
@@ -352,6 +416,14 @@ public class PluginRegistryTest {
                     }
                 }
         );
+    }
+
+    /**
+     * Throws a checked exception from code that doesn't declare it, as Kotlin code can.
+     */
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> void sneakyThrow(Throwable throwable) throws T {
+        throw (T) throwable;
     }
 
     private static List<String> names(List<MockPlugin> plugins) {

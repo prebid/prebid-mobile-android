@@ -195,8 +195,9 @@ public final class PluginRegistry<P> {
 
     /**
      * Registers the plugin and calls its {@code onRegister}. It's ignored if a plugin with equal info
-     * is registered, or if the registry is full. If {@code onRegister} throws, the plugin is not
-     * registered and the exception is logged.
+     * is registered, or if the registry is full. If {@code onRegister} throws an exception, checked
+     * or not, the plugin is not registered and the exception is logged. If it throws an
+     * {@link Error}, the plugin is not registered either, and the error propagates.
      */
     public void add(@NonNull P plugin) {
         PrebidPluginInfo info = identify.identify(plugin);
@@ -222,16 +223,28 @@ public final class PluginRegistry<P> {
             return;
         }
 
-        if (onRegister != null) {
-            try {
+        boolean registered = false;
+        Exception failure = null;
+        try {
+            if (onRegister != null) {
                 onRegister.call(plugin);
-            } catch (RuntimeException exception) {
+            }
+            registered = true;
+        } catch (Exception exception) {
+            // Also catches checked exceptions, which Kotlin code can throw without declaring them.
+            failure = exception;
+        } finally {
+            // Runs for an Error too, so the identity is free again before the Error propagates.
+            if (!registered) {
                 synchronized (lock) {
                     registrations.remove(registration);
                 }
-                LogUtil.error(TAG, "[" + name + "] Plugin " + info + " is not registered: its onRegister threw " + exception);
-                return;
             }
+        }
+
+        if (!registered) {
+            LogUtil.error(TAG, "[" + name + "] Plugin " + info + " is not registered: its onRegister threw " + failure);
+            return;
         }
 
         synchronized (lock) {
@@ -243,7 +256,8 @@ public final class PluginRegistry<P> {
 
     /**
      * Unregisters the plugin whose info equals this plugin's, and calls that plugin's
-     * {@code onUnregister}. No-op if no such plugin is registered.
+     * {@code onUnregister}. No-op if no such plugin is registered. An exception that
+     * {@code onUnregister} throws, checked or not, is logged and not propagated.
      */
     public void remove(@NonNull P plugin) {
         PrebidPluginInfo info = identify.identify(plugin);
@@ -263,6 +277,7 @@ public final class PluginRegistry<P> {
 
     /**
      * Unregisters every plugin, in registration order, and calls their {@code onUnregister}.
+     * An exception from one {@code onUnregister} is logged and doesn't stop the others.
      */
     public void removeAll() {
         List<Registration<P>> removed;
@@ -304,7 +319,8 @@ public final class PluginRegistry<P> {
 
         try {
             onUnregister.call(entry.plugin);
-        } catch (RuntimeException exception) {
+        } catch (Exception exception) {
+            // Also catches checked exceptions, which Kotlin code can throw without declaring them.
             LogUtil.error(TAG, "[" + name + "] Plugin " + entry.info + " is unregistered, but its onUnregister threw " + exception);
         }
     }
