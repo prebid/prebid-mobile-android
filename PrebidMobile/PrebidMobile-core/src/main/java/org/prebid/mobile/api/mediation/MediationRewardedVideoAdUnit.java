@@ -62,6 +62,10 @@ public class MediationRewardedVideoAdUnit extends MediationBaseFullScreenAdUnit 
      * Loads ad and applies mediation delegate. Like {@link #fetchDemand(OnFetchCompleteListener)},
      * but returns the full {@link org.prebid.mobile.api.data.BidInfo} (including the price,
      * currency, creative id and ad id of the winning bid) instead of only the result.
+     * <p>
+     * The result code is an {@link org.prebid.mobile.ResultCode}, not the
+     * {@link org.prebid.mobile.api.data.FetchDemandResult} that {@code fetchDemand} reports
+     * (for example, {@code PREBID_SERVER_ERROR} instead of {@code SERVER_ERROR}).
      *
      * @param listener callback when operation is completed (success or fail)
      */

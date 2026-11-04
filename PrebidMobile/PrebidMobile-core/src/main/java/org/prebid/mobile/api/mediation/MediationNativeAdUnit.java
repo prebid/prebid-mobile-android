@@ -56,6 +56,10 @@ public class MediationNativeAdUnit {
      * but returns the full {@link org.prebid.mobile.api.data.BidInfo} (including the price,
      * currency, creative id and ad id of the winning bid) instead of only the result.
      * <p>
+     * The result code is an {@link org.prebid.mobile.ResultCode}, not the
+     * {@link org.prebid.mobile.api.data.FetchDemandResult} that {@code fetchDemand} reports
+     * (for example, {@code PREBID_SERVER_ERROR} instead of {@code SERVER_ERROR}).
+     * <p>
      * The targeting keywords applied to the ad object keep the Prebid Server {@code hb_cache_id}.
      * In the returned {@link org.prebid.mobile.api.data.BidInfo#getTargetingKeywords()}, it is
      * replaced with the local cache id from
