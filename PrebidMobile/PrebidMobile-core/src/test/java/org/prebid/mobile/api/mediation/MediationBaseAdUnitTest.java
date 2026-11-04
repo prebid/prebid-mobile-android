@@ -175,6 +175,21 @@ public class MediationBaseAdUnitTest {
     }
 
     @Test
+    public void fetchDemandBidInfo_ResponseReceivedDirectly_ReturnsBidInfoForThatResponse() throws IOException {
+        PrebidMobile.setPrebidServerAccountId("id");
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        // Completes without the bid listener's onFetchCompleted, as an onResponseReceived override could
+        baseAdUnit.fetchDemandBidInfo(listener);
+        baseAdUnit.onResponseReceived(createBidResponse(baseAdUnit));
+
+        BidInfo bidInfo = captureBidInfo(listener);
+        assertEquals(ResultCode.SUCCESS, bidInfo.getResultCode());
+        assertEquals(Double.valueOf(0.15), bidInfo.getPrice());
+        assertEquals("crid", bidInfo.getCreativeId());
+    }
+
+    @Test
     public void fetchDemandBidInfo_ErrorReceived_ReturnsResultCodeOnly() {
         PrebidMobile.setPrebidServerAccountId("id");
         OnFetchDemandResult listener = mock(OnFetchDemandResult.class);

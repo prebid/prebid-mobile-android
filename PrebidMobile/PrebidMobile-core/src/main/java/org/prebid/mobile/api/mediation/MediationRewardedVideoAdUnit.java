@@ -88,7 +88,7 @@ public class MediationRewardedVideoAdUnit extends MediationBaseFullScreenAdUnit 
             BidResponseCache.getInstance().putBidResponse(response.getId(), response);
             mediationDelegate.setResponseToLocalExtras(response);
             mediationDelegate.handleKeywordsUpdate(response.getTargeting());
-            onFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
+            notifyFetchCompleted(FetchDemandResult.SUCCESS, response);
         }
     }
 
