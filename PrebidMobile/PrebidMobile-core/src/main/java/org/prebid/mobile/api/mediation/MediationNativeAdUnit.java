@@ -55,6 +55,13 @@ public class MediationNativeAdUnit {
      * Loads ad and applies mediation delegate. Like {@link #fetchDemand(OnFetchCompleteListener)},
      * but returns the full {@link org.prebid.mobile.api.data.BidInfo} (including the price,
      * currency, creative id and ad id of the winning bid) instead of only the result.
+     * <p>
+     * The targeting keywords applied to the ad object keep the Prebid Server {@code hb_cache_id}.
+     * In the returned {@link org.prebid.mobile.api.data.BidInfo#getTargetingKeywords()}, it is
+     * replaced with the local cache id from
+     * {@link org.prebid.mobile.api.data.BidInfo#getNativeCacheId()}, which reaches the ad object
+     * separately (as {@link NativeAdUnit#BUNDLE_KEY_CACHE_ID} for AdMob, as a local extra
+     * parameter for AppLovin MAX).
      *
      * @param listener callback when operation is completed (success or fail)
      */
