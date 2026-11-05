@@ -100,14 +100,26 @@ public class OpenRtbMerger {
         }
     }
 
+    /**
+     * Removes the fields that the SDK computes itself, so that the publisher provided
+     * global ORTB config can't override them.
+     * <p>
+     * Each list is applied at the level where the SDK actually writes the field, i.e.
+     * {@code regs.ext.gdpr} is stripped from {@code regs.ext} and not from {@code regs}.
+     */
     private static void removeSensitiveData(@NonNull JSONObject openRtbJson) {
-        JSONObject userJson = openRtbJson.optJSONObject("user");
-        JSONObject extJson = userJson != null ? userJson.optJSONObject("ext") : null;
-        removeFields(extJson, FIELDS_USER_EXT);
+        removeFieldsWithExt(openRtbJson.optJSONObject("regs"), FIELDS_REGS, FIELDS_REGS_EXT);
+        removeFieldsWithExt(openRtbJson.optJSONObject("user"), FIELDS_USER, FIELDS_USER_EXT);
 
-        removeFields(openRtbJson.optJSONObject("regs"), FIELDS_REGS);
-        removeFields(openRtbJson.optJSONObject("geo"), FIELDS_GEO);
+        // "device" has no separate ext list, FIELDS_DEVICE drops the whole "device.ext" object.
         removeFields(openRtbJson.optJSONObject("device"), FIELDS_DEVICE);
+    }
+
+    private static void removeFieldsWithExt(@Nullable JSONObject json, String[] fields, String[] extFields) {
+        if (json == null) return;
+
+        removeFields(json, fields);
+        removeFields(json.optJSONObject("ext"), extFields);
     }
 
     private static void removeFields(@Nullable JSONObject json, String... fields) {
@@ -119,29 +131,27 @@ public class OpenRtbMerger {
     }
 
 
+    private static final String[] FIELDS_USER = {
+            "geo"
+    };
+
     private static final String[] FIELDS_USER_EXT = {
             "consent"
     };
 
     private static final String[] FIELDS_REGS = {
-            "gdpr",
-            "us_privacy",
-            "coppa"
+            "coppa",
+            "gpp",
+            "gpp_sid"
     };
 
-    private static final String[] FIELDS_GEO = {
-            "lat",
-            "lon",
-            "type",
-            "accuracy",
-            "lastfix",
-            "country",
-            "region",
-            "regionfips104",
-            "metro",
-            "city",
-            "zip",
-            "utcoffset"
+    /**
+     * Note: "tfua" is intentionally not protected. The global ORTB config is the only way
+     * for publishers to send it (see issue #997).
+     */
+    private static final String[] FIELDS_REGS_EXT = {
+            "gdpr",
+            "us_privacy"
     };
 
     private static final String[] FIELDS_DEVICE = {

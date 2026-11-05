@@ -41,7 +41,8 @@ public class Geo extends BaseBid {
     public Integer utcoffset = null;
 
     /**
-     * When you add a new field to this list, don't forget to add it to the {@link org.prebid.mobile.OpenRtbMerger}.
+     * No per-field list is needed in the {@link org.prebid.mobile.OpenRtbMerger}: the whole
+     * "geo" object is protected by its parent ("device" via FIELDS_DEVICE, "user" via FIELDS_USER).
      */
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
