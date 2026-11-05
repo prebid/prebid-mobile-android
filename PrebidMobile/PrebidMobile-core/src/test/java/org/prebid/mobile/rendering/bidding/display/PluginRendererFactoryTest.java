@@ -3,6 +3,7 @@ package org.prebid.mobile.rendering.bidding.display;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -20,6 +21,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +35,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
@@ -79,6 +82,78 @@ public class PluginRendererFactoryTest {
         for (PrebidMobilePluginRenderer renderer : registeredRenderers) {
             PrebidMobilePluginRegister.getInstance().unregisterPlugin(renderer);
         }
+    }
+
+    // Renderers work on a copy of the ad unit's configuration: the server's rendering controls
+    // hold for this response only, and the creative pipeline's writes stay off the ad unit.
+    @Test
+    public void renderingConfiguration_copiesTheAdUnitConfiguration_withTheServerOverridesOnTop() throws Exception {
+        config.setIsMuted(false);
+        config.setSkipDelay(5);
+        when(mockBidResponse.getMobileSdkPassThrough()).thenReturn(MobileSdkPassThrough.create(new JSONObject(
+                "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\"ismuted\":true}}]}}"
+        )));
+
+        AdUnitConfiguration rendering = PluginRendererFactory.renderingConfiguration(config, mockBidResponse);
+
+        assertNotSame(config, rendering);
+        assertTrue("The server side ismuted applies to the rendered copy", rendering.isMuted());
+        assertEquals("The ad unit's other settings are carried over", 5, rendering.getSkipDelay());
+        assertFalse("The ad unit's own configuration stays as the publisher set it", config.isMuted());
+    }
+
+    @Test
+    public void renderingConfiguration_responseWithoutPassThrough_keepsTheAdUnitValues() {
+        config.setIsMuted(true);
+
+        AdUnitConfiguration rendering = PluginRendererFactory.renderingConfiguration(config, mockBidResponse);
+
+        assertNotSame(config, rendering);
+        assertTrue(rendering.isMuted());
+    }
+
+    // Mediation adapters only know the ad format; the publisher's settings live on the mediation
+    // ad unit's configuration, which the response carries.
+    @Test
+    public void mediationRenderingConfiguration_copiesTheAdUnitConfigurationOfTheResponse() {
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setIsSoundButtonVisible(true);
+        when(mockBidResponse.getAdUnitConfiguration()).thenReturn(adUnitConfiguration);
+        AdUnitConfiguration adapterConfiguration = new AdUnitConfiguration();
+
+        AdUnitConfiguration rendering = PluginRendererFactory.mediationRenderingConfiguration(mockBidResponse, adapterConfiguration);
+
+        assertNotSame(adUnitConfiguration, rendering);
+        assertNotSame(adapterConfiguration, rendering);
+        assertTrue(rendering.isSoundButtonVisible());
+    }
+
+    // An adapter may load the next rewarded ad while one is showing: the two loads must not
+    // share reward listeners or the "already rewarded" state.
+    @Test
+    public void mediationRenderingConfiguration_givesTheCopyItsOwnRewardManager() {
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.getRewardManager().setUserRewardedAlready(true);
+        when(mockBidResponse.getAdUnitConfiguration()).thenReturn(adUnitConfiguration);
+
+        AdUnitConfiguration first = PluginRendererFactory.mediationRenderingConfiguration(mockBidResponse, new AdUnitConfiguration());
+        AdUnitConfiguration second = PluginRendererFactory.mediationRenderingConfiguration(mockBidResponse, new AdUnitConfiguration());
+
+        assertNotSame(adUnitConfiguration.getRewardManager(), first.getRewardManager());
+        assertNotSame(first.getRewardManager(), second.getRewardManager());
+        assertFalse(first.getRewardManager().getUserRewardedAlready());
+    }
+
+    @Test
+    public void mediationRenderingConfiguration_responseWithoutAdUnitConfiguration_copiesTheAdapterConfiguration() {
+        when(mockBidResponse.getAdUnitConfiguration()).thenReturn(null);
+        AdUnitConfiguration adapterConfiguration = new AdUnitConfiguration();
+        adapterConfiguration.setIsMuted(true);
+
+        AdUnitConfiguration rendering = PluginRendererFactory.mediationRenderingConfiguration(mockBidResponse, adapterConfiguration);
+
+        assertNotSame(adapterConfiguration, rendering);
+        assertTrue(rendering.isMuted());
     }
 
     @Test

@@ -19,9 +19,12 @@ package org.prebid.mobile.api.rendering;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Looper;
+import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockedConstruction;
@@ -44,6 +47,7 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
@@ -77,9 +81,12 @@ public class InterstitialAdUnitTest {
     @Mock
     InterstitialController mockInterstitialController;
 
+    private PrebidMobilePluginRenderer defaultRendererBeforeTest;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        defaultRendererBeforeTest = PrebidMobilePluginRegister.getInstance().getDefaultPluginRenderer();
 
         context = Robolectric.buildActivity(Activity.class).create().get();
 
@@ -92,6 +99,19 @@ public class InterstitialAdUnitTest {
 
         final AdUnitConfiguration adUnitConfig = interstitialAdUnit.config;
         assertEquals(AdPosition.FULLSCREEN.getValue(), adUnitConfig.getAdPositionValue());
+    }
+
+    // Tests replace the default Prebid renderer in the global register: put back what was there.
+    @After
+    public void tearDown() {
+        PrebidMobilePluginRegister register = PrebidMobilePluginRegister.getInstance();
+        PrebidMobilePluginRenderer current = register.getDefaultPluginRenderer();
+        if (current != null) {
+            register.unregisterPlugin(current);
+        }
+        if (defaultRendererBeforeTest != null) {
+            register.registerPlugin(defaultRendererBeforeTest);
+        }
     }
 
     @Test
@@ -464,6 +484,66 @@ public class InterstitialAdUnitTest {
             PrebidMobilePluginRegister.getInstance().unregisterPlugin(pluginRenderer);
         }
         verify(pluginController).loadAd(any(), eq(mockBidResponse));
+    }
+
+    // The renderer works on a copy: a server side ismuted mutes this ad and never reaches the ad
+    // unit's own configuration, so the next load starts from the publisher's setting again.
+    @Test
+    public void onPrebidSdkWin_serverIsMuted_rendersFromAMutedCopyAndKeepsTheAdUnitUnmuted() throws Exception {
+        interstitialAdUnit.setIsMuted(false);
+        final BidResponse mockBidResponse = mockBidResponseWithServerIsMuted();
+        final InterstitialController mockInterstitialController = mock(InterstitialController.class);
+        PrebidMobile.registerPluginRenderer(FakePrebidMobilePluginRenderer.getFakePrebidRenderer(
+                mockInterstitialController, null, true, PREBID_MOBILE_RENDERER_NAME, "1.0"
+        ));
+        WhiteBox.setInternalState(interstitialAdUnit, "bidResponse", mockBidResponse);
+
+        RenderingTestUtils.getInterstitialEventListener(interstitialAdUnit).onPrebidSdkWin();
+
+        ArgumentCaptor<AdUnitConfiguration> rendered = ArgumentCaptor.forClass(AdUnitConfiguration.class);
+        verify(mockInterstitialController).loadAd(rendered.capture(), eq(mockBidResponse));
+        assertNotSame("A renderer must never be handed the ad unit's own configuration", interstitialAdUnit.config, rendered.getValue());
+        assertTrue(rendered.getValue().isMuted());
+        assertFalse("The server value must not be written back into the ad unit", interstitialAdUnit.config.isMuted());
+    }
+
+    // A plugin renderer's controller gets the same copy, with the server's rendering controls applied.
+    @Test
+    public void onPrebidSdkWin_pluginRendererOwnController_getsTheServerRenderingControls() throws Exception {
+        final BidResponse mockBidResponse = mockBidResponseWithServerIsMuted();
+        when(mockBidResponse.getPreferredPluginRendererName()).thenReturn("CustomRenderer");
+        when(mockBidResponse.getPreferredPluginRendererVersion()).thenReturn("2.0");
+        final PrebidMobileInterstitialControllerInterface pluginController = mock(PrebidMobileInterstitialControllerInterface.class);
+        final PrebidMobilePluginRenderer pluginRenderer = spy(
+                FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, null, true, "CustomRenderer", "2.0")
+        );
+        doReturn(pluginController).when(pluginRenderer).createInterstitialController(any(), any(), any(), any());
+        PrebidMobile.registerPluginRenderer(pluginRenderer);
+        WhiteBox.setInternalState(interstitialAdUnit, "bidResponse", mockBidResponse);
+
+        ArgumentCaptor<AdUnitConfiguration> created = ArgumentCaptor.forClass(AdUnitConfiguration.class);
+        ArgumentCaptor<AdUnitConfiguration> loaded = ArgumentCaptor.forClass(AdUnitConfiguration.class);
+        try (MockedConstruction<WinNotifier> ignored = mockConstruction(WinNotifier.class)) {
+            RenderingTestUtils.getInterstitialEventListener(interstitialAdUnit).onPrebidSdkWin();
+
+            verify(pluginRenderer).createInterstitialController(any(), any(), created.capture(), eq(mockBidResponse));
+            verify(pluginController).loadAd(loaded.capture(), eq(mockBidResponse));
+        } finally {
+            PrebidMobilePluginRegister.getInstance().unregisterPlugin(pluginRenderer);
+        }
+        assertSame(created.getValue(), loaded.getValue());
+        assertNotSame(interstitialAdUnit.config, loaded.getValue());
+        assertTrue(loaded.getValue().isMuted());
+        assertFalse(interstitialAdUnit.config.isMuted());
+    }
+
+    private static BidResponse mockBidResponseWithServerIsMuted() throws Exception {
+        BidResponse mockBidResponse = mock(BidResponse.class);
+        when(mockBidResponse.getWinningBid()).thenReturn(mock(Bid.class));
+        when(mockBidResponse.getMobileSdkPassThrough()).thenReturn(MobileSdkPassThrough.create(new JSONObject(
+                "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\"ismuted\":true}}]}}"
+        )));
+        return mockBidResponse;
     }
 
     @Test

@@ -53,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -157,6 +158,30 @@ public class MediationBannerAdUnitTest {
 
         mediationBannerAdUnit.setAdUnitFormats(EnumSet.noneOf(AdUnitFormat.class));
         assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), mediationBannerAdUnit.adUnitConfig.getAdFormats());
+    }
+
+    @Test
+    public void setIsMuted_updatesAdUnitConfig() {
+        assertFalse("Outstream video plays with sound unless the publisher asks otherwise",
+                mediationBannerAdUnit.adUnitConfig.isMuted());
+
+        mediationBannerAdUnit.setIsMuted(true);
+        assertTrue(mediationBannerAdUnit.adUnitConfig.isMuted());
+
+        mediationBannerAdUnit.setIsMuted(false);
+        assertFalse(mediationBannerAdUnit.adUnitConfig.isMuted());
+    }
+
+    @Test
+    public void setIsSoundButtonVisible_updatesAdUnitConfig() {
+        assertTrue("Banner video keeps its volume control unless the publisher hides it",
+                mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible(true));
+
+        mediationBannerAdUnit.setIsSoundButtonVisible(false);
+        assertFalse(mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible(true));
+
+        mediationBannerAdUnit.setIsSoundButtonVisible(true);
+        assertTrue(mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible());
     }
 
     @Test

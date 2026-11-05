@@ -373,6 +373,7 @@ public class VideoViewTest {
     public void viewReadyForImmediateDisplay_notShowingEndCard_ShowVideoCreative() {
         final VideoCreativeView mockVideoCreativeView = mock(VideoCreativeView.class);
         when(mockAdViewManager.isNotShowingEndCard()).thenReturn(true);
+        when(mockAdViewManager.getAdConfiguration()).thenReturn(new AdUnitConfiguration());
 
         videoView.setVideoPlayerClick(true);
 
@@ -380,6 +381,45 @@ public class VideoViewTest {
 
         verify(mockVideoViewListener).onDisplayed(eq(videoView));
         verify(mockVideoCreativeView).enableVideoPlayerClick();
+        verify(mockVideoCreativeView).showVolumeControls();
+    }
+
+    @Test
+    public void viewReadyForImmediateDisplay_soundButtonHidden_DoNotShowVolumeControls() {
+        final VideoCreativeView mockVideoCreativeView = mock(VideoCreativeView.class);
+        when(mockAdViewManager.isNotShowingEndCard()).thenReturn(true);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsSoundButtonVisible(false);
+        when(mockAdViewManager.getAdConfiguration()).thenReturn(configuration);
+
+        adViewManagerListener.viewReadyForImmediateDisplay(mockVideoCreativeView);
+
+        verify(mockVideoCreativeView, never()).showVolumeControls();
+    }
+
+    // A configuration that never set the flag, such as the one a plugin renderer or the public
+    // VideoView constructor builds, keeps the volume control banner video has always had.
+    @Test
+    public void viewReadyForImmediateDisplay_soundButtonNotSet_ShowVolumeControls() {
+        final VideoCreativeView mockVideoCreativeView = mock(VideoCreativeView.class);
+        when(mockAdViewManager.isNotShowingEndCard()).thenReturn(true);
+        when(mockAdViewManager.getAdConfiguration()).thenReturn(new AdUnitConfiguration());
+
+        adViewManagerListener.viewReadyForImmediateDisplay(mockVideoCreativeView);
+
+        verify(mockVideoCreativeView).showVolumeControls();
+    }
+
+    @Test
+    public void viewReadyForImmediateDisplay_soundButtonVisible_ShowVolumeControls() {
+        final VideoCreativeView mockVideoCreativeView = mock(VideoCreativeView.class);
+        when(mockAdViewManager.isNotShowingEndCard()).thenReturn(true);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsSoundButtonVisible(true);
+        when(mockAdViewManager.getAdConfiguration()).thenReturn(configuration);
+
+        adViewManagerListener.viewReadyForImmediateDisplay(mockVideoCreativeView);
+
         verify(mockVideoCreativeView).showVolumeControls();
     }
 

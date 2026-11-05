@@ -1,10 +1,12 @@
 package org.prebid.mobile.configuration;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -198,13 +200,22 @@ public class AdUnitConfigurationTest {
     }
 
     @Test
-    public void copyConstructor_keepsFingerprintAndBroadcastId() {
+    public void copyConstructor_keepsTheFingerprint() {
         AdUnitConfiguration copy = new AdUnitConfiguration(subject);
 
-        // Plugin event listeners are registered under the fingerprint, and creatives address the
-        // event receiver by broadcast id, so both must survive the copy.
+        // Plugin event listeners are registered under the fingerprint, so it must survive the copy.
         assertEquals(subject.getFingerprint(), copy.getFingerprint());
-        assertEquals(subject.getBroadcastId(), copy.getBroadcastId());
+    }
+
+    @Test
+    public void copyConstructor_givesEachRenderingItsOwnBroadcastId() {
+        // Every rendering registers its own event receiver under its broadcast id. With a shared
+        // id, closing the in-app browser would also reach the earlier renderings of the ad unit.
+        AdUnitConfiguration first = new AdUnitConfiguration(subject);
+        AdUnitConfiguration second = new AdUnitConfiguration(subject);
+
+        assertNotEquals(subject.getBroadcastId(), first.getBroadcastId());
+        assertNotEquals(first.getBroadcastId(), second.getBroadcastId());
     }
 
     @Test
@@ -223,6 +234,29 @@ public class AdUnitConfigurationTest {
 
         assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), subject.getAdFormats());
         assertFalse(subject.getSizes().contains(new AdSize(1, 1)));
+    }
+
+    @Test
+    public void soundButtonVisibility_unsetFollowsTheCallerDefault_setValueWins() {
+        assertFalse("Full screen ads hide the sound button unless asked", subject.isSoundButtonVisible());
+        assertTrue("Banner video shows it unless hidden", subject.isSoundButtonVisible(true));
+
+        subject.setIsSoundButtonVisible(false);
+        assertFalse(subject.isSoundButtonVisible(true));
+
+        subject.setIsSoundButtonVisible(true);
+        assertTrue(subject.isSoundButtonVisible());
+        assertTrue(subject.isSoundButtonVisible(false));
+    }
+
+    @Test
+    public void copyConstructor_keepsAnUnsetSoundButtonUnset() {
+        AdUnitConfiguration copy = new AdUnitConfiguration(subject);
+        assertTrue(copy.isSoundButtonVisible(true));
+        assertFalse(copy.isSoundButtonVisible(false));
+
+        subject.setIsSoundButtonVisible(false);
+        assertFalse(new AdUnitConfiguration(subject).isSoundButtonVisible(true));
     }
 
     @Test

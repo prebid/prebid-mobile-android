@@ -246,11 +246,12 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     protected void loadPrebidAd() {
+        AdUnitConfiguration renderingConfiguration = PluginRendererFactory.renderingConfiguration(config, bidResponse);
         // The factory sends the win notice when a plugin renderer's controller draws the ad.
         interstitialController = PluginRendererFactory.createInterstitialController(
                 getContext(),
                 controllerListener,
-                config,
+                renderingConfiguration,
                 bidResponse
         );
         if (interstitialController == null) {
@@ -259,7 +260,7 @@ public abstract class BaseInterstitialAdUnit {
                     "InterstitialController is not defined. Unable to process bid."
             ));
         } else {
-            interstitialController.loadAd(config, bidResponse);
+            interstitialController.loadAd(renderingConfiguration, bidResponse);
         }
     }
 

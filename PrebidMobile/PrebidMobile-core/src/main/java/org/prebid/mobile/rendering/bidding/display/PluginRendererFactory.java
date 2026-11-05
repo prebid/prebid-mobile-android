@@ -17,6 +17,8 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
+import org.prebid.mobile.rendering.interstitial.rewarded.RewardManager;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 
 /**
@@ -30,6 +32,53 @@ import org.prebid.mobile.rendering.networking.WinNotifier;
  * Prebid's own {@link InterstitialController} sends it itself in {@code loadAd}.
  */
 public class PluginRendererFactory {
+
+    /**
+     * Builds the configuration a renderer works on for one bid response: a copy of the ad unit's
+     * configuration with the response's rendering controls
+     * ({@code ext.prebid.passthrough[].adconfiguration}) applied on top.
+     * <p>
+     * A renderer never gets the ad unit's own configuration. A server override therefore holds
+     * for this response only, and the creative pipeline's writes stay off the ad unit, except
+     * for the sub configurations the copy shares with it: the banner, video and native
+     * parameters, and the {@link RewardManager}, into which the creative pipeline writes the
+     * rewarded ext, the after reward listener and the "already rewarded" flag. The Rendering
+     * API's {@code RewardedAdUnit} reads the reward back through that shared manager; mediation
+     * copies get their own one from {@link #mediationRenderingConfiguration}.
+     */
+    @NonNull
+    public static AdUnitConfiguration renderingConfiguration(
+            @NonNull AdUnitConfiguration adUnitConfiguration,
+            @NonNull BidResponse bidResponse
+    ) {
+        AdUnitConfiguration renderingConfiguration = new AdUnitConfiguration(adUnitConfiguration);
+        MobileSdkPassThrough.applyTo(bidResponse, renderingConfiguration);
+        return renderingConfiguration;
+    }
+
+    /**
+     * The rendering configuration for a mediation adapter. The adapter's own configuration knows
+     * only the ad format; the publisher's settings live on the mediation ad unit's configuration,
+     * which the bid response carries. That one is copied, with the server's rendering controls on
+     * top, and {@code adapterConfiguration} is copied instead only when the response carries none.
+     * <p>
+     * The copy gets its own {@link RewardManager}: mediation never reads the reward back through
+     * the ad unit, and an adapter may load the next rewarded ad while one is still showing, so
+     * the two loads must not share reward state or listeners.
+     */
+    @NonNull
+    public static AdUnitConfiguration mediationRenderingConfiguration(
+            @NonNull BidResponse bidResponse,
+            @NonNull AdUnitConfiguration adapterConfiguration
+    ) {
+        AdUnitConfiguration adUnitConfiguration = bidResponse.getAdUnitConfiguration();
+        AdUnitConfiguration renderingConfiguration = renderingConfiguration(
+                adUnitConfiguration != null ? adUnitConfiguration : adapterConfiguration,
+                bidResponse
+        );
+        renderingConfiguration.setRewardManager(new RewardManager());
+        return renderingConfiguration;
+    }
 
     /**
      * Creates the renderer-owned banner view after the caller has completed win notification.

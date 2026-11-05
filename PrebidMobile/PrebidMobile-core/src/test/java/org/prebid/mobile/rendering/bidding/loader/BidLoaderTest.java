@@ -17,8 +17,11 @@
 package org.prebid.mobile.rendering.bidding.loader;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
@@ -84,6 +87,10 @@ public class BidLoaderTest {
     public void clean() {
         PrebidMobile.setFilterOutUncachedBids(false);
         PrebidMobile.setEventDelegate(null);
+        // The fixtures carry tmaxrequest, which the real handler folds into these statics.
+        WhiteBox.setStaticVariableTo(BidLoader.class, "sTimeoutHasChanged", false);
+        WhiteBox.setStaticVariableTo(PrebidMobile.class, "timeoutMillis", 2_000);
+        WhiteBox.setStaticVariableTo(PrebidMobile.class, "isTimeoutModified", false);
     }
 
     @Test
@@ -315,6 +322,57 @@ public class BidLoaderTest {
         assertTrue(responseCaptor.getValue().isTopBidFiltered());
         assertEquals("runnerUpBid", responseCaptor.getValue().getWinningBid().getId());
         verify(bidRequesterListener, never()).onError(any());
+    }
+
+    // The response carries only what the server sent. Renderers work on a copy of the ad unit's
+    // configuration taken at render time, so its own settings never travel in the passthrough.
+    @Test
+    public void responseHandler_noServerPassThrough_leavesTheResponseWithoutOne() throws Exception {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setIsMuted(true);
+        bidLoader = createBidLoader(config, bidRequesterListener);
+
+        BidResponse response = handleResponse("PrebidServerOneBidFromRubiconResponse.json");
+
+        assertNull(response.getMobileSdkPassThrough());
+        assertTrue(config.isMuted());
+    }
+
+    @Test
+    public void responseHandler_serverIsMuted_staysOnTheResponse() throws Exception {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setIsMuted(false);
+        bidLoader = createBidLoader(config, bidRequesterListener);
+
+        BidResponse response = handleResponse("BidResponseTest/mobile_sdk_pass_through.json");
+
+        assertEquals(Boolean.TRUE, response.getMobileSdkPassThrough().isMuted);
+        assertFalse("The server value must not be written back into the ad unit", config.isMuted());
+    }
+
+    // A refreshing banner: the first bid asks for muted, the next one says nothing.
+    @Test
+    public void responseHandler_serverIsMuted_doesNotStickToTheNextResponse() throws Exception {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setIsMuted(false);
+        bidLoader = createBidLoader(config, bidRequesterListener);
+
+        BidResponse muted = handleResponse("BidResponseTest/mobile_sdk_pass_through.json");
+        BidResponse next = handleResponse("PrebidServerOneBidFromRubiconResponse.json");
+
+        assertEquals(Boolean.TRUE, muted.getMobileSdkPassThrough().isMuted);
+        assertNull(next.getMobileSdkPassThrough());
+    }
+
+    private BidResponse handleResponse(String resourceName) throws Exception {
+        ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        BaseNetworkTask.GetUrlResult responseResult = new BaseNetworkTask.GetUrlResult();
+        responseResult.responseString = ResourceUtils.convertResourceToString(resourceName);
+        responseHandler.onResponse(responseResult);
+
+        ArgumentCaptor<BidResponse> responseCaptor = ArgumentCaptor.forClass(BidResponse.class);
+        verify(bidRequesterListener, atLeastOnce()).onFetchCompleted(responseCaptor.capture());
+        return responseCaptor.getValue();
     }
 
     private BidLoader createBidLoader(AdUnitConfiguration adConfiguration, BidRequesterListener requestListener) {

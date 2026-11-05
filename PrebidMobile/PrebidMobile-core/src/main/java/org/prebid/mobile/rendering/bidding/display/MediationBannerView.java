@@ -18,6 +18,9 @@ import org.prebid.mobile.rendering.networking.WinNotifier;
 
 /**
  * Mediation banner container that lets adapters render through the preferred plugin renderer.
+ * <p>
+ * Renders from a copy of the ad unit's configuration carried by the bid response, with the
+ * server side passthrough applied on top, so the publisher's settings reach the renderer.
  */
 public class MediationBannerView extends FrameLayout implements PrebidDestroyable {
 
@@ -32,6 +35,11 @@ public class MediationBannerView extends FrameLayout implements PrebidDestroyabl
     @Nullable
     private DisplayVideoListener displayVideoListener;
 
+    /**
+     * @param adUnitConfiguration used only when {@code bidResponse} carries no ad unit
+     *                            configuration. A response from a {@code MediationBannerAdUnit}
+     *                            always does, and the view renders from a copy of that one.
+     */
     public MediationBannerView(
             @NonNull Context context,
             @NonNull DisplayViewListener displayViewListener,
@@ -41,6 +49,11 @@ public class MediationBannerView extends FrameLayout implements PrebidDestroyabl
         this(context, displayViewListener, null, adUnitConfiguration, bidResponse);
     }
 
+    /**
+     * @param adUnitConfiguration used only when {@code bidResponse} carries no ad unit
+     *                            configuration. A response from a {@code MediationBannerAdUnit}
+     *                            always does, and the view renders from a copy of that one.
+     */
     public MediationBannerView(
             @NonNull Context context,
             @NonNull DisplayViewListener displayViewListener,
@@ -50,7 +63,7 @@ public class MediationBannerView extends FrameLayout implements PrebidDestroyabl
     ) {
         super(context);
 
-        this.adUnitConfiguration = adUnitConfiguration;
+        this.adUnitConfiguration = PluginRendererFactory.mediationRenderingConfiguration(bidResponse, adUnitConfiguration);
         this.displayViewListener = displayViewListener;
         this.displayVideoListener = displayVideoListener;
 

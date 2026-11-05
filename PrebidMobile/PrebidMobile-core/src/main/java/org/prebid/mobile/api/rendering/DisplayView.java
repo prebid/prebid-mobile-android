@@ -35,7 +35,8 @@ import org.prebid.mobile.rendering.networking.WinNotifier;
  * <p>
  * Renders against its own copy of the ad unit's configuration. The creative pipeline rewrites the
  * configuration it is given, so sharing the ad unit's instance would narrow a multiformat ad unit
- * to the winning creative's format and break the following auctions.
+ * to the winning creative's format and break the following auctions. The server side rendering
+ * controls of the bid response are applied to that copy, so they hold for this creative only.
  */
 public class DisplayView extends FrameLayout {
     private View adView;
@@ -49,12 +50,7 @@ public class DisplayView extends FrameLayout {
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse bidResponse
     ) {
-        super(context);
-
-        this.adUnitConfiguration = new AdUnitConfiguration(adUnitConfiguration);
-        this.displayViewListener = displayViewListener;
-
-        createBannerAdView(context, bidResponse);
+        this(context, displayViewListener, null, adUnitConfiguration, bidResponse);
     }
 
     public DisplayView(
@@ -66,7 +62,7 @@ public class DisplayView extends FrameLayout {
     ) {
         super(context);
 
-        this.adUnitConfiguration = new AdUnitConfiguration(adUnitConfiguration);
+        this.adUnitConfiguration = PluginRendererFactory.renderingConfiguration(adUnitConfiguration, bidResponse);
         this.displayViewListener = displayViewListener;
         this.displayVideoListener = displayVideoListener;
 

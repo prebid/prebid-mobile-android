@@ -1,6 +1,8 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -21,7 +23,9 @@ import android.view.View;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.json.JSONObject;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.MockedConstruction;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.rendering.PrebidDestroyable;
@@ -31,6 +35,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
@@ -220,6 +225,116 @@ public class MediationBannerViewTest {
             assertEquals(1, bannerView.getChildCount());
         }
         verify(customRenderer).createBannerAdView(any(), any(), any(), any(), any());
+    }
+
+    // The container renders from a copy of the mediation ad unit's configuration, which the
+    // response carries, with the server side ismuted applied on top of it.
+    @Test
+    public void constructor_appliesBidResponseRenderingControls_toTheRenderedConfiguration() throws Exception {
+        PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
+        when(mockBidResponse.getMobileSdkPassThrough()).thenReturn(passThroughWithIsMuted(true));
+        adUnitConfiguration.setIsMuted(false);
+
+        new MediationBannerView(context, mockDisplayViewListener, freshAdapterConfiguration(), mockBidResponse);
+
+        AdUnitConfiguration rendered = captureRenderedConfiguration(defaultRenderer);
+        assertTrue(rendered.isMuted());
+        assertFalse("The server value must not be written back into the ad unit", adUnitConfiguration.isMuted());
+    }
+
+    @Test
+    public void constructor_bidResponseWithoutRenderingControls_keepsTheAdUnitSetting() {
+        PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
+        when(mockBidResponse.getMobileSdkPassThrough()).thenReturn(null);
+        adUnitConfiguration.setIsMuted(true);
+
+        new MediationBannerView(context, mockDisplayViewListener, freshAdapterConfiguration(), mockBidResponse);
+
+        AdUnitConfiguration rendered = captureRenderedConfiguration(defaultRenderer);
+        assertTrue(rendered.isMuted());
+    }
+
+    // The adapters pass a fresh configuration. The container renders from a copy of the ad unit's
+    // own configuration, which the response carries, so the publisher's settings reach the renderer.
+    @Test
+    public void constructor_rendersFromACopyOfTheAdUnitConfiguration() {
+        PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
+        adUnitConfiguration.setIsMuted(true);
+        adUnitConfiguration.setIsSoundButtonVisible(false);
+        AdUnitConfiguration adapterConfiguration = freshAdapterConfiguration();
+
+        new MediationBannerView(context, mockDisplayViewListener, adapterConfiguration, mockBidResponse);
+
+        AdUnitConfiguration rendered = captureRenderedConfiguration(defaultRenderer);
+        assertNotSame("The ad unit's own configuration must not be handed to a renderer", adUnitConfiguration, rendered);
+        assertNotSame(adapterConfiguration, rendered);
+        assertEquals(adUnitConfiguration.getFingerprint(), rendered.getFingerprint());
+        assertTrue(rendered.isMuted());
+        assertFalse("An explicit setIsSoundButtonVisible(false) must reach the renderer", rendered.isSoundButtonVisible());
+    }
+
+    @Test
+    public void constructor_adUnitShowsTheSoundButton_rendersWithIt() {
+        PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
+        adUnitConfiguration.setIsSoundButtonVisible(true);
+
+        new MediationBannerView(context, mockDisplayViewListener, freshAdapterConfiguration(), mockBidResponse);
+
+        assertTrue(captureRenderedConfiguration(defaultRenderer).isSoundButtonVisible());
+    }
+
+    @Test
+    public void constructor_adUnitNeverSetTheSoundButton_keepsItUnsetForTheRenderer() {
+        PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
+
+        new MediationBannerView(context, mockDisplayViewListener, freshAdapterConfiguration(), mockBidResponse);
+
+        AdUnitConfiguration rendered = captureRenderedConfiguration(defaultRenderer);
+        assertTrue("Banner video keeps its volume control", rendered.isSoundButtonVisible(true));
+        assertFalse(rendered.isSoundButtonVisible());
+    }
+
+    @Test
+    public void constructor_responseWithoutAdUnitConfiguration_rendersACopyOfTheAdapterConfiguration() {
+        PrebidMobilePluginRenderer defaultRenderer = registerDefaultRenderer(new View(context));
+        when(mockBidResponse.getAdUnitConfiguration()).thenReturn(null);
+        AdUnitConfiguration adapterConfiguration = freshAdapterConfiguration();
+        adapterConfiguration.setIsMuted(true);
+
+        new MediationBannerView(context, mockDisplayViewListener, adapterConfiguration, mockBidResponse);
+
+        AdUnitConfiguration rendered = captureRenderedConfiguration(defaultRenderer);
+        assertNotSame(adapterConfiguration, rendered);
+        assertTrue(rendered.isMuted());
+    }
+
+    private static AdUnitConfiguration freshAdapterConfiguration() {
+        AdUnitConfiguration adapterConfiguration = new AdUnitConfiguration();
+        adapterConfiguration.setAdFormat(AdFormat.BANNER);
+        return adapterConfiguration;
+    }
+
+    private static MobileSdkPassThrough passThroughWithIsMuted(boolean isMuted) throws Exception {
+        return MobileSdkPassThrough.create(new JSONObject(
+                "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\"ismuted\":" + isMuted + "}}]}}"
+        ));
+    }
+
+    private AdUnitConfiguration captureRenderedConfiguration(PrebidMobilePluginRenderer renderer) {
+        ArgumentCaptor<AdUnitConfiguration> captor = ArgumentCaptor.forClass(AdUnitConfiguration.class);
+        verify(renderer).createBannerAdView(any(), any(), any(), captor.capture(), eq(mockBidResponse));
+        return captor.getValue();
+    }
+
+    private PrebidMobilePluginRenderer registerDefaultRenderer(View bannerView) {
+        PrebidMobilePluginRenderer defaultRenderer = spy(
+                FakePrebidMobilePluginRenderer.getFakePrebidRenderer(
+                        null, bannerView, true,
+                        PREBID_MOBILE_RENDERER_NAME, "1.0"
+                )
+        );
+        registerPlugin(defaultRenderer);
+        return defaultRenderer;
     }
 
     private PrebidMobilePluginRenderer registerCustomRenderer(View bannerView) {

@@ -52,7 +52,8 @@ public class PrebidRewardedAdapter extends PrebidBaseAdapter {
         }
 
         InterstitialControllerListener prebidListener = getListener(adMobLoadListener);
-        AdUnitConfiguration config = new AdUnitConfiguration();
+        // Rendered from a copy of the mediation ad unit's configuration, so the publisher's settings apply.
+        AdUnitConfiguration config = PluginRendererFactory.mediationRenderingConfiguration(bidResponse, new AdUnitConfiguration());
         config.setAdFormat(bidResponse.isVideo() ? AdFormat.VAST : AdFormat.INTERSTITIAL);
         config.setRewarded(true);
         config.getRewardManager().setRewardListener(prebidListener::onUserEarnedReward);

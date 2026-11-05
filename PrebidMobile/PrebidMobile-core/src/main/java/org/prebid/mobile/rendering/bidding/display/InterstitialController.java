@@ -118,10 +118,16 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
         bidInterstitialView.setPubBackGroundOpacity(1.0f);
     }
 
+    /**
+     * Applies the bid response's rendering controls to {@code adUnitConfiguration} and loads the
+     * ad. Ad units and adapters pass a copy built with
+     * {@link PluginRendererFactory#renderingConfiguration}, which carries them already; a caller
+     * that renders with its own configuration gets them here.
+     */
     public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
         config = adUnitConfiguration;
+        MobileSdkPassThrough.applyTo(bidResponse, adUnitConfiguration);
         adUnitConfiguration.modifyUsingBidResponse(bidResponse);
-        setRenderingControlSettings(adUnitConfiguration, bidResponse);
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {
             impressionEventUrl = bidResponse.getImpressionEventUrl();
@@ -142,7 +148,7 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
             }
             return;
         }
-        config = new AdUnitConfiguration();
+        config = PluginRendererFactory.mediationRenderingConfiguration(bidResponse, new AdUnitConfiguration());
         config.setRewarded(isRewarded);
         if (isRewarded) {
             config.getRewardManager().setRewardListener(rewardListener);
@@ -186,16 +192,6 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
         if (config == null) return null;
 
         return config.getRewardManager().getRewardedExt().getReward();
-    }
-
-    private void setRenderingControlSettings(
-        AdUnitConfiguration adUnitConfiguration,
-        BidResponse bidResponse
-    ) {
-        MobileSdkPassThrough renderingControlSettings = bidResponse.getMobileSdkPassThrough();
-        if (renderingControlSettings != null) {
-            renderingControlSettings.modifyAdUnitConfiguration(adUnitConfiguration);
-        }
     }
 
 }
