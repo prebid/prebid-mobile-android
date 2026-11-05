@@ -76,5 +76,10 @@ public enum ResultCode {
     /**
      * Prebid Server returned bids, but none had successful cache entries.
      */
-    NO_CACHED_BIDS
+    NO_CACHED_BIDS,
+    /**
+     * The bid request was not sent because the Prebid SDK has not finished initializing. Wait for
+     * {@code SdkInitializationListener.onInitializationComplete()} before calling fetchDemand().
+     */
+    SDK_NOT_INITIALIZED
 }
