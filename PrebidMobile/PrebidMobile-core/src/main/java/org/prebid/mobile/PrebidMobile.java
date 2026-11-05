@@ -28,6 +28,7 @@ import org.prebid.mobile.LogUtil.PrebidLogger;
 import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
+import org.prebid.mobile.api.eid.ExtendedIdProvider;
 import org.prebid.mobile.configuration.PBSConfig;
 import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
@@ -567,6 +568,39 @@ public class PrebidMobile {
      */
     public static Boolean containsPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         return PrebidMobilePluginRegister.getInstance().containsPlugin(prebidMobilePluginRenderer);
+    }
+
+    /**
+     * Registers an extended ID provider. Its EIDs (via {@code getExtendedIds()})
+     * are included in all subsequent auction requests. {@code onRegister()} is called immediately.
+     * For simple static IDs use {@link TargetingParams#addExternalUserId} instead.
+     * <p>
+     * A provider whose {@link ExtendedIdProvider.Info} equals an already-registered one is ignored.
+     *
+     * @see ExtendedIdProvider
+     * @see ExtendedIdProvider.Info
+     */
+    public static void registerExtendedIdProvider(@NonNull ExtendedIdProvider provider) {
+        ExtendedIdRegistry.getInstance().addProvider(provider);
+    }
+
+    /**
+     * Removes a previously registered provider and calls its {@code onUnregister} method.
+     * The provider's EIDs will no longer appear in auction requests.
+     *
+     * @see #registerExtendedIdProvider(ExtendedIdProvider)
+     */
+    public static void unregisterExtendedIdProvider(@NonNull ExtendedIdProvider provider) {
+        ExtendedIdRegistry.getInstance().removeProvider(provider);
+    }
+
+    /**
+     * Returns whether the given extended ID provider is currently registered.
+     *
+     * @see #registerExtendedIdProvider(ExtendedIdProvider)
+     */
+    public static boolean containsExtendedIdProvider(@NonNull ExtendedIdProvider provider) {
+        return ExtendedIdRegistry.getInstance().hasProvider(provider);
     }
 
     /**
