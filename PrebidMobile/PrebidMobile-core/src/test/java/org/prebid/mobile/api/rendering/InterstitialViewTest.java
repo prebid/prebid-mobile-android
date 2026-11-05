@@ -31,7 +31,9 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
+import org.prebid.mobile.rendering.interstitial.DialogEventListener;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
+import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreativeView;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
@@ -163,6 +165,29 @@ public class InterstitialViewTest {
             }
         }
         assertTrue(containsSoundView);
+    }
+
+    @Test
+    public void soundButtonMuteEvent_MuteAndTrackVastMute() throws Exception {
+        invokeHandleDialogEvent(DialogEventListener.EventType.MUTE);
+
+        verify(mockAdViewManager).mute();
+        verify(mockAdViewManager).trackVideoEvent(VideoAdEvent.Event.AD_MUTE);
+        verify(mockAdViewManager, never()).trackVideoEvent(VideoAdEvent.Event.AD_UNMUTE);
+    }
+
+    @Test
+    public void soundButtonUnMuteEvent_UnMuteAndTrackVastUnMute() throws Exception {
+        invokeHandleDialogEvent(DialogEventListener.EventType.UNMUTE);
+
+        verify(mockAdViewManager).unmute();
+        verify(mockAdViewManager).trackVideoEvent(VideoAdEvent.Event.AD_UNMUTE);
+        verify(mockAdViewManager, never()).trackVideoEvent(VideoAdEvent.Event.AD_MUTE);
+    }
+
+    private void invokeHandleDialogEvent(DialogEventListener.EventType eventType) throws Exception {
+        WhiteBox.method(InterstitialView.class, "handleDialogEvent", DialogEventListener.EventType.class)
+                .invoke(spyBidInterstitialView, eventType);
     }
 
 }

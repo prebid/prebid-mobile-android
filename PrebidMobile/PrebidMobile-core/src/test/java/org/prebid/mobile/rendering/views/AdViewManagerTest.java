@@ -339,6 +339,22 @@ public class AdViewManagerTest {
     }
 
     @Test
+    public void trackVideoEvent_TrackOnCreative() throws IllegalAccessException {
+        setupCreative();
+
+        adViewManager.trackVideoEvent(VideoAdEvent.Event.AD_MUTE);
+
+        verify(mockVideoCreative).trackVideoEvent(VideoAdEvent.Event.AD_MUTE);
+    }
+
+    @Test
+    public void trackVideoEventWithoutCreative_NoException() {
+        adViewManager.trackVideoEvent(VideoAdEvent.Event.AD_MUTE);
+
+        verify(mockVideoCreative, never()).trackVideoEvent(any());
+    }
+
+    @Test
     public void isNotShowingEndCard_withEndCard_ReturnFalse() throws IllegalAccessException {
         setupCreative();
         when(mockVideoCreative.isDisplay()).thenReturn(true);
