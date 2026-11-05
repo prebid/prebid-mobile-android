@@ -25,6 +25,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
+import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
@@ -57,6 +58,22 @@ public class MediationRewardedVideoAdUnit extends MediationBaseFullScreenAdUnit 
         super.fetchDemand(listener);
     }
 
+    /**
+     * Loads ad and applies mediation delegate. Like {@link #fetchDemand(OnFetchCompleteListener)},
+     * but returns the full {@link org.prebid.mobile.api.data.BidInfo} (including the price,
+     * currency, creative id and ad id of the winning bid) instead of only the result.
+     * <p>
+     * The result code is an {@link org.prebid.mobile.ResultCode}, not the
+     * {@link org.prebid.mobile.api.data.FetchDemandResult} that {@code fetchDemand} reports
+     * (for example, {@code PREBID_SERVER_ERROR} instead of {@code SERVER_ERROR}).
+     *
+     * @param listener callback when operation is completed (success or fail)
+     */
+    @Override
+    public final void fetchDemandBidInfo(@NonNull OnFetchDemandResult listener) {
+        super.fetchDemandBidInfo(listener);
+    }
+
     @Override
     protected final void initAdConfig(
         String configId,
@@ -75,7 +92,7 @@ public class MediationRewardedVideoAdUnit extends MediationBaseFullScreenAdUnit 
             BidResponseCache.getInstance().putBidResponse(response.getId(), response);
             mediationDelegate.setResponseToLocalExtras(response);
             mediationDelegate.handleKeywordsUpdate(response.getTargeting());
-            onFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
+            notifyFetchCompleted(FetchDemandResult.SUCCESS, response);
         }
     }
 

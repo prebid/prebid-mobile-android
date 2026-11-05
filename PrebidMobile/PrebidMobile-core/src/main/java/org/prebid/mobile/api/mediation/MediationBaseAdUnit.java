@@ -26,9 +26,12 @@ import org.prebid.mobile.AdSize;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
+import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
@@ -106,6 +109,20 @@ public abstract class MediationBaseAdUnit {
         bidLoader.load();
     }
 
+    /**
+     * Like {@link #fetchDemand(OnFetchCompleteListener)}, but returns the full {@link BidInfo}.
+     * Its result code is the {@link ResultCode} matching the {@link FetchDemandResult} that
+     * {@code fetchDemand} reports.
+     */
+    protected void fetchDemandBidInfo(@NonNull OnFetchDemandResult listener) {
+        if (listener == null) {
+            LogUtil.error(TAG, "Parameter OnFetchDemandResult in fetchDemandBidInfo() must be not null.");
+            return;
+        }
+
+        fetchDemand(new BidInfoListener(listener, adUnitConfig));
+    }
+
     public void setPbAdSlot(String adSlot) {
         adUnitConfig.setPbAdSlot(adSlot);
     }
@@ -136,7 +153,7 @@ public abstract class MediationBaseAdUnit {
         BidResponseCache.getInstance().putBidResponse(response);
         mediationDelegate.handleKeywordsUpdate(response.getTargeting());
         mediationDelegate.setResponseToLocalExtras(response);
-        onFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
+        notifyFetchCompleted(FetchDemandResult.SUCCESS, response);
     }
 
     protected void onErrorReceived(AdException exception) {
@@ -146,6 +163,22 @@ public abstract class MediationBaseAdUnit {
             return;
         }
         onFetchCompleteListener.onComplete(FetchDemandResult.parseErrorMessage(exception.getMessage()));
+    }
+
+    /**
+     * Reports a fetch result to {@link #onFetchCompleteListener}. When the listener came from
+     * {@link #fetchDemandBidInfo(OnFetchDemandResult)}, the {@link BidInfo} is built from
+     * {@code response}, so it always describes the response that produced the result.
+     */
+    protected final void notifyFetchCompleted(
+            @NonNull FetchDemandResult result,
+            @Nullable BidResponse response
+    ) {
+        if (onFetchCompleteListener instanceof BidInfoListener) {
+            ((BidInfoListener) onFetchCompleteListener).onComplete(result, response);
+        } else if (onFetchCompleteListener != null) {
+            onFetchCompleteListener.onComplete(result);
+        }
     }
 
     protected void initBidLoader() {
@@ -186,6 +219,35 @@ public abstract class MediationBaseAdUnit {
      */
     public void setGlobalOrtbConfig(@Nullable String ortbConfig) {
         adUnitConfig.setGlobalOrtbConfig(ortbConfig);
+    }
+
+    /**
+     * Adapts an {@link OnFetchDemandResult} to {@link OnFetchCompleteListener}, so
+     * {@link #onFetchCompleteListener} keeps its type. A result reported without a response
+     * (a validation failure, an error, or a subclass calling {@code onComplete} directly) gets a
+     * {@link BidInfo} with only the result code.
+     */
+    private static final class BidInfoListener implements OnFetchCompleteListener {
+
+        @NonNull
+        private final OnFetchDemandResult listener;
+        @NonNull
+        private final AdUnitConfiguration adUnitConfig;
+
+        BidInfoListener(@NonNull OnFetchDemandResult listener, @NonNull AdUnitConfiguration adUnitConfig) {
+            this.listener = listener;
+            this.adUnitConfig = adUnitConfig;
+        }
+
+        @Override
+        public void onComplete(FetchDemandResult result) {
+            onComplete(result, null);
+        }
+
+        void onComplete(@NonNull FetchDemandResult result, @Nullable BidResponse response) {
+            listener.onComplete(BidInfo.create(result.toResultCode(), response, adUnitConfig));
+        }
+
     }
 
 }

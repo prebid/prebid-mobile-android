@@ -148,6 +148,21 @@ public class BidInfo {
             @Nullable BidResponse bidResponse,
             @Nullable AdUnitConfiguration configuration
     ) {
+        return create(resultCode, bidResponse, configuration, null);
+    }
+
+    /**
+     * Like {@link #create(ResultCode, BidResponse, AdUnitConfiguration)}, but for a native winning
+     * bid the caller already saved to {@link CacheManager}: reuses {@code nativeCacheId} instead of
+     * saving the bid again. With a {@code null} id, the winning bid is saved as usual.
+     */
+    @NonNull
+    public static BidInfo create(
+            @NonNull ResultCode resultCode,
+            @Nullable BidResponse bidResponse,
+            @Nullable AdUnitConfiguration configuration,
+            @Nullable String nativeCacheId
+    ) {
         BidInfo bidInfo = new BidInfo(resultCode);
         if (bidResponse == null) {
             return bidInfo;
@@ -174,7 +189,7 @@ public class BidInfo {
 
         boolean isNative = configuration != null && configuration.getNativeConfiguration() != null;
         if (isNative && bidInfo.resultCode == ResultCode.SUCCESS) {
-            final @Nullable String cacheId = CacheManager.save(
+            final @Nullable String cacheId = nativeCacheId != null ? nativeCacheId : CacheManager.save(
                     bidResponse.getWinningBidJson(),
                     bidInfo.exp != null ? bidInfo.exp.longValue() : null
             );

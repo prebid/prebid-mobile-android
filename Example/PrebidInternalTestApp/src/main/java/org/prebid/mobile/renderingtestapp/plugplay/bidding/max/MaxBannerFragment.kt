@@ -78,7 +78,7 @@ open class MaxBannerFragment : AdFragment() {
     }
 
     override fun loadAd() {
-        adUnit?.fetchDemand {
+        adUnit?.fetchDemandBidInfo {
             adView?.loadAd()
         }
     }

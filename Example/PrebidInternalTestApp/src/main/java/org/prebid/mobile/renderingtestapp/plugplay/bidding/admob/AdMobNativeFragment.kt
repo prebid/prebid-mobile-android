@@ -100,8 +100,8 @@ class AdMobNativeFragment : AdFragment() {
             .addNetworkExtrasBundle(PrebidNativeAdapter::class.java, extras!!)
             .build()
 
-        adUnit?.fetchDemand { resultCode ->
-            Log.d(TAG, "Fetch demand result: $resultCode")
+        adUnit?.fetchDemandBidInfo { bidInfo ->
+            Log.d(TAG, "Fetch demand result: ${bidInfo.resultCode}")
 
             /** For mediation use loadAd() not loadAds() */
             adLoader?.loadAd(adRequest)

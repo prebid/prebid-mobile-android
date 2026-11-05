@@ -27,7 +27,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.PrebidNativeAdEventListener
-import org.prebid.mobile.api.data.FetchDemandResult
+import org.prebid.mobile.ResultCode
 import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
 import org.prebid.mobile.renderingtestapp.R
@@ -48,15 +48,15 @@ class NativeFeedAdapter(
         if (nativeAdLayout == null) {
             nativeAdLayout = layoutInflater.inflate(R.layout.lyt_native_ad, parent, false) as ConstraintLayout
         }
-        nativeAdUnit.fetchDemand {
-            if (it != FetchDemandResult.SUCCESS) {
-                return@fetchDemand
+        nativeAdUnit.fetchDemandBidInfo {
+            if (it.resultCode != ResultCode.SUCCESS) {
+                return@fetchDemandBidInfo
             }
 
             val nativeAd = NativeAdProvider.getNativeAd(extras)
             if (nativeAd == null) {
                 LogUtil.error(TAG, "Native ad is null")
-                return@fetchDemand
+                return@fetchDemandBidInfo
             }
 
             inflateViewContent(nativeAd)

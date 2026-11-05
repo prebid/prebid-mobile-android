@@ -24,6 +24,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
+import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
@@ -106,6 +107,24 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
             @NonNull OnFetchCompleteListener listener
     ) {
         super.fetchDemand(listener);
+    }
+
+    /**
+     * Loads ad and applies mediation delegate. Like {@link #fetchDemand(OnFetchCompleteListener)},
+     * but returns the full {@link org.prebid.mobile.api.data.BidInfo} (including the price,
+     * currency, creative id and ad id of the winning bid) instead of only the result.
+     * <p>
+     * The result code is an {@link org.prebid.mobile.ResultCode}, not the
+     * {@link org.prebid.mobile.api.data.FetchDemandResult} that {@code fetchDemand} reports
+     * (for example, {@code PREBID_SERVER_ERROR} instead of {@code SERVER_ERROR}).
+     * <p>
+     * With auto refresh, the listener is called again on every refresh.
+     *
+     * @param listener callback when operation is completed (success or fail)
+     */
+    @Override
+    public final void fetchDemandBidInfo(@NonNull OnFetchDemandResult listener) {
+        super.fetchDemandBidInfo(listener);
     }
 
     public final void addAdditionalSizes(AdSize... sizes) {
