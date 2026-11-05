@@ -26,7 +26,7 @@ import androidx.annotation.Nullable;
 
 import org.prebid.mobile.LogUtil.PrebidLogger;
 import org.prebid.mobile.api.data.InitializationStatus;
-import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
+import org.prebid.mobile.api.plugin.PluginCapability;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.PBSConfig;
 import org.prebid.mobile.core.BuildConfig;
@@ -548,25 +548,80 @@ public class PrebidMobile {
     }
 
     /**
+     * Registers the plugin for the capability:
+     * <pre>{@code
+     * PrebidMobile.registerPlugin(vendorRenderer, PluginCapability.RENDERER);
+     * }</pre>
+     * The plugin must be of the capability's plugin type, e.g. {@link PrebidMobilePluginRenderer} for
+     * {@link PluginCapability#RENDERER}; the compiler checks it. A plugin whose identity equals a
+     * registered one is ignored, and the SDK logs a warning. To register one object for several
+     * capabilities, call this once for each.
+     * <p>
+     * Register plugins during SDK setup. Registering or unregistering the same plugin from several
+     * threads at once, or from inside the plugin's own callbacks, is not supported.
+     */
+    public static <P> void registerPlugin(@NonNull P plugin, @NonNull PluginCapability<P> capability) {
+        capability.getRegistry().add(plugin);
+    }
+
+    /**
+     * Unregisters the plugin of the capability whose identity equals this plugin's.
+     * No-op if no such plugin is registered.
+     * <p>
+     * Unregistering is best-effort: the SDK stops using the plugin for new work, but work that has
+     * already started with it, or was already queued for it, can still reach it. Registering or
+     * unregistering the same plugin from several threads at once, or from inside the plugin's own
+     * callbacks, is not supported.
+     */
+    public static <P> void unregisterPlugin(@NonNull P plugin, @NonNull PluginCapability<P> capability) {
+        capability.getRegistry().remove(plugin);
+    }
+
+    /**
+     * Returns whether a plugin whose identity equals this plugin's is active for the capability.
+     * <p>
+     * A plugin is active once its registration completes. While its
+     * {@link #registerPlugin(Object, PluginCapability)} call is still running, e.g. while the plugin
+     * is inside its own {@code onRegister} callback, this returns {@code false} for it.
+     */
+    public static <P> boolean containsPlugin(@NonNull P plugin, @NonNull PluginCapability<P> capability) {
+        return capability.getRegistry().contains(plugin);
+    }
+
+    /**
      * Registers plugin renderer for displaying ad in custom wrapper.
      * Prebid SDK will choose this renderer only if the winning bid contains this renderer.
+     * A renderer whose name is already registered is ignored; to replace it, unregister it first.
+     *
+     * @deprecated This method is deprecated and will be removed in 4.0. Use
+     * {@link #registerPlugin(Object, PluginCapability)} with {@link PluginCapability#RENDERER} instead.
      */
+    @Deprecated
     public static void registerPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
-        PrebidMobilePluginRegister.getInstance().registerPlugin(prebidMobilePluginRenderer);
+        registerPlugin(prebidMobilePluginRenderer, PluginCapability.RENDERER);
     }
 
     /**
-     * Remove plugin renderer. {@link #registerPluginRenderer(PrebidMobilePluginRenderer)}
+     * Unregisters the plugin renderer with the same name as this renderer.
+     * {@link #registerPluginRenderer(PrebidMobilePluginRenderer)}
+     *
+     * @deprecated This method is deprecated and will be removed in 4.0. Use
+     * {@link #unregisterPlugin(Object, PluginCapability)} with {@link PluginCapability#RENDERER} instead.
      */
+    @Deprecated
     public static void unregisterPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
-        PrebidMobilePluginRegister.getInstance().unregisterPlugin(prebidMobilePluginRenderer);
+        unregisterPlugin(prebidMobilePluginRenderer, PluginCapability.RENDERER);
     }
 
     /**
-     * Return whether SDK already registered this renderer.
+     * Returns whether a renderer with the same name as this renderer is registered.
+     *
+     * @deprecated This method is deprecated and will be removed in 4.0. Use
+     * {@link #containsPlugin(Object, PluginCapability)} with {@link PluginCapability#RENDERER} instead.
      */
+    @Deprecated
     public static Boolean containsPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
-        return PrebidMobilePluginRegister.getInstance().containsPlugin(prebidMobilePluginRenderer);
+        return containsPlugin(prebidMobilePluginRenderer, PluginCapability.RENDERER);
     }
 
     /**
