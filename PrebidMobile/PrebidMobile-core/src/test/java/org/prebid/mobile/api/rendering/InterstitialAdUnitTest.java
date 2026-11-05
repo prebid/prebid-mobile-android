@@ -495,9 +495,12 @@ public class InterstitialAdUnitTest {
         interstitialAdUnit.setIsMuted(false);
         final BidResponse mockBidResponse = mockBidResponseWithServerIsMuted();
         final InterstitialController mockInterstitialController = mock(InterstitialController.class);
-        PrebidMobile.registerPluginRenderer(FakePrebidMobilePluginRenderer.getFakePrebidRenderer(
+        PrebidMobilePluginRenderer fakePrebidRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(
                 mockInterstitialController, null, true, PREBID_MOBILE_RENDERER_NAME, "1.0"
-        ));
+        );
+        // A renderer whose name is already registered is ignored, so replace it.
+        PrebidMobile.unregisterPluginRenderer(fakePrebidRenderer);
+        PrebidMobile.registerPluginRenderer(fakePrebidRenderer);
         WhiteBox.setInternalState(interstitialAdUnit, "bidResponse", mockBidResponse);
 
         RenderingTestUtils.getInterstitialEventListener(interstitialAdUnit).onPrebidSdkWin();
