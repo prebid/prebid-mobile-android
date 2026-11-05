@@ -122,8 +122,13 @@ public class AdInterstitialDialogTest {
         InterstitialDisplayPropertiesInternal mockProperties = mock(InterstitialDisplayPropertiesInternal.class);
         when(mockInterstitialManager.getInterstitialDisplayProperties()).thenReturn(mockProperties);
 
+        RewardedCompletionRules completionRules = new RewardedCompletionRules();
+        RewardedClosingRules closingRules = new RewardedClosingRules(5, RewardedClosingRules.Action.AUTO_CLOSE);
+        RewardedExt rewardedExt = new RewardedExt(null, completionRules, closingRules);
+
         RewardManager mockRewardManager = mock(RewardManager.class);
         when(mockRewardManager.getUserRewardedAlready()).thenReturn(true);
+        when(mockRewardManager.getRewardedExt()).thenReturn(rewardedExt);
 
         AdUnitConfiguration mockConfig = mock(AdUnitConfiguration.class);
         when(mockConfig.isRewarded()).thenReturn(true);
@@ -132,8 +137,10 @@ public class AdInterstitialDialogTest {
 
         spySubject.setUpCloseButtonTask();
 
-        verify(spySubject, never()).changeCloseViewVisibility(View.GONE);
-        verify(spySubject, never()).scheduleCloseButtonDisplaying(anyInt(), anyBoolean());
+        // Even though the reward was already granted before this dialog was created (e.g. the
+        // end card), the close button must still be scheduled so it doesn't stay hidden forever.
+        verify(spySubject).changeCloseViewVisibility(View.GONE);
+        verify(spySubject).scheduleCloseButtonDisplaying(5_000, true);
         verify(spySubject, never()).scheduleRewardListener(anyInt(), anyInt(), anyBoolean());
     }
 
