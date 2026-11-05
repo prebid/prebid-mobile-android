@@ -1006,21 +1006,28 @@ public class BasicParameterBuilderTest {
         assertNotNull(video);
         assertNotNull(video.w);
         assertNotNull(video.h);
-        assertEquals(new Integer(5), video.placement);
-        assertEquals(new Integer(1), video.linearity);
-        assertEquals(new Integer(1), video.playbackend);
         assertArrayEquals(new int[]{3}, video.delivery);
-        assertArrayEquals(new String[]{"video/mp4", "video/3gpp", "video/webm", "video/mkv"}, video.mimes);
-        assertArrayEquals(new int[]{2, 5}, video.protocols);
 
-        assertNull(video.minduration);
-        assertNull(video.maxduration);
-        assertNull(video.api);
-        assertNull(video.minbitrate);
-        assertNull(video.maxbitrate);
-        assertNull(video.playbackmethod);
+        // The rendering API defaults the interstitial keeps, because VideoParameters has no say
+        // over them.
+        assertEquals(new Integer(1), video.playbackend);
+
+        // Everything the publisher set overrides the rendering API default, as on iOS.
+        assertEquals(new Integer(2), video.placement);
+        assertEquals(new Integer(4), video.plcmt);
+        assertEquals(new Integer(1), video.linearity);
+        assertEquals(new Integer(101), video.minduration);
+        assertEquals(new Integer(102), video.maxduration);
+        assertEquals(new Integer(201), video.minbitrate);
+        assertEquals(new Integer(202), video.maxbitrate);
+        assertEquals(new Integer(0), video.startDelay);
+        assertEquals(Integer.valueOf(1), video.skippable);
+        assertArrayEquals(new String[]{"Mime1", "Mime2"}, video.mimes);
+        assertArrayEquals(new int[]{11, 12}, video.protocols);
+        assertArrayEquals(new int[]{21, 22}, video.api);
+        assertArrayEquals(new int[]{31, 32}, video.playbackmethod);
+
         assertNull(video.pos);
-        assertNull(video.startDelay);
     }
 
     @Test
@@ -1082,21 +1089,88 @@ public class BasicParameterBuilderTest {
         assertNotNull(video);
         assertNotNull(video.w);
         assertNotNull(video.h);
-        assertEquals(new Integer(5), video.placement);
+        assertArrayEquals(new int[]{3}, video.delivery);
+
+        // The rendering API default the banner keeps, because VideoParameters has no say over it.
+        assertEquals(new Integer(2), video.playbackend);
+
+        // Everything the publisher set overrides the rendering API default, as on iOS.
+        assertEquals(new Integer(2), video.placement);
+        assertEquals(new Integer(4), video.plcmt);
+        assertEquals(new Integer(1), video.linearity);
+        assertEquals(new Integer(101), video.minduration);
+        assertEquals(new Integer(102), video.maxduration);
+        assertEquals(new Integer(201), video.minbitrate);
+        assertEquals(new Integer(202), video.maxbitrate);
+        assertEquals(new Integer(0), video.startDelay);
+        assertEquals(Integer.valueOf(1), video.skippable);
+        assertArrayEquals(new String[]{"Mime1", "Mime2"}, video.mimes);
+        assertArrayEquals(new int[]{11, 12}, video.protocols);
+        assertArrayEquals(new int[]{21, 22}, video.api);
+        assertArrayEquals(new int[]{31, 32}, video.playbackmethod);
+
+        assertNull(video.pos);
+    }
+
+    @Test
+    public void testRenderingApiVideoParameters_partial_keepsDefaultsForUnsetFields() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(false);
+        configuration.setAdFormat(AdFormat.VAST);
+
+        ArrayList<String> mimes = new ArrayList<>(1);
+        mimes.add("video/mp4");
+        VideoParameters parameters = new VideoParameters(mimes);
+        parameters.setMaxDuration(30);
+        configuration.setVideoParameters(parameters);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+            configuration,
+            context.getResources(),
+            browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+        BidRequest bidRequest = adRequestInput.getBidRequest();
+        Imp imp = bidRequest.getImp().iterator().next();
+
+        Video video = imp.getVideo();
+        assertNotNull(video);
+        assertArrayEquals(new String[]{"video/mp4"}, video.mimes);
+        assertEquals(new Integer(30), video.maxduration);
+
+        // Untouched by the publisher, so the rendering API defaults stand.
+        assertArrayEquals(new int[]{2, 5}, video.protocols);
         assertEquals(new Integer(1), video.linearity);
         assertEquals(new Integer(2), video.playbackend);
-        assertArrayEquals(new int[]{3}, video.delivery);
-        assertArrayEquals(new String[]{"video/mp4", "video/3gpp", "video/webm", "video/mkv"}, video.mimes);
-        assertArrayEquals(new int[]{2, 5}, video.protocols);
-
+        assertEquals(new Integer(5), video.placement);
         assertNull(video.minduration);
-        assertNull(video.maxduration);
-        assertNull(video.api);
-        assertNull(video.minbitrate);
-        assertNull(video.maxbitrate);
-        assertNull(video.playbackmethod);
-        assertNull(video.pos);
-        assertNull(video.startDelay);
+    }
+
+    @Test
+    public void testRenderingApiVideoParameters_placementType_isOverriddenByVideoParameters() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(false);
+        configuration.setAdFormat(AdFormat.VAST);
+        configuration.setPlacementType(PlacementType.IN_BANNER);
+
+        VideoParameters parameters = new VideoParameters(null);
+        parameters.setPlacement(Signals.Placement.InFeed);
+        configuration.setVideoParameters(parameters);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+            configuration,
+            context.getResources(),
+            browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+        BidRequest bidRequest = adRequestInput.getBidRequest();
+        Imp imp = bidRequest.getImp().iterator().next();
+
+        Video video = imp.getVideo();
+        assertNotNull(video);
+        assertEquals(Signals.Placement.InFeed.getValue(), video.placement.intValue());
     }
 
     @Test
