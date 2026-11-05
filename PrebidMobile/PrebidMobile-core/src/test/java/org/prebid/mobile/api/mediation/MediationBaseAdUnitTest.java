@@ -94,7 +94,8 @@ public class MediationBaseAdUnitTest {
     @Test
     public void whenFetchDemandAndNotMoPubViewPassed_InvalidAdObjectResult() {
         PrebidMobile.setPrebidServerAccountId("testAccountId");
-        new MediationBaseAdUnit(context, "123", mockAdSize, new MockMediationUtils()) {
+        OnFetchCompleteListener mockListener = mock(OnFetchCompleteListener.class);
+        new MediationBaseAdUnit(context, "123", mockAdSize, null) {
             @Override
             protected void initAdConfig(
                 String configId,
@@ -102,9 +103,9 @@ public class MediationBaseAdUnitTest {
             ) {
                 adUnitConfig.setConfigId(configId);
             }
-        }.fetchDemand(result -> {
-            assertEquals(FetchDemandResult.INVALID_AD_OBJECT, result);
-        });
+        }.fetchDemand(mockListener);
+
+        verify(mockListener).onComplete(FetchDemandResult.INVALID_AD_OBJECT);
     }
 
     @Test

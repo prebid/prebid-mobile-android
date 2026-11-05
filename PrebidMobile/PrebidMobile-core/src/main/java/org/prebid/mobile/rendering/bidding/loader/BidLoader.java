@@ -16,7 +16,13 @@
 
 package org.prebid.mobile.rendering.bidding.loader;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
+
+import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidEventDelegate;
 import org.prebid.mobile.PrebidMobile;
@@ -30,6 +36,7 @@ import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
+import org.prebid.mobile.rendering.sdk.InitializationNotifier;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
 
 import java.util.Map;
@@ -44,6 +51,13 @@ public class BidLoader {
     private final static String TMAX_REQUEST_KEY = "tmaxrequest";
     private static boolean sTimeoutHasChanged = false;
 
+    /**
+     * Time on top of the connect and read timeouts before a bid request that has not finished is
+     * reported as a timeout. Covers building the request, the DNS lookup (no timeout of its own)
+     * and handing the result to the main thread.
+     */
+    private final static int REQUEST_DEADLINE_MARGIN_MILLIS = 1000;
+
     private AdUnitConfiguration adConfiguration;
     private BidRequester bidRequester;
     private AtomicBoolean currentlyLoading;
@@ -51,10 +65,16 @@ public class BidLoader {
     private BidRequesterListener requestListener;
     private BidRefreshListener bidRefreshListener;
 
+    private final Handler requestDeadlineHandler = new Handler(Looper.getMainLooper());
+    private final Runnable requestDeadlineTask = this::onRequestDeadline;
+    private int requestDeadlineMillis;
+
     private final ResponseHandler responseHandler = new ResponseHandler() {
         @Override
         public void onResponse(BaseNetworkTask.GetUrlResult response) {
-            currentlyLoading.set(false);
+            if (!finishRequest()) {
+                return;
+            }
             BidResponse bidResponse = new BidResponse(response.responseString, adConfiguration);
             if (bidResponse.hasParseError()) {
                 failedToLoadBid(new AdException(AdException.FAILED_TO_PARSE_RESPONSE, bidResponse.getParseError()));
@@ -95,6 +115,9 @@ public class BidLoader {
                 String msg,
                 long responseTime
         ) {
+            if (!finishRequest()) {
+                return;
+            }
             failedToLoadBid(new AdException(AdException.FAILED_TO_LOAD_BIDS, msg));
         }
 
@@ -103,6 +126,9 @@ public class BidLoader {
                 Exception e,
                 long responseTime
         ) {
+            if (!finishRequest()) {
+                return;
+            }
             if (e instanceof AdException) {
                 failedToLoadBid((AdException) e);
             } else {
@@ -151,15 +177,23 @@ public class BidLoader {
             LogUtil.error(TAG, "No ad request configuration to load");
             return;
         }
-        if (!PrebidMobile.isSdkInitialized()) {
-            LogUtil.error(TAG, "SDK wasn't initialized. Context is null.");
-            return;
-        }
 
         // If currentlyLoading == false, set it to true and return true; else return false
         // If compareAndSet returns false, it means currentlyLoading was already true and therefore we should skip loading
         if (!currentlyLoading.compareAndSet(false, true)) {
             LogUtil.error(TAG, "Previous load is in progress. Load() ignored.");
+            return;
+        }
+
+        if (!PrebidMobile.isSdkInitialized()) {
+            String reason = InitializationNotifier.isInitializationInProgress()
+                    ? "Initialization is still in progress."
+                    : "Call PrebidMobile.initializeSdk() first.";
+            failedToLoadBid(new AdException(
+                    AdException.FAILED_TO_LOAD_BIDS,
+                    FetchDemandResult.SDK_NOT_INITIALIZED_MESSAGE + " " + reason
+                            + " Wait for SdkInitializationListener.onInitializationComplete() before loading."
+            ));
             return;
         }
 
@@ -198,6 +232,7 @@ public class BidLoader {
     public void destroy() {
         cancelRefresh();
         refreshTimerTask.destroy();
+        requestDeadlineHandler.removeCallbacks(requestDeadlineTask);
 
         if (bidRequester != null) {
             bidRequester.destroy();
@@ -211,7 +246,47 @@ public class BidLoader {
         if (bidRequester == null) {
             bidRequester = new BidRequester(config, new AdRequestInput(), responseHandler);
         }
+        requestDeadlineMillis = getRequestDeadlineMillis();
+        requestDeadlineHandler.removeCallbacks(requestDeadlineTask);
+        requestDeadlineHandler.postDelayed(requestDeadlineTask, requestDeadlineMillis);
         bidRequester.startAdRequest();
+    }
+
+    /**
+     * The longest a bid request can take on its connect and read timeouts, plus a margin. Past it
+     * the request is cancelled and reported as a timeout, so the listener is always called.
+     */
+    @VisibleForTesting
+    static int getRequestDeadlineMillis() {
+        return PrebidMobile.getTimeoutMillis() + BaseNetworkTask.getReadTimeoutMillis() + REQUEST_DEADLINE_MARGIN_MILLIS;
+    }
+
+    /**
+     * Ends the request in flight. Returns false if there is none: the deadline already reported
+     * it as a timeout, so its late result must be dropped.
+     */
+    private boolean finishRequest() {
+        requestDeadlineHandler.removeCallbacks(requestDeadlineTask);
+        if (!currentlyLoading.compareAndSet(true, false)) {
+            LogUtil.debug(TAG, "Ignoring the result of a bid request that is no longer in progress.");
+            return false;
+        }
+        return true;
+    }
+
+    private void onRequestDeadline() {
+        if (!currentlyLoading.compareAndSet(true, false)) {
+            return;
+        }
+        // Drops the request's callback; the next load creates a new requester.
+        if (bidRequester != null) {
+            bidRequester.destroy();
+            bidRequester = null;
+        }
+        failedToLoadBid(new AdException(
+                AdException.FAILED_TO_LOAD_BIDS,
+                "Timeout: the bid request did not finish within " + requestDeadlineMillis + " ms."
+        ));
     }
 
     private void failedToLoadBid(AdException exception) {
@@ -246,7 +321,9 @@ public class BidLoader {
         PrebidEventDelegate eventDelegate = PrebidMobile.getEventDelegate();
         if (eventDelegate == null) return;
 
-        new Thread(() -> eventDelegate.onBidResponse(bidRequester.getBuiltRequest(), response.getResponseJson())).start();
+        // Read now: a later request timeout replaces the requester.
+        JSONObject request = bidRequester != null ? bidRequester.getBuiltRequest() : new JSONObject();
+        new Thread(() -> eventDelegate.onBidResponse(request, response.getResponseJson())).start();
     }
 
     public interface BidRefreshListener {

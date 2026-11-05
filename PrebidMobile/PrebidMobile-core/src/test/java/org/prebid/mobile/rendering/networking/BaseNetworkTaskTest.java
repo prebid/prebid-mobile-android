@@ -32,12 +32,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.reflection.Reflection;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.LooperMode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
@@ -90,6 +93,8 @@ public class BaseNetworkTaskTest {
     @After
     public void tearDown() throws Exception {
         server.shutdown();
+        Reflection.setStaticVariableTo(PrebidMobile.class, "timeoutMillis", 2_000);
+        Reflection.setStaticVariableTo(PrebidMobile.class, "isTimeoutModified", false);
     }
 
     @Suppress
@@ -305,6 +310,22 @@ public class BaseNetworkTaskTest {
         }
 
         Assert.assertEquals(true, success);
+    }
+
+    @Test
+    public void testRedirectTargetNotResponding_ReadTimeoutApplies() {
+        PrebidMobile.setTimeoutMillis(300);
+        server.enqueue(new MockResponse().setResponseCode(302)
+                                         .addHeader("Location: " + server.url("/new-path")));
+        // Slower than the read timeout; without it on the redirect the request would wait it out.
+        server.enqueue(new MockResponse().setHeadersDelay(2, TimeUnit.SECONDS).setBody("late"));
+
+        BaseNetworkTask baseNetworkTask = new BaseNetworkTask(baseResponseHandler);
+        params.name = REDIRECT_TASK;
+        baseNetworkTask.execute(params);
+
+        Assert.assertFalse(success);
+        Assert.assertTrue(String.valueOf(exception), exception instanceof SocketTimeoutException);
     }
 
     @Test
