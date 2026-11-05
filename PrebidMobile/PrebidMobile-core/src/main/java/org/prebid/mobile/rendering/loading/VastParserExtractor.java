@@ -27,6 +27,7 @@ import org.prebid.mobile.rendering.models.internal.VastExtractorResult;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.modelcontrollers.AsyncVastLoader;
+import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.parser.AdResponseParserBase;
 import org.prebid.mobile.rendering.parser.AdResponseParserVast;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
@@ -37,6 +38,12 @@ public class VastParserExtractor {
     private static final String TAG = VastParserExtractor.class.getSimpleName();
 
     public static final int WRAPPER_NESTING_LIMIT = 5;
+
+    static final String NO_ADS_MESSAGE = "VAST response has no ads";
+
+    // VAST 4.3, section 2.3.6.4: the [ERRORCODE] macro in the Error URI of a no-ad response
+    // is replaced with 303, "No VAST response after one or more Wrappers".
+    private static final String NO_ADS_ERROR_CODE = "303";
 
     private final AsyncVastLoader asyncVastLoader = new AsyncVastLoader();
     @NonNull private final VastParserExtractor.Listener listener;
@@ -117,6 +124,18 @@ public class VastParserExtractor {
 
         latestVastWrapperParser = adResponseParserVast;
 
+        // A response without ads, either the initial one or one after wrappers, ends the load.
+        // Report it to the <VAST>-level Error URI of every response in the chain.
+        if (latestVastWrapperParser.hasNoAds()) {
+            for (String errorUrl : rootVastParser.getNoAdsErrorUrls()) {
+                TrackingManager.getInstance().fireEventTrackingURL(replaceErrorCodeMacro(errorUrl, NO_ADS_ERROR_CODE));
+            }
+
+            final AdException adException = new AdException(AdException.INTERNAL_ERROR, NO_ADS_MESSAGE);
+            listener.onResult(createExtractorFailureResult(adException));
+            return;
+        }
+
         // Check if this response is a wrapper
         String vastUrl = latestVastWrapperParser.getVastUrl();
         if (!TextUtils.isEmpty(vastUrl)) {
@@ -137,6 +156,13 @@ public class VastParserExtractor {
             final AdResponseParserBase[] parserArray = {rootVastParser, latestVastWrapperParser};
             listener.onResult(new VastExtractorResult(parserArray));
         }
+    }
+
+    // The ad server expects the player to fill in the macro. The percent-encoded form is replaced too,
+    // for servers that encode the whole URI.
+    @VisibleForTesting
+    static String replaceErrorCodeMacro(String url, String errorCode) {
+        return url.replace("[ERRORCODE]", errorCode).replaceAll("(?i)%5BERRORCODE%5D", errorCode);
     }
 
     private void failedToLoadAd(String msg) {
