@@ -1,0 +1,10 @@
+{
+  "guard": "ortb-test-presence",
+  "description": "OpenRTB models with no unit-test reference when the guard landed. Shrink-only: add a wire-format test for the model and delete its entry in the same PR.",
+  "entries": [
+    {
+      "entry": "BaseBid",
+      "reason": "No test referenced this model when the guard landed."
+    }
+  ]
+}

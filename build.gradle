@@ -10,3 +10,6 @@ ext {
     omSdkVersion = "1.4.1"
     omSdkModuleName = "omsdk-android"
 }
+
+// Public-API signature generation (public-api-baseline guard) — see metalava.gradle
+apply from: 'metalava.gradle'
