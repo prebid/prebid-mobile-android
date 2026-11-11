@@ -523,6 +523,7 @@ public class BannerView extends FrameLayout {
     }
 
     private void init() {
+        adUnitConfig.setRendersWithoutAdServer(eventHandler instanceof StandaloneBannerEventHandler);
         initPrebidRenderingSdk();
         initAdConfiguration();
         initBidLoader();

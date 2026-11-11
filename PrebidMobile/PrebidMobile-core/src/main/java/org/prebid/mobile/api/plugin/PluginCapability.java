@@ -21,6 +21,7 @@ import androidx.annotation.RestrictTo;
 
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
+import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
 
 /**
  * A kind of plugin the SDK accepts. Pass one to
@@ -47,6 +48,23 @@ public final class PluginCapability<P> {
                     PluginRegistry.UNLIMITED,
                     null,
                     null
+            )
+    );
+
+    /**
+     * Bid selectors: objects that implement {@link PrebidBidSelecting}.
+     * <p>
+     * Selectors are identified by {@link PrebidBidSelecting#getPluginInfo()}, i.e. name and version.
+     * At most one selector is registered at a time: while one is registered, registering another is
+     * ignored. Unregister the current one first.
+     */
+    public static final PluginCapability<PrebidBidSelecting> BID_SELECTOR = new PluginCapability<>(
+            new PluginRegistry<>(
+                    "bidSelector",
+                    PrebidBidSelecting::getPluginInfo,
+                    1,
+                    PrebidBidSelecting::onRegister,
+                    PrebidBidSelecting::onUnregister
             )
     );
 

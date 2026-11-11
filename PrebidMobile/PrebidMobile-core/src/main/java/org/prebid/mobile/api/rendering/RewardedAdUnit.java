@@ -95,6 +95,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
         adUnitConfiguration.setConfigId(configId);
         adUnitConfiguration.setAdFormats(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST));
         adUnitConfiguration.setRewarded(true);
+        adUnitConfiguration.setRendersWithoutAdServer(eventHandler instanceof StandaloneRewardedVideoEventHandler);
 
         init(adUnitConfiguration);
     }

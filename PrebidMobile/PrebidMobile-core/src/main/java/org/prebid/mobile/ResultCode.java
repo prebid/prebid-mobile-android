@@ -76,5 +76,12 @@ public enum ResultCode {
     /**
      * Prebid Server returned bids, but none had successful cache entries.
      */
-    NO_CACHED_BIDS
+    NO_CACHED_BIDS,
+    /**
+     * The bid that the registered
+     * {@link org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting} plugin chose lacks
+     * the targeting keywords the ad server needs ({@code hb_pb} and {@code hb_bidder}, plus
+     * {@code hb_cache_id} when the cache is used), so no keywords were attached.
+     */
+    INVALID_TARGETING
 }

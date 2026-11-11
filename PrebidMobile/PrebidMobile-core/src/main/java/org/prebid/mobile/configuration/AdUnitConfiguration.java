@@ -3,6 +3,7 @@ package org.prebid.mobile.configuration;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerParameters;
@@ -41,6 +42,7 @@ public class AdUnitConfiguration {
     @Nullable
     private Boolean isSoundButtonVisible;
     private boolean isOriginalAdUnit = false;
+    private boolean rendersWithoutAdServer = false;
     private boolean hasEndCard = false;
 
     private int videoSkipOffset = SKIP_OFFSET_NOT_ASSIGNED;
@@ -115,6 +117,7 @@ public class AdUnitConfiguration {
         isMuted = source.isMuted;
         isSoundButtonVisible = source.isSoundButtonVisible;
         isOriginalAdUnit = source.isOriginalAdUnit;
+        rendersWithoutAdServer = source.rendersWithoutAdServer;
         hasEndCard = source.hasEndCard;
 
         videoSkipOffset = source.videoSkipOffset;
@@ -531,6 +534,20 @@ public class AdUnitConfiguration {
 
     public void setIsOriginalAdUnit(boolean originalAdUnit) {
         isOriginalAdUnit = originalAdUnit;
+    }
+
+    /**
+     * Whether the ad unit renders the winning bid itself, with no ad server involved. Such an ad
+     * unit doesn't need the targeting keywords that ad servers match.
+     */
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    public boolean rendersWithoutAdServer() {
+        return rendersWithoutAdServer;
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    public void setRendersWithoutAdServer(boolean rendersWithoutAdServer) {
+        this.rendersWithoutAdServer = rendersWithoutAdServer;
     }
 
     public String getImpressionUrl() {

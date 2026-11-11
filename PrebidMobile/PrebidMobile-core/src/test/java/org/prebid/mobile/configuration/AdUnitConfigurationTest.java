@@ -219,6 +219,13 @@ public class AdUnitConfigurationTest {
     }
 
     @Test
+    public void copyConstructor_keepsRendersWithoutAdServer() {
+        subject.setRendersWithoutAdServer(true);
+
+        assertTrue(new AdUnitConfiguration(subject).rendersWithoutAdServer());
+    }
+
+    @Test
     public void copyConstructor_sharesTheRewardManager() {
         // The reward is read back through the ad unit after rendering.
         assertSame(subject.getRewardManager(), new AdUnitConfiguration(subject).getRewardManager());
@@ -264,7 +271,7 @@ public class AdUnitConfigurationTest {
         // Tripwire: a field added to AdUnitConfiguration must also be added to the copy
         // constructor, otherwise rendering silently loses it. Update both together.
         Set<String> expected = new HashSet<>(Arrays.asList(
-                "isRewarded", "isBuiltInVideo", "isMuted", "isSoundButtonVisible", "isOriginalAdUnit",
+                "isRewarded", "isBuiltInVideo", "isMuted", "isSoundButtonVisible", "isOriginalAdUnit", "rendersWithoutAdServer",
                 "hasEndCard", "videoSkipOffset", "autoRefreshDelayInMillis", "skipDelay", "broadcastId",
                 "videoInitialVolume", "closeButtonArea", "skipButtonArea", "maxVideoDuration",
                 "configId", "pbAdSlot", "interstitialSize", "impressionUrl", "fingerprint", "gpid",
