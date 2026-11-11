@@ -66,6 +66,13 @@ public class Prebid {
         return targeting;
     }
 
+    /**
+     * Replaces the targeting of a bid that a bid selector chose. See {@link SelectedBidTargeting}.
+     */
+    void setTargeting(@NonNull HashMap<String, String> targeting) {
+        this.targeting = targeting;
+    }
+
     public HashMap<String, String> getMeta() {
         return meta;
     }

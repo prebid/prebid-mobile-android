@@ -4,7 +4,6 @@ import org.jetbrains.annotations.Nullable;
 import org.prebid.mobile.BannerParameters;
 import org.prebid.mobile.NativeParameters;
 import org.prebid.mobile.VideoParameters;
-import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
 import org.prebid.mobile.rendering.models.AdPosition;
 
 /**
@@ -27,9 +26,6 @@ public class PrebidRequest {
 
     @Nullable
     private AdPosition adPosition;
-
-    @Nullable
-    private PrebidBidSelecting bidSelector;
 
     public PrebidRequest() {
     }
@@ -95,14 +91,5 @@ public class PrebidRequest {
 
     public void setAdPosition(@Nullable AdPosition position) {
         this.adPosition = position;
-    }
-
-    @Nullable
-    PrebidBidSelecting getBidSelector() {
-        return bidSelector;
-    }
-
-    public void setBidSelector(@Nullable PrebidBidSelecting bidSelector) {
-        this.bidSelector = bidSelector;
     }
 }

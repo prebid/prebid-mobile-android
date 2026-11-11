@@ -60,12 +60,6 @@ public class NativeAdUnit extends AdUnit {
             public void onFetchCompleted(BidResponse response) {
                 bidResponse = response;
 
-                if (response.hasBidSelectorRejectedAllBids()) {
-                    Util.apply(null, adObject);
-                    originalListener.onComplete(ResultCode.NO_BIDS);
-                    return;
-                }
-
                 HashMap<String, String> keywords = response.getTargeting();
                 Util.apply(keywords, adObject);
 

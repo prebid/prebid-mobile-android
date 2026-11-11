@@ -116,6 +116,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         config.setConfigId(configId);
         config.setAdUnitFormats(adUnitFormats);
         config.addAdFormat(AdFormat.INTERSTITIAL);
+        config.setRendersWithoutAdServer(this.eventHandler instanceof StandaloneInterstitialEventHandler);
         init(config);
     }
 

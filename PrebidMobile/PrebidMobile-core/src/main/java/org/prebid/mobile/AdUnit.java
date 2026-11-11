@@ -39,6 +39,7 @@ import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.TargetingKey;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
@@ -307,13 +308,6 @@ public abstract class AdUnit {
             public void onFetchCompleted(BidResponse response) {
                 bidResponse = response;
 
-                if (response.hasBidSelectorRejectedAllBids()) {
-                    LogUtil.debug(TAG, "Bid selector rejected all bids.");
-                    Util.apply(null, adObject);
-                    originalListener.onComplete(ResultCode.NO_BIDS);
-                    return;
-                }
-
                 HashMap<String, String> keywords = response.getTargeting();
                 LogUtil.debug(TAG, "Bid response received successfully: " + keywords);
 
@@ -357,7 +351,7 @@ public abstract class AdUnit {
 
         String burl = response.getWinningBid().getBurl();
 
-        String cacheId = response.getTargeting().get("hb_cache_id");
+        String cacheId = response.getTargeting().get(TargetingKey.CACHE_ID);
         if (cacheId == null) {
             LogUtil.warning(TAG, "Can't register visibility tracker. There is no hb_cache_id keyword.");
             return;

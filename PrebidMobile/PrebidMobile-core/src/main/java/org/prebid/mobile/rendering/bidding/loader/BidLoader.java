@@ -25,6 +25,8 @@ import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.BidSelection;
+import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
@@ -60,11 +62,22 @@ public class BidLoader {
                 failedToLoadBid(new AdException(AdException.FAILED_TO_PARSE_RESPONSE, bidResponse.getParseError()));
                 return;
             }
-            if (bidResponse.isFilteringUncachedBids()) {
-                int removedBids = bidResponse.getBidsWithoutSuccessfulCacheCount();
-                if (removedBids > 0) {
-                    LogUtil.warning(TAG, "Ignored " + removedBids + " bids without successful Prebid Cache entries.");
+            // Always 0 unless the response filters uncached bids
+            int removedBids = bidResponse.getBidsWithoutSuccessfulCacheCount();
+            if (removedBids > 0) {
+                LogUtil.warning(TAG, "Ignored " + removedBids + " bids without successful Prebid Cache entries.");
+            }
+            PrebidBidSelecting bidSelector = BidSelection.getRegisteredSelector();
+            if (bidSelector != null) {
+                // onPostExecute of the network task delivers the response on the main thread, so the
+                // selector runs there too
+                AdException selectionError = BidSelection.select(bidSelector, bidResponse, adConfiguration);
+                if (selectionError != null) {
+                    failedToLoadBid(selectionError);
+                    callEventDelegate(bidResponse);
+                    return;
                 }
+            } else if (bidResponse.isFilteringUncachedBids()) {
                 if (bidResponse.isTopBidFiltered()) {
                     LogUtil.warning(TAG, "Top bid was filtered for a failed Prebid Cache entry; promoted the next best cached bid.");
                 }

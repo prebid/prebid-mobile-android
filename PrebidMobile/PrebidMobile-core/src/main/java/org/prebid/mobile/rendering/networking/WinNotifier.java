@@ -25,6 +25,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
+import org.prebid.mobile.rendering.bidding.data.bid.TargetingKey;
 import org.prebid.mobile.rendering.networking.tracking.ServerConnection;
 
 import java.util.Collections;
@@ -35,10 +36,10 @@ public class WinNotifier {
 
     private static final String TAG = WinNotifier.class.getSimpleName();
 
-    private static final String KEY_CACHE_HOST = "hb_cache_host";
-    private static final String KEY_CACHE_PATH = "hb_cache_path";
-    private static final String KEY_CACHE_ID = "hb_cache_id";
-    private static final String KEY_UUID = "hb_uuid";
+    private static final String KEY_CACHE_HOST = TargetingKey.CACHE_HOST;
+    private static final String KEY_CACHE_PATH = TargetingKey.CACHE_PATH;
+    private static final String KEY_CACHE_ID = TargetingKey.CACHE_ID;
+    private static final String KEY_UUID = TargetingKey.VAST_CACHE_ID;
     private static final String CACHE_URL_TEMPLATE = "https://%1$s%2$s?uuid=%3$s";
 
     private final LinkedList<String> urlQueue = new LinkedList<>();

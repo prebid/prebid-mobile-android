@@ -1,7 +1,6 @@
 package org.prebid.mobile.api.mediation;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.NativeAsset;
@@ -9,7 +8,6 @@ import org.prebid.mobile.NativeEventTracker;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.api.original.OnFetchDemandResult;
-import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
 
 import java.util.Set;
 
@@ -119,18 +117,6 @@ public class MediationNativeAdUnit {
 
     public void setDUrlSupport(boolean support) {
         nativeAdUnit.setDUrlSupport(support);
-    }
-
-    @Nullable
-    public PrebidBidSelecting getBidSelector() {
-        return nativeAdUnit.getConfiguration().getBidSelector();
-    }
-
-    /**
-     * Sets a publisher-supplied strategy for choosing the winning bid. See {@link PrebidBidSelecting}.
-     */
-    public void setBidSelector(@Nullable PrebidBidSelecting bidSelector) {
-        nativeAdUnit.getConfiguration().setBidSelector(bidSelector);
     }
 
 }

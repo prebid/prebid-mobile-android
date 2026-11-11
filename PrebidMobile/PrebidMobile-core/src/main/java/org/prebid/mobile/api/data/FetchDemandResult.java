@@ -75,12 +75,19 @@ public enum FetchDemandResult {
     /**
      * Prebid Server returned bids, but none had successful cache entries.
      */
-    NO_CACHED_BIDS;
+    NO_CACHED_BIDS,
+    /**
+     * The bid that the registered
+     * {@link org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting} plugin chose lacks
+     * the targeting keywords the ad server needs, so no keywords were attached.
+     */
+    INVALID_TARGETING;
 
     private static final String TAG = "FetchDemandResult";
 
     public static final String NO_BIDS_MESSAGE = "Failed to parse bids. No winning bids were found.";
     public static final String NO_CACHED_BIDS_MESSAGE = "No bids with successful Prebid Cache entries were found.";
+    public static final String INVALID_TARGETING_MESSAGE = "The selected bid has no valid targeting keywords";
 
     /**
      * Returns the {@link ResultCode} the original API reports for the same outcome.
@@ -109,6 +116,8 @@ public enum FetchDemandResult {
                 return ResultCode.NO_BIDS;
             case NO_CACHED_BIDS:
                 return ResultCode.NO_CACHED_BIDS;
+            case INVALID_TARGETING:
+                return ResultCode.INVALID_TARGETING;
             case SERVER_ERROR:
             default:
                 return ResultCode.PREBID_SERVER_ERROR;
@@ -139,6 +148,8 @@ public enum FetchDemandResult {
                 return NO_BIDS;
             case NO_CACHED_BIDS:
                 return NO_CACHED_BIDS;
+            case INVALID_TARGETING:
+                return INVALID_TARGETING;
             case PREBID_SERVER_ERROR:
                 return SERVER_ERROR;
             case TIMEOUT:
@@ -166,6 +177,10 @@ public enum FetchDemandResult {
 
         if (msg.contains(NO_CACHED_BIDS_MESSAGE)) {
             return NO_CACHED_BIDS;
+        }
+        // Checked before "No bids": the bid selector reports it as an AdException.NO_BIDS error
+        if (msg.contains(INVALID_TARGETING_MESSAGE)) {
+            return INVALID_TARGETING;
         }
         if (msg.contains("No bids") || msg.equals(NO_BIDS_MESSAGE)) {
             return NO_BIDS;

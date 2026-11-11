@@ -32,11 +32,8 @@ import org.prebid.mobile.rendering.utils.helpers.Dips;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class BidResponse {
 
@@ -46,12 +43,6 @@ public class BidResponse {
     public static final String KEY_RENDERER_NAME = "rendererName";
     public static final String KEY_RENDERER_VERSION = "rendererVersion";
     public static final String TYPE_VIDEO = "video";
-
-    // Standard winner-marker keys (see hasWinningKeywords). These specifically identify "the"
-    // winner, so they must never be attributed to a bid that isn't the (possibly
-    // selector-chosen) winner -- otherwise getTargeting() could still point at a different bid
-    // than getWinningBid() does.
-    private static final Set<String> WINNING_BID_MARKER_KEYS = new HashSet<>(Arrays.asList("hb_pb", "hb_bidder", "hb_cache_id"));
 
     // ID of the bid request to which this is a response
     private String id;
@@ -85,25 +76,14 @@ public class BidResponse {
     private boolean topBidFiltered;
     @Nullable
     private Bid promotedWinningBid;
+    @Nullable
+    private Bid selectedWinningBid;
+    @Nullable
+    private MobileSdkPassThrough rootMobilePassThrough;
 
     private long creationTime;
 
     private MobileSdkPassThrough mobileSdkPassThrough;
-
-    // Snapshotted from adUnitConfiguration at construction time -- adUnitConfiguration is a
-    // mutable reference owned by the ad unit and can outlive this response (e.g. via
-    // BidResponseCache or a slow-rendering flow), so reading it live on every call would let a
-    // later selector change silently change the winner of an already-returned BidResponse.
-    @Nullable
-    private final PrebidBidSelecting bidSelector;
-
-    // Resolved exactly once, right after seatbids are parsed (see resolveWinningBid()). A
-    // publisher-supplied selector may be non-deterministic or stateful, so it must be evaluated
-    // a single time per response -- otherwise getWinningBid(), hasBidSelectorRejectedAllBids(),
-    // getTargeting(), and getWinningBidJson() could each observe a different "winner" for what
-    // is supposed to be one frozen auction result.
-    @Nullable
-    private Bid resolvedWinningBid;
 
     public BidResponse(
         String json,
@@ -112,7 +92,6 @@ public class BidResponse {
         seatbids = new ArrayList<>();
         usesCache = adUnitConfiguration.isOriginalAdUnit() || PrebidMobile.isUseCacheForReportingWithRenderingApi();
         this.adUnitConfiguration = adUnitConfiguration;
-        this.bidSelector = adUnitConfiguration.getBidSelector();
 
         parseJson(json);
     }
@@ -177,7 +156,6 @@ public class BidResponse {
             customData = responseJson.optString("customdata");
             nbr = responseJson.optInt("nbr", -1);
 
-            MobileSdkPassThrough rootMobilePassThrough = null;
             if (responseJson.has("ext")) {
                 ext = new Ext();
                 JSONObject extJsonObject = responseJson.optJSONObject("ext");
@@ -197,15 +175,13 @@ public class BidResponse {
                         seatbids.add(seatbid);
                     }
                 }
-                if (removedDesignatedWinningBid && !hasRemainingWinningBid()) {
+                if (removedDesignatedWinningBid && getWinningBid() == null) {
                     promoteHighestPricedBid();
                 }
             }
 
-            resolveWinningBid();
-
             MobileSdkPassThrough bidMobilePassThrough = null;
-            Bid winningBid = resolvedWinningBid;
+            Bid winningBid = getWinningBid();
             if (winningBid != null) {
                 bidMobilePassThrough = winningBid.getMobileSdkPassThrough();
             }
@@ -226,110 +202,40 @@ public class BidResponse {
 
     @Nullable
     public Bid getWinningBid() {
-        return resolvedWinningBid;
-    }
-
-    /**
-     * True if a bid selector is active for this response and it decided that no bid should win.
-     * Callers must treat this as final: no targeting keywords should be attached and the fetch
-     * should be reported as having no bids, not as a success.
-     */
-    public boolean hasBidSelectorRejectedAllBids() {
-        return bidSelector != null && resolvedWinningBid == null;
-    }
-
-    /**
-     * Resolves and caches the winning bid exactly once, right after seatbids are parsed. See
-     * the {@link #resolvedWinningBid} field doc for why this must not be re-evaluated per call.
-     */
-    private void resolveWinningBid() {
-        if (bidSelector != null) {
-            List<Bid> allBids = getAllBids();
-            Bid selectedBid = bidSelector.selectBid(allBids);
-            if (selectedBid != null && !allBids.contains(selectedBid)) {
-                LogUtil.warning(TAG, "PrebidBidSelecting.selectBid() returned a bid that is not part of the provided bids. Ignoring it.");
-                selectedBid = null;
-            }
-            resolvedWinningBid = selectedBid;
-            if (resolvedWinningBid != null) {
-                winningBidJson = resolvedWinningBid.getJsonString();
-            }
-            return;
+        if (selectedWinningBid != null) {
+            winningBidJson = selectedWinningBid.getJsonString();
+            return selectedWinningBid;
         }
 
         if (promotedWinningBid != null) {
             winningBidJson = promotedWinningBid.getJsonString();
-            resolvedWinningBid = promotedWinningBid;
-            return;
+            return promotedWinningBid;
+        }
+
+        if (seatbids == null) {
+            return null;
         }
 
         for (Seatbid seatbid : seatbids) {
             for (Bid bid : seatbid.getBids()) {
                 if (hasWinningKeywords(bid.getPrebid())) {
                     winningBidJson = bid.getJsonString();
-                    resolvedWinningBid = bid;
-                    return;
+                    return bid;
                 }
             }
         }
 
-        resolvedWinningBid = null;
-    }
-
-    private boolean hasRemainingWinningBid() {
-        for (Seatbid seatbid : seatbids) {
-            for (Bid bid : seatbid.getBids()) {
-                if (hasWinningKeywords(bid.getPrebid())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    @NonNull
-    private List<Bid> getAllBids() {
-        List<Bid> allBids = new ArrayList<>();
-        if (seatbids == null) {
-            return allBids;
-        }
-        for (Seatbid seatbid : seatbids) {
-            allBids.addAll(seatbid.getBids());
-        }
-        return allBids;
+        return null;
     }
 
     @NonNull
     public HashMap<String, String> getTargeting() {
-        HashMap<String, String> keywords = new HashMap<>();
-
-        if (bidSelector != null) {
-            Bid winningBid = getWinningBid();
-            if (winningBid == null) {
-                // The selector explicitly chose no winner -- no bid's targeting should be
-                // attached at all, not even non-marker keys from the other bids.
-                return keywords;
-            }
-
-            for (Seatbid seatbid : seatbids) {
-                for (Bid bid : seatbid.getBids()) {
-                    if (bid.getPrebid() == null || bid == winningBid) {
-                        continue;
-                    }
-                    // Strip the standard winner markers from every bid that isn't the
-                    // selector-chosen winner, or the ad server could still be targeted with a
-                    // different bid than the one getWinningBid() reports.
-                    HashMap<String, String> filtered = new HashMap<>(bid.getPrebid().getTargeting());
-                    filtered.keySet().removeAll(WINNING_BID_MARKER_KEYS);
-                    keywords.putAll(filtered);
-                }
-            }
-
-            // The winner's own targeting always takes precedence over other bids' contributions.
-            keywords.putAll(winningBid.getPrebid().getTargeting());
-            return keywords;
+        if (selectedWinningBid != null) {
+            // The bids that lost contribute no keys
+            return new HashMap<>(selectedWinningBid.getPrebid().getTargeting());
         }
 
+        HashMap<String, String> keywords = new HashMap<>();
         for (Seatbid seatbid : seatbids) {
             for (Bid bid : seatbid.getBids()) {
                 if (bid.getPrebid() != null) {
@@ -405,11 +311,51 @@ public class BidResponse {
         return adUnitConfiguration;
     }
 
-    private boolean hasWinningKeywords(Prebid prebid) {
+    /**
+     * The bids of this response the ad unit can use, in response order. Uncached bids are already
+     * gone when {@link #isFilteringUncachedBids()}.
+     */
+    @NonNull
+    List<Bid> getAllBids() {
+        List<Bid> bids = new ArrayList<>();
+        if (seatbids == null) {
+            return bids;
+        }
+        for (Seatbid seatbid : seatbids) {
+            bids.addAll(seatbid.getBids());
+        }
+        return bids;
+    }
+
+    /**
+     * Makes {@code bid}, which a bid selector chose from {@link #getAllBids()}, the winner of this
+     * response. The targeting is the selected bid's alone, and the cached-bid promotion no longer
+     * applies.
+     */
+    void commitSelectedBid(@NonNull Bid bid) {
+        selectedWinningBid = bid;
+        winningBidJson = bid.getJsonString();
+        promotedWinningBid = null;
+        topBidFiltered = false;
+        mobileSdkPassThrough = MobileSdkPassThrough.combine(bid.getMobileSdkPassThrough(), rootMobilePassThrough);
+    }
+
+    /**
+     * Whether a winner must have {@code hb_cache_id}: the Original API, or cache reporting with the
+     * Rendering API.
+     */
+    boolean usesCache() {
+        return usesCache;
+    }
+
+    /**
+     * Whether {@code prebid} has the keys that make a bid the winner of its impression.
+     */
+    boolean hasWinningKeywords(Prebid prebid) {
         if (!hasDesignatedWinningKeywords(prebid)) {
             return false;
         }
-        return !usesCache || prebid.getTargeting().containsKey("hb_cache_id");
+        return !usesCache || prebid.getTargeting().containsKey(TargetingKey.CACHE_ID);
     }
 
     /**
@@ -422,7 +368,7 @@ public class BidResponse {
             return false;
         }
         HashMap<String, String> targeting = prebid.getTargeting();
-        return targeting.containsKey("hb_pb") && targeting.containsKey("hb_bidder");
+        return targeting.containsKey(TargetingKey.PRICE) && targeting.containsKey(TargetingKey.BIDDER);
     }
 
     private boolean keepBidWithSuccessfulCache(@NonNull Bid bid) {

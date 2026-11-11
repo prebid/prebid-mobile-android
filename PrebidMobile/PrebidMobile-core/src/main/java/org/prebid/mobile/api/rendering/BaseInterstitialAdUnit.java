@@ -31,7 +31,6 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.PluginRendererFactory;
-import org.prebid.mobile.rendering.bidding.data.bid.PrebidBidSelecting;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
@@ -163,18 +162,6 @@ public abstract class BaseInterstitialAdUnit {
      */
     public void setGlobalOrtbConfig(@Nullable String ortbConfig) {
         config.setGlobalOrtbConfig(ortbConfig);
-    }
-
-    @Nullable
-    public PrebidBidSelecting getBidSelector() {
-        return config.getBidSelector();
-    }
-
-    /**
-     * Sets a publisher-supplied strategy for choosing the winning bid. See {@link PrebidBidSelecting}.
-     */
-    public void setBidSelector(@Nullable PrebidBidSelecting bidSelector) {
-        config.setBidSelector(bidSelector);
     }
 
     @Nullable
