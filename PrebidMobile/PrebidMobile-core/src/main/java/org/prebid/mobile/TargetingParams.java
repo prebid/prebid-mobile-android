@@ -20,15 +20,18 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.prebid.mobile.api.eid.ExtendedId;
+import org.prebid.mobile.api.eid.ExtendedIdProvider;
+import org.prebid.mobile.api.plugin.PluginCapability;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.UserConsentUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -61,10 +64,13 @@ public class TargetingParams {
     private static Integer locationDecimalPrecision = null;
 
 
-    private static final Map<String, ExternalUserId> externalUserIdMap = new HashMap<>();
     private static final Set<String> accessControlList = new HashSet<>();
     private static final Set<String> userKeywordsSet = new HashSet<>();
     private static final Map<String, Set<String>> extDataDictionary = new HashMap<>();
+    /**
+     * The static external user IDs. Providers are registered as {@link PluginCapability#EXTENDED_IDS}.
+     */
+    private static final ExtendedIdRegistry extendedIdRegistry = new ExtendedIdRegistry();
 
     private TargetingParams() {
     }
@@ -178,25 +184,74 @@ public class TargetingParams {
     /* -------------------- Ids -------------------- */
 
     /**
-     * Sets external user ids. Set null for clearing.
-     * See: {@link ExternalUserId}.
+     * Adds a static external user ID, replacing the ID that has the same {@code source}.
+     * <p>
+     * IDs from other sources stay in place, so independent integrations can each manage their own ID.
+     * Prefer this over {@link #setExternalUserIds(List)}, which replaces the whole list.
+     * <p>
+     * For IDs that change during the session (e.g. an identity SDK that refreshes tokens), implement
+     * {@link ExtendedIdProvider} and register it with
+     * {@link PrebidMobile#registerPlugin(Object, PluginCapability)} as
+     * {@link PluginCapability#EXTENDED_IDS}. Identity vendors may ship ready-made providers.
+     *
+     * @see #removeExternalUserId(String)
+     * @see #clearExternalUserIds()
      */
-    public static void setExternalUserIds(@Nullable List<ExternalUserId> userIds) {
-        externalUserIdMap.clear();
-
-        if (userIds == null) return;
-
-        for (ExternalUserId userId : userIds) {
-            if (userId == null) continue;
-            externalUserIdMap.put(userId.getSource(), userId);
-        }
+    public static void addExternalUserId(@NonNull ExternalUserId userId) {
+        extendedIdRegistry.staticProvider.addUserId(userId);
     }
 
     /**
-     * Returns external user ids.
+     * Removes the static external user ID with the given {@code source}.
+     * IDs from registered providers are not affected.
      */
+    public static void removeExternalUserId(@NonNull String source) {
+        extendedIdRegistry.staticProvider.removeUserId(source);
+    }
+
+    /**
+     * Removes all static external user IDs. IDs from registered providers are not affected.
+     */
+    public static void clearExternalUserIds() {
+        extendedIdRegistry.staticProvider.clear();
+    }
+
+    /**
+     * Replaces all static external user IDs with the given list. Pass {@code null} to clear.
+     * See: {@link ExternalUserId}.
+     *
+     * @deprecated Replaces the whole list, so it can overwrite IDs set by other integrations. Use
+     * {@link #addExternalUserId(ExternalUserId)}, {@link #removeExternalUserId(String)} or
+     * {@link #clearExternalUserIds()} instead.
+     */
+    @Deprecated
+    public static void setExternalUserIds(@Nullable List<ExternalUserId> userIds) {
+        extendedIdRegistry.staticProvider.setUserIds(userIds);
+    }
+
+    /**
+     * Returns the static external user IDs. IDs from registered providers, including SharedID, are
+     * not included.
+     *
+     * @deprecated Returns only the static IDs. Use {@link #getExtendedIds()} to get every ID sent in
+     * bid requests.
+     */
+    @Deprecated
     public static List<ExternalUserId> getExternalUserIds() {
-        return new ArrayList<>(externalUserIdMap.values());
+        return extendedIdRegistry.staticProvider.getExternalUserIds();
+    }
+
+    /**
+     * Returns every external user ID sent in bid requests: the static IDs, then SharedID when
+     * {@link #getSendSharedId()} is {@code true}, then the IDs of the providers registered as
+     * {@link PluginCapability#EXTENDED_IDS}, in registration order. A provider's ID whose source is
+     * already in the list is skipped. Calls {@link ExtendedIdProvider#getExtendedIds()} on every
+     * provider.
+     */
+    @NonNull
+    public static List<ExtendedId> getExtendedIds() {
+        ExtendedId sharedId = Boolean.TRUE.equals(sendSharedId) ? SharedId.getIdentifier() : null;
+        return extendedIdRegistry.getAllExtendedIds(sharedId);
     }
 
     /**
