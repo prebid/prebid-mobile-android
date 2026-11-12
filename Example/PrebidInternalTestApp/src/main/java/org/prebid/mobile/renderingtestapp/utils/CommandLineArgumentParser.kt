@@ -130,14 +130,12 @@ object CommandLineArgumentParser {
                 val identifier = jsonObject.get("identifier").asString
                 if (source == null || identifier == null) {
                     val aType = jsonObject.get("atype")
-                    TargetingParams.setExternalUserIds(
-                        listOf(
-                            if (aType == null) {
-                                ExternalUserId(source, listOf(UniqueId(identifier, 1)))
-                            } else {
-                                ExternalUserId(source, listOf(UniqueId(identifier, aType.asInt)))
-                            }
-                        )
+                    TargetingParams.addExternalUserId(
+                        if (aType == null) {
+                            ExternalUserId(source, listOf(UniqueId(identifier, 1)))
+                        } else {
+                            ExternalUserId(source, listOf(UniqueId(identifier, aType.asInt)))
+                        }
                     )
                 }
             }
