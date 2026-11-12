@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 
 import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.LogUtil;
@@ -89,16 +88,6 @@ public class InitializationNotifier {
 
     public static boolean isInitializationInProgress() {
         return initializationInProgress;
-    }
-
-    /**
-     * Resets initialization flags so that {@link SdkInitializer#init} can be called again.
-     * Intended for test teardown — call via {@link SdkInitializer#reset()}.
-     */
-    @VisibleForTesting
-    public static void reset() {
-        tasksCompletedSuccessfully = false;
-        initializationInProgress = false;
     }
 
 }
