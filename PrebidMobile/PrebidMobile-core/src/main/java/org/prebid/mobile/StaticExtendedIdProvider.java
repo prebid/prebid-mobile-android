@@ -16,73 +16,72 @@
 
 package org.prebid.mobile;
 
-import org.prebid.mobile.api.eid.ExtendedId;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.prebid.mobile.api.eid.ExtendedIdProvider;
+import org.prebid.mobile.api.eid.ExtendedId;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 /**
- * Built-in provider that holds static EIDs set via the legacy
- * {@link TargetingParams#addExternalUserId} / {@link TargetingParams#setExternalUserIds} API,
- * or directly via the convenience methods on {@link ExtendedIdRegistry}.
+ * The static EIDs set through {@link TargetingParams#addExternalUserId} and
+ * {@link TargetingParams#setExternalUserIds}, keyed by source.
  * <p>
- * Always registered in the registry. Its {@link #getExternalUserIds()} returns a
- * snapshot of the current static EID map on every bid request.
+ * It isn't a registered provider. Each change is applied under a lock, so a bid request never sees a
+ * partly updated list. The IDs are kept in a {@link HashMap}, as before providers existed, so the
+ * order of the static IDs in a bid request doesn't change.
  */
-class StaticExtendedIdProvider implements ExtendedIdProvider {
+class StaticExtendedIdProvider {
 
-    private static final Info INFO = new Info("_static", "1.0");
+    private final Map<String, ExternalUserId> userIds = new HashMap<>();
 
-    private final ConcurrentHashMap<String, ExternalUserId> eids = new ConcurrentHashMap<>();
-
+    /**
+     * A snapshot of the static IDs.
+     */
     @NonNull
-    @Override
-    public Info getProviderInfo() {
-        return INFO;
-    }
-
-    @Override
-    public void onRegister() {}
-
-    @Override
-    public void onUnregister() {}
-
-    @NonNull
-    @Override
-    public List<ExtendedId> getExtendedIds() {
-        return Collections.unmodifiableList(getExternalUserIds());
+    synchronized List<ExternalUserId> getExternalUserIds() {
+        return new ArrayList<>(userIds.values());
     }
 
     @NonNull
-    List<ExternalUserId> getExternalUserIds() {
-        return new ArrayList<>(eids.values());
+    List<ExtendedId> getExtendedIds() {
+        return new ArrayList<>(getExternalUserIds());
     }
 
-    void setUserIds(@Nullable List<ExternalUserId> userIds) {
-        eids.clear();
-        if (userIds == null) return;
-        for (ExternalUserId userId : userIds) {
-            if (userId == null) continue;
-            eids.put(userId.getSource(), userId);
+    /**
+     * Replaces all static IDs. {@code null} clears them, and {@code null} elements are skipped.
+     * Of several IDs with the same source, the last one is kept.
+     */
+    synchronized void setUserIds(@Nullable List<ExternalUserId> newUserIds) {
+        userIds.clear();
+        if (newUserIds == null) {
+            return;
+        }
+        for (ExternalUserId userId : newUserIds) {
+            if (userId != null) {
+                userIds.put(userId.getSource(), userId);
+            }
         }
     }
 
-    void addUserId(@NonNull ExternalUserId userId) {
-        eids.put(userId.getSource(), userId);
+    /**
+     * Adds the ID, replacing the ID that has the same source.
+     */
+    synchronized void addUserId(@NonNull ExternalUserId userId) {
+        userIds.put(userId.getSource(), userId);
     }
 
-    void removeUserId(@NonNull String source) {
-        eids.remove(source);
+    /**
+     * Removes the ID with the given source.
+     */
+    synchronized void removeUserId(@Nullable String source) {
+        userIds.remove(source);
     }
 
-    void clear() {
-        eids.clear();
+    synchronized void clear() {
+        userIds.clear();
     }
 }

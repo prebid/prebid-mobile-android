@@ -59,6 +59,7 @@ import org.prebid.mobile.api.rendering.PrebidRenderer;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.eid.ExtendedIdProvider;
+import org.prebid.mobile.api.plugin.PluginCapability;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -104,6 +105,19 @@ public class BasicParameterBuilderTest {
     private static final String USER_KEYWORDS = "keywords";
     private static final String USER_CUSTOM = "custom";
     private static final String USER_BUYER_ID = "bid";
+    /**
+     * What master (before extended ID providers) sends in {@code user.ext.eids} and {@code user.eids}
+     * for the input of the test that uses it, with SharedID replaced by a placeholder.
+     */
+    private static final String EXPECTED_EIDS_WITHOUT_PROVIDERS = "["
+            + "{\"ext\":{\"rtiPartner\":\"TDID\"},\"uids\":[{\"atype\":1,\"id\":\"111111111111\"}],\"source\":\"adserver.org\"},"
+            + "{\"uids\":[{\"atype\":2,\"id\":\"222\"}],\"source\":\"netid.de\"},"
+            + "{\"mm\":3,\"uids\":[{\"atype\":3,\"id\":\"_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N\"}],\"source\":\"criteo.com\",\"matcher\":\"criteo.com\",\"inserter\":\"prebid.org\"},"
+            + "{\"uids\":[{\"atype\":3,\"id\":\"AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg\"}],\"source\":\"liveramp.com\"},"
+            + "SHARED_ID_JSON"
+            + "]";
+    private static final String EXPECTED_USER_WITHOUT_PROVIDERS =
+            "{\"ext\":{\"eids\":" + EXPECTED_EIDS_WITHOUT_PROVIDERS + "},\"eids\":" + EXPECTED_EIDS_WITHOUT_PROVIDERS + "}";
     private PrebidMobilePluginRenderer otherPlugin = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, null, true, "FakePlugin", "1.0");
 
     private Context context;
@@ -137,6 +151,8 @@ public class BasicParameterBuilderTest {
         PrebidMobile.setAuctionSettingsId(null);
 
         PrebidMobilePluginRegister.getInstance().unregisterAllPlugins();
+        TargetingParams.setSendSharedId(false);
+        PluginCapability.EXTENDED_IDS.getRegistry().removeAll();
     }
 
     @Test
@@ -773,28 +789,10 @@ public class BasicParameterBuilderTest {
         eid.setMatcher("id5-sync.com");
         eid.setMm(3);
 
-        ExtendedIdProvider provider = new ExtendedIdProvider() {
-            @NonNull
-            @Override
-            public Info getProviderInfo() {
-                return new Info("test-provider", "1.0");
-            }
-
-            @NonNull
-            @Override
-            public List<ExtendedId> getExtendedIds() {
-                return List.of(eid);
-            }
-
-            @Override
-            public void onRegister() {}
-
-            @Override
-            public void onUnregister() {}
-        };
+        ExtendedIdProvider provider = new TestExtendedIdProvider("test-provider", eid);
 
         PrebidMobile.setEidsPlacement(EidsPlacement.COMPATIBLE);
-        PrebidMobile.registerExtendedIdProvider(provider);
+        PrebidMobile.registerPlugin(provider, PluginCapability.EXTENDED_IDS);
         try {
             AdRequestInput adRequestInput = new AdRequestInput();
             new BasicParameterBuilder(adConfiguration, context.getResources(), browserActivityAvailable)
@@ -803,7 +801,6 @@ public class BasicParameterBuilderTest {
             // getJsonObject() runs placeEids(), which promotes EIDs to user.eids (OpenRTB 2.6).
             JSONObject user = adRequestInput.getBidRequest().getJsonObject().getJSONObject("user");
 
-            // Look up by source: EID order across providers is unspecified.
             JSONObject userEid = findEidBySource(user.getJSONArray("eids"), "id5-sync.com");
             assertNotNull(userEid);
             assertEquals("prebid.org", userEid.getString("inserter"));
@@ -818,7 +815,149 @@ public class BasicParameterBuilderTest {
             assertEquals("id5-sync.com", extEid.getString("matcher"));
             assertEquals(3, extEid.getInt("mm"));
         } finally {
-            PrebidMobile.unregisterExtendedIdProvider(provider);
+            PrebidMobile.unregisterPlugin(provider, PluginCapability.EXTENDED_IDS);
+            PrebidMobile.setEidsPlacement(EidsPlacement.COMPATIBLE);
+        }
+    }
+
+    @Test
+    public void whenExtendedIdProvidersRegistered_staticAndSharedIdComeFirstAndDuplicateSourcesAreSkipped() throws JSONException {
+        TargetingParams.addExternalUserId(new ExternalUserId("static.com", List.of(new ExternalUserId.UniqueId("static", 1))));
+        TargetingParams.setSendSharedId(true);
+        PrebidMobile.registerPlugin(new TestExtendedIdProvider(
+                "first",
+                new ExternalUserId("static.com", List.of(new ExternalUserId.UniqueId("first-static", 1))),
+                new ExternalUserId("vendor.com", List.of(new ExternalUserId.UniqueId("first-vendor", 1)))
+        ), PluginCapability.EXTENDED_IDS);
+        PrebidMobile.registerPlugin(new TestExtendedIdProvider(
+                "second",
+                new ExternalUserId("vendor.com", List.of(new ExternalUserId.UniqueId("second-vendor", 1))),
+                new ExternalUserId("pubcid.org", List.of(new ExternalUserId.UniqueId("second-shared", 1))),
+                ExtendedId.wrap(new JSONObject("{\"source\":\"raw.com\",\"uids\":[{\"id\":\"raw\",\"atype\":3}]}"))
+        ), PluginCapability.EXTENDED_IDS);
+
+        JSONArray eids = buildUserExtEids();
+
+        assertEquals(4, eids.length());
+        assertEquals("static.com", eids.getJSONObject(0).getString("source"));
+        assertEquals("static", firstUid(eids.getJSONObject(0)));
+        assertEquals("pubcid.org", eids.getJSONObject(1).getString("source"));
+        assertEquals(TargetingParams.getSharedId().getUniqueIds().get(0).getId(), firstUid(eids.getJSONObject(1)));
+        assertEquals("vendor.com", eids.getJSONObject(2).getString("source"));
+        assertEquals("first-vendor", firstUid(eids.getJSONObject(2)));
+        assertEquals("raw.com", eids.getJSONObject(3).getString("source"));
+        assertEquals("raw", firstUid(eids.getJSONObject(3)));
+        assertEquals(3, eids.getJSONObject(3).getJSONArray("uids").getJSONObject(0).getInt("atype"));
+    }
+
+    @Test
+    public void whenExtendedIdJsonThrowsOrIsEmpty_onlyThatIdIsSkipped() throws JSONException {
+        ExtendedId throwing = new ExtendedId() {
+            @NonNull
+            @Override
+            public String getSource() {
+                return "throwing.com";
+            }
+
+            @Override
+            public JSONObject getJson() {
+                throw new IllegalStateException("boom");
+            }
+        };
+        ExtendedId empty = new ExtendedId() {
+            @NonNull
+            @Override
+            public String getSource() {
+                return "empty.com";
+            }
+
+            @Override
+            public JSONObject getJson() {
+                return new JSONObject();
+            }
+        };
+        PrebidMobile.registerPlugin(new TestExtendedIdProvider(
+                "vendor",
+                throwing,
+                empty,
+                new ExternalUserId("good.com", List.of(new ExternalUserId.UniqueId("good", 1)))
+        ), PluginCapability.EXTENDED_IDS);
+
+        JSONArray eids = buildUserExtEids();
+
+        assertEquals(1, eids.length());
+        assertEquals("good.com", eids.getJSONObject(0).getString("source"));
+    }
+
+    @Test
+    public void whenNoExtendedIdProviderRegistered_userIsTheSameAsBeforeProviders() throws JSONException {
+        // The expected JSON is what master (before extended ID providers) builds for the same input,
+        // with SharedID replaced by a placeholder because its value is random.
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdFormat(AdFormat.BANNER);
+        adConfiguration.addSize(new AdSize(320, 50));
+
+        ExternalUserId id1 = new ExternalUserId("adserver.org", List.of(new ExternalUserId.UniqueId("111111111111", 1)));
+        id1.setExt(new HashMap<String, Object>() {{
+            put("rtiPartner", "TDID");
+        }});
+        ExternalUserId id2 = new ExternalUserId("netid.de", List.of(new ExternalUserId.UniqueId("999888777", 2)));
+        ExternalUserId id3 = new ExternalUserId("criteo.com", List.of(new ExternalUserId.UniqueId("_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", 3)));
+        id3.setInserter("prebid.org");
+        id3.setMatcher("criteo.com");
+        id3.setMm(3);
+        ExternalUserId id4 = new ExternalUserId("liveramp.com", List.of(new ExternalUserId.UniqueId("AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", 3)));
+        // No unique IDs, so it is not sent.
+        ExternalUserId id5 = new ExternalUserId("adserver3.com", List.of());
+        // The same source as id2, so it replaces id2.
+        ExternalUserId id6 = new ExternalUserId("netid.de", List.of(new ExternalUserId.UniqueId("222", 2)));
+        TargetingParams.setExternalUserIds(Arrays.asList(id1, id2, id3, id4, id5, id6));
+        TargetingParams.setSendSharedId(true);
+
+        AdRequestInput adRequestInput = new AdRequestInput();
+        new BasicParameterBuilder(adConfiguration, context.getResources(), browserActivityAvailable)
+                .appendBuilderParameters(adRequestInput);
+
+        String user = adRequestInput.getBidRequest().getJsonObject().getJSONObject("user").toString();
+        String sharedId = TargetingParams.getSharedId().getJson().toString();
+        assertEquals(EXPECTED_USER_WITHOUT_PROVIDERS, user.replace(sharedId, "SHARED_ID_JSON"));
+    }
+
+    private JSONArray buildUserExtEids() throws JSONException {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdFormat(AdFormat.BANNER);
+        adConfiguration.addSize(new AdSize(320, 50));
+
+        AdRequestInput adRequestInput = new AdRequestInput();
+        new BasicParameterBuilder(adConfiguration, context.getResources(), browserActivityAvailable)
+                .appendBuilderParameters(adRequestInput);
+        return adRequestInput.getBidRequest().getUser().getJsonObject().getJSONObject("ext").getJSONArray("eids");
+    }
+
+    private static String firstUid(JSONObject eid) throws JSONException {
+        return eid.getJSONArray("uids").getJSONObject(0).getString("id");
+    }
+
+    private static class TestExtendedIdProvider implements ExtendedIdProvider {
+
+        private final Info info;
+        private final List<ExtendedId> ids;
+
+        TestExtendedIdProvider(String name, ExtendedId... ids) {
+            this.info = new Info(name, "1.0");
+            this.ids = Arrays.asList(ids);
+        }
+
+        @NonNull
+        @Override
+        public Info getProviderInfo() {
+            return info;
+        }
+
+        @NonNull
+        @Override
+        public List<ExtendedId> getExtendedIds() {
+            return ids;
         }
     }
 

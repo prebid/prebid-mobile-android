@@ -19,6 +19,7 @@ package org.prebid.mobile;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -38,6 +39,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.api.eid.ExtendedId;
+import org.prebid.mobile.api.eid.ExtendedIdProvider;
+import org.prebid.mobile.api.plugin.PluginCapability;
 import org.prebid.mobile.reflection.sdk.ManagersResolverReflection;
 import org.prebid.mobile.reflection.sdk.UserConsentManagerReflection;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
@@ -50,6 +54,7 @@ import org.robolectric.annotation.LooperMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +85,8 @@ public class TargetingParamsTest extends BaseSetup {
         TargetingParams.clearAccessControlList();
         TargetingParams.setExternalUserIds(null);
         TargetingParams.clearUserKeywords();
+        TargetingParams.setSendSharedId(false);
+        PluginCapability.EXTENDED_IDS.getRegistry().removeAll();
     }
 
     @Test
@@ -422,6 +429,104 @@ public class TargetingParamsTest extends BaseSetup {
     }
 
     @Test
+    public void testAddExternalUserIdReplacesOnlyTheSameSource() {
+        TargetingParams.addExternalUserId(createUserId("source1", "id1"));
+        TargetingParams.addExternalUserId(createUserId("source2", "id2"));
+        TargetingParams.addExternalUserId(createUserId("source1", "id3"));
+
+        assertThat(uniqueIds(TargetingParams.getExtendedIds()), containsInAnyOrder("id3", "id2"));
+        assertEquals(2, TargetingParams.getExternalUserIds().size());
+    }
+
+    @Test
+    public void testRemoveExternalUserIdRemovesOnlyThatSource() {
+        TargetingParams.addExternalUserId(createUserId("source1", "id1"));
+        TargetingParams.addExternalUserId(createUserId("source2", "id2"));
+
+        TargetingParams.removeExternalUserId("source1");
+        TargetingParams.removeExternalUserId("unknown");
+
+        assertEquals(Collections.singletonList("id2"), uniqueIds(TargetingParams.getExtendedIds()));
+    }
+
+    @Test
+    public void testClearExternalUserIdsKeepsProviderIds() {
+        TargetingParams.addExternalUserId(createUserId("source1", "id1"));
+        PrebidMobile.registerPlugin(new TestProvider("p1", createUserId("provider.com", "provider")), PluginCapability.EXTENDED_IDS);
+
+        TargetingParams.clearExternalUserIds();
+
+        assertTrue(TargetingParams.getExternalUserIds().isEmpty());
+        assertEquals(Collections.singletonList("provider"), uniqueIds(TargetingParams.getExtendedIds()));
+    }
+
+    @Test
+    public void testGetExternalUserIdsReturnsOnlyStaticIds() {
+        TargetingParams.addExternalUserId(createUserId("static.com", "static"));
+        TargetingParams.setSendSharedId(true);
+        PrebidMobile.registerPlugin(new TestProvider("p1", createUserId("provider.com", "provider")), PluginCapability.EXTENDED_IDS);
+
+        List<ExternalUserId> externalUserIds = TargetingParams.getExternalUserIds();
+
+        assertEquals(1, externalUserIds.size());
+        assertEquals("static.com", externalUserIds.get(0).getSource());
+    }
+
+    @Test
+    public void testGetExtendedIdsPlacesSharedIdBetweenStaticAndProviderIds() {
+        TargetingParams.addExternalUserId(createUserId("static.com", "static"));
+        PrebidMobile.registerPlugin(new TestProvider("p1", createUserId("provider.com", "provider")), PluginCapability.EXTENDED_IDS);
+        TargetingParams.setSendSharedId(true);
+
+        List<ExtendedId> extendedIds = TargetingParams.getExtendedIds();
+
+        assertEquals(Arrays.asList("static.com", "pubcid.org", "provider.com"), sources(extendedIds));
+        assertEquals(TargetingParams.getSharedId(), extendedIds.get(1));
+    }
+
+    @Test
+    public void testGetExtendedIdsWithoutSendSharedIdHasNoSharedId() {
+        TargetingParams.addExternalUserId(createUserId("static.com", "static"));
+        PrebidMobile.registerPlugin(new TestProvider("p1", createUserId("provider.com", "provider")), PluginCapability.EXTENDED_IDS);
+
+        assertEquals(Arrays.asList("static.com", "provider.com"), sources(TargetingParams.getExtendedIds()));
+    }
+
+    @Test
+    public void testSendSharedIdIsAStoredFlag() {
+        assertFalse(TargetingParams.getSendSharedId());
+
+        TargetingParams.setSendSharedId(true);
+        TargetingParams.setSendSharedId(true);
+        assertTrue(TargetingParams.getSendSharedId());
+
+        TargetingParams.setSendSharedId(false);
+        assertFalse(TargetingParams.getSendSharedId());
+    }
+
+    @Test
+    public void testProviderRegisteredAsExtendedIdsReachesGetExtendedIds() {
+        TestProvider provider = new TestProvider("p1", createUserId("provider.com", "provider"));
+        TargetingParams.addExternalUserId(createUserId("static.com", "static"));
+
+        PrebidMobile.registerPlugin(provider, PluginCapability.EXTENDED_IDS);
+        assertTrue(PrebidMobile.containsPlugin(provider, PluginCapability.EXTENDED_IDS));
+        assertEquals(Arrays.asList("static", "provider"), uniqueIds(TargetingParams.getExtendedIds()));
+
+        PrebidMobile.unregisterPlugin(provider, PluginCapability.EXTENDED_IDS);
+        assertFalse(PrebidMobile.containsPlugin(provider, PluginCapability.EXTENDED_IDS));
+        assertEquals(Collections.singletonList("static"), uniqueIds(TargetingParams.getExtendedIds()));
+    }
+
+    @Test
+    public void testProviderIdWithStaticSourceIsSkipped() {
+        TargetingParams.addExternalUserId(createUserId("id5-sync.com", "static"));
+        PrebidMobile.registerPlugin(new TestProvider("id5", createUserId("id5-sync.com", "provider")), PluginCapability.EXTENDED_IDS);
+
+        assertEquals(Collections.singletonList("static"), uniqueIds(TargetingParams.getExtendedIds()));
+    }
+
+    @Test
     public void testNewConstructor() {
         TargetingParams.setExternalUserIds(createNewExternalUserIds());
 
@@ -535,6 +640,49 @@ public class TargetingParamsTest extends BaseSetup {
         float negativeCoord = -122.987654321f;
         result = Util.applyLocationPrecision(negativeCoord, 2);
         assertEquals(-122.99f, result, 0.001f);
+    }
+
+    private static ExternalUserId createUserId(String source, String id) {
+        return new ExternalUserId(source, Collections.singletonList(new ExternalUserId.UniqueId(id, 1)));
+    }
+
+    private static List<String> uniqueIds(List<ExtendedId> extendedIds) {
+        List<String> result = new ArrayList<>();
+        for (ExtendedId extendedId : extendedIds) {
+            result.add(((ExternalUserId) extendedId).getUniqueIds().get(0).getId());
+        }
+        return result;
+    }
+
+    private static List<String> sources(List<ExtendedId> extendedIds) {
+        List<String> result = new ArrayList<>();
+        for (ExtendedId extendedId : extendedIds) {
+            result.add(extendedId.getSource());
+        }
+        return result;
+    }
+
+    private static class TestProvider implements ExtendedIdProvider {
+
+        private final Info info;
+        private final List<ExtendedId> ids;
+
+        TestProvider(String name, ExtendedId... ids) {
+            this.info = new Info(name, "1.0");
+            this.ids = Arrays.asList(ids);
+        }
+
+        @NonNull
+        @Override
+        public Info getProviderInfo() {
+            return info;
+        }
+
+        @NonNull
+        @Override
+        public List<ExtendedId> getExtendedIds() {
+            return ids;
+        }
     }
 
 }

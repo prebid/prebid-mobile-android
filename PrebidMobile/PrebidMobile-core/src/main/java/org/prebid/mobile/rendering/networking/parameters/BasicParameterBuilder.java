@@ -29,7 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerParameters;
-import org.prebid.mobile.api.eid.ExtendedId;
+import org.prebid.mobile.DataObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
@@ -37,6 +37,7 @@ import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.Util;
 import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.eid.ExtendedId;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.PlacementType;
@@ -194,7 +195,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
             JSONArray idsJson = new JSONArray();
             for (ExtendedId id : extendedIds) {
                 if (id != null) {
-                    JSONObject idJson = id.getJson();
+                    JSONObject idJson = getEidJson(id);
                     if (idJson != null) {
                         idsJson.put(idJson);
                     }
@@ -210,6 +211,26 @@ public class BasicParameterBuilder extends ParameterBuilder {
             userGeo.lat = Util.applyLocationPrecision(userLatLng.first, precision);
             userGeo.lon = Util.applyLocationPrecision(userLatLng.second, precision);
         }
+    }
+
+    /**
+     * Returns the JSON of the EID, or {@code null} if it is empty or can't be built. A provider's EID
+     * can be vendor code, so an exception from it skips that EID instead of failing the request.
+     */
+    @Nullable
+    private static JSONObject getEidJson(@NonNull ExtendedId id) {
+        JSONObject json;
+        try {
+            json = id.getJson();
+        } catch (Exception exception) {
+            // Also catches checked exceptions, which Kotlin code can throw without declaring them.
+            LogUtil.warning("Skipping an extended ID: its getJson() threw " + exception);
+            return null;
+        }
+        if (json == null || json.length() == 0) {
+            return null;
+        }
+        return json;
     }
 
     private void setVideoImpValues(Imp imp) {

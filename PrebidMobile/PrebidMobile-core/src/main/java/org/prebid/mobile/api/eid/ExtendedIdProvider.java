@@ -21,87 +21,89 @@ import androidx.annotation.NonNull;
 import java.util.List;
 
 /**
- * Provider of Extended IDs (EIDs) for OpenRTB auction requests.
+ * A source of Extended IDs (EIDs) for OpenRTB bid requests. Register it with
+ * {@link org.prebid.mobile.PrebidMobile#registerPlugin(Object, org.prebid.mobile.api.plugin.PluginCapability)}
+ * as {@link org.prebid.mobile.api.plugin.PluginCapability#EXTENDED_IDS}.
  * <p>
- * The SDK calls {@link #getExtendedIds()} on every bid request to collect the provider's current
- * EIDs. Because resolution happens on-demand, returned values always reflect the latest runtime
- * state (e.g. consent flags, session changes).
+ * The SDK calls {@link #getExtendedIds()} on every bid request, so the IDs it sends always reflect
+ * the provider's current state (consent, session changes, refreshed tokens). IDs may be resolved
+ * synchronously or asynchronously, but {@link #getExtendedIds()} itself must not block, and it may
+ * be called on any thread.
  * <p>
- * IDs may be resolved synchronously or asynchronously, but {@link #getExtendedIds()} itself must
- * never block: it is called on the auction path and must return immediately with the IDs currently
- * available.
+ * Provider IDs are sent after the static IDs set through {@link org.prebid.mobile.TargetingParams}
+ * and SharedID, in the order the providers were registered. Registration order is the only
+ * ordering guarantee. An ID whose source is already present (a static ID, SharedID, or an ID from a
+ * provider registered earlier) is skipped, and the SDK logs a warning.
  *
  * <h3>Lifecycle</h3>
  * <ol>
- *   <li>{@link #onRegister()}: called once, immediately after the provider is
- *       added to the registry. Use it for one-time setup if needed.</li>
- *   <li>{@link #getExtendedIds()}: called on every bid request to collect current EIDs.</li>
- *   <li>{@link #onUnregister()}: called when the provider is removed from the
- *       registry. Use it to release resources.</li>
+ *   <li>{@link #onRegister()} is called once after the provider is registered, before its IDs are
+ *       included in bid requests.</li>
+ *   <li>{@link #getExtendedIds()} is called on every bid request.</li>
+ *   <li>{@link #onUnregister()} is called after the provider is unregistered.</li>
  * </ol>
  *
- * <h3>Usage example (synchronous provider)</h3>
+ * <h3>Usage example</h3>
  * <pre>{@code
  * public class MyIdProvider implements ExtendedIdProvider {
  *
+ *     private static final Info INFO = new Info("my-source.com", "1.0");
+ *
  *     public Info getProviderInfo() {
- *         return new Info("myProvider", "1.0");
+ *         return INFO;
  *     }
  *
  *     public List<ExtendedId> getExtendedIds() {
- *         String id = resolveIdFromLocalState();
- *         return List.of(new ExternalUserId("my-source.com",
- *                 List.of(new ExternalUserId.UniqueId(id, 1))));
+ *         String id = resolvedId;
+ *         if (id == null) {
+ *             return Collections.emptyList();
+ *         }
+ *         return Collections.singletonList(new ExternalUserId("my-source.com",
+ *                 Collections.singletonList(new ExternalUserId.UniqueId(id, 1))));
  *     }
  * }
- * }</pre>
  *
- * @see org.prebid.mobile.PrebidMobile#registerExtendedIdProvider
+ * PrebidMobile.registerPlugin(new MyIdProvider(), PluginCapability.EXTENDED_IDS);
+ * }</pre>
  */
 public interface ExtendedIdProvider {
 
     /**
-     * Returns metadata describing this provider (name and version).
-     * Used by the registry for deduplication, logging, and debugging.
-     * Must return the same value for the lifetime of this provider instance.
-     *
-     * @return provider metadata
+     * Returns the provider's name and version. The SDK uses it to detect duplicate registrations
+     * and in logs. Must return the same value for the lifetime of the provider.
      */
     @NonNull
     Info getProviderInfo();
 
     /**
-     * Returns the provider's current EIDs. The registry calls this on the bid-request thread on
-     * every auction, so it must be non-blocking and return immediately. Do not perform network
-     * calls, disk I/O, or any other blocking or long-running work here.
-     *
-     * @return current list of extended IDs; may be empty but never null
+     * Returns the provider's current EIDs. May be empty.
+     * <p>
+     * Called on every bid request, so it must return immediately: no network calls, disk I/O, or
+     * other blocking work. May be called on any thread, including the main thread.
      */
     @NonNull
     List<ExtendedId> getExtendedIds();
 
     /**
-     * Called once, immediately after this provider is added to the registry
-     * via {@link org.prebid.mobile.PrebidMobile#registerExtendedIdProvider}.
-     * Use it for one-time initialization if needed.
+     * Called once after the provider is registered, before its IDs are included in bid requests.
+     * If it throws, the provider is not registered.
      */
-    void onRegister();
+    default void onRegister() {
+    }
 
     /**
-     * Called when this provider is removed from the registry via
-     * {@link org.prebid.mobile.PrebidMobile#unregisterExtendedIdProvider}
-     * or when the registry is cleared. Release resources here.
+     * Called when the provider is unregistered. Release resources here.
      */
-    void onUnregister();
+    default void onUnregister() {
+    }
 
     /**
      * Identity of an {@link ExtendedIdProvider}: its {@code name} and {@code version}.
      * <p>
-     * The registry treats two providers as the same when their {@code Info} is equal (both
-     * {@code name} and {@code version} match): registering a second provider with an equal
-     * {@code Info} is ignored, and {@link org.prebid.mobile.PrebidMobile#unregisterExtendedIdProvider}
-     * removes whichever instance is registered under that {@code Info}. Choose a {@code name}
-     * specific to your integration (e.g. your source domain) so it does not collide with other vendors.
+     * Two providers with equal info (both {@code name} and {@code version} match) are treated as
+     * the same provider: registering the second one is ignored, and unregistering either of them
+     * removes the registered one. Choose a {@code name} specific to your integration (e.g. your
+     * source domain) so it doesn't collide with other vendors.
      */
     class Info {
 

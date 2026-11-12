@@ -16,185 +16,102 @@
 
 package org.prebid.mobile;
 
-import org.prebid.mobile.api.eid.ExtendedId;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.prebid.mobile.api.eid.ExtendedId;
 import org.prebid.mobile.api.eid.ExtendedIdProvider;
-import org.prebid.mobile.api.eid.ExtendedIdProvider.Info;
+import org.prebid.mobile.api.plugin.PluginCapability;
+import org.prebid.mobile.api.plugin.PluginRegistry;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
 
 /**
- * Central, thread-safe registry for external user IDs (EIDs).
+ * The EID sources of {@link TargetingParams}: its static IDs, SharedID, and the providers registered
+ * for {@link PluginCapability#EXTENDED_IDS}.
  * <p>
- * All EID sources are {@link ExtendedIdProvider} instances. The registry
- * calls {@link ExtendedIdProvider#getExtendedIds()} on every registered provider
- * at each bid request, so values are always fresh.
- * <p>
- * For backward compatibility, the registry also exposes convenience methods
- * ({@link #addStaticExternalUserId}, {@link #setStaticExternalUserIds}, etc.) that manage
- * a built-in {@link StaticExtendedIdProvider} internally.
- * <p>
- * {@link #getAllExtendedIds()} collects EIDs from all providers and is called by
- * the bid request builder to populate {@code user.ext.eids} in the OpenRTB payload.
- *
- * @see ExtendedIdProvider
+ * {@link #getAllExtendedIds(ExtendedId)} is called for each bid request. The providers live in the
+ * capability's {@link PluginRegistry}, which keeps them in registration order and makes a provider
+ * active only once its {@code onRegister()} returns.
  */
 class ExtendedIdRegistry {
 
     private static final String TAG = "ExtendedIdRegistry";
 
-    private static final ExtendedIdRegistry INSTANCE = new ExtendedIdRegistry();
-
-    private final ConcurrentHashMap<Info, ExtendedIdProvider> providers = new ConcurrentHashMap<>();
-    private final StaticExtendedIdProvider staticProvider = new StaticExtendedIdProvider();
-
-    private ExtendedIdRegistry() {
-        providers.put(staticProvider.getProviderInfo(), staticProvider);
-    }
-
     /**
-     * Returns the singleton registry instance.
+     * Holds the static IDs. It isn't one of the registered providers, so unregistering a provider
+     * can never remove it.
      */
-    @NonNull
-    static ExtendedIdRegistry getInstance() {
-        return INSTANCE;
-    }
-
-    // --- Static EIDs (convenience API delegating to built-in StaticExtendedIdProvider) ---
+    final StaticExtendedIdProvider staticProvider = new StaticExtendedIdProvider();
 
     /**
-     * Replaces all static EIDs with the provided list.
-     * Existing static EIDs are discarded. Pass {@code null} to clear.
+     * Returns the static IDs, then {@code sharedId} if it isn't {@code null}, then the IDs of each
+     * registered provider in registration order. Calls {@code getExtendedIds()} on every provider.
      * <p>
-     * Typed as {@link ExternalUserId} to stay compatible
-     * with the deprecated {@link TargetingParams} API.
-     */
-    void setStaticExternalUserIds(@Nullable List<ExternalUserId> userIds) {
-        staticProvider.setUserIds(userIds);
-    }
-
-    /**
-     * Adds or replaces a single static external user ID, keyed by its source.
-     */
-    void addStaticExternalUserId(@NonNull ExternalUserId userId) {
-        staticProvider.addUserId(userId);
-    }
-
-    /**
-     * Removes the static EID with the given source identifier.
-     * No-op if no EID with that source exists.
-     */
-    void removeStaticExternalUserId(@NonNull String source) {
-        staticProvider.removeUserId(source);
-    }
-
-    /**
-     * Removes all static EIDs. Does not affect other providers.
-     */
-    void clearStaticExternalUserIds() {
-        staticProvider.clear();
-    }
-
-    /**
-     * Returns only the static EIDs. Does not include EIDs from other providers.
-     * Use {@link #getAllExtendedIds()} to get the full list.
-     * <p>
-     * Typed as {@link ExternalUserId} to stay compatible
-     * with the deprecated {@link TargetingParams} API.
+     * A provider's ID whose source is already in the list is skipped, so the static IDs and SharedID
+     * are always sent, and of several providers the first one registered wins.
      */
     @NonNull
-    List<ExternalUserId> getStaticExternalUserIds() {
-        return staticProvider.getExternalUserIds();
-    }
+    List<ExtendedId> getAllExtendedIds(@Nullable ExtendedId sharedId) {
+        List<ExtendedId> extendedIds = new ArrayList<>(staticProvider.getExtendedIds());
+        if (sharedId != null) {
+            extendedIds.add(sharedId);
+        }
 
-    // --- Providers ---
+        Set<String> sources = new HashSet<>();
+        for (ExtendedId extendedId : extendedIds) {
+            sources.add(extendedId.getSource());
+        }
 
-    /**
-     * Returns all EIDs from all registered providers (including the built-in
-     * static provider). Each provider's {@link ExtendedIdProvider#getExtendedIds()}
-     * is called on-demand. This is the list sent in each auction request.
-     */
-    @NonNull
-    List<ExtendedId> getAllExtendedIds() {
-        List<ExtendedId> result = new ArrayList<>();
-        for (ExtendedIdProvider provider : providers.values()) {
-            try {
-                List<ExtendedId> ids = provider.getExtendedIds();
-                if (ids == null) {
+        PluginRegistry<ExtendedIdProvider> registry = PluginCapability.EXTENDED_IDS.getRegistry();
+        for (PluginRegistry.Entry<ExtendedIdProvider> entry : registry.getActiveEntries()) {
+            for (ExtendedId extendedId : getProviderIds(entry)) {
+                String source;
+                try {
+                    source = extendedId.getSource();
+                } catch (Exception exception) {
+                    LogUtil.warning(TAG, "[extendedIds] Skipping an ID provided by " + entry.getInfo() + ": its getSource() threw " + exception);
                     continue;
                 }
-                for (ExtendedId id : ids) {
-                    if (id != null) {
-                        result.add(id);
-                    }
+
+                if (!sources.add(source)) {
+                    LogUtil.warning(TAG, "[extendedIds] Skipping the ID from source " + source + " provided by " + entry.getInfo() + ": an ID from this source is already present.");
+                    continue;
                 }
-            } catch (Exception e) {
-                LogUtil.warning(TAG, "Provider " + provider.getProviderInfo()
-                        + " failed to supply EIDs, skipping: " + e.getMessage());
+
+                extendedIds.add(extendedId);
             }
         }
-        return result;
+
+        return extendedIds;
     }
 
     /**
-     * Registers a provider and calls its {@link ExtendedIdProvider#onRegister()}.
-     * Duplicate registrations (same {@link Info}) are silently ignored.
-     * The provider's EIDs will be included in all subsequent auction requests.
-     * Reached through {@link org.prebid.mobile.PrebidMobile#registerExtendedIdProvider}.
+     * Returns the provider's IDs without {@code null} elements, or an empty list if
+     * {@code getExtendedIds()} throws or returns {@code null}.
      */
-    void addProvider(@NonNull ExtendedIdProvider provider) {
-        Info info = provider.getProviderInfo();
-        if (providers.putIfAbsent(info, provider) != null) {
-            LogUtil.warning(TAG, "Provider " + info + " already registered, ignoring duplicate");
-            return;
+    @NonNull
+    private static List<ExtendedId> getProviderIds(@NonNull PluginRegistry.Entry<ExtendedIdProvider> entry) {
+        List<ExtendedId> result = new ArrayList<>();
+        try {
+            List<ExtendedId> ids = entry.getPlugin().getExtendedIds();
+            if (ids == null) {
+                return result;
+            }
+            // Copied inside the try: the provider may change its own list while it is read.
+            for (ExtendedId id : ids) {
+                if (id != null) {
+                    result.add(id);
+                }
+            }
+            return result;
+        } catch (Exception exception) {
+            // Also catches checked exceptions, which Kotlin code can throw without declaring them.
+            LogUtil.warning(TAG, "[extendedIds] Skipping the IDs of " + entry.getInfo() + ": its getExtendedIds() threw " + exception);
+            return new ArrayList<>();
         }
-        LogUtil.debug(TAG, "Provider " + info + " registered");
-        provider.onRegister();
     }
-
-    /**
-     * Removes a previously registered provider and calls its
-     * {@link ExtendedIdProvider#onUnregister()}.
-     * Its EIDs will no longer be included in auction requests.
-     * Reached through {@link org.prebid.mobile.PrebidMobile#unregisterExtendedIdProvider}.
-     */
-    void removeProvider(@NonNull ExtendedIdProvider provider) {
-        Info info = provider.getProviderInfo();
-        ExtendedIdProvider removed = providers.remove(info);
-        if (removed == null) {
-            return;
-        }
-        removed.onUnregister();
-        LogUtil.debug(TAG, "Provider " + info + " removed");
-    }
-
-    /**
-     * Removes all registered providers (calling {@link ExtendedIdProvider#onUnregister()}
-     * on each) and clears all static EIDs. The built-in static provider is
-     * re-registered automatically.
-     * Typically used during SDK teardown or testing.
-     */
-    void clearProviders() {
-        for (ExtendedIdProvider provider : providers.values()) {
-            provider.onUnregister();
-        }
-        providers.clear();
-        staticProvider.clear();
-        providers.put(staticProvider.getProviderInfo(), staticProvider);
-        LogUtil.debug(TAG, "All providers cleared");
-    }
-
-    /**
-     * Returns {@code true} if the given provider is currently registered.
-     * Reached through {@link org.prebid.mobile.PrebidMobile#containsExtendedIdProvider}.
-     */
-    boolean hasProvider(@NonNull ExtendedIdProvider provider) {
-        return providers.containsKey(provider.getProviderInfo());
-    }
-
 }
