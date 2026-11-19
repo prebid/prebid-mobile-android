@@ -124,8 +124,8 @@ object CommandLineArgumentParser {
         val eidsJsonArray = JSONArray(eidsJsonString)
         for (i in 0 until eidsJsonArray.length()) {
             val jsonObject = eidsJsonArray.optJSONObject(i) ?: continue
-            val source = jsonObject.optString("source")
-            val identifier = jsonObject.optString("identifier")
+            val source = (jsonObject.opt("source") as? String).orEmpty()
+            val identifier = (jsonObject.opt("identifier") as? String).orEmpty()
             if (source.isNotEmpty() && identifier.isNotEmpty()) {
                 val aType = jsonObject.optInt("atype", 1)
                 TargetingParams.addExternalUserId(ExternalUserId(source, listOf(UniqueId(identifier, aType))))

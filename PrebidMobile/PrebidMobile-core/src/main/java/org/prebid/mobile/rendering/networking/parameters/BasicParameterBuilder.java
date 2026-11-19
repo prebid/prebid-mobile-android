@@ -205,7 +205,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
             }
             // No "eids": [] when every ID was dropped.
             if (idsJson.length() > 0) {
-                user.getExt().put("eids", idsJson);
+                user.getExt().put("eids", appendToPublisherEids(user.getExt().getMap().get("eids"), idsJson));
             }
         }
 
@@ -216,6 +216,25 @@ public class BasicParameterBuilder extends ParameterBuilder {
             userGeo.lat = Util.applyLocationPrecision(userLatLng.first, precision);
             userGeo.lon = Util.applyLocationPrecision(userLatLng.second, precision);
         }
+    }
+
+    /**
+     * Returns the {@code "eids"} the publisher set through {@link TargetingParams#setUserExt}, if it
+     * is an array, followed by the SDK's IDs. It is a new array, so the publisher's isn't changed.
+     */
+    @NonNull
+    private static JSONArray appendToPublisherEids(@Nullable Object publisherEids, @NonNull JSONArray idsJson) {
+        JSONArray eids = new JSONArray();
+        if (publisherEids instanceof JSONArray) {
+            JSONArray publisherArray = (JSONArray) publisherEids;
+            for (int i = 0; i < publisherArray.length(); i++) {
+                eids.put(publisherArray.opt(i));
+            }
+        }
+        for (int i = 0; i < idsJson.length(); i++) {
+            eids.put(idsJson.opt(i));
+        }
+        return eids;
     }
 
     /**

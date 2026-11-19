@@ -36,16 +36,20 @@ import java.util.List;
  * provider registered earlier) is skipped, and the SDK logs a warning.
  * <p>
  * The SDK reads each ID's {@link ExtendedId#getJson()} once per bid request and sends that JSON. An
- * ID is also skipped, with a warning, if its JSON is {@code null} or empty, can't be built or
- * encoded, or has a {@code "source"} other than {@link ExtendedId#getSource()}. A skipped ID doesn't
- * take its source, so another provider's ID from the same source can still be sent.
+ * ID is also skipped, with a warning, if its source is empty, its JSON is {@code null} or empty,
+ * can't be built or encoded, or has a {@code "source"} other than {@link ExtendedId#getSource()}. A
+ * skipped ID doesn't take its source, so another provider's ID from the same source can still be
+ * sent. Each warning about a provider's IDs is usually logged once per registration of the provider.
  *
  * <h3>Lifecycle</h3>
  * <ol>
- *   <li>{@link #onRegister()} is called once after the provider is registered, before its IDs are
- *       included in bid requests.</li>
- *   <li>{@link #getExtendedIds()} is called on every bid request.</li>
- *   <li>{@link #onUnregister()} is called after the provider is unregistered.</li>
+ *   <li>{@link #onRegister()} runs synchronously inside {@code registerPlugin}, once per
+ *       registration. The provider's IDs are used only after it returns.</li>
+ *   <li>{@link #getExtendedIds()} is called for every bid request, on any thread, possibly
+ *       concurrently.</li>
+ *   <li>{@link #onUnregister()} runs inside {@code unregisterPlugin}. Requests already being built
+ *       may still call {@link #getExtendedIds()} during or after it, so keep it safe to call (e.g.
+ *       return an empty list).</li>
  * </ol>
  *
  * <h3>Usage example</h3>
@@ -86,21 +90,23 @@ public interface ExtendedIdProvider {
     /**
      * Returns the provider's current EIDs. May be empty.
      * <p>
-     * Called on every bid request, so it must return immediately: no network calls, disk I/O, or
-     * other blocking work. May be called on any thread, including the main thread.
+     * Called for every bid request, so it must return immediately: no network calls, disk I/O, or
+     * other blocking work. May be called on any thread, including the main thread, and on several
+     * threads at once.
      */
     @NonNull
     List<ExtendedId> getExtendedIds();
 
     /**
-     * Called once after the provider is registered, before its IDs are included in bid requests.
-     * If it throws, the provider is not registered.
+     * Called synchronously inside {@code registerPlugin}, once per registration. The provider's IDs
+     * are used only after it returns. If it throws, the provider is not registered.
      */
     default void onRegister() {
     }
 
     /**
-     * Called when the provider is unregistered. Release resources here.
+     * Called when the provider is unregistered. Requests in progress may still call
+     * {@link #getExtendedIds()} afterwards, so keep it safe to call.
      */
     default void onUnregister() {
     }

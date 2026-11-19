@@ -58,7 +58,9 @@ public interface ExtendedId {
      *
      * @param json a valid OpenRTB EID JSON object
      * @return an ExtendedId backed by a copy of the given JSON
-     * @throws IllegalArgumentException if {@code json} has no non-empty {@code "source"} string
+     * @throws IllegalArgumentException if {@code json} has no non-empty {@code "source"} string, or
+     *                                  can't be encoded (e.g. it holds a {@code NaN} number). Catch it
+     *                                  for each ID, so one bad ID doesn't drop the others.
      */
     @NonNull
     static ExtendedId wrap(@NonNull JSONObject json) {

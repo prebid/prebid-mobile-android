@@ -988,6 +988,58 @@ public class BasicParameterBuilderTest {
         assertEquals("second", firstUid(eids.getJSONObject(0)));
     }
 
+    @Test
+    public void whenPublisherUserExtHasEids_theSdkIdsAreAppendedAfterThem() throws JSONException {
+        JSONArray publisherEids = new JSONArray()
+                .put(new JSONObject("{\"source\":\"publisher.com\",\"uids\":[{\"id\":\"publisher\",\"atype\":1}]}"));
+        Ext publisherUserExt = new Ext();
+        publisherUserExt.put("eids", publisherEids);
+        TargetingParams.setUserExt(publisherUserExt);
+        TargetingParams.addExternalUserId(new ExternalUserId("static.com", List.of(new ExternalUserId.UniqueId("static", 1))));
+        PrebidMobile.registerPlugin(new TestExtendedIdProvider(
+                "vendor",
+                new ExternalUserId("vendor.com", List.of(new ExternalUserId.UniqueId("vendor", 1)))
+        ), PluginCapability.EXTENDED_IDS);
+
+        JSONArray eids = buildUserExtEids();
+
+        assertEquals(3, eids.length());
+        assertEquals("publisher", firstUid(eids.getJSONObject(0)));
+        assertEquals("static", firstUid(eids.getJSONObject(1)));
+        assertEquals("vendor", firstUid(eids.getJSONObject(2)));
+        // The publisher's own array is not changed.
+        assertEquals(1, publisherEids.length());
+    }
+
+    @Test
+    public void whenStaticIdJsonCantBeEncoded_itIsSkippedAndTheRequestIsStillEncoded() throws JSONException {
+        ExternalUserId notEncodable = new ExternalUserId("nan.com", List.of(new ExternalUserId.UniqueId("nan", 1)));
+        HashMap<String, Object> ext = new HashMap<>();
+        ext.put("score", Double.NaN);
+        notEncodable.setExt(ext);
+        TargetingParams.addExternalUserId(notEncodable);
+        TargetingParams.addExternalUserId(new ExternalUserId("static.com", List.of(new ExternalUserId.UniqueId("static", 1))));
+
+        AdRequestInput adRequestInput = buildRequest();
+        String request = adRequestInput.getBidRequest().getJsonObject().toString();
+
+        assertNotNull(request);
+        JSONArray eids = new JSONObject(request).getJSONObject("user").getJSONArray("eids");
+        assertEquals(1, eids.length());
+        assertEquals("static.com", eids.getJSONObject(0).getString("source"));
+    }
+
+    private AdRequestInput buildRequest() {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdFormat(AdFormat.BANNER);
+        adConfiguration.addSize(new AdSize(320, 50));
+
+        AdRequestInput adRequestInput = new AdRequestInput();
+        new BasicParameterBuilder(adConfiguration, context.getResources(), browserActivityAvailable)
+                .appendBuilderParameters(adRequestInput);
+        return adRequestInput;
+    }
+
     /**
      * Returns {@code user} as it is sent, after the EIDs are placed for the EID placement.
      */

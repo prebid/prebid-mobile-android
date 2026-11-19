@@ -232,8 +232,8 @@ public class TargetingParams {
     /**
      * Returns the static external user IDs. Provider IDs and SharedID are not included.
      *
-     * @deprecated Returns only the static IDs. Use {@link #getExtendedIds()} to get every ID sent in
-     * bid requests.
+     * @deprecated Returns only the static IDs. Use {@link #getExtendedIds()} to get the IDs the SDK
+     * adds to bid requests.
      */
     @Deprecated
     public static List<ExternalUserId> getExternalUserIds() {
@@ -241,12 +241,14 @@ public class TargetingParams {
     }
 
     /**
-     * Returns every external user ID sent in bid requests: the static IDs, then SharedID when
+     * Returns the IDs the SDK adds to bid requests, in order: the static IDs, then SharedID when
      * {@link #getSendSharedId()} is {@code true}, then the IDs of the providers registered as
-     * {@link PluginCapability#EXTENDED_IDS}, in registration order. A provider's ID is skipped if
-     * its source is already in the list or its JSON can't be sent (see {@link ExtendedIdProvider}).
-     * Calls {@link ExtendedIdProvider#getExtendedIds()} on every provider, and returns each provider
-     * ID as a copy of the JSON it is sent with.
+     * {@link PluginCapability#EXTENDED_IDS}, in registration order. EIDs set through
+     * {@link #setUserExt(Ext)} or an ORTB config are sent too, but aren't in this list.
+     * <p>
+     * An ID is skipped if its JSON can't be sent, and a provider's ID also if its source is already
+     * in the list (see {@link ExtendedIdProvider}). Calls {@link ExtendedIdProvider#getExtendedIds()}
+     * on every provider, and returns each ID as a copy of the JSON it is sent with.
      */
     @NonNull
     public static List<ExtendedId> getExtendedIds() {

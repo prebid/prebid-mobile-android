@@ -485,7 +485,8 @@ public class TargetingParamsTest extends BaseSetup {
         List<ExtendedId> extendedIds = TargetingParams.getExtendedIds();
 
         assertEquals(Arrays.asList("static.com", "pubcid.org", "provider.com"), sources(extendedIds));
-        assertEquals(TargetingParams.getSharedId(), extendedIds.get(1));
+        // Each ID is a copy of the JSON it is sent with.
+        assertEquals(TargetingParams.getSharedId().getJson().toString(), extendedIds.get(1).getJson().toString());
     }
 
     @Test

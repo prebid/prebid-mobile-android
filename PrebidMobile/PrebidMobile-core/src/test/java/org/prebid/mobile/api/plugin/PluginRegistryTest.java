@@ -27,6 +27,8 @@ import androidx.annotation.Nullable;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.testutils.RecordingLogger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -333,6 +335,36 @@ public class PluginRegistryTest {
 
         assertFalse(registry.contains(plugin));
         assertTrue(registry.getActive().isEmpty());
+    }
+
+    @Test
+    public void exceptionsFromLifecycleCallbacksAreLoggedByClassOnly() {
+        // Stands for an ID value or a token inside the exception message.
+        String secret = "raw-token-123";
+        MockPlugin failingRegister = new MockPlugin("failingRegister");
+        failingRegister.onRegisterAction = () -> {
+            throw new IllegalStateException(secret);
+        };
+        MockPlugin failingUnregister = new MockPlugin("failingUnregister");
+        failingUnregister.onUnregisterAction = () -> {
+            throw new IllegalStateException(secret);
+        };
+        RecordingLogger logger = new RecordingLogger(LogUtil.WARN).install();
+        try {
+            registry.add(failingRegister);
+            registry.add(failingUnregister);
+            registry.remove(failingUnregister);
+
+            List<String> messages = logger.getMessages();
+            assertEquals(2, messages.size());
+            assertTrue(messages.get(0).endsWith("is not registered: its onRegister threw java.lang.IllegalStateException"));
+            assertTrue(messages.get(1).endsWith("is unregistered, but its onUnregister threw java.lang.IllegalStateException"));
+            for (String message : messages) {
+                assertFalse(message.contains(secret));
+            }
+        } finally {
+            logger.uninstall();
+        }
     }
 
     @Test

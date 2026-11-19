@@ -435,7 +435,9 @@ public class ExtendedIdRegistryTest {
     @Test
     public void eachWarningIsLoggedOnce() {
         registry.staticProvider.addUserId(createUserId("static.com", "static"));
-        PrebidMobile.registerPlugin(new FakeProvider("p1", createUserId("static.com", "p1"), jsonId("empty.com", new JSONObject())), PluginCapability.EXTENDED_IDS);
+        // Its own getJson() logs nothing above debug level, so the registry's warning is the only one.
+        ExternalUserId unresolved = new ExternalUserId("empty.com", Collections.emptyList());
+        PrebidMobile.registerPlugin(new FakeProvider("p1", createUserId("static.com", "p1"), unresolved), PluginCapability.EXTENDED_IDS);
 
         registry.getAllExtendedIds(null);
         registry.getAllExtendedIds(null);
@@ -448,6 +450,118 @@ public class ExtendedIdRegistryTest {
         registry.getAllExtendedIds(null);
         assertEquals(3, logger.getMessages().size());
         assertTrue(logContains("Skipping the ID from source static.com provided by p2/1.0"));
+    }
+
+    @Test
+    public void providerWarningsAreLoggedAgainAfterTheProviderIsRegisteredAgain() {
+        FakeProvider provider = new FakeProvider("p1", new ExternalUserId("empty.com", Collections.emptyList()));
+        PrebidMobile.registerPlugin(provider, PluginCapability.EXTENDED_IDS);
+        registry.getAllExtendedIds(null);
+        registry.getAllExtendedIds(null);
+        assertEquals(1, logger.getMessages().size());
+
+        PrebidMobile.unregisterPlugin(provider, PluginCapability.EXTENDED_IDS);
+        registry.getAllExtendedIds(null);
+        PrebidMobile.registerPlugin(provider, PluginCapability.EXTENDED_IDS);
+        registry.getAllExtendedIds(null);
+        registry.getAllExtendedIds(null);
+
+        assertEquals(2, logger.getMessages().size());
+    }
+
+    @Test
+    public void providerWarningsAreBoundedPerProvider() {
+        FakeProvider other = new FakeProvider("other", jsonId("other.com", new JSONObject()));
+        PrebidMobile.registerPlugin(other, PluginCapability.EXTENDED_IDS);
+        ExtendedId[] hundred = new ExtendedId[100];
+        for (int i = 0; i < hundred.length; i++) {
+            hundred[i] = jsonId("source" + i + ".com", new JSONObject());
+        }
+        FakeProvider provider = new FakeProvider("p1", hundred);
+        PrebidMobile.registerPlugin(provider, PluginCapability.EXTENDED_IDS);
+
+        registry.getAllExtendedIds(null);
+        registry.getAllExtendedIds(null);
+        // 100 warnings of p1 and 1 of the other provider. Repeats don't clear the full set.
+        assertEquals(101, logger.getMessages().size());
+
+        // The 101st warning of p1 clears its set, so its first warning is logged again.
+        provider.setIds(jsonId("source100.com", new JSONObject()));
+        registry.getAllExtendedIds(null);
+        provider.setIds(hundred[0]);
+        registry.getAllExtendedIds(null);
+        assertEquals(103, logger.getMessages().size());
+        assertEquals(2, count("Skipping the ID from source source0.com provided by p1/1.0"));
+        // The other provider's warnings are kept.
+        assertEquals(1, count("provided by other/1.0"));
+    }
+
+    @Test
+    public void staticIdThatCantBeSentIsSkippedAndDoesNotTakeItsSource() {
+        registry.staticProvider.addUserId(new ExternalUserId("id5-sync.com", Collections.emptyList()));
+        registry.staticProvider.addUserId(createUserId("static.com", "static"));
+        PrebidMobile.registerPlugin(new FakeProvider("id5", createUserId("id5-sync.com", "provider")), PluginCapability.EXTENDED_IDS);
+
+        List<ExtendedId> extendedIds = registry.getAllExtendedIds(null);
+
+        assertThat(ids(extendedIds)).containsExactly("static", "provider");
+        assertTrue(logContains("Skipping the ID from source id5-sync.com in the static IDs: its JSON is empty."));
+        assertFalse(logContains("already present"));
+    }
+
+    @Test
+    public void sharedIdThatCantBeSentIsSkippedAndDoesNotTakeItsSource() {
+        PrebidMobile.registerPlugin(new FakeProvider("p1", createUserId("pubcid.org", "provider")), PluginCapability.EXTENDED_IDS);
+
+        List<ExtendedId> extendedIds = registry.getAllExtendedIds(throwingJsonId("pubcid.org"));
+
+        assertThat(ids(extendedIds)).containsExactly("provider");
+        assertEquals(
+                Collections.singletonList("[extendedIds] Skipping the ID from source pubcid.org in SharedID: its getJson() threw java.lang.IllegalStateException."),
+                logger.getMessages()
+        );
+    }
+
+    @Test
+    public void staticIdChecksMatchProviderIdChecks() {
+        Map<String, Object> notEncodable = new HashMap<>();
+        notEncodable.put("score", Double.NaN);
+        ExternalUserId nan = createUserId("nan.com", "nan");
+        nan.setExt(notEncodable);
+        registry.staticProvider.addUserId(nan);
+        registry.staticProvider.addUserId(createUserId("", "empty"));
+        registry.staticProvider.addUserId(createUserId("static.com", "static"));
+
+        List<ExtendedId> extendedIds = registry.getAllExtendedIds(jsonId("pubcid.org", "{\"source\":\"other.org\",\"uids\":[{\"id\":\"shared\",\"atype\":1}]}"));
+
+        assertThat(ids(extendedIds)).containsExactly("static");
+        assertTrue(logContains("Skipping the ID from source nan.com in the static IDs: its JSON can't be encoded."));
+        assertTrue(logContains("Skipping an ID in the static IDs: its source is empty."));
+        assertTrue(logContains("Skipping the ID from source pubcid.org in SharedID: the \"source\" in its JSON is different."));
+    }
+
+    @Test
+    public void staticIdWarningsAreLoggedOnEveryRequest() {
+        registry.staticProvider.addUserId(new ExternalUserId("empty.com", Collections.emptyList()));
+
+        registry.getAllExtendedIds(null);
+        registry.getAllExtendedIds(null);
+        registry.getAllExtendedIds(null);
+
+        assertEquals(3, count("Skipping the ID from source empty.com in the static IDs: its JSON is empty."));
+    }
+
+    @Test
+    public void staticIdsAndSharedIdAreReturnedAsCopies() throws JSONException {
+        ExternalUserId staticId = createUserId("static.com", "static");
+        registry.staticProvider.addUserId(staticId);
+
+        List<ExtendedId> extendedIds = registry.getAllExtendedIds(createUserId("pubcid.org", "shared"));
+        // The app changes the ID after the IDs were collected.
+        staticId.setInserter("changed.com");
+
+        assertFalse(extendedIds.get(0).getJson().has("inserter"));
+        assertThat(ids(extendedIds)).containsExactly("static", "shared");
     }
 
     @Test
@@ -538,6 +652,16 @@ public class ExtendedIdRegistryTest {
     }
 
     // --- Helpers ---
+
+    private int count(String text) {
+        int count = 0;
+        for (String message : logger.getMessages()) {
+            if (message.contains(text)) {
+                count++;
+            }
+        }
+        return count;
+    }
 
     private boolean logContains(String text) {
         for (String message : logger.getMessages()) {

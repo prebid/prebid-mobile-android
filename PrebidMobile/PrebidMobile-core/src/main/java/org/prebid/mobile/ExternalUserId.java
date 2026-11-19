@@ -122,7 +122,7 @@ public class ExternalUserId implements ExtendedId {
     @Override
     public JSONObject getJson() {
         if (source == null || source.isEmpty()) {
-            LogUtil.warning(TAG, "Empty source");
+            LogUtil.debug(TAG, "Empty source");
             return null;
         }
 
@@ -135,7 +135,7 @@ public class ExternalUserId implements ExtendedId {
                 uniqueIdArray.put(idJson);
             }
             if (uniqueIdArray.length() == 0) {
-                LogUtil.warning(TAG, "No unique ids");
+                LogUtil.debug(TAG, "No unique ids");
                 return null;
             }
 
