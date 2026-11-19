@@ -24,6 +24,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
+import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
@@ -108,6 +109,24 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         super.fetchDemand(listener);
     }
 
+    /**
+     * Loads ad and applies mediation delegate. Like {@link #fetchDemand(OnFetchCompleteListener)},
+     * but returns the full {@link org.prebid.mobile.api.data.BidInfo} (including the price,
+     * currency, creative id and ad id of the winning bid) instead of only the result.
+     * <p>
+     * The result code is an {@link org.prebid.mobile.ResultCode}, not the
+     * {@link org.prebid.mobile.api.data.FetchDemandResult} that {@code fetchDemand} reports
+     * (for example, {@code PREBID_SERVER_ERROR} instead of {@code SERVER_ERROR}).
+     * <p>
+     * With auto refresh, the listener is called again on every refresh.
+     *
+     * @param listener callback when operation is completed (success or fail)
+     */
+    @Override
+    public final void fetchDemandBidInfo(@NonNull OnFetchDemandResult listener) {
+        super.fetchDemandBidInfo(listener);
+    }
+
     public final void addAdditionalSizes(AdSize... sizes) {
         adUnitConfig.addSizes(sizes);
     }
@@ -149,6 +168,29 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
 
     public AdPosition getAdPosition() {
         return adUnitConfig.getAdPosition();
+    }
+
+    /**
+     * Sets whether an outstream video creative starts muted. Defaults to false.
+     * <p>
+     * Handed to the Prebid banner adapter with every winning bid, so the value also applies to
+     * auto refreshed ads. The user can still unmute the creative on screen; that does not change
+     * this setting. A server side {@code ismuted} in the bid response
+     * ({@code ext.prebid.passthrough[].adconfiguration}) overrides this value, as it does for
+     * interstitials. Has no effect on HTML banners or on ads the mediated SDK renders itself.
+     */
+    public void setIsMuted(boolean isMuted) {
+        adUnitConfig.setIsMuted(isMuted);
+    }
+
+    /**
+     * Sets whether an outstream video creative shows a mute/unmute button. Defaults to true.
+     * <p>
+     * Handed to the Prebid banner adapter with every winning bid, so the value also applies to
+     * auto refreshed ads. Has no effect on HTML banners or on ads the mediated SDK renders itself.
+     */
+    public void setIsSoundButtonVisible(boolean isSoundButtonVisible) {
+        adUnitConfig.setIsSoundButtonVisible(isSoundButtonVisible);
     }
 
     /**

@@ -2,13 +2,12 @@ package org.prebid.mobile.api.mediation;
 
 import androidx.annotation.NonNull;
 
-import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.NativeAsset;
 import org.prebid.mobile.NativeEventTracker;
-import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
+import org.prebid.mobile.api.original.OnFetchDemandResult;
 
 import java.util.Set;
 
@@ -16,8 +15,6 @@ import java.util.Set;
  * Mediation native ad unit for Rendering API with AdMob or AppLovin MAX.
  */
 public class MediationNativeAdUnit {
-
-    private static final String TAG = "MediationNativeAdUnit";
 
     private final Object adObject;
     private final NativeAdUnit nativeAdUnit;
@@ -46,8 +43,32 @@ public class MediationNativeAdUnit {
             @NonNull OnFetchCompleteListener listener
     ) {
         nativeAdUnit.fetchDemand(adObject, resultCode ->
-                listener.onComplete(convertResultCode(resultCode))
+                listener.onComplete(FetchDemandResult.fromResultCode(resultCode))
         );
+    }
+
+    /**
+     * Loads ad and applies mediation delegate. Like {@link #fetchDemand(OnFetchCompleteListener)},
+     * but returns the full {@link org.prebid.mobile.api.data.BidInfo} (including the price,
+     * currency, creative id and ad id of the winning bid) instead of only the result.
+     * <p>
+     * The result code is an {@link org.prebid.mobile.ResultCode}, not the
+     * {@link org.prebid.mobile.api.data.FetchDemandResult} that {@code fetchDemand} reports
+     * (for example, {@code PREBID_SERVER_ERROR} instead of {@code SERVER_ERROR}).
+     * <p>
+     * The targeting keywords applied to the ad object keep the Prebid Server {@code hb_cache_id}.
+     * In the returned {@link org.prebid.mobile.api.data.BidInfo#getTargetingKeywords()}, it is
+     * replaced with the local cache id from
+     * {@link org.prebid.mobile.api.data.BidInfo#getNativeCacheId()}, which reaches the ad object
+     * separately (as {@link NativeAdUnit#BUNDLE_KEY_CACHE_ID} for AdMob, as a local extra
+     * parameter for AppLovin MAX).
+     *
+     * @param listener callback when operation is completed (success or fail)
+     */
+    public void fetchDemandBidInfo(
+            @NonNull OnFetchDemandResult listener
+    ) {
+        nativeAdUnit.fetchDemandBidInfo(adObject, listener);
     }
 
     public void destroy() {
@@ -96,41 +117,6 @@ public class MediationNativeAdUnit {
 
     public void setDUrlSupport(boolean support) {
         nativeAdUnit.setDUrlSupport(support);
-    }
-
-    private FetchDemandResult convertResultCode(ResultCode originalResult) {
-        switch (originalResult) {
-            case SUCCESS:
-                return FetchDemandResult.SUCCESS;
-            case INVALID_ACCOUNT_ID:
-                return FetchDemandResult.INVALID_ACCOUNT_ID;
-            case INVALID_CONFIG_ID:
-                return FetchDemandResult.INVALID_CONFIG_ID;
-            case INVALID_CONTEXT:
-                return FetchDemandResult.INVALID_CONTEXT;
-            case INVALID_HOST_URL:
-                return FetchDemandResult.INVALID_HOST_URL;
-            case INVALID_SIZE:
-                return FetchDemandResult.INVALID_SIZE;
-            case INVALID_AD_OBJECT:
-                return FetchDemandResult.INVALID_AD_OBJECT;
-            case NO_BIDS:
-                return FetchDemandResult.NO_BIDS;
-            case NO_CACHED_BIDS:
-                return FetchDemandResult.NO_CACHED_BIDS;
-            case PREBID_SERVER_ERROR:
-                return FetchDemandResult.SERVER_ERROR;
-            case TIMEOUT:
-                return FetchDemandResult.TIMEOUT;
-            case NETWORK_ERROR:
-                return FetchDemandResult.NETWORK_ERROR;
-            case INVALID_NATIVE_REQUEST:
-                LogUtil.error(TAG, "Invalid native request!");
-                return FetchDemandResult.NETWORK_ERROR;
-            default:
-                LogUtil.error(TAG, "Something went wrong!");
-                return FetchDemandResult.NETWORK_ERROR;
-        }
     }
 
 }

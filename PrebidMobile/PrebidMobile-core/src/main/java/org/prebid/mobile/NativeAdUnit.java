@@ -6,6 +6,7 @@ import androidx.annotation.VisibleForTesting;
 
 import org.json.JSONObject;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.NativeAdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -31,11 +32,25 @@ public class NativeAdUnit extends AdUnit {
     private final NativeAdUnitConfiguration nativeConfiguration;
 
     /**
+     * Id the bid listener saved the last winning bid under in {@link CacheManager}.
+     */
+    @Nullable
+    private String nativeCacheId;
+
+    /**
      * Default constructor.
      */
     public NativeAdUnit(@NonNull String configId) {
         super(configId, EnumSet.of(AdFormat.NATIVE));
         nativeConfiguration = configuration.getNativeConfiguration();
+    }
+
+    @NonNull
+    @Override
+    protected BidInfo createBidInfo(@NonNull ResultCode resultCode) {
+        // The bid listener already saved the winning bid, so reuse its id instead of caching
+        // the bid a second time.
+        return BidInfo.create(resultCode, bidResponse, configuration, nativeCacheId);
     }
 
     @Override
@@ -53,6 +68,7 @@ public class NativeAdUnit extends AdUnit {
                         response.getWinningBidJson(),
                         expirationTimeSeconds != null ? expirationTimeSeconds.longValue() : null
                 );
+                nativeCacheId = cacheId;
                 Util.saveCacheId(cacheId, adObject);
 
                 notifyWinEvent(response);
@@ -62,6 +78,7 @@ public class NativeAdUnit extends AdUnit {
             @Override
             public void onError(AdException exception) {
                 bidResponse = null;
+                nativeCacheId = null;
 
                 Util.apply(null, adObject);
                 originalListener.onComplete(convertToResultCode(exception));

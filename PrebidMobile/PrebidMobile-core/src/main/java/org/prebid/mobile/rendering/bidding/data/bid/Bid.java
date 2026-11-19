@@ -46,6 +46,9 @@ public class Bid {
     // for a unit impression only.
     private double price;
 
+    // False when the bid JSON has no numeric price, so a missing price can be told apart from 0.
+    private boolean hasPrice;
+
     // Optional means of conveying ad markup in case the bid wins;
     // supersedes the win notice if markup is included in both.
     // Substitution macros (Section 4.4) may be included.
@@ -160,6 +163,14 @@ public class Bid {
 
     public double getPrice() {
         return price;
+    }
+
+    /**
+     * Whether the bid JSON had a numeric {@code price}. When it is {@code false},
+     * {@link #getPrice()} returns 0.
+     */
+    public boolean hasPrice() {
+        return hasPrice;
     }
 
     public String getAdm() {
@@ -291,7 +302,9 @@ public class Bid {
         bid.jsonString = jsonObject.toString();
         bid.id = jsonObject.optString("id", null);
         bid.impId = jsonObject.optString("impid", null);
-        bid.price = jsonObject.optDouble("price", 0);
+        double price = jsonObject.optDouble("price", Double.NaN);
+        bid.hasPrice = !Double.isNaN(price);
+        bid.price = bid.hasPrice ? price : 0;
         bid.adm = jsonObject.optString("adm", null);
         bid.crid = jsonObject.optString("crid", null);
         bid.width = jsonObject.optInt("w");

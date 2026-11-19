@@ -67,7 +67,7 @@ open class MaxInterstitialFragment : AdFragment() {
     }
 
     override fun loadAd() {
-        adUnit?.fetchDemand {
+        adUnit?.fetchDemandBidInfo {
             maxInterstitialAd?.loadAd()
         }
     }

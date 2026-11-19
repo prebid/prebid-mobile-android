@@ -44,4 +44,31 @@ public class VASTErrorCodesTest {
         assertEquals("Could not find MediaFile that is supported by this video player, based on the attributes of the MediaFile element.", VASTErrorCodes.NO_SUPPORTED_MEDIA_ERROR.toString());
         assertEquals("Problem displaying MediaFile. Video player found a MediaFile with supported type but couldn't display it. MediaFile may include: unsupported codecs, different MIME type than MediaFile@type, unsupported delivery method, etc.", VASTErrorCodes.MEDIA_DISPLAY_ERROR.toString());
     }
+
+    @Test
+    public void testVastErrorCodeValues() {
+        assertEquals(100, VASTErrorCodes.XML_PARSE_ERROR.getCode());
+        assertEquals(303, VASTErrorCodes.NO_AD_IN_WRAPPER_ERROR.getCode());
+        assertEquals(304, VASTErrorCodes.AD_DISPLAY_TIMEOUT_ERROR.getCode());
+        assertEquals(401, VASTErrorCodes.MEDIA_NOT_FOUND_ERROR.getCode());
+        assertEquals(403, VASTErrorCodes.NO_SUPPORTED_MEDIA_ERROR.getCode());
+        assertEquals(405, VASTErrorCodes.MEDIA_DISPLAY_ERROR.getCode());
+        assertEquals(900, VASTErrorCodes.UNDEFINED_ERROR.getCode());
+    }
+
+    @Test
+    public void replaceErrorCodeMacro_replacesPlainAndEncodedMacroOnly() {
+        assertEquals(
+                "https://example.com/error?code=405&ts=[TIMESTAMP]",
+                VASTErrorCodes.MEDIA_DISPLAY_ERROR.replaceErrorCodeMacro("https://example.com/error?code=[ERRORCODE]&ts=[TIMESTAMP]")
+        );
+        assertEquals(
+                "https://example.com/error?code=401&again=401",
+                VASTErrorCodes.MEDIA_NOT_FOUND_ERROR.replaceErrorCodeMacro("https://example.com/error?code=%5BERRORCODE%5D&again=%5berrorcode%5d")
+        );
+        assertEquals(
+                "https://example.com/error",
+                VASTErrorCodes.AD_DISPLAY_TIMEOUT_ERROR.replaceErrorCodeMacro("https://example.com/error")
+        );
+    }
 }

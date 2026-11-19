@@ -56,7 +56,8 @@ public class MaxRewardedManager {
 
         activity.runOnUiThread(() -> {
             InterstitialControllerListener prebidListener = createRewardedListener();
-            adUnitConfiguration = new AdUnitConfiguration();
+            // Rendered from a copy of the mediation ad unit's configuration, so the publisher's settings apply.
+            adUnitConfiguration = PluginRendererFactory.mediationRenderingConfiguration(bidResponse, new AdUnitConfiguration());
             adUnitConfiguration.setAdFormat(bidResponse.isVideo() ? AdFormat.VAST : AdFormat.INTERSTITIAL);
             adUnitConfiguration.setRewarded(true);
             adUnitConfiguration.getRewardManager().setRewardListener(prebidListener::onUserEarnedReward);

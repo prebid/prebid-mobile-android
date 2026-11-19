@@ -72,8 +72,8 @@ open class AdMobInterstitialFragment : AdFragment() {
             .addNetworkExtrasBundle(PrebidInterstitialAdapter::class.java, extras!!)
             .build()
 
-        adUnit?.fetchDemand { result ->
-            Log.d("Prebid", "Fetch demand result: $result")
+        adUnit?.fetchDemandBidInfo { bidInfo ->
+            Log.d("Prebid", "Fetch demand result: ${bidInfo.resultCode}")
 
             InterstitialAd.load(requireContext(), adUnitId, request, object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {

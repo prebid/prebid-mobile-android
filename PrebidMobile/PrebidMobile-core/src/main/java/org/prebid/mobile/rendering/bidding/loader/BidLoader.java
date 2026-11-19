@@ -26,7 +26,6 @@ import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
@@ -82,7 +81,6 @@ public class BidLoader {
                 }
             }
             checkTmax(response, bidResponse);
-            updateAdUnitConfiguration(bidResponse);
             if (requestListener != null) {
                 setupRefreshTimer();
                 requestListener.onFetchCompleted(bidResponse);
@@ -242,18 +240,6 @@ public class BidLoader {
             PrebidMobile.setTimeoutMillis(timeout);
             sTimeoutHasChanged = true;
         }
-    }
-
-    /**
-     * Gets mobile sdk pass through object, combines it with user's ad unit
-     * rendering controls settings in configuration, modifies ad unit
-     * configuration, sets combined parameters to bid response.
-     */
-    private void updateAdUnitConfiguration(@NonNull BidResponse bidResponse) {
-        MobileSdkPassThrough serverParameters = bidResponse.getMobileSdkPassThrough();
-        MobileSdkPassThrough combinedParameters = MobileSdkPassThrough.combine(serverParameters, adConfiguration);
-        combinedParameters.modifyAdUnitConfiguration(adConfiguration);
-        bidResponse.setMobileSdkPassThrough(combinedParameters);
     }
 
     private void callEventDelegate(BidResponse response) {

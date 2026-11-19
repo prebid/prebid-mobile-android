@@ -22,6 +22,7 @@ import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.video.vast.AdVerifications;
+import org.prebid.mobile.rendering.video.vast.VASTErrorCodes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ public class VideoCreativeModel extends CreativeModel {
     private String vastClickthroughUrl;
     private AdVerifications adVerifications;
 
+    private boolean vastErrorTracked;
 
     public VideoCreativeModel(
             TrackingManager trackingManager,
@@ -69,6 +71,35 @@ public class VideoCreativeModel extends CreativeModel {
         trackingManager.fireEventTrackingURLs(urls);
 
         LogUtil.debug(TAG, "Video event '" + videoEvent.name() + "' was fired with urls: " + urls.toString());
+    }
+
+    /**
+     * Requests the VAST {@code <Error>} URIs of the ad (its InLine ad's and those of the Wrappers that led to it)
+     * with the {@code [ERRORCODE]} macro replaced (VAST 4.3, section 2.3.6.2). Only the first failure of the ad
+     * requests them, so a later failure, like a late one after a timeout, requests nothing.
+     */
+    public void trackVastError(VASTErrorCodes errorCode) {
+        if (vastErrorTracked) {
+            LogUtil.debug(TAG, "VAST error " + errorCode.getCode() + " not tracked: an error was already tracked for this ad");
+            return;
+        }
+        vastErrorTracked = true;
+
+        ArrayList<String> urls = videoEventUrls.get(VideoAdEvent.Event.AD_ERROR);
+        if (urls == null || urls.isEmpty()) {
+            LogUtil.debug(TAG, "No VAST error URLs to track error " + errorCode.getCode());
+            return;
+        }
+
+        ArrayList<String> errorUrls = new ArrayList<>(urls.size());
+        for (String url : urls) {
+            if (url != null) {
+                errorUrls.add(errorCode.replaceErrorCodeMacro(url));
+            }
+        }
+        trackingManager.fireEventTrackingURLs(errorUrls);
+
+        LogUtil.debug(TAG, "VAST error " + errorCode.getCode() + " was tracked with urls: " + errorUrls);
     }
 
     public void trackPlayerStateChange(InternalPlayerState changedPlayerState) {

@@ -30,7 +30,6 @@ import org.json.JSONObject;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.BannerParameters;
 import org.prebid.mobile.DataObject;
-import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
@@ -38,6 +37,7 @@ import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.Util;
 import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.eid.ExtendedId;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.PlacementType;
@@ -62,6 +62,8 @@ import java.util.Set;
 import java.util.UUID;
 
 public class BasicParameterBuilder extends ParameterBuilder {
+
+    private static final String TAG = "BasicParameterBuilder";
 
     public static final String[] SUPPORTED_VIDEO_MIME_TYPES = new String[]{
             "video/mp4",
@@ -190,21 +192,21 @@ public class BasicParameterBuilder extends ParameterBuilder {
             user.ext.put(publisherUserExt.getJsonObject());
         }
 
-        List<ExternalUserId> extendedIds = TargetingParams.getExternalUserIds();
-        if (TargetingParams.getSendSharedId()) {
-            extendedIds.add(TargetingParams.getSharedId());
-        }
+        List<ExtendedId> extendedIds = TargetingParams.getExtendedIds();
         if (extendedIds != null && extendedIds.size() > 0) {
             JSONArray idsJson = new JSONArray();
-            for (ExternalUserId id : extendedIds) {
+            for (ExtendedId id : extendedIds) {
                 if (id != null) {
-                    JSONObject idJson = id.getJson();
+                    JSONObject idJson = getEidJson(id);
                     if (idJson != null) {
                         idsJson.put(idJson);
                     }
                 }
             }
-            user.getExt().put("eids", idsJson);
+            // No "eids": [] when every ID was dropped.
+            if (idsJson.length() > 0) {
+                user.getExt().put("eids", appendToPublisherEids(user.getExt().getMap().get("eids"), idsJson));
+            }
         }
 
         final Pair<Float, Float> userLatLng = TargetingParams.getUserLatLng();
@@ -214,6 +216,46 @@ public class BasicParameterBuilder extends ParameterBuilder {
             userGeo.lat = Util.applyLocationPrecision(userLatLng.first, precision);
             userGeo.lon = Util.applyLocationPrecision(userLatLng.second, precision);
         }
+    }
+
+    /**
+     * Returns the {@code "eids"} the publisher set through {@link TargetingParams#setUserExt}, if it
+     * is an array, followed by the SDK's IDs. It is a new array, so the publisher's isn't changed.
+     */
+    @NonNull
+    private static JSONArray appendToPublisherEids(@Nullable Object publisherEids, @NonNull JSONArray idsJson) {
+        JSONArray eids = new JSONArray();
+        if (publisherEids instanceof JSONArray) {
+            JSONArray publisherArray = (JSONArray) publisherEids;
+            for (int i = 0; i < publisherArray.length(); i++) {
+                eids.put(publisherArray.opt(i));
+            }
+        }
+        for (int i = 0; i < idsJson.length(); i++) {
+            eids.put(idsJson.opt(i));
+        }
+        return eids;
+    }
+
+    /**
+     * Returns the JSON of the EID, or {@code null} if it is empty or can't be built. A provider's EID
+     * can be vendor code, so an exception from it skips that EID instead of failing the request.
+     */
+    @Nullable
+    private static JSONObject getEidJson(@NonNull ExtendedId id) {
+        JSONObject json;
+        try {
+            json = id.getJson();
+        } catch (Exception exception) {
+            // Also catches checked exceptions, which Kotlin code can throw without declaring them.
+            // By class only: the exception's message can contain the ID value.
+            LogUtil.warning(TAG, "Skipping an extended ID: its getJson() threw " + exception.getClass().getName());
+            return null;
+        }
+        if (json == null || json.length() == 0) {
+            return null;
+        }
+        return json;
     }
 
     private void setVideoImpValues(Imp imp) {

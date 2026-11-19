@@ -211,9 +211,31 @@ public abstract class AdUnit {
         allowNullableAdObject = true;
 
         fetchDemand(null, resultCode -> {
-            BidInfo bidInfo = BidInfo.create(resultCode, bidResponse, configuration);
-            Util.saveCacheId(bidInfo.getNativeCacheId(), adObject);
-            listener.onComplete(bidInfo);
+            listener.onComplete(createBidInfo(resultCode));
+        });
+    }
+
+    /**
+     * Loads ad, applies keywords to the ad object, and calls listener with bid info data.
+     * Like {@link #fetchDemand(Object, OnCompleteListener)}, but returns the full {@link BidInfo}
+     * (including the price, currency, creative id and ad id of the attached bid) instead of only
+     * the result code.
+     *
+     * @param adObject AdMob's ({@code AdManagerAdRequest} or {@code AdManagerAdRequest.Builder})
+     *                 or AppLovin's ({@code MaxNativeAdLoader}) ad object
+     * @param listener callback when operation is completed (success or fail)
+     */
+    public void fetchDemandBidInfo(Object adObject, OnFetchDemandResult listener) {
+        // Not a fetchDemand overload: an implicitly typed lambda fits both OnCompleteListener and
+        // OnFetchDemandResult, so existing fetchDemand(adObject, resultCode -> ...) calls would no
+        // longer compile.
+        if (listener == null) {
+            LogUtil.error("Parameter OnFetchDemandResult in fetchDemandBidInfo() must be not null.");
+            return;
+        }
+
+        fetchDemand(adObject, resultCode -> {
+            listener.onComplete(createBidInfo(resultCode));
         });
     }
 
@@ -271,6 +293,14 @@ public abstract class AdUnit {
         configuration.setGlobalOrtbConfig(ortbConfig);
     }
 
+    /**
+     * Builds the {@link BidInfo} reported for the last fetch.
+     */
+    @NonNull
+    protected BidInfo createBidInfo(@NonNull ResultCode resultCode) {
+        return BidInfo.create(resultCode, bidResponse, configuration);
+    }
+
     protected BidRequesterListener createBidListener(OnCompleteListener originalListener) {
         return new BidRequesterListener() {
             @Override
@@ -300,30 +330,7 @@ public abstract class AdUnit {
     protected ResultCode convertToResultCode(AdException renderingException) {
         FetchDemandResult fetchDemandResult = FetchDemandResult.parseErrorMessage(renderingException.getMessage());
         LogUtil.error("Prebid", "Can't download bids: " + fetchDemandResult);
-        switch (fetchDemandResult) {
-            case INVALID_ACCOUNT_ID:
-                return ResultCode.INVALID_ACCOUNT_ID;
-            case INVALID_CONFIG_ID:
-                return ResultCode.INVALID_CONFIG_ID;
-            case INVALID_SIZE:
-                return ResultCode.INVALID_SIZE;
-            case INVALID_CONTEXT:
-                return ResultCode.INVALID_CONTEXT;
-            case INVALID_AD_OBJECT:
-                return ResultCode.INVALID_AD_OBJECT;
-            case INVALID_HOST_URL:
-                return ResultCode.INVALID_HOST_URL;
-            case NETWORK_ERROR:
-                return ResultCode.NETWORK_ERROR;
-            case TIMEOUT:
-                return ResultCode.TIMEOUT;
-            case NO_BIDS:
-                return ResultCode.NO_BIDS;
-            case NO_CACHED_BIDS:
-                return ResultCode.NO_CACHED_BIDS;
-            default:
-                return ResultCode.PREBID_SERVER_ERROR;
-        }
+        return fetchDemandResult.toResultCode();
     }
 
 

@@ -109,7 +109,9 @@ public class CreativeFactory {
         if (creative != null) {
             creative.destroy();
         }
-        timeoutHandler.removeCallbacks(null);
+        // Not removeCallbacks(null), which removes nothing: the timeout of a destroyed factory would still
+        // fail the ad and request its VAST Error URIs.
+        timeoutHandler.removeCallbacksAndMessages(null);
     }
 
     public AbstractCreative getCreative() {
@@ -156,6 +158,7 @@ public class CreativeFactory {
         VideoCreativeModel videoCreativeModel = (VideoCreativeModel) creativeModel;
         String mediaUrl = videoCreativeModel.getMediaUrl();
         if (Utils.isBlank(mediaUrl) || mediaUrl.equals("invalid media file")) {
+            videoCreativeModel.trackVastError(VASTErrorCodes.NO_SUPPORTED_MEDIA_ERROR);
             listener.onFailure(new AdException(
                 AdException.INTERNAL_ERROR,
                 VASTErrorCodes.NO_SUPPORTED_MEDIA_ERROR.toString()
@@ -210,6 +213,10 @@ public class CreativeFactory {
         timeoutHandler.postDelayed(() -> {
             if (timeoutState != TimeoutState.FINISHED) {
                 timeoutState = TimeoutState.EXPIRED;
+                if (creativeModel instanceof VideoCreativeModel) {
+                    // VAST 4.3, section 2.3.5.1: the InLine ad did not produce an ad within the time limit.
+                    ((VideoCreativeModel) creativeModel).trackVastError(VASTErrorCodes.AD_DISPLAY_TIMEOUT_ERROR);
+                }
                 listener.onFailure((new AdException(AdException.INTERNAL_ERROR, "Creative factory Timeout")));
             }
         }, timeout);

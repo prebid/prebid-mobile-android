@@ -17,6 +17,19 @@
 package org.prebid.mobile.testutils;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
+/**
+ * Application for all Robolectric tests (set in robolectric.properties).
+ */
 public class MockApplication extends Application {
+
+    static {
+        // On Android 5.0, which these tests run on, AsyncTask binds its handler to the thread that
+        // loads the class. Android loads it on the main thread when the app starts, but Robolectric
+        // doesn't. Without this, an SDK background thread can load it first, and every later
+        // AsyncTask in the test run fails.
+        AsyncTask.THREAD_POOL_EXECUTOR.getClass();
+    }
+
 }

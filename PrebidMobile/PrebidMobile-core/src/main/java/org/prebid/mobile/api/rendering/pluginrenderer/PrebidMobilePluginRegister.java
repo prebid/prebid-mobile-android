@@ -16,19 +16,24 @@
 
 package org.prebid.mobile.api.rendering.pluginrenderer;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.api.plugin.PluginCapability;
+import org.prebid.mobile.api.plugin.PluginRegistry;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 /**
- * Plugin registerer.
+ * Plugin registerer. The renderers are stored in the registry of {@link PluginCapability#RENDERER},
+ * which {@link PrebidMobile#registerPlugin(Object, PluginCapability)} writes to.
  */
 public class PrebidMobilePluginRegister {
 
@@ -37,61 +42,77 @@ public class PrebidMobilePluginRegister {
 
     private static final PrebidMobilePluginRegister instance = new PrebidMobilePluginRegister();
 
-    private final HashMap<String, PrebidMobilePluginRenderer> plugins = new HashMap<>();
-
+    /**
+     * Registers the renderer. A renderer whose name is already registered is ignored; to replace it,
+     * unregister it first.
+     *
+     * @deprecated This method is deprecated and will be removed in 4.0. Use
+     * {@link PrebidMobile#registerPlugin(Object, PluginCapability)} with {@link PluginCapability#RENDERER} instead.
+     */
+    @Deprecated
     public void registerPlugin(PrebidMobilePluginRenderer prebidMobilePluginRenderers) {
-        String rendererName = prebidMobilePluginRenderers.getName();
-        if (plugins.containsKey(rendererName)) {
-            LogUtil.debug(TAG, "New plugin renderer with name" + rendererName + "will replace the previous one with same name");
-        }
-        plugins.put(prebidMobilePluginRenderers.getName(), prebidMobilePluginRenderers);
+        getRegistry().add(prebidMobilePluginRenderers);
     }
 
+    /**
+     * Unregisters the renderer with the same name as this renderer.
+     *
+     * @deprecated This method is deprecated and will be removed in 4.0. Use
+     * {@link PrebidMobile#unregisterPlugin(Object, PluginCapability)} with {@link PluginCapability#RENDERER} instead.
+     */
+    @Deprecated
     public void unregisterPlugin(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
-        plugins.remove(prebidMobilePluginRenderer.getName());
+        getRegistry().remove(prebidMobilePluginRenderer);
     }
 
+    /**
+     * Returns whether a renderer with the same name as this renderer is registered.
+     *
+     * @deprecated This method is deprecated and will be removed in 4.0. Use
+     * {@link PrebidMobile#containsPlugin(Object, PluginCapability)} with {@link PluginCapability#RENDERER} instead.
+     */
+    @Deprecated
     public Boolean containsPlugin(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
-        return plugins.containsKey(prebidMobilePluginRenderer.getName());
+        return getRegistry().contains(prebidMobilePluginRenderer);
     }
 
     @VisibleForTesting
     public Boolean containsPlugin(String prebidMobilePluginRendererName) {
-        return plugins.containsKey(prebidMobilePluginRendererName);
+        return getPluginRenderer(prebidMobilePluginRendererName) != null;
     }
 
     @VisibleForTesting
     public void unregisterAllPlugins() {
-        plugins.clear();
+        getRegistry().removeAll();
     }
 
     public PrebidMobilePluginRenderer getDefaultPluginRenderer() {
-        return plugins.get(PREBID_MOBILE_RENDERER_NAME);
+        return getPluginRenderer(PREBID_MOBILE_RENDERER_NAME);
     }
 
     public void registerEventListener(
             PluginEventListener pluginEventListener,
             String listenerKey
     ) {
-        if (plugins.containsKey(pluginEventListener.getPluginRendererName())) {
-            plugins.get(pluginEventListener.getPluginRendererName()).registerEventListener(pluginEventListener, listenerKey);
+        String rendererName = pluginEventListener.getPluginRendererName();
+        PrebidMobilePluginRenderer renderer = getPluginRenderer(rendererName);
+        if (renderer != null) {
+            renderer.registerEventListener(pluginEventListener, listenerKey);
         } else {
-            LogUtil.debug(TAG, "Skipping PluginEventListener with name" + pluginEventListener.getPluginRendererName() + ", such key does not exist");
+            LogUtil.debug(TAG, "Skipping PluginEventListener with name" + rendererName + ", such key does not exist");
         }
     }
 
     public void unregisterEventListener(String listenerKey) {
-        for (Map.Entry<String, PrebidMobilePluginRenderer> entry : plugins.entrySet()) {
-            PrebidMobilePluginRenderer renderer = entry.getValue();
+        for (PrebidMobilePluginRenderer renderer : getRegistry().getActive()) {
             renderer.unregisterEventListener(listenerKey);
         }
     }
 
-    // Returns the list of available renderers for the given ad unit for RT request
+    // Returns the list of available renderers for the given ad unit for RT request, in registration order
     public List<PrebidMobilePluginRenderer> getRTBListOfRenderersFor(AdUnitConfiguration adUnitConfiguration) {
         List<PrebidMobilePluginRenderer> compliantPlugins = new ArrayList<>();
-        for (Map.Entry<String, PrebidMobilePluginRenderer> entry : plugins.entrySet()) {
-            PrebidMobilePluginRenderer renderer = entry.getValue();
+        for (PrebidMobilePluginRenderer renderer : getRegistry().getActive()) {
             if (renderer.isSupportRenderingFor(adUnitConfiguration)) {
                 compliantPlugins.add(renderer);
             }
@@ -113,14 +134,41 @@ public class PrebidMobilePluginRegister {
     ) {
         String preferredRendererName = bidResponse.getPreferredPluginRendererName();
         String preferredRendererVersion = bidResponse.getPreferredPluginRendererVersion();
-        PrebidMobilePluginRenderer preferredPlugin = plugins.get(preferredRendererName);
+        List<PluginRegistry.Entry<PrebidMobilePluginRenderer>> entries = getRegistry().getActiveEntries();
+        PrebidMobilePluginRenderer preferredPlugin = findByName(entries, preferredRendererName);
         if (preferredPlugin != null
                 && preferredPlugin.isSupportRenderingFor(adUnitConfiguration)
                 && preferredPlugin.getVersion().equals(preferredRendererVersion)) {
             return preferredPlugin;
         } else {
-            return plugins.get(PREBID_MOBILE_RENDERER_NAME);
+            return findByName(entries, PREBID_MOBILE_RENDERER_NAME);
         }
+    }
+
+    @Nullable
+    private PrebidMobilePluginRenderer getPluginRenderer(@Nullable String name) {
+        return findByName(getRegistry().getActiveEntries(), name);
+    }
+
+    /**
+     * Finds a renderer by the name it had when it was registered.
+     */
+    @Nullable
+    private static PrebidMobilePluginRenderer findByName(
+            @NonNull List<PluginRegistry.Entry<PrebidMobilePluginRenderer>> entries,
+            @Nullable String name
+    ) {
+        for (PluginRegistry.Entry<PrebidMobilePluginRenderer> entry : entries) {
+            if (Objects.equals(entry.getInfo().getName(), name)) {
+                return entry.getPlugin();
+            }
+        }
+        return null;
+    }
+
+    @NonNull
+    private static PluginRegistry<PrebidMobilePluginRenderer> getRegistry() {
+        return PluginCapability.RENDERER.getRegistry();
     }
 
     private PrebidMobilePluginRegister() {

@@ -11,6 +11,7 @@ import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.configuration.PBSConfig;
 import org.prebid.mobile.core.BuildConfig;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 /**
  * A class responsible for parsing "prebidmobilesdk" pass through type from bid response.
@@ -92,46 +93,18 @@ public class MobileSdkPassThrough {
     }
 
     /**
-     * Combines unified pass through object with rendering controls
-     * from ad unit configuration. Settings from ad unit configuration
-     * have lower priority.
+     * Applies the rendering controls carried by the bid response to the configuration a renderer
+     * is about to use. A response without a passthrough leaves the configuration untouched.
      */
-    @NonNull
-    public static MobileSdkPassThrough combine(
-        @Nullable MobileSdkPassThrough unifiedPassThrough,
-        @NonNull AdUnitConfiguration configuration
+    public static void applyTo(
+        @NonNull BidResponse bidResponse,
+        @NonNull AdUnitConfiguration adUnitConfiguration
     ) {
-        MobileSdkPassThrough result;
-        if (unifiedPassThrough == null) {
-            result = new MobileSdkPassThrough();
-        } else {
-            result = unifiedPassThrough;
+        MobileSdkPassThrough renderingControlSettings = bidResponse.getMobileSdkPassThrough();
+        if (renderingControlSettings != null) {
+            renderingControlSettings.modifyAdUnitConfiguration(adUnitConfiguration);
         }
-
-        if (result.isMuted == null) {
-            result.isMuted = configuration.isMuted();
-        }
-        if (result.maxVideoDuration == null) {
-            result.maxVideoDuration = configuration.getMaxVideoDuration();
-        }
-        if (result.skipDelay == null) {
-            result.skipDelay = configuration.getSkipDelay();
-        }
-        if (result.skipButtonArea == null) {
-            result.skipButtonArea = configuration.getSkipButtonArea();
-        }
-        if (result.skipButtonPosition == null) {
-            result.skipButtonPosition = configuration.getSkipButtonPosition();
-        }
-        if (result.closeButtonArea == null) {
-            result.closeButtonArea = configuration.getCloseButtonArea();
-        }
-        if (result.closeButtonPosition == null) {
-            result.closeButtonPosition = configuration.getCloseButtonPosition();
-        }
-        return result;
     }
-
 
     public Boolean isMuted;
 
@@ -148,8 +121,6 @@ public class MobileSdkPassThrough {
     public Integer preRenderTimeout = 0;
 
     private JSONObject configuration;
-
-    private MobileSdkPassThrough() {}
 
     private MobileSdkPassThrough(JSONObject passThrough) {
         try {

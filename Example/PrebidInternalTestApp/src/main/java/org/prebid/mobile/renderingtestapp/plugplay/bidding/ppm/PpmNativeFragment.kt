@@ -22,7 +22,7 @@ import android.os.Looper
 import android.view.View
 import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.PrebidNativeAdEventListener
-import org.prebid.mobile.api.data.FetchDemandResult
+import org.prebid.mobile.ResultCode
 import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
 import org.prebid.mobile.renderingtestapp.AdFragment
@@ -66,17 +66,17 @@ open class PpmNativeFragment : AdFragment() {
     }
 
     override fun loadAd() {
-        nativeAdUnit?.fetchDemand {
-            if (it != FetchDemandResult.SUCCESS) {
+        nativeAdUnit?.fetchDemandBidInfo {
+            if (it.resultCode != ResultCode.SUCCESS) {
                 events.fetchDemandFailure(true)
-                return@fetchDemand
+                return@fetchDemandBidInfo
             }
             events.fetchDemandSuccess(true)
 
             val nativeAd = NativeAdProvider.getNativeAd(extras)
             if (nativeAd == null) {
                 events.getNativeAdResultFailure(true)
-                return@fetchDemand
+                return@fetchDemandBidInfo
             }
 
             events.getNativeAdResultSuccess(true)

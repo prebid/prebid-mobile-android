@@ -468,15 +468,39 @@ public class AdResponseParserVast extends AdResponseParserBase {
         return null;
     }
 
-    public String getError(AdResponseParserVast parserVast, int index) {
+    /**
+     * Returns the {@code <Error>} URIs of the InLine ad, followed by those of the Wrappers that led to it,
+     * from the closest Wrapper to the root one.
+     */
+    public ArrayList<String> getErrorUrls(AdResponseParserVast parserVast, int index) {
+        ArrayList<String> errorUrls = new ArrayList<>();
 
-        Ad ad = parserVast.vast.getAds().get(index);
-
-        if (ad != null && ad.getInline() != null && ad.getInline().getError() != null) {
-            return ad.getInline().getError().getValue();
+        /**
+         * Here we use a recursion pattern to traverse the nested VAST nodes "parserVast",
+         * so that the URIs of the deeper responses come first.
+         */
+        if (parserVast.wrappedVASTXml != null) {
+            errorUrls.addAll(getErrorUrls(parserVast.wrappedVASTXml, index));
         }
 
-        return null;
+        Ad ad = parserVast.vast.getAds().get(index);
+        ArrayList<org.prebid.mobile.rendering.video.vast.Error> errors = null;
+        if (ad.getInline() != null) {
+            errors = ad.getInline().getErrors();
+        }
+        else if (ad.getWrapper() != null) {
+            errors = ad.getWrapper().getErrors();
+        }
+
+        if (errors != null) {
+            for (org.prebid.mobile.rendering.video.vast.Error error : errors) {
+                if (Utils.isNotBlank(error.getValue())) {
+                    errorUrls.add(error.getValue());
+                }
+            }
+        }
+
+        return errorUrls;
     }
 
     public String getClickThroughUrl(AdResponseParserVast parserVast, int index) {

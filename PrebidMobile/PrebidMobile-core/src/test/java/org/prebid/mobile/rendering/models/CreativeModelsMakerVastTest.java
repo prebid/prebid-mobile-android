@@ -276,11 +276,11 @@ public class CreativeModelsMakerVastTest {
         assertEquals(CreativeModelsMakerVast.VIDEO_CREATIVE_TAG, videoModel.getName());
 
         HashMap<VideoAdEvent.Event, ArrayList<String>> videoEventUrls = videoModel.getVideoEventUrls();
-        // for wrapper case AD_ERROR is null cause of Error object is taken from InLine object, for Wrapper case it's null
-        if (!isWrapper) {
-            assertEquals("http://myErrorURL/error",
-                         videoEventUrls.get(VideoAdEvent.Event.AD_ERROR).get(0));
-        }
+        // The InLine ad's Error URI, then the Wrapper's
+        List<String> expectedErrorUrls = isWrapper
+                                         ? Arrays.asList("http://myErrorURL/error", "http://myErrorURL/wrapper/error")
+                                         : Arrays.asList("http://myErrorURL/error");
+        assertEquals(expectedErrorUrls, videoEventUrls.get(VideoAdEvent.Event.AD_ERROR));
         assertEquals("http://myTrackingURL/click1",
                      videoEventUrls.get(VideoAdEvent.Event.AD_CLICK).get(0));
         assertEquals("http://myTrackingURL/click2",

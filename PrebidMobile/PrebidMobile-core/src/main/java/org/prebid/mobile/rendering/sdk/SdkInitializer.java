@@ -1,5 +1,7 @@
 package org.prebid.mobile.rendering.sdk;
 
+import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
+
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
@@ -10,7 +12,10 @@ import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.LogUtil.PrebidLogger;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.api.plugin.PluginCapability;
 import org.prebid.mobile.api.rendering.PrebidRenderer;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AdvertisingIdManager;
@@ -54,7 +59,7 @@ public class SdkInitializer {
         }
 
         try {
-            PrebidMobile.registerPluginRenderer(new PrebidRenderer());
+            registerSdkRenderer();
 
             AppInfoManager.init(applicationContext);
 
@@ -72,6 +77,27 @@ public class SdkInitializer {
                 initializationNotifier,
                 Executors.newFixedThreadPool(2))
         ).start();
+    }
+
+    /**
+     * Registers the SDK's own renderer. Initialization can run more than once (e.g. after a failed
+     * attempt), so a renderer that is already registered is kept, without the duplicate warning.
+     * If that renderer is not the SDK's own, it stays the default renderer, and a warning says so.
+     */
+    @VisibleForTesting
+    static void registerSdkRenderer() {
+        PrebidMobilePluginRenderer registered = PrebidMobilePluginRegister.getInstance().getDefaultPluginRenderer();
+
+        if (registered == null) {
+            PrebidMobile.registerPlugin(new PrebidRenderer(), PluginCapability.RENDERER);
+            return;
+        }
+
+        if (registered.getClass() != PrebidRenderer.class) {
+            LogUtil.warning(TAG, "The app registered " + registered.getClass().getName() + " with the name "
+                    + PREBID_MOBILE_RENDERER_NAME + ", so it stays the default renderer instead of the SDK's own. "
+                    + "To use the SDK's renderer, unregister it.");
+        }
     }
 
     @VisibleForTesting

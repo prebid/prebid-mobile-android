@@ -22,25 +22,38 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.api.data.BidInfo;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
+import org.prebid.mobile.api.original.OnFetchDemandResult;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
+import org.prebid.mobile.rendering.networking.BaseNetworkTask;
+import org.prebid.mobile.rendering.networking.ResponseHandler;
+import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
+import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowLooper;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -71,6 +84,9 @@ public class MediationBannerAdUnitTest {
     @After
     public void cleanup() {
         PrebidMobile.setPrebidServerAccountId(null);
+        // setHost changes the shared Host.CUSTOM url, so restore the default empty one
+        PrebidMobileReflection.setHost("");
+        PrebidMobileReflection.setFlagsThatSdkIsNotInitialized();
     }
 
     @Test
@@ -145,6 +161,30 @@ public class MediationBannerAdUnitTest {
     }
 
     @Test
+    public void setIsMuted_updatesAdUnitConfig() {
+        assertFalse("Outstream video plays with sound unless the publisher asks otherwise",
+                mediationBannerAdUnit.adUnitConfig.isMuted());
+
+        mediationBannerAdUnit.setIsMuted(true);
+        assertTrue(mediationBannerAdUnit.adUnitConfig.isMuted());
+
+        mediationBannerAdUnit.setIsMuted(false);
+        assertFalse(mediationBannerAdUnit.adUnitConfig.isMuted());
+    }
+
+    @Test
+    public void setIsSoundButtonVisible_updatesAdUnitConfig() {
+        assertTrue("Banner video keeps its volume control unless the publisher hides it",
+                mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible(true));
+
+        mediationBannerAdUnit.setIsSoundButtonVisible(false);
+        assertFalse(mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible(true));
+
+        mediationBannerAdUnit.setIsSoundButtonVisible(true);
+        assertTrue(mediationBannerAdUnit.adUnitConfig.isSoundButtonVisible());
+    }
+
+    @Test
     public void setAdPosition_EqualsGetAdPosition() {
         mediationBannerAdUnit.setAdPosition(null);
         assertEquals(AdPosition.UNDEFINED, mediationBannerAdUnit.getAdPosition());
@@ -160,6 +200,64 @@ public class MediationBannerAdUnitTest {
 
         mediationBannerAdUnit.setAdPosition(AdPosition.UNKNOWN);
         assertEquals(AdPosition.UNKNOWN, mediationBannerAdUnit.getAdPosition());
+    }
+
+    @Test
+    public void fetchDemandBidInfo_ResponseReceived_ReturnsBidInfo() throws IOException {
+        PrebidMobileReflection.setHost("https://test.com");
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        mediationBannerAdUnit.fetchDemandBidInfo(listener);
+        MediationBaseAdUnitTest.bidRequesterListener(mediationBannerAdUnit)
+                .onFetchCompleted(MediationBaseAdUnitTest.createBidResponse(mediationBannerAdUnit));
+
+        BidInfo bidInfo = MediationBaseAdUnitTest.captureBidInfo(listener);
+        assertEquals(ResultCode.SUCCESS, bidInfo.getResultCode());
+        assertEquals(Double.valueOf(0.15), bidInfo.getPrice());
+        assertEquals("crid", bidInfo.getCreativeId());
+    }
+
+    @Test
+    public void fetchDemandBidInfo_AutoRefresh_CallsListenerAgainWithRefreshedBid() throws IOException {
+        PrebidMobileReflection.setHost("https://test.com");
+        PrebidMobileReflection.setFlagsThatSdkIsInitialized();
+        when(mockScreenStateReceiver.isScreenOn()).thenReturn(true);
+        MediationBannerAdUnit adUnit = new MediationBannerAdUnit(context, "config", new AdSize(320, 50), new MockMediationUtils() {
+            @Override
+            public boolean canPerformRefresh() {
+                return true;
+            }
+        });
+        WhiteBox.setInternalState(adUnit, "screenStateReceiver", mockScreenStateReceiver);
+        stubBidRequests(adUnit, ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"));
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        adUnit.fetchDemandBidInfo(listener);
+        verify(listener, times(1)).onComplete(any(BidInfo.class));
+        ShadowLooper.idleMainLooper(adUnit.adUnitConfig.getAutoRefreshDelay(), TimeUnit.MILLISECONDS);
+
+        ArgumentCaptor<BidInfo> captor = ArgumentCaptor.forClass(BidInfo.class);
+        verify(listener, times(2)).onComplete(captor.capture());
+        BidInfo refreshed = captor.getAllValues().get(1);
+        assertEquals(ResultCode.SUCCESS, refreshed.getResultCode());
+        assertEquals(Double.valueOf(0.15), refreshed.getPrice());
+        assertEquals("crid", refreshed.getCreativeId());
+        adUnit.destroy();
+    }
+
+    // Keeps the ad unit's real BidLoader, so its refresh timer runs, and answers every bid request
+    // with the given response instead of going to the network.
+    private static void stubBidRequests(MediationBaseAdUnit adUnit, String responseString) {
+        BidLoader bidLoader = WhiteBox.getInternalState(adUnit, "bidLoader");
+        ResponseHandler responseHandler = WhiteBox.getInternalState(bidLoader, "responseHandler");
+        BidRequester bidRequester = mock(BidRequester.class);
+        doAnswer(invocation -> {
+            BaseNetworkTask.GetUrlResult result = new BaseNetworkTask.GetUrlResult();
+            result.responseString = responseString;
+            responseHandler.onResponse(result);
+            return null;
+        }).when(bidRequester).startAdRequest();
+        WhiteBox.setInternalState(bidLoader, "bidRequester", bidRequester);
     }
 
 }

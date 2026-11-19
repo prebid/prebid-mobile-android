@@ -34,7 +34,12 @@ public class AdUnitConfiguration {
     private boolean isRewarded;
     private boolean isBuiltInVideo = false;
     private boolean isMuted = false;
-    private boolean isSoundButtonVisible = false;
+    /**
+     * Null until the publisher sets it. Interstitials hide the sound button unless asked for,
+     * banner video shows it unless hidden explicitly; see {@link #isSoundButtonVisible(boolean)}.
+     */
+    @Nullable
+    private Boolean isSoundButtonVisible;
     private boolean isOriginalAdUnit = false;
     private boolean hasEndCard = false;
 
@@ -95,11 +100,14 @@ public class AdUnitConfiguration {
      * next auction.
      * <p>
      * {@code fingerprint} is carried over because plugin event listeners are registered under it.
-     * The mutable sub configurations are shared on purpose: the reward, banner, video and native
-     * settings are read back through the ad unit after rendering.
+     * {@code broadcastId} is not: each rendering registers its own event receiver under it, and a
+     * shared id would let the in-app browser's close broadcast reach every earlier rendering of
+     * the same ad unit that is still registered. The mutable sub configurations are shared on
+     * purpose: the reward, banner, video and native settings are read back through the ad unit
+     * after rendering.
      */
     public AdUnitConfiguration(@NonNull AdUnitConfiguration source) {
-        broadcastId = source.broadcastId;
+        broadcastId = Utils.generateRandomInt();
         fingerprint = source.fingerprint;
 
         isRewarded = source.isRewarded;
@@ -248,8 +256,25 @@ public class AdUnitConfiguration {
         this.isSoundButtonVisible = isSoundButtonVisible;
     }
 
+    /**
+     * The full screen default: true only when the publisher asked for the sound button, as
+     * interstitial and rewarded ads hide it otherwise. A banner renderer must not use this
+     * getter, because banner video shows the button unless it was hidden explicitly; it reads
+     * {@link #isSoundButtonVisible(boolean) isSoundButtonVisible(true)} instead.
+     */
     public boolean isSoundButtonVisible() {
-        return isSoundButtonVisible;
+        return isSoundButtonVisible(false);
+    }
+
+    /**
+     * The publisher's setting, or {@code defaultValue} when none was made. Pass the default of
+     * the ad type being rendered: {@code true} for banner video, which has always shown the
+     * volume control, so only an explicit
+     * {@link #setIsSoundButtonVisible(boolean) setIsSoundButtonVisible(false)} hides it;
+     * {@code false} for full screen ads, which {@link #isSoundButtonVisible()} does.
+     */
+    public boolean isSoundButtonVisible(boolean defaultValue) {
+        return isSoundButtonVisible != null ? isSoundButtonVisible : defaultValue;
     }
 
     public void setAutoRefreshDelay(int autoRefreshDelayInSeconds) {

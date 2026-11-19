@@ -436,11 +436,6 @@ public class InterstitialVideo extends AdBaseDialog {
                     return;
                 }
                 adViewContainer.removeView(lytCountDownCircle);
-
-                if (isRewarded && !hasEndCard) {
-                    View learnMore = adViewContainer.findViewById(R.id.tv_learn_more);
-                    learnMore.setVisibility(View.VISIBLE);
-                }
             }
         };
         countDownTimer.start();

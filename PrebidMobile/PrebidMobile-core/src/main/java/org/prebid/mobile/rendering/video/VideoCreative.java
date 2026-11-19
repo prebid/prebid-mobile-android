@@ -39,6 +39,7 @@ import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
+import org.prebid.mobile.rendering.video.vast.VASTErrorCodes;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
 import java.io.File;
@@ -121,8 +122,9 @@ public class VideoCreative extends VideoCreativeProtocol
 
     @Override
     public void onFailure(AdException error) {
-        // ad -> inline -> error
-        model.trackVideoEvent(VideoAdEvent.Event.AD_ERROR);
+        // The player could not play the preloaded MediaFile. The player is prepared when the ad is displayed,
+        // so this comes after the creative was reported ready, and the failure is still reported to the ad view.
+        model.trackVastError(VASTErrorCodes.MEDIA_DISPLAY_ERROR);
         getResolutionListener().creativeFailed(error);
     }
 
@@ -454,6 +456,7 @@ public class VideoCreative extends VideoCreativeProtocol
                 return;
             }
 
+            videoCreative.model.trackVastError(VASTErrorCodes.MEDIA_NOT_FOUND_ERROR);
             videoCreative.getResolutionListener().creativeFailed(new AdException(AdException.INTERNAL_ERROR, "Preloading failed: " + error));
         }
     }

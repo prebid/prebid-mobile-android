@@ -277,10 +277,21 @@ public class VideoView extends BaseAdView {
         if (enableVideoPlayerClick) {
             videoCreativeView.enableVideoPlayerClick();
         }
-        videoCreativeView.showVolumeControls();
-        addVideoControlObstruction(videoCreativeView.getVolumeControlView(), "Volume button");
+        if (isSoundButtonVisible()) {
+            videoCreativeView.showVolumeControls();
+            addVideoControlObstruction(videoCreativeView.getVolumeControlView(), "Volume button");
+        }
 
         addView(view);
+    }
+
+    /**
+     * The volume control is drawn unless the configuration the creative was loaded with hides it
+     * explicitly. A configuration that never set it keeps the control, the historical behavior
+     * of banner video.
+     */
+    private boolean isSoundButtonVisible() {
+        return adViewManager.getAdConfiguration().isSoundButtonVisible(true);
     }
 
     private void showEndCardCreative(View creativeView) {

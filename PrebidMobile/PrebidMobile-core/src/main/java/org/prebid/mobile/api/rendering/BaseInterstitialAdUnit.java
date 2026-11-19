@@ -27,11 +27,10 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
-import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.display.PluginRendererFactory;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
@@ -247,17 +246,21 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     protected void loadPrebidAd() {
-        PrebidMobilePluginRenderer plugin = PrebidMobilePluginRegister.getInstance().getPluginForPreferredRenderer(bidResponse);
-        if (plugin != null) {
-            interstitialController = plugin.createInterstitialController(getContext(), controllerListener, config, bidResponse);
-        }
+        AdUnitConfiguration renderingConfiguration = PluginRendererFactory.renderingConfiguration(config, bidResponse);
+        // The factory sends the win notice when a plugin renderer's controller draws the ad.
+        interstitialController = PluginRendererFactory.createInterstitialController(
+                getContext(),
+                controllerListener,
+                renderingConfiguration,
+                bidResponse
+        );
         if (interstitialController == null) {
             notifyErrorListener(new AdException(
                     AdException.INTERNAL_ERROR,
                     "InterstitialController is not defined. Unable to process bid."
             ));
         } else {
-            interstitialController.loadAd(config, bidResponse);
+            interstitialController.loadAd(renderingConfiguration, bidResponse);
         }
     }
 
@@ -411,8 +414,8 @@ public abstract class BaseInterstitialAdUnit {
 
             @Override
             public void onInterstitialClosed() {
+                // Closing does not grant the reward: the controller reports it via onUserEarnedReward().
                 notifyAdEventListener(AdListenerEvent.AD_CLOSE);
-                notifyUserReward();
             }
 
             @Override

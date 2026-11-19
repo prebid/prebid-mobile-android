@@ -1,10 +1,14 @@
 package org.prebid.mobile.api.rendering;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
@@ -13,12 +17,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
@@ -33,6 +39,8 @@ import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayVideoListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
+import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -141,6 +149,42 @@ public class DisplayViewTest {
         assertEquals(EnumSet.of(AdFormat.BANNER, AdFormat.VAST), adUnitConfiguration.getAdFormats());
     }
 
+    // The bid response's ext.prebid.passthrough[].adconfiguration.ismuted applies to the copy the
+    // renderer gets, never to the ad unit's own configuration, so it holds for this creative only.
+    @Test
+    public void serverSideIsMuted_appliesToTheRenderedCopyOnly() throws Exception {
+        adUnitConfiguration.setIsMuted(false);
+        when(mockResponse.getMobileSdkPassThrough()).thenReturn(MobileSdkPassThrough.create(new JSONObject(
+                "{\"prebid\":{\"passthrough\":[{\"type\":\"prebidmobilesdk\",\"adconfiguration\":{\"ismuted\":true}}]}}"
+        )));
+
+        displayView = new DisplayView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
+
+        AdUnitConfiguration rendered = captureRenderedConfiguration(null);
+        assertTrue("A server side ismuted=1 mutes this creative", rendered.isMuted());
+        assertFalse("The ad unit keeps its own setting for the next auction", adUnitConfiguration.isMuted());
+    }
+
+    @Test
+    public void customRendererSendsWinNoticeItself_skipsWinNotice() {
+        View customBannerView = new View(context);
+        PrebidMobilePluginRenderer customRenderer = Mockito.spy(
+                FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, customBannerView, true, "CustomRenderer", "2.0")
+        );
+        doReturn(true).when(customRenderer).sendsWinNotice();
+        registerPlugin(customRenderer);
+        when(mockResponse.getPreferredPluginRendererName()).thenReturn("CustomRenderer");
+        when(mockResponse.getPreferredPluginRendererVersion()).thenReturn("2.0");
+
+        try (MockedConstruction<WinNotifier> winNotifiers = mockConstruction(WinNotifier.class)) {
+            displayView = new DisplayView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
+
+            assertTrue(winNotifiers.constructed().isEmpty());
+            assertEquals(1, displayView.getChildCount());
+        }
+        verify(customRenderer).createBannerAdView(any(), any(), any(), any(), any());
+    }
+
     private AdUnitConfiguration captureRenderedConfiguration(DisplayVideoListener videoListener) {
         ArgumentCaptor<AdUnitConfiguration> captor = ArgumentCaptor.forClass(AdUnitConfiguration.class);
         verify(fakePrebidMobilePluginRenderer).createBannerAdView(
@@ -154,6 +198,8 @@ public class DisplayViewTest {
     }
 
     private void registerPlugin(PrebidMobilePluginRenderer renderer) {
+        // A renderer whose name is already registered is ignored, so replace it.
+        PrebidMobile.unregisterPluginRenderer(renderer);
         PrebidMobile.registerPluginRenderer(renderer);
         registeredRenderers.add(renderer);
     }

@@ -58,7 +58,7 @@ open class MaxRewardedFragment : AdFragment() {
     }
 
     override fun loadAd() {
-        adUnit?.fetchDemand {
+        adUnit?.fetchDemandBidInfo {
             maxRewardedAd?.loadAd()
         }
     }

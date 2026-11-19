@@ -29,6 +29,9 @@ public interface InterstitialControllerListener {
 
     void onInterstitialClosed();
 
+    /**
+     * Grants the reward of a rewarded ad. Only this call grants it, {@link #onInterstitialClosed()} does not.
+     */
     default void onUserEarnedReward() {
 
     }

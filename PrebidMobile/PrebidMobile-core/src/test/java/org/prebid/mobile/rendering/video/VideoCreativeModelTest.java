@@ -23,14 +23,18 @@ import org.junit.runners.JUnit4;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
+import org.prebid.mobile.rendering.video.vast.VASTErrorCodes;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(JUnit4.class)
 @Config(sdk = 19)
@@ -67,6 +71,41 @@ public class VideoCreativeModelTest {
 
         videoCreativeModel.trackVideoAdStarted(0, 0);
         verify(mockOmEventTracker).trackVideoAdStarted(0, 0);
+    }
+
+    @Test
+    public void trackVastError_requestsErrorUrlsWithErrorCode() {
+        videoCreativeModel.getVideoEventUrls().put(VideoAdEvent.Event.AD_ERROR, new ArrayList<>(Arrays.asList(
+                "https://example.com/error/inline?code=[ERRORCODE]&ts=[TIMESTAMP]",
+                "https://example.com/error/wrapper?code=%5BERRORCODE%5D"
+        )));
+
+        videoCreativeModel.trackVastError(VASTErrorCodes.MEDIA_DISPLAY_ERROR);
+
+        verify(mockTrackingManager).fireEventTrackingURLs(Arrays.asList(
+                "https://example.com/error/inline?code=405&ts=[TIMESTAMP]",
+                "https://example.com/error/wrapper?code=405"
+        ));
+    }
+
+    @Test
+    public void trackVastError_onlyFirstErrorRequestsErrorUrls() {
+        videoCreativeModel.getVideoEventUrls().put(VideoAdEvent.Event.AD_ERROR, new ArrayList<>(Arrays.asList(
+                "https://example.com/error?code=[ERRORCODE]"
+        )));
+
+        videoCreativeModel.trackVastError(VASTErrorCodes.AD_DISPLAY_TIMEOUT_ERROR);
+        videoCreativeModel.trackVastError(VASTErrorCodes.MEDIA_DISPLAY_ERROR);
+
+        verify(mockTrackingManager).fireEventTrackingURLs(Arrays.asList("https://example.com/error?code=304"));
+        verifyNoMoreInteractions(mockTrackingManager);
+    }
+
+    @Test
+    public void trackVastError_noErrorUrls_requestsNothing() {
+        videoCreativeModel.trackVastError(VASTErrorCodes.MEDIA_NOT_FOUND_ERROR);
+
+        verifyNoInteractions(mockTrackingManager);
     }
 
     @Test

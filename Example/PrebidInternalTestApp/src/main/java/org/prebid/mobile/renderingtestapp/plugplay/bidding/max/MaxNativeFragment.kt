@@ -58,7 +58,7 @@ open class MaxNativeFragment : AdFragment() {
     }
 
     override fun loadAd() {
-        nativeAdUnit.fetchDemand(nativeAdLoader) {
+        nativeAdUnit.fetchDemandBidInfo(nativeAdLoader) {
             nativeAdLoader.loadAd(createNativeAdView(requireActivity()))
         }
     }

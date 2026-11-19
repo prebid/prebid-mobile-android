@@ -27,6 +27,7 @@ import org.robolectric.RobolectricTestRunner;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -737,8 +738,63 @@ public class AdResponseParserVastTest {
         assertNotNull(vast.getVast().getAds().get(0).getInline().getError());
         assertEquals("http://adserver.com/error.gif", vast.getVast().getAds().get(0).getInline().getError().getValue());
 
-        assertEquals("http://adserver.com/error.gif", vast.getError(vast, 0));
-        assertFalse("http://adserver.com/error.png".equals(vast.getError(vast, 0)));
+        assertEquals(Arrays.asList("http://adserver.com/error.gif"), vast.getErrorUrls(vast, 0));
+    }
+
+    @Test
+    public void getErrorUrls_returnsInLineUrlsThenWrapperUrlsFromClosestWrapper() throws Exception {
+        AdResponseParserVast rootWrapper = new AdResponseParserVast(wrapperVast(
+                "<Error><![CDATA[https://example.com/error/wrapper1?code=[ERRORCODE]]]></Error>"
+        ));
+        AdResponseParserVast wrapper = new AdResponseParserVast(wrapperVast(
+                "<Error><![CDATA[https://example.com/error/wrapper2a]]></Error>"
+                + "<Error><![CDATA[https://example.com/error/wrapper2b]]></Error>"
+        ));
+        AdResponseParserVast inline = new AdResponseParserVast(inlineVast(
+                "<Error><![CDATA[https://example.com/error/inline1?code=[ERRORCODE]]]></Error>"
+                + "<Error></Error>"
+                + "<Error><![CDATA[https://example.com/error/inline2?code=%5BERRORCODE%5D]]></Error>"
+        ));
+        rootWrapper.setWrapper(wrapper);
+        wrapper.setWrapper(inline);
+
+        assertEquals(
+                Arrays.asList(
+                        "https://example.com/error/inline1?code=[ERRORCODE]",
+                        "https://example.com/error/inline2?code=%5BERRORCODE%5D",
+                        "https://example.com/error/wrapper2a",
+                        "https://example.com/error/wrapper2b",
+                        "https://example.com/error/wrapper1?code=[ERRORCODE]"
+                ),
+                rootWrapper.getErrorUrls(rootWrapper, 0)
+        );
+        assertEquals("https://example.com/error/wrapper2b",
+                     wrapper.getVast().getAds().get(0).getWrapper().getError().getValue());
+    }
+
+    @Test
+    public void getErrorUrls_noErrorElements_returnsEmptyList() throws Exception {
+        AdResponseParserVast rootWrapper = new AdResponseParserVast(wrapperVast(""));
+        AdResponseParserVast inline = new AdResponseParserVast(inlineVast(""));
+        rootWrapper.setWrapper(inline);
+
+        assertTrue(rootWrapper.getErrorUrls(rootWrapper, 0).isEmpty());
+    }
+
+    private static String wrapperVast(String errorElements) {
+        return "<VAST version=\"4.0\"><Ad id=\"wrapper\"><Wrapper>"
+               + "<AdSystem>test</AdSystem>"
+               + "<VASTAdTagURI><![CDATA[https://example.com/vast.xml]]></VASTAdTagURI>"
+               + errorElements
+               + "</Wrapper></Ad></VAST>";
+    }
+
+    private static String inlineVast(String errorElements) {
+        return "<VAST version=\"4.0\"><Ad id=\"inline\"><InLine>"
+               + "<AdSystem>test</AdSystem>"
+               + "<AdTitle>test</AdTitle>"
+               + errorElements
+               + "</InLine></Ad></VAST>";
     }
 
     @Test
