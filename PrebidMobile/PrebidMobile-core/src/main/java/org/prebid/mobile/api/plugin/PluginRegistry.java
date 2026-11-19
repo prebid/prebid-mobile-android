@@ -243,7 +243,8 @@ public final class PluginRegistry<P> {
         }
 
         if (!registered) {
-            LogUtil.error(TAG, "[" + name + "] Plugin " + info + " is not registered: its onRegister threw " + failure);
+            // By class only: the exception's message can contain a user ID or a token.
+            LogUtil.error(TAG, "[" + name + "] Plugin " + info + " is not registered: its onRegister threw " + failure.getClass().getName());
             return;
         }
 
@@ -321,7 +322,8 @@ public final class PluginRegistry<P> {
             onUnregister.call(entry.plugin);
         } catch (Exception exception) {
             // Also catches checked exceptions, which Kotlin code can throw without declaring them.
-            LogUtil.error(TAG, "[" + name + "] Plugin " + entry.info + " is unregistered, but its onUnregister threw " + exception);
+            // By class only: the exception's message can contain a user ID or a token.
+            LogUtil.error(TAG, "[" + name + "] Plugin " + entry.info + " is unregistered, but its onUnregister threw " + exception.getClass().getName());
         }
     }
 }

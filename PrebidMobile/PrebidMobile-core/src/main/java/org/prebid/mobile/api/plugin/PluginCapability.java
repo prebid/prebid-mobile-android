@@ -20,6 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RestrictTo;
 
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.api.eid.ExtendedIdProvider;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 
 /**
@@ -47,6 +49,27 @@ public final class PluginCapability<P> {
                     PluginRegistry.UNLIMITED,
                     null,
                     null
+            )
+    );
+
+    /**
+     * Extended ID providers: objects that implement {@link ExtendedIdProvider}.
+     * <p>
+     * Providers are identified by {@link ExtendedIdProvider#getProviderInfo()}, i.e. name and
+     * version. Their IDs are sent in every bid request, after the static IDs set through
+     * {@link TargetingParams} and SharedID, in the order the providers were registered. An ID
+     * whose source is already present is skipped.
+     */
+    public static final PluginCapability<ExtendedIdProvider> EXTENDED_IDS = new PluginCapability<>(
+            new PluginRegistry<>(
+                    "extendedIds",
+                    provider -> {
+                        ExtendedIdProvider.Info info = provider.getProviderInfo();
+                        return new PrebidPluginInfo(info.getName(), info.getVersion());
+                    },
+                    PluginRegistry.UNLIMITED,
+                    ExtendedIdProvider::onRegister,
+                    ExtendedIdProvider::onUnregister
             )
     );
 

@@ -27,7 +27,6 @@ import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.javademo.utils.Settings;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -84,7 +83,9 @@ public class CustomApplication extends Application {
             put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
         }});
 
-        TargetingParams.setExternalUserIds(new ArrayList<>(Arrays.asList(id1, id2, id3, id4, id5)));
+        for (ExternalUserId id : Arrays.asList(id1, id2, id3, id4, id5)) {
+            TargetingParams.addExternalUserId(id);
+        }
     }
 
 }
