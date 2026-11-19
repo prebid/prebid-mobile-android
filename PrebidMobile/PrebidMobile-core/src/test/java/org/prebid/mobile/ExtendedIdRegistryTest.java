@@ -20,11 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
@@ -41,12 +41,17 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
 public class ExtendedIdRegistryTest {
+
+    /** Stands for an ID value inside an exception message; it must never reach the log. */
+    private static final String SECRET = "raw-token-123";
 
     private ExtendedIdRegistry registry;
     private RecordingLogger logger;
@@ -79,7 +84,37 @@ public class ExtendedIdRegistryTest {
 
         List<ExtendedId> extendedIds = registry.getAllExtendedIds(null);
         assertEquals(1, extendedIds.size());
-        assertSame(userId, extendedIds.get(0));
+        assertEquals("source1", extendedIds.get(0).getSource());
+        assertThat(ids(extendedIds)).containsExactly("id1");
+    }
+
+    @Test
+    public void providerIdJsonIsReadOnceAndReturnedAsACopy() throws JSONException {
+        int[] getJsonCount = {0};
+        JSONObject json = new JSONObject("{\"source\":\"source1\",\"uids\":[{\"id\":\"id1\",\"atype\":1}]}");
+        ExtendedId counting = new ExtendedId() {
+            @NonNull
+            @Override
+            public String getSource() {
+                return "source1";
+            }
+
+            @Override
+            public JSONObject getJson() {
+                getJsonCount[0]++;
+                return json;
+            }
+        };
+        PrebidMobile.registerPlugin(new FakeProvider("p1", counting), PluginCapability.EXTENDED_IDS);
+
+        List<ExtendedId> extendedIds = registry.getAllExtendedIds(null);
+        // The provider changes its JSON after the IDs were collected.
+        json.put("source", "other.com");
+
+        assertEquals(1, getJsonCount[0]);
+        assertEquals("source1", extendedIds.get(0).getJson().getString("source"));
+        assertThat(ids(extendedIds)).containsExactly("id1");
+        assertEquals(1, getJsonCount[0]);
     }
 
     @Test
@@ -313,6 +348,109 @@ public class ExtendedIdRegistryTest {
     }
 
     @Test
+    public void invalidProviderIdDoesNotTakeItsSource() {
+        PrebidMobile.registerPlugin(new FakeProvider(
+                "first",
+                new ExternalUserId("id5-sync.com", Collections.emptyList()),
+                jsonId("id5-sync.com", (JSONObject) null),
+                jsonId("id5-sync.com", new JSONObject()),
+                throwingJsonId("id5-sync.com")
+        ), PluginCapability.EXTENDED_IDS);
+        PrebidMobile.registerPlugin(new FakeProvider("second", createUserId("id5-sync.com", "second")), PluginCapability.EXTENDED_IDS);
+
+        List<ExtendedId> extendedIds = registry.getAllExtendedIds(null);
+
+        assertThat(ids(extendedIds)).containsExactly("second");
+        assertTrue(logContains("Skipping the ID from source id5-sync.com provided by first/1.0: its JSON is empty."));
+        assertTrue(logContains("Skipping the ID from source id5-sync.com provided by first/1.0: its getJson() threw java.lang.IllegalStateException"));
+        assertFalse(logContains("provided by second/1.0"));
+    }
+
+    @Test
+    public void providerIdWhoseJsonHasAnotherSourceIsSkipped() {
+        PrebidMobile.registerPlugin(new FakeProvider(
+                "first",
+                jsonId("vendor.com", "{\"source\":\"pubcid.org\",\"uids\":[{\"id\":\"first\",\"atype\":1}]}")
+        ), PluginCapability.EXTENDED_IDS);
+        PrebidMobile.registerPlugin(new FakeProvider("second", createUserId("vendor.com", "second")), PluginCapability.EXTENDED_IDS);
+
+        List<ExtendedId> extendedIds = registry.getAllExtendedIds(createUserId("pubcid.org", "shared"));
+
+        assertThat(ids(extendedIds)).containsExactly("shared", "second");
+        assertTrue(logContains("Skipping the ID from source vendor.com provided by first/1.0: the \"source\" in its JSON is different."));
+    }
+
+    @Test
+    public void providerIdWithEmptySourceIsSkipped() {
+        PrebidMobile.registerPlugin(new FakeProvider(
+                "p1",
+                createUserId("", "empty"),
+                jsonId(null, "{\"source\":\"\",\"uids\":[{\"id\":\"null\",\"atype\":1}]}"),
+                createUserId("source1", "id1")
+        ), PluginCapability.EXTENDED_IDS);
+
+        assertThat(ids(registry.getAllExtendedIds(null))).containsExactly("id1");
+        assertTrue(logContains("Skipping an ID provided by p1/1.0: its source is empty."));
+    }
+
+    @Test
+    public void providerIdWhoseJsonCantBeEncodedIsSkipped() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("source", "id5-sync.com");
+        map.put("uids", Double.NaN);
+        PrebidMobile.registerPlugin(new FakeProvider("first", jsonId("id5-sync.com", new JSONObject(map))), PluginCapability.EXTENDED_IDS);
+        PrebidMobile.registerPlugin(new FakeProvider("second", createUserId("id5-sync.com", "second")), PluginCapability.EXTENDED_IDS);
+
+        assertThat(ids(registry.getAllExtendedIds(null))).containsExactly("second");
+        assertTrue(logContains("Skipping the ID from source id5-sync.com provided by first/1.0: its JSON can't be encoded."));
+    }
+
+    @Test
+    public void exceptionMessagesAreNotLogged() {
+        FakeProvider throwing = new FakeProvider("throwing");
+        throwing.throwOnGetExtendedIds = true;
+        ExtendedId sourceThrows = new ExtendedId() {
+            @NonNull
+            @Override
+            public String getSource() {
+                throw new IllegalStateException(SECRET);
+            }
+
+            @Override
+            public JSONObject getJson() {
+                return null;
+            }
+        };
+        PrebidMobile.registerPlugin(throwing, PluginCapability.EXTENDED_IDS);
+        PrebidMobile.registerPlugin(new FakeProvider("p1", sourceThrows, throwingJsonId("source1")), PluginCapability.EXTENDED_IDS);
+
+        registry.getAllExtendedIds(null);
+
+        assertEquals(3, logger.getMessages().size());
+        for (String message : logger.getMessages()) {
+            assertThat(message).contains("threw java.lang.IllegalStateException").doesNotContain(SECRET);
+        }
+    }
+
+    @Test
+    public void eachWarningIsLoggedOnce() {
+        registry.staticProvider.addUserId(createUserId("static.com", "static"));
+        PrebidMobile.registerPlugin(new FakeProvider("p1", createUserId("static.com", "p1"), jsonId("empty.com", new JSONObject())), PluginCapability.EXTENDED_IDS);
+
+        registry.getAllExtendedIds(null);
+        registry.getAllExtendedIds(null);
+        registry.getAllExtendedIds(null);
+        assertEquals(2, logger.getMessages().size());
+
+        // A new provider, source or reason is logged again.
+        PrebidMobile.registerPlugin(new FakeProvider("p2", createUserId("static.com", "p2"), createUserId("other.com", "other")), PluginCapability.EXTENDED_IDS);
+        registry.getAllExtendedIds(null);
+        registry.getAllExtendedIds(null);
+        assertEquals(3, logger.getMessages().size());
+        assertTrue(logContains("Skipping the ID from source static.com provided by p2/1.0"));
+    }
+
+    @Test
     public void providerIdWithSourceOfItsOwnEarlierIdIsSkipped() {
         PrebidMobile.registerPlugin(new FakeProvider(
                 "p1",
@@ -414,10 +552,59 @@ public class ExtendedIdRegistryTest {
         return new ExternalUserId(source, Collections.singletonList(new ExternalUserId.UniqueId(id, 1)));
     }
 
+    /**
+     * An ID whose {@code getSource()} and {@code getJson()} are set independently, as a custom
+     * {@link ExtendedId} implementation can do.
+     */
+    private static ExtendedId jsonId(String source, JSONObject json) {
+        return new ExtendedId() {
+            @NonNull
+            @Override
+            public String getSource() {
+                return source;
+            }
+
+            @Override
+            public JSONObject getJson() {
+                return json;
+            }
+        };
+    }
+
+    private static ExtendedId jsonId(String source, String json) {
+        try {
+            return jsonId(source, new JSONObject(json));
+        } catch (JSONException exception) {
+            throw new IllegalArgumentException(exception);
+        }
+    }
+
+    private static ExtendedId throwingJsonId(String source) {
+        return new ExtendedId() {
+            @NonNull
+            @Override
+            public String getSource() {
+                return source;
+            }
+
+            @Override
+            public JSONObject getJson() {
+                throw new IllegalStateException(SECRET);
+            }
+        };
+    }
+
+    /**
+     * Reads the first unique ID from the JSON, since provider IDs come back as copies of their JSON.
+     */
     private static List<String> ids(List<ExtendedId> extendedIds) {
         List<String> result = new ArrayList<>();
         for (ExtendedId extendedId : extendedIds) {
-            result.add(((ExternalUserId) extendedId).getUniqueIds().get(0).getId());
+            try {
+                result.add(extendedId.getJson().getJSONArray("uids").getJSONObject(0).getString("id"));
+            } catch (JSONException exception) {
+                throw new AssertionError(exception);
+            }
         }
         return result;
     }

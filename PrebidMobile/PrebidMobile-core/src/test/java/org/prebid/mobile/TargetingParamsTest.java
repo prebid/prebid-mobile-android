@@ -34,6 +34,7 @@ import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
@@ -56,9 +57,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -527,6 +531,47 @@ public class TargetingParamsTest extends BaseSetup {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
+    public void testSetExternalUserIdsIsNeverSeenHalfApplied() throws InterruptedException {
+        // At most 12 IDs at a time: more would grow the shared static map, whose clear() keeps its
+        // size, and change the iteration order that other tests expect.
+        List<ExternalUserId> listA = new ArrayList<>();
+        List<ExternalUserId> listB = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            listA.add(createUserId("a" + i + ".com", "a"));
+            listB.add(createUserId("b" + i + ".com", "b"));
+        }
+        TargetingParams.setExternalUserIds(listA);
+
+        // The writer keeps replacing the list until the reader is done, so every read overlaps a write.
+        AtomicBoolean readerDone = new AtomicBoolean(false);
+        AtomicReference<Throwable> writerError = new AtomicReference<>();
+        Thread writer = new Thread(() -> {
+            try {
+                for (int i = 0; !readerDone.get(); i++) {
+                    TargetingParams.setExternalUserIds(i % 2 == 0 ? listB : listA);
+                }
+            } catch (Throwable throwable) {
+                writerError.set(throwable);
+            }
+        });
+        writer.start();
+
+        try {
+            for (int read = 0; read < 2000; read++) {
+                List<ExtendedId> extendedIds = TargetingParams.getExtendedIds();
+                // Either all of list A or all of list B, never a mix or a partly cleared list.
+                assertEquals(10, extendedIds.size());
+                assertEquals(1, new HashSet<>(uniqueIds(extendedIds)).size());
+            }
+        } finally {
+            readerDone.set(true);
+            writer.join();
+        }
+        assertNull(writerError.get());
+    }
+
+    @Test
     public void testNewConstructor() {
         TargetingParams.setExternalUserIds(createNewExternalUserIds());
 
@@ -646,10 +691,17 @@ public class TargetingParamsTest extends BaseSetup {
         return new ExternalUserId(source, Collections.singletonList(new ExternalUserId.UniqueId(id, 1)));
     }
 
+    /**
+     * Reads the first unique ID from the JSON, since provider IDs come back as copies of their JSON.
+     */
     private static List<String> uniqueIds(List<ExtendedId> extendedIds) {
         List<String> result = new ArrayList<>();
         for (ExtendedId extendedId : extendedIds) {
-            result.add(((ExternalUserId) extendedId).getUniqueIds().get(0).getId());
+            try {
+                result.add(extendedId.getJson().getJSONArray("uids").getJSONObject(0).getString("id"));
+            } catch (JSONException exception) {
+                throw new AssertionError(exception);
+            }
         }
         return result;
     }

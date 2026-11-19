@@ -34,6 +34,11 @@ import java.util.List;
  * and SharedID, in the order the providers were registered. Registration order is the only
  * ordering guarantee. An ID whose source is already present (a static ID, SharedID, or an ID from a
  * provider registered earlier) is skipped, and the SDK logs a warning.
+ * <p>
+ * The SDK reads each ID's {@link ExtendedId#getJson()} once per bid request and sends that JSON. An
+ * ID is also skipped, with a warning, if its JSON is {@code null} or empty, can't be built or
+ * encoded, or has a {@code "source"} other than {@link ExtendedId#getSource()}. A skipped ID doesn't
+ * take its source, so another provider's ID from the same source can still be sent.
  *
  * <h3>Lifecycle</h3>
  * <ol>
@@ -71,6 +76,9 @@ public interface ExtendedIdProvider {
     /**
      * Returns the provider's name and version. The SDK uses it to detect duplicate registrations
      * and in logs. Must return the same value for the lifetime of the provider.
+     * <p>
+     * Must not return {@code null} or throw: it is called by {@code registerPlugin},
+     * {@code unregisterPlugin} and {@code containsPlugin}, which don't catch errors from it.
      */
     @NonNull
     Info getProviderInfo();
@@ -105,7 +113,7 @@ public interface ExtendedIdProvider {
      * removes the registered one. Choose a {@code name} specific to your integration (e.g. your
      * source domain) so it doesn't collide with other vendors.
      */
-    class Info {
+    final class Info {
 
         @NonNull
         private final String name;

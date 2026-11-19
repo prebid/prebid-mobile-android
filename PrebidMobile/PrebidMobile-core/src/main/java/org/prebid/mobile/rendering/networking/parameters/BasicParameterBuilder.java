@@ -63,6 +63,8 @@ import java.util.UUID;
 
 public class BasicParameterBuilder extends ParameterBuilder {
 
+    private static final String TAG = "BasicParameterBuilder";
+
     public static final String[] SUPPORTED_VIDEO_MIME_TYPES = new String[]{
             "video/mp4",
             "video/3gpp",
@@ -201,7 +203,10 @@ public class BasicParameterBuilder extends ParameterBuilder {
                     }
                 }
             }
-            user.getExt().put("eids", idsJson);
+            // No "eids": [] when every ID was dropped.
+            if (idsJson.length() > 0) {
+                user.getExt().put("eids", idsJson);
+            }
         }
 
         final Pair<Float, Float> userLatLng = TargetingParams.getUserLatLng();
@@ -224,7 +229,8 @@ public class BasicParameterBuilder extends ParameterBuilder {
             json = id.getJson();
         } catch (Exception exception) {
             // Also catches checked exceptions, which Kotlin code can throw without declaring them.
-            LogUtil.warning("Skipping an extended ID: its getJson() threw " + exception);
+            // By class only: the exception's message can contain the ID value.
+            LogUtil.warning(TAG, "Skipping an extended ID: its getJson() threw " + exception.getClass().getName());
             return null;
         }
         if (json == null || json.length() == 0) {

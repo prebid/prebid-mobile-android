@@ -230,8 +230,7 @@ public class TargetingParams {
     }
 
     /**
-     * Returns the static external user IDs. IDs from registered providers, including SharedID, are
-     * not included.
+     * Returns the static external user IDs. Provider IDs and SharedID are not included.
      *
      * @deprecated Returns only the static IDs. Use {@link #getExtendedIds()} to get every ID sent in
      * bid requests.
@@ -244,9 +243,10 @@ public class TargetingParams {
     /**
      * Returns every external user ID sent in bid requests: the static IDs, then SharedID when
      * {@link #getSendSharedId()} is {@code true}, then the IDs of the providers registered as
-     * {@link PluginCapability#EXTENDED_IDS}, in registration order. A provider's ID whose source is
-     * already in the list is skipped. Calls {@link ExtendedIdProvider#getExtendedIds()} on every
-     * provider.
+     * {@link PluginCapability#EXTENDED_IDS}, in registration order. A provider's ID is skipped if
+     * its source is already in the list or its JSON can't be sent (see {@link ExtendedIdProvider}).
+     * Calls {@link ExtendedIdProvider#getExtendedIds()} on every provider, and returns each provider
+     * ID as a copy of the JSON it is sent with.
      */
     @NonNull
     public static List<ExtendedId> getExtendedIds() {

@@ -7,7 +7,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
 import org.json.JSONObject
@@ -124,20 +123,12 @@ object CommandLineArgumentParser {
     private fun extractEidsExtras(eidsJsonString: String) {
         val eidsJsonArray = JSONArray(eidsJsonString)
         for (i in 0 until eidsJsonArray.length()) {
-            val jsonObject = eidsJsonArray.get(i)
-            if (jsonObject is JsonObject) {
-                val source = jsonObject.get("source").asString
-                val identifier = jsonObject.get("identifier").asString
-                if (source == null || identifier == null) {
-                    val aType = jsonObject.get("atype")
-                    TargetingParams.addExternalUserId(
-                        if (aType == null) {
-                            ExternalUserId(source, listOf(UniqueId(identifier, 1)))
-                        } else {
-                            ExternalUserId(source, listOf(UniqueId(identifier, aType.asInt)))
-                        }
-                    )
-                }
+            val jsonObject = eidsJsonArray.optJSONObject(i) ?: continue
+            val source = jsonObject.optString("source")
+            val identifier = jsonObject.optString("identifier")
+            if (source.isNotEmpty() && identifier.isNotEmpty()) {
+                val aType = jsonObject.optInt("atype", 1)
+                TargetingParams.addExternalUserId(ExternalUserId(source, listOf(UniqueId(identifier, aType))))
             }
         }
     }

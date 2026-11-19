@@ -923,6 +923,85 @@ public class BasicParameterBuilderTest {
         assertEquals(EXPECTED_USER_WITHOUT_PROVIDERS, user.replace(sharedId, "SHARED_ID_JSON"));
     }
 
+    @Test
+    public void whenEidsPlacementIsOpenRtb26_providerIdsAreOnlyInUserEids() throws JSONException {
+        TargetingParams.addExternalUserId(new ExternalUserId("static.com", List.of(new ExternalUserId.UniqueId("static", 1))));
+        PrebidMobile.registerPlugin(new TestExtendedIdProvider(
+                "vendor",
+                new ExternalUserId("vendor.com", List.of(new ExternalUserId.UniqueId("vendor", 1)))
+        ), PluginCapability.EXTENDED_IDS);
+        PrebidMobile.setEidsPlacement(EidsPlacement.OPEN_RTB_2_6);
+        try {
+            JSONObject user = buildUser();
+
+            JSONArray eids = user.getJSONArray("eids");
+            assertEquals(2, eids.length());
+            assertEquals("static", firstUid(findEidBySource(eids, "static.com")));
+            assertEquals("vendor", firstUid(findEidBySource(eids, "vendor.com")));
+            assertFalse(user.has("ext") && user.getJSONObject("ext").has("eids"));
+        } finally {
+            PrebidMobile.setEidsPlacement(EidsPlacement.COMPATIBLE);
+        }
+    }
+
+    @Test
+    public void whenExternalUserIdHasEmptySource_itIsNotSent() throws JSONException {
+        TargetingParams.addExternalUserId(new ExternalUserId("", List.of(new ExternalUserId.UniqueId("empty", 1))));
+        TargetingParams.addExternalUserId(new ExternalUserId("good.com", List.of(new ExternalUserId.UniqueId("good", 1))));
+
+        JSONArray eids = buildUserExtEids();
+
+        assertEquals(1, eids.length());
+        assertEquals("good.com", eids.getJSONObject(0).getString("source"));
+    }
+
+    @Test
+    public void whenEveryExtendedIdIsDropped_noEidsAreSent() throws JSONException {
+        TargetingParams.addExternalUserId(new ExternalUserId("", List.of(new ExternalUserId.UniqueId("empty", 1))));
+        TargetingParams.addExternalUserId(new ExternalUserId("no-uids.com", List.of()));
+        PrebidMobile.registerPlugin(new TestExtendedIdProvider(
+                "vendor",
+                new ExternalUserId("vendor.com", List.of())
+        ), PluginCapability.EXTENDED_IDS);
+
+        JSONObject user = buildUser();
+
+        assertFalse(user.has("eids"));
+        assertFalse(user.has("ext") && user.getJSONObject("ext").has("eids"));
+    }
+
+    @Test
+    public void whenFirstProviderIdIsInvalid_aLaterProviderIdFromTheSameSourceIsSent() throws JSONException {
+        PrebidMobile.registerPlugin(new TestExtendedIdProvider(
+                "first",
+                new ExternalUserId("id5-sync.com", List.of())
+        ), PluginCapability.EXTENDED_IDS);
+        PrebidMobile.registerPlugin(new TestExtendedIdProvider(
+                "second",
+                new ExternalUserId("id5-sync.com", List.of(new ExternalUserId.UniqueId("second", 1)))
+        ), PluginCapability.EXTENDED_IDS);
+
+        JSONArray eids = buildUserExtEids();
+
+        assertEquals(1, eids.length());
+        assertEquals("id5-sync.com", eids.getJSONObject(0).getString("source"));
+        assertEquals("second", firstUid(eids.getJSONObject(0)));
+    }
+
+    /**
+     * Returns {@code user} as it is sent, after the EIDs are placed for the EID placement.
+     */
+    private JSONObject buildUser() throws JSONException {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdFormat(AdFormat.BANNER);
+        adConfiguration.addSize(new AdSize(320, 50));
+
+        AdRequestInput adRequestInput = new AdRequestInput();
+        new BasicParameterBuilder(adConfiguration, context.getResources(), browserActivityAvailable)
+                .appendBuilderParameters(adRequestInput);
+        return adRequestInput.getBidRequest().getJsonObject().getJSONObject("user");
+    }
+
     private JSONArray buildUserExtEids() throws JSONException {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.setAdFormat(AdFormat.BANNER);
