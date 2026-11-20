@@ -117,10 +117,13 @@ public class AdWebViewClient extends WebViewClient {
                                                                                                                                           .getType() == SRC_ANCHOR_TYPE || view.getHitTestResult()
                                                                                                                                                                                .getType() == SRC_IMAGE_ANCHOR_TYPE)) {
 
-                // stop loading the iframe or whatever
-                // instead simply change the location of the webview - this will
-                // trigger our shouldOverrideUrlLoading
-                reloadUrl(view, url);
+                // The tap navigated the ad's iframe. Stop that navigation and treat it as
+                // the click directly. Re-loading the URL into the WebView and waiting for
+                // shouldOverrideUrlLoading does not work: WebView never calls it for
+                // navigations the app starts with loadUrl(), so the landing page would
+                // open inside the ad and the click would never reach the browser.
+                view.stopLoading();
+                handleWebViewClick(url, webViewBase);
             }
 
             urls.add(url);

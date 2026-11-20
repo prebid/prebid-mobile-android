@@ -64,19 +64,86 @@ public class AdWebViewClientTest {
     }
 
     @Test
-    public void onLoadResourceTest() {
-        WebViewBase mockWebView = mock(WebViewBase.class);
-        WebView.HitTestResult mockHitTestResult = mock(WebView.HitTestResult.class);
-
-        when(mockWebView.isClicked()).thenReturn(true);
-        when(mockWebView.containsIFrame()).thenReturn(true);
-        when(mockWebView.getHitTestResult()).thenReturn(mockHitTestResult);
-        when(mockHitTestResult.getType()).thenReturn(WebView.HitTestResult.SRC_ANCHOR_TYPE);
+    public void onLoadResource_clickedIFrameAnchor_opensTheClickUrlExternally() {
+        MraidEventsManager.MraidListener mockListener = mock(MraidEventsManager.MraidListener.class);
+        WebViewBase mockWebView = clickedIFrameWebView(WebView.HitTestResult.SRC_ANCHOR_TYPE, mockListener);
 
         adWebViewClient.onLoadResource(mockWebView, TEST_URL);
 
         verify(mockWebView).stopLoading();
-        verify(mockWebView).loadUrl(TEST_URL);
+        verify(mockListener).openExternalLink(TEST_URL);
+        // loadUrl() never reaches shouldOverrideUrlLoading, so it must not be the route to the click.
+        verify(mockWebView, never()).loadUrl(anyString());
+    }
+
+    @Test
+    public void onLoadResource_clickedIFrameImageAnchor_opensTheClickUrlExternally() {
+        MraidEventsManager.MraidListener mockListener = mock(MraidEventsManager.MraidListener.class);
+        WebViewBase mockWebView = clickedIFrameWebView(WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE, mockListener);
+
+        adWebViewClient.onLoadResource(mockWebView, TEST_URL);
+
+        verify(mockListener).openExternalLink(TEST_URL);
+    }
+
+    @Test
+    public void onLoadResource_prefersTheTargetUrlOverTheIFrameNavigation() {
+        MraidEventsManager.MraidListener mockListener = mock(MraidEventsManager.MraidListener.class);
+        WebViewBase mockWebView = clickedIFrameWebView(WebView.HitTestResult.SRC_ANCHOR_TYPE, mockListener);
+        when(mockWebView.getTargetUrl()).thenReturn("https://landing.example");
+
+        adWebViewClient.onLoadResource(mockWebView, TEST_URL);
+
+        verify(mockListener).openExternalLink("https://landing.example");
+    }
+
+    @Test
+    public void onLoadResource_sameUrlLoadedAgain_opensOnlyOnce() {
+        MraidEventsManager.MraidListener mockListener = mock(MraidEventsManager.MraidListener.class);
+        WebViewBase mockWebView = clickedIFrameWebView(WebView.HitTestResult.SRC_ANCHOR_TYPE, mockListener);
+
+        adWebViewClient.onLoadResource(mockWebView, TEST_URL);
+        adWebViewClient.onLoadResource(mockWebView, TEST_URL);
+
+        verify(mockListener, times(1)).openExternalLink(TEST_URL);
+    }
+
+    @Test
+    public void onLoadResource_withoutATap_isNotAClick() {
+        MraidEventsManager.MraidListener mockListener = mock(MraidEventsManager.MraidListener.class);
+        WebViewBase mockWebView = clickedIFrameWebView(WebView.HitTestResult.SRC_ANCHOR_TYPE, mockListener);
+        when(mockWebView.isClicked()).thenReturn(false);
+
+        adWebViewClient.onLoadResource(mockWebView, TEST_URL);
+
+        verify(mockWebView, never()).stopLoading();
+        verify(mockListener, never()).openExternalLink(anyString());
+    }
+
+    @Test
+    public void onLoadResource_tapThatIsNotOnALink_isNotAClick() {
+        MraidEventsManager.MraidListener mockListener = mock(MraidEventsManager.MraidListener.class);
+        WebViewBase mockWebView = clickedIFrameWebView(WebView.HitTestResult.UNKNOWN_TYPE, mockListener);
+
+        adWebViewClient.onLoadResource(mockWebView, TEST_URL);
+
+        verify(mockWebView, never()).stopLoading();
+        verify(mockListener, never()).openExternalLink(anyString());
+    }
+
+    private static WebViewBase clickedIFrameWebView(int hitTestType, MraidEventsManager.MraidListener listener) {
+        WebViewBase mockWebView = mock(WebViewBase.class);
+        WebView.HitTestResult mockHitTestResult = mock(WebView.HitTestResult.class);
+        mockWebView.mraidListener = listener;
+
+        when(mockWebView.isClicked()).thenReturn(true);
+        when(mockWebView.containsIFrame()).thenReturn(true);
+        when(mockWebView.getHitTestResult()).thenReturn(mockHitTestResult);
+        when(mockHitTestResult.getType()).thenReturn(hitTestType);
+        when(mockWebView.getMRAIDInterface()).thenReturn(mock(BaseJSInterface.class));
+        when(mockWebView.getPreloadedListener()).thenReturn(mock(PreloadManager.PreloadedListener.class));
+        when(mockWebView.canHandleClick()).thenReturn(true);
+        return mockWebView;
     }
 
     @Test
