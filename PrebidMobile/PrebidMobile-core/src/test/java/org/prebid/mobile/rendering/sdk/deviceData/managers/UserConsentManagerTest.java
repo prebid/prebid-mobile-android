@@ -260,8 +260,9 @@ public class UserConsentManagerTest {
         WhiteBox.setInternalState(spyConsentManager, "realGdpr2PurposeConsents", "10"); // true
         assertTrue(spyConsentManager.canAccessDeviceData());
 
+        // Outside GDPR a TCF Purpose 1 refusal does not govern device access (prebid#1001).
         WhiteBox.setInternalState(spyConsentManager, "realGdpr2PurposeConsents", "00"); // false
-        assertFalse(spyConsentManager.canAccessDeviceData());
+        assertTrue(spyConsentManager.canAccessDeviceData());
 
         WhiteBox.setInternalState(spyConsentManager, "realGdpr2PurposeConsents", null); // undefined
         assertTrue(spyConsentManager.canAccessDeviceData());
@@ -295,6 +296,74 @@ public class UserConsentManagerTest {
 
         WhiteBox.setInternalState(spyConsentManager, "realGdpr2PurposeConsents", null); // undefined
         assertTrue(spyConsentManager.canAccessDeviceData());
+    }
+
+    @Test
+    public void canAccessDeviceData_cmpWritesAllZeroTcfOutsideGdpr_allowsDeviceData() {
+        // The prebid#1001 case: a CMP that writes TCF keys in every region, US traffic.
+        sharedPreferences
+            .edit()
+            .putInt(UserConsentManager.GDPR_2_SUBJECT_KEY, 0)
+            .putString(UserConsentManager.GDPR_2_PURPOSE_CONSENT_KEY, "0000000000")
+            .apply();
+
+        assertFalse(userConsentManager.getSubjectToGdpr());
+        assertTrue(userConsentManager.canAccessDeviceData());
+    }
+
+    @Test
+    public void canAccessDeviceData_cmpRefusesPurpose1UnderGdpr_deniesDeviceData() {
+        sharedPreferences
+            .edit()
+            .putInt(UserConsentManager.GDPR_2_SUBJECT_KEY, 1)
+            .putString(UserConsentManager.GDPR_2_PURPOSE_CONSENT_KEY, "0000000000")
+            .apply();
+
+        assertFalse(userConsentManager.canAccessDeviceData());
+    }
+
+    @Test
+    public void canAccessDeviceData_publisherSubjectOverridesCmpSubjectOnItsOwn() {
+        // Previously the publisher's gdprApplies was ignored unless purpose consents were also
+        // set through the Prebid API, so the CMP's pair decided instead.
+        sharedPreferences
+            .edit()
+            .putInt(UserConsentManager.GDPR_2_SUBJECT_KEY, 1)
+            .putString(UserConsentManager.GDPR_2_PURPOSE_CONSENT_KEY, "0000000000")
+            .apply();
+
+        userConsentManager.setSubjectToGdpr(false);
+
+        assertTrue(userConsentManager.canAccessDeviceData());
+    }
+
+    @Test
+    public void canAccessDeviceData_publisherPurposeConsentsOverrideCmpConsentsOnTheirOwn() {
+        // Previously publisher purpose consents were ignored unless gdprApplies was also set
+        // through the Prebid API.
+        sharedPreferences
+            .edit()
+            .putInt(UserConsentManager.GDPR_2_SUBJECT_KEY, 1)
+            .putString(UserConsentManager.GDPR_2_PURPOSE_CONSENT_KEY, "0000000000")
+            .apply();
+        assertFalse(userConsentManager.canAccessDeviceData());
+
+        userConsentManager.setGdprPurposeConsents("1000000000");
+
+        assertTrue(userConsentManager.canAccessDeviceData());
+    }
+
+    @Test
+    public void canAccessDeviceData_publisherRefusalUnderGdprWinsOverCmpGrant() {
+        sharedPreferences
+            .edit()
+            .putString(UserConsentManager.GDPR_2_PURPOSE_CONSENT_KEY, "1000000000")
+            .apply();
+
+        userConsentManager.setSubjectToGdpr(true);
+        userConsentManager.setGdprPurposeConsents("0000000000");
+
+        assertFalse(userConsentManager.canAccessDeviceData());
     }
 
     @Test

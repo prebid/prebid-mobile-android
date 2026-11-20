@@ -248,42 +248,42 @@ public class UserConsentManager extends BaseManager {
 
 
     /**
-     * Truth table. Fetches advertising identifier based TCF 2.0 Purpose1 value.
+     * Whether the SDK may read device data such as the advertising ID, based on TCF v2
+     * Purpose 1 ("store and/or access information on a device").
      * <p>
-     * deviceAccessConsent=true   deviceAccessConsent=false  deviceAccessConsent undefined
-     * <p>
-     * gdprApplies=false        Yes, read IDFA             No, don’t read IDFA           Yes, read IDFA
-     * gdprApplies=true         Yes, read IDFA             No, don’t read IDFA           No, don’t read IDFA
-     * gdprApplies=undefined    Yes, read IDFA             No, don’t read IDFA           Yes, read IDFA
+     * Each signal is resolved on its own: a value the publisher set through the Prebid API
+     * takes precedence over the CMP's IAB value for that signal only, so a publisher who sets
+     * just one of them still has the other read from the CMP.
+     * <pre>
+     *                      Purpose 1 = 1   Purpose 1 = 0   Purpose 1 undefined
+     * gdprApplies=false    Yes             Yes             Yes
+     * gdprApplies=true     Yes             No              No
+     * gdprApplies=undefined Yes            No              Yes
+     * </pre>
+     * When GDPR is known not to apply, TCF purpose consents do not govern the request. Some
+     * CMPs write a TCF string in every region, and an all-zero string written outside the EEA
+     * is not a refusal. Regional opt-outs outside GDPR travel separately in regs.us_privacy and
+     * regs.gpp, and the device limit-ad-tracking setting in device.lmt.
      */
     public boolean canAccessDeviceData() {
         final int deviceConsentIndex = 0;
-
-        if (prebidGdpr2Subject != null && prebidGdpr2PurposeConsents != null && prebidGdpr2PurposeConsents.length() > 0) {
-            return checkDeviceDataAccess(
-                prebidGdpr2Subject.equals(Boolean.TRUE),
-                prebidGdpr2PurposeConsents.charAt(deviceConsentIndex) == '1'
-            );
-        }
-
-        Boolean gdprApplies = getRealSubjectToGdprBoolean();
-        Boolean deviceAccessConsent = getGdprPurposeConsent(realGdpr2PurposeConsents, deviceConsentIndex);
-        return checkDeviceDataAccess(gdprApplies, deviceAccessConsent);
+        return checkDeviceDataAccess(getSubjectToGdpr(), getGdprPurposeConsent(deviceConsentIndex));
     }
 
     private boolean checkDeviceDataAccess(
         @Nullable Boolean gdprApplies,
         @Nullable Boolean deviceAccessConsent
     ) {
-        if (deviceAccessConsent == null && gdprApplies == null) {
+        if (Boolean.FALSE.equals(gdprApplies)) {
             return true;
         }
 
-        if (deviceAccessConsent == null && Boolean.FALSE.equals(gdprApplies)) {
-            return true;
+        if (Boolean.TRUE.equals(gdprApplies)) {
+            return Boolean.TRUE.equals(deviceAccessConsent);
         }
 
-        return Boolean.TRUE.equals(deviceAccessConsent);
+        // GDPR applicability unknown: honour an explicit Purpose 1 refusal, otherwise allow.
+        return !Boolean.FALSE.equals(deviceAccessConsent);
     }
 
 }
