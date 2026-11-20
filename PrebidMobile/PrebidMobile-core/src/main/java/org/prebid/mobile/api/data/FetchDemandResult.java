@@ -75,12 +75,18 @@ public enum FetchDemandResult {
     /**
      * Prebid Server returned bids, but none had successful cache entries.
      */
-    NO_CACHED_BIDS;
+    NO_CACHED_BIDS,
+    /**
+     * The bid request was not sent because the Prebid SDK has not finished initializing. Wait for
+     * {@code SdkInitializationListener.onInitializationComplete()} before fetching demand.
+     */
+    SDK_NOT_INITIALIZED;
 
     private static final String TAG = "FetchDemandResult";
 
     public static final String NO_BIDS_MESSAGE = "Failed to parse bids. No winning bids were found.";
     public static final String NO_CACHED_BIDS_MESSAGE = "No bids with successful Prebid Cache entries were found.";
+    public static final String SDK_NOT_INITIALIZED_MESSAGE = "Prebid SDK is not initialized.";
 
     /**
      * Returns the {@link ResultCode} the original API reports for the same outcome.
@@ -109,6 +115,8 @@ public enum FetchDemandResult {
                 return ResultCode.NO_BIDS;
             case NO_CACHED_BIDS:
                 return ResultCode.NO_CACHED_BIDS;
+            case SDK_NOT_INITIALIZED:
+                return ResultCode.SDK_NOT_INITIALIZED;
             case SERVER_ERROR:
             default:
                 return ResultCode.PREBID_SERVER_ERROR;
@@ -139,6 +147,8 @@ public enum FetchDemandResult {
                 return NO_BIDS;
             case NO_CACHED_BIDS:
                 return NO_CACHED_BIDS;
+            case SDK_NOT_INITIALIZED:
+                return SDK_NOT_INITIALIZED;
             case PREBID_SERVER_ERROR:
                 return SERVER_ERROR;
             case TIMEOUT:
@@ -164,6 +174,9 @@ public enum FetchDemandResult {
         Matcher interstitialSizeMatcher = invalidInterstitialSize.matcher(msg);
         Matcher impMatcher = storedImpNotFound.matcher(msg);
 
+        if (msg.contains(SDK_NOT_INITIALIZED_MESSAGE)) {
+            return SDK_NOT_INITIALIZED;
+        }
         if (msg.contains(NO_CACHED_BIDS_MESSAGE)) {
             return NO_CACHED_BIDS;
         }

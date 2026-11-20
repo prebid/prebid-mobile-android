@@ -59,6 +59,22 @@ public class FetchDemandResultTest {
     }
 
     @Test
+    public void whenParseErrorMessageAndSdkNotInitializedMsg_SdkNotInitializedResult() {
+        assertEquals(
+                SDK_NOT_INITIALIZED,
+                FetchDemandResult.parseErrorMessage("Failed to load bids: Prebid SDK is not initialized. Initialization is still in progress.")
+        );
+    }
+
+    @Test
+    public void whenParseErrorMessageAndRequestDeadlineMsg_TimeoutResult() {
+        assertEquals(
+                TIMEOUT,
+                FetchDemandResult.parseErrorMessage("Failed to load bids: Timeout: the bid request did not finish within 6000 ms.")
+        );
+    }
+
+    @Test
     public void whenParseErrorMessageAndTimeoutsMsg_TimeoutResult() {
         assertEquals(TIMEOUT, FetchDemandResult.parseErrorMessage("Creative factory Timeout"));
     }

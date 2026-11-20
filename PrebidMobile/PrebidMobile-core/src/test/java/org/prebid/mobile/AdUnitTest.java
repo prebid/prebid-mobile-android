@@ -37,11 +37,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.prebid.mobile.api.data.BidInfo;
+import org.prebid.mobile.api.data.FetchDemandResult;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.original.OnFetchDemandResult;
+import org.prebid.mobile.reflection.Reflection;
+import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.sdk.InitializationNotifier;
+import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
 
@@ -109,6 +116,41 @@ public class AdUnitTest {
         assertNotNull(bidInfo.getNativeCacheId());
         assertTrue(cachedBids.containsKey(bidInfo.getNativeCacheId()));
         assertEquals(bidInfo.getNativeCacheId(), adObject.getString(NativeAdUnit.BUNDLE_KEY_CACHE_ID));
+    }
+
+    @Test
+    public void fetchDemand_SdkInitializationInProgress_CompletesWithSdkNotInitialized() {
+        // initializeSdk() sets the context first, then completes in the background.
+        String previousHostUrl = Host.CUSTOM.getHostUrl();
+        PrebidMobile.setPrebidServerAccountId("accountId");
+        Host.createCustomHost("https://prebid.example/openrtb2/auction");
+        PrebidMobileReflection.setFlagsThatSdkIsNotInitialized();
+        PrebidContextHolder.setContext(RuntimeEnvironment.getApplication());
+        Reflection.setStaticVariableTo(InitializationNotifier.class, "initializationInProgress", true);
+        BannerAdUnit adUnit = new BannerAdUnit("configId", 320, 50);
+        OnFetchDemandResult listener = mock(OnFetchDemandResult.class);
+
+        try {
+            adUnit.fetchDemand(listener);
+        } finally {
+            PrebidMobileReflection.setFlagsThatSdkIsNotInitialized();
+            PrebidMobile.setPrebidServerAccountId("");
+            Host.createCustomHost(previousHostUrl);
+        }
+
+        assertEquals(ResultCode.SDK_NOT_INITIALIZED, captureBidInfo(listener).getResultCode());
+    }
+
+    @Test
+    public void convertToResultCode_SdkNotInitializedMessage_SdkNotInitialized() {
+        BannerAdUnit adUnit = new BannerAdUnit("configId", 320, 50);
+
+        ResultCode resultCode = adUnit.convertToResultCode(new AdException(
+                AdException.FAILED_TO_LOAD_BIDS,
+                FetchDemandResult.SDK_NOT_INITIALIZED_MESSAGE + " Initialization is still in progress."
+        ));
+
+        assertEquals(ResultCode.SDK_NOT_INITIALIZED, resultCode);
     }
 
     @Test

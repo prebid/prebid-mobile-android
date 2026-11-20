@@ -268,11 +268,7 @@ public class BaseNetworkTask
         connection.setRequestProperty(CONTENT_TYPE_HEADER, CONTENT_TYPE_HEADER_VALUE);
         this.setCustomHeadersIfAvailable(connection);
 
-        connection.setConnectTimeout(PrebidMobile.getTimeoutMillis());
-        if (!(this instanceof FileDownloadTask)) {
-            int timeout = PrebidMobile.getTimeoutModified() ? PrebidMobile.getTimeoutMillis() : SOCKET_TIMEOUT;
-            connection.setReadTimeout(timeout);
-        }
+        applyTimeouts(connection);
 
         if ("POST".equals(param.requestType)) {
             // Send post request
@@ -300,6 +296,20 @@ public class BaseNetworkTask
         byte[] bytes = requestBody.getBytes("UTF-8");
         for (byte b : bytes) {
             requestStream.write(b);
+        }
+    }
+
+    /**
+     * Read timeout of a request connection, redirects included. File downloads have none.
+     */
+    public static int getReadTimeoutMillis() {
+        return PrebidMobile.getTimeoutModified() ? PrebidMobile.getTimeoutMillis() : SOCKET_TIMEOUT;
+    }
+
+    private void applyTimeouts(URLConnection connection) {
+        connection.setConnectTimeout(PrebidMobile.getTimeoutMillis());
+        if (!(this instanceof FileDownloadTask)) {
+            connection.setReadTimeout(getReadTimeoutMillis());
         }
     }
 
@@ -347,6 +357,8 @@ public class BaseNetworkTask
                 }
                 redirected = true;
                 connection = target.openConnection();
+                // Without this the redirected connection has no timeouts and can block forever.
+                applyTimeouts(connection);
                 redirects++;
             }
         }

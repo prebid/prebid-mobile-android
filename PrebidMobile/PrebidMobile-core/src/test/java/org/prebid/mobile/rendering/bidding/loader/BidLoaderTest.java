@@ -25,8 +25,11 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import android.content.Context;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,13 +54,16 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
+import org.prebid.mobile.rendering.sdk.InitializationNotifier;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowLooper;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @RunWith(RobolectricTestRunner.class)
@@ -133,6 +139,87 @@ public class BidLoaderTest {
     }
 
     @Test
+    public void whenLoadAndSdkIsNotInitialized_CallSdkNotInitializedError() {
+        PrebidMobileReflection.setFlagsThatSdkIsNotInitialized();
+
+        bidLoader.load();
+
+        assertErrorResult(FetchDemandResult.SDK_NOT_INITIALIZED);
+        assertFalse(isLoading(bidLoader));
+    }
+
+    @Test
+    public void whenLoadAndSdkInitializationInProgress_CallSdkNotInitializedError() {
+        // The context is set at the start of initialization, before it completes.
+        PrebidMobileReflection.setFlagsThatSdkIsNotInitialized();
+        PrebidContextHolder.setContext(mock(Context.class));
+        Reflection.setStaticVariableTo(InitializationNotifier.class, "initializationInProgress", true);
+
+        try {
+            bidLoader.load();
+        } finally {
+            PrebidMobileReflection.setFlagsThatSdkIsNotInitialized();
+        }
+
+        verify(mockRequester, never()).startAdRequest();
+        assertErrorResult(FetchDemandResult.SDK_NOT_INITIALIZED);
+    }
+
+    @Test
+    public void whenRequestDoesNotFinishBeforeDeadline_CancelRequestAndCallTimeoutError() {
+        PrebidMobileReflection.setFlagsThatSdkIsInitialized();
+
+        bidLoader.load();
+        ShadowLooper.idleMainLooper(BidLoader.getRequestDeadlineMillis() - 1, TimeUnit.MILLISECONDS);
+        verify(bidRequesterListener, never()).onError(any());
+
+        ShadowLooper.idleMainLooper(1, TimeUnit.MILLISECONDS);
+
+        verify(mockRequester).destroy();
+        assertErrorResult(FetchDemandResult.TIMEOUT);
+        assertFalse(isLoading(bidLoader));
+    }
+
+    @Test
+    public void whenResponseArrivesAfterDeadline_IgnoreResponse() throws Exception {
+        PrebidMobileReflection.setFlagsThatSdkIsInitialized();
+        ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+
+        bidLoader.load();
+        ShadowLooper.idleMainLooper(BidLoader.getRequestDeadlineMillis(), TimeUnit.MILLISECONDS);
+        responseHandler.onResponse(successfulResponse());
+        responseHandler.onError("Late error", 0);
+
+        verify(bidRequesterListener, times(1)).onError(any());
+        verify(bidRequesterListener, never()).onFetchCompleted(any());
+    }
+
+    @Test
+    public void whenResponseArrivesBeforeDeadline_DeadlineDoesNotFire() throws Exception {
+        PrebidMobileReflection.setFlagsThatSdkIsInitialized();
+        ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+
+        bidLoader.load();
+        responseHandler.onResponse(successfulResponse());
+        ShadowLooper.idleMainLooper(BidLoader.getRequestDeadlineMillis(), TimeUnit.MILLISECONDS);
+
+        verify(bidRequesterListener).onFetchCompleted(any());
+        verify(bidRequesterListener, never()).onError(any());
+        verify(mockRequester, never()).destroy();
+    }
+
+    @Test
+    public void whenDestroyedWhileLoading_DeadlineDoesNotFire() {
+        PrebidMobileReflection.setFlagsThatSdkIsInitialized();
+
+        bidLoader.load();
+        bidLoader.destroy();
+        ShadowLooper.idleMainLooper(BidLoader.getRequestDeadlineMillis(), TimeUnit.MILLISECONDS);
+
+        verify(bidRequesterListener, never()).onError(any());
+    }
+
+    @Test
     public void whenLoadAndCurrentlyLoading_NoStartAdRequestCall() {
         WhiteBox.setInternalState(bidLoader, "currentlyLoading", new AtomicBoolean(true));
         bidLoader.load();
@@ -161,6 +248,7 @@ public class BidLoaderTest {
         ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
         Reflection.setVariableTo(bidLoader, "adConfiguration", config);
         Reflection.setVariableTo(bidLoader, "bidRequester", mockRequester);
+        startRequest(bidLoader);
 
         String responseString = ResourceUtils.convertResourceToString("PrebidServerOneBidFromRubiconResponse.json");
         JSONObject testRequest = new JSONObject("{\"test\":\"test\"}");
@@ -188,6 +276,7 @@ public class BidLoaderTest {
     @Test
     public void responseHandler_filterUncachedBidsAndNoCachedBids_callNoCachedBidsError() throws Exception {
         ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        startRequest(bidLoader);
         String responseString = removePrebidCache(
                 ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json")
         );
@@ -210,6 +299,7 @@ public class BidLoaderTest {
     @Test
     public void responseHandler_filterUncachedBidsAndNoCachedBids_callEventDelegateWithRawResponse() throws Exception {
         ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        startRequest(bidLoader);
         String responseString = removePrebidCache(
                 ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json")
         );
@@ -232,6 +322,7 @@ public class BidLoaderTest {
     @Test
     public void responseHandler_filterUncachedBidsAndNoBids_callNoBidsError() throws Exception {
         ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        startRequest(bidLoader);
         String responseString = ResourceUtils.convertResourceToString("bidding_response_no_bids_obj.json");
         when(mockAdConfiguration.isOriginalAdUnit()).thenReturn(true);
         PrebidMobile.setFilterOutUncachedBids(true);
@@ -252,6 +343,7 @@ public class BidLoaderTest {
     @Test
     public void responseHandler_filterUncachedBidsDisabledAndUncachedBid_callSuccess() throws Exception {
         ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        startRequest(bidLoader);
         String responseString = removePrebidCache(
                 ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json")
         );
@@ -267,6 +359,7 @@ public class BidLoaderTest {
     @Test
     public void responseHandler_filterUncachedBidsWithRenderingApi_callSuccess() throws Exception {
         ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        startRequest(bidLoader);
         String responseString = removePrebidCache(
                 ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json")
         );
@@ -286,6 +379,7 @@ public class BidLoaderTest {
     @Test
     public void responseHandler_filterUncachedBidsAndMixedBids_callSuccessWithCachedBidOnly() throws Exception {
         ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        startRequest(bidLoader);
         JSONObject response = new JSONObject(ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json"));
         JSONArray bids = response.getJSONArray("seatbid").getJSONObject(0).getJSONArray("bid");
         JSONObject uncachedBid = new JSONObject(bids.getJSONObject(0).toString());
@@ -309,6 +403,7 @@ public class BidLoaderTest {
     @Test
     public void responseHandler_filterUncachedBidsAndTopBidFiltered_callSuccessWithPromotedBid() throws Exception {
         ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        startRequest(bidLoader);
         String responseString = ResourceUtils.convertResourceToString("BidResponseTest/top_bid_uncached_runner_up_cached.json");
         when(mockAdConfiguration.isOriginalAdUnit()).thenReturn(true);
         PrebidMobile.setFilterOutUncachedBids(true);
@@ -366,6 +461,7 @@ public class BidLoaderTest {
 
     private BidResponse handleResponse(String resourceName) throws Exception {
         ResponseHandler responseHandler = Reflection.getFieldOf(bidLoader, "responseHandler");
+        startRequest(bidLoader);
         BaseNetworkTask.GetUrlResult responseResult = new BaseNetworkTask.GetUrlResult();
         responseResult.responseString = ResourceUtils.convertResourceToString(resourceName);
         responseHandler.onResponse(responseResult);
@@ -373,6 +469,28 @@ public class BidLoaderTest {
         ArgumentCaptor<BidResponse> responseCaptor = ArgumentCaptor.forClass(BidResponse.class);
         verify(bidRequesterListener, atLeastOnce()).onFetchCompleted(responseCaptor.capture());
         return responseCaptor.getValue();
+    }
+
+    // The response handler only accepts the result of a request in flight.
+    private static void startRequest(BidLoader bidLoader) {
+        WhiteBox.setInternalState(bidLoader, "currentlyLoading", new AtomicBoolean(true));
+    }
+
+    private static boolean isLoading(BidLoader bidLoader) {
+        AtomicBoolean currentlyLoading = WhiteBox.getInternalState(bidLoader, "currentlyLoading");
+        return currentlyLoading.get();
+    }
+
+    private void assertErrorResult(FetchDemandResult expected) {
+        ArgumentCaptor<AdException> exceptionCaptor = ArgumentCaptor.forClass(AdException.class);
+        verify(bidRequesterListener).onError(exceptionCaptor.capture());
+        assertEquals(expected, FetchDemandResult.parseErrorMessage(exceptionCaptor.getValue().getMessage()));
+    }
+
+    private static BaseNetworkTask.GetUrlResult successfulResponse() throws Exception {
+        BaseNetworkTask.GetUrlResult result = new BaseNetworkTask.GetUrlResult();
+        result.responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json");
+        return result;
     }
 
     private BidLoader createBidLoader(AdUnitConfiguration adConfiguration, BidRequesterListener requestListener) {

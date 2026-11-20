@@ -111,7 +111,8 @@ public abstract class AdUnit {
     }
 
     /**
-     * Destroy ad unit and stop downloading.
+     * Destroy ad unit and stop downloading. A fetch demand in progress is cancelled and its
+     * listener is not called.
      */
     public void destroy() {
         if (bidLoader != null) {
@@ -122,6 +123,12 @@ public abstract class AdUnit {
 
     /**
      * Loads ad and applies keywords to the ad object.
+     * <p>
+     * The listener is called for every bid request, including auto refreshes, unless the ad unit
+     * is destroyed first. If the SDK has not finished initializing, it is called right away with
+     * {@link ResultCode#SDK_NOT_INITIALIZED}. If the request does not finish within its connect
+     * and read timeouts plus one second, it is cancelled and the listener gets
+     * {@link ResultCode#TIMEOUT}.
      *
      * @param adObject AdMob's ({@code AdManagerAdRequest} or {@code AdManagerAdRequest.Builder})
      *                 or AppLovin's ({@code MaxNativeAdLoader}) ad object
