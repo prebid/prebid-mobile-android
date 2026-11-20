@@ -11,6 +11,7 @@ import static org.mockito.Mockito.mock;
 import android.os.Looper;
 import android.view.View;
 
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,19 +41,81 @@ public class PrebidNativeAdTest {
         assertEquals("https://prebid.qa.openx.net//event?t=win&b=5f6bec03-a3ae-4084-b2ae-dedfb0ac01ff&a=b4eb1475-4e3d-4186-97b7-25b6a6cf8618&bidder=openx&ts=1643899069308", nativeAd.getWinEvent());
         assertEquals("https://prebid.qa.openx.net//event?t=imp&b=5f6bec03-a3ae-4084-b2ae-dedfb0ac01ff&a=b4eb1475-4e3d-4186-97b7-25b6a6cf8618&bidder=openx&ts=1643899069308", nativeAd.getImpEvent());
 
-        ArrayList<String> admImpressionTrackers = PrebidNativeAdTestHelper.reflectAdmImpressionTrackers(nativeAd);
-        assertNotNull(admImpressionTrackers);
-        assertEquals(1, admImpressionTrackers.size());
-        assertThat(admImpressionTrackers, hasItem("https://s3-us-west-2.amazonaws.com/omsdk-files/compliance-js/omid-validation-verification-script-v1.js"));
+        // The fixture's only event tracker is the OM SDK verification script (method 2, JS,
+        // custom event 555). It is not an impression pixel and must not be requested as one.
+        assertNull(PrebidNativeAdTestHelper.reflectAdmImpressionTrackers(nativeAd));
 
 
         nativeAd.registerView(PrebidNativeAdTestHelper.createViewMock(), mock(List.class), mock(PrebidNativeAdEventListener.class));
 
 
         ArrayList<ImpressionTracker> trackerObjects = PrebidNativeAdTestHelper.reflectImpressionTrackerObjects(nativeAd);
-        assertEquals(2, trackerObjects.size());
-        assertEquals("https://s3-us-west-2.amazonaws.com/omsdk-files/compliance-js/omid-validation-verification-script-v1.js", PrebidNativeAdTestHelper.reflectImpressionTrackerUrl(trackerObjects.get(0)));
-        assertEquals("https://prebid.qa.openx.net//event?t=imp&b=5f6bec03-a3ae-4084-b2ae-dedfb0ac01ff&a=b4eb1475-4e3d-4186-97b7-25b6a6cf8618&bidder=openx&ts=1643899069308", PrebidNativeAdTestHelper.reflectImpressionTrackerUrl(trackerObjects.get(1)));
+        assertEquals(1, trackerObjects.size());
+        assertEquals("https://prebid.qa.openx.net//event?t=imp&b=5f6bec03-a3ae-4084-b2ae-dedfb0ac01ff&a=b4eb1475-4e3d-4186-97b7-25b6a6cf8618&bidder=openx&ts=1643899069308", PrebidNativeAdTestHelper.reflectImpressionTrackerUrl(trackerObjects.get(0)));
+    }
+
+    @Test
+    public void parseImpressionTrackers_firesOnlyImagePixelsForMeasuredEvents() throws Exception {
+        JSONObject nativeObj = new JSONObject("{\"eventtrackers\":["
+                + "{\"event\":1,\"method\":1,\"url\":\"https://t.example/imp\"},"
+                + "{\"event\":2,\"method\":1,\"url\":\"https://t.example/mrc50\"},"
+                + "{\"event\":3,\"method\":1,\"url\":\"https://t.example/mrc100\"},"
+                + "{\"event\":4,\"method\":1,\"url\":\"https://t.example/video50\"},"
+                + "{\"event\":555,\"method\":1,\"url\":\"https://t.example/custom\"},"
+                + "{\"event\":1,\"method\":2,\"url\":\"https://t.example/trk.js\"}"
+                + "]}");
+
+        ArrayList<String> trackers = PrebidNativeAd.parseImpressionTrackers(nativeObj, null);
+
+        assertEquals(2, trackers.size());
+        assertEquals("https://t.example/imp", trackers.get(0));
+        assertEquals("https://t.example/mrc50", trackers.get(1));
+    }
+
+    @Test
+    public void parseImpressionTrackers_firesLegacyImptrackers() throws Exception {
+        // Native 1.1 bidders still send imptrackers; they were previously ignored entirely.
+        JSONObject nativeObj = new JSONObject("{\"imptrackers\":[\"https://t.example/legacy?p={AUCTION_PRICE}\"]}");
+
+        ArrayList<String> trackers = PrebidNativeAd.parseImpressionTrackers(nativeObj, "1.25");
+
+        assertEquals(1, trackers.size());
+        assertEquals("https://t.example/legacy?p=1.25", trackers.get(0));
+    }
+
+    @Test
+    public void parseImpressionTrackers_sameUrlInBothFieldsFiresOnce() throws Exception {
+        // Native 1.2 recommends sending both fields while buyers migrate.
+        JSONObject nativeObj = new JSONObject("{"
+                + "\"eventtrackers\":[{\"event\":1,\"method\":1,\"url\":\"https://t.example/imp\"}],"
+                + "\"imptrackers\":[\"https://t.example/imp\",\"https://t.example/other\"]}");
+
+        ArrayList<String> trackers = PrebidNativeAd.parseImpressionTrackers(nativeObj, null);
+
+        assertEquals(2, trackers.size());
+        assertEquals("https://t.example/imp", trackers.get(0));
+        assertEquals("https://t.example/other", trackers.get(1));
+    }
+
+    @Test
+    public void parseImpressionTrackers_missingEventOrMethodIsTreatedAsAnImpressionPixel() throws Exception {
+        JSONObject nativeObj = new JSONObject("{\"eventtrackers\":["
+                + "{\"url\":\"https://t.example/no-fields\"},"
+                + "{\"event\":1,\"url\":\"https://t.example/no-method\"},"
+                + "{\"method\":1,\"url\":\"https://t.example/no-event\"},"
+                + "{\"event\":1,\"method\":1}"
+                + "]}");
+
+        ArrayList<String> trackers = PrebidNativeAd.parseImpressionTrackers(nativeObj, null);
+
+        assertEquals(3, trackers.size());
+    }
+
+    @Test
+    public void parseImpressionTrackers_noneReturnsNull() throws Exception {
+        assertNull(PrebidNativeAd.parseImpressionTrackers(new JSONObject("{}"), null));
+        assertNull(PrebidNativeAd.parseImpressionTrackers(new JSONObject(
+                "{\"eventtrackers\":[{\"event\":1,\"method\":2,\"url\":\"https://t.example/trk.js\"}]}"), null));
     }
 
     @Test
