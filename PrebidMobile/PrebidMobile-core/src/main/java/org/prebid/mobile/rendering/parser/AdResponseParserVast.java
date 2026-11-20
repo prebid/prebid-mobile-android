@@ -200,6 +200,26 @@ public class AdResponseParserVast extends AdResponseParserBase {
         return result;
     }
 
+    public boolean hasNoAds() {
+        return vast.getAds() == null || vast.getAds().isEmpty();
+    }
+
+    /**
+     * Returns the {@code <VAST>}-level {@code <Error>} URIs of this response and of every response it wraps.
+     * They report a response without ads.
+     */
+    public List<String> getNoAdsErrorUrls() {
+        List<String> urls = new ArrayList<>();
+        if (vast.getError() != null && Utils.isNotBlank(vast.getError().getValue())) {
+            urls.add(vast.getError().getValue());
+        }
+        if (wrappedVASTXml != null) {
+            urls.addAll(wrappedVASTXml.getNoAdsErrorUrls());
+        }
+
+        return urls;
+    }
+
     public List<String> getImpressionTrackerUrl() {
         List<String> urls = new ArrayList<>();
         if (wrappedVASTXml != null && wrappedVASTXml.getImpressionTrackerUrl() != null) {
