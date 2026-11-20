@@ -129,6 +129,9 @@ public abstract class AdUnit {
      */
     public void fetchDemand(Object adObject, @NonNull OnCompleteListener listener) {
         LogUtil.debug(TAG, "Fetch demand called");
+        // The previous fetch's response doesn't describe this one: a validation failure below
+        // must not report its bid.
+        bidResponse = null;
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
             LogUtil.error("Empty account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
