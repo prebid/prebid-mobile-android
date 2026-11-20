@@ -140,7 +140,7 @@ class AdViewWrapperTest {
     @Test
     fun adSize_AfterAdLoaded_IsLoadedAdSize() {
         val ad: BannerAd = Mockito.mock()
-        Mockito.`when`(ad.adSize).thenReturn(NextSize(300, 250))
+        Mockito.`when`(ad.getAdSize()).thenReturn(NextSize(300, 250))
 
         adViewWrapper.onAdLoaded(ad)
 
@@ -150,7 +150,7 @@ class AdViewWrapperTest {
     @Test
     fun adSize_WhenSdkThrows_IsNull() {
         val ad: BannerAd = Mockito.mock()
-        Mockito.`when`(ad.adSize).thenThrow(RuntimeException("Test"))
+        Mockito.`when`(ad.getAdSize()).thenThrow(RuntimeException("Test"))
 
         adViewWrapper.onAdLoaded(ad)
 

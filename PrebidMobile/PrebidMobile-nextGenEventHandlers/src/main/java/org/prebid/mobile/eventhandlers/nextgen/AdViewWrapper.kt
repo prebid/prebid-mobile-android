@@ -161,7 +161,7 @@ internal class AdViewWrapper private constructor(
      */
     val adSize: AdSize?
         get() = try {
-            val nextSize: NextSize? = ad?.adSize
+            val nextSize: NextSize? = ad?.getAdSize()
             nextSize?.let { AdSize(it.width, it.height) }
         } catch (throwable: Throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(throwable))
