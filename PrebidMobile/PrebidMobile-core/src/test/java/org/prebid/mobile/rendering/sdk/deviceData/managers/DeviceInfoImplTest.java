@@ -18,13 +18,17 @@ package org.prebid.mobile.rendering.sdk.deviceData.managers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,12 +41,17 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,6 +61,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 import org.robolectric.annotation.LooperMode;
 import org.robolectric.shadows.ShadowEnvironment;
 
@@ -88,6 +99,75 @@ public class DeviceInfoImplTest {
         when(mockContext.getPackageManager()).thenReturn(mockPackageManager);
 
         deviceInfoImpl = new DeviceInfoImpl(mockContext);
+    }
+
+    @Test
+    @Config(sdk = {30, 31, 34})
+    public void screenSize_usesWindowContextAndTracksRotation() {
+        DisplayManager displayManager = mock(DisplayManager.class);
+        Display display = mock(Display.class);
+        Context displayContext = mock(Context.class);
+        Context windowContext = mock(Context.class);
+        WindowMetrics windowMetrics = mock(WindowMetrics.class);
+        when(mockContext.getSystemService(Context.DISPLAY_SERVICE)).thenReturn(displayManager);
+        when(displayManager.getDisplay(Display.DEFAULT_DISPLAY)).thenReturn(display);
+        when(mockContext.createDisplayContext(display)).thenReturn(displayContext);
+        when(displayContext.createWindowContext(WindowManager.LayoutParams.TYPE_APPLICATION, null))
+                .thenReturn(windowContext);
+        when(windowContext.getSystemService(Context.WINDOW_SERVICE)).thenReturn(mockWindowManager);
+        when(mockWindowManager.getMaximumWindowMetrics()).thenReturn(windowMetrics);
+        when(windowMetrics.getBounds()).thenReturn(new Rect(0, 0, 1080, 2400));
+
+        deviceInfoImpl = new DeviceInfoImpl(mockContext);
+
+        assertEquals(1080, deviceInfoImpl.getScreenWidth());
+        assertEquals(2400, deviceInfoImpl.getScreenHeight());
+        when(windowMetrics.getBounds()).thenReturn(new Rect(0, 0, 2400, 1080));
+        assertEquals(2400, deviceInfoImpl.getScreenWidth());
+        assertEquals(1080, deviceInfoImpl.getScreenHeight());
+        verify(mockContext, never()).getSystemService(Context.WINDOW_SERVICE);
+        verify(mockWindowManager, never()).getCurrentWindowMetrics();
+    }
+
+    @Test
+    @Config(sdk = {30, 31, 34})
+    public void initialization_applicationContextDoesNotAccessWindowService() throws IllegalAccessException {
+        Context applicationContext = spy(RuntimeEnvironment.getApplication());
+        doThrow(new AssertionError("WindowManager requires a visual context"))
+                .when(applicationContext).getSystemService(Context.WINDOW_SERVICE);
+
+        DeviceInfoImpl deviceInfo = new DeviceInfoImpl(applicationContext);
+
+        assertNotNull(WhiteBox.field(DeviceInfoImpl.class, "windowManager").get(deviceInfo));
+        verify(applicationContext, never()).getSystemService(Context.WINDOW_SERVICE);
+    }
+
+    @Test
+    @Config(sdk = {19, 29})
+    public void screenSize_legacyUsesFullDisplaySize() {
+        Display display = mock(Display.class);
+        when(mockWindowManager.getDefaultDisplay()).thenReturn(display);
+        doAnswer(invocation -> {
+            ((Point) invocation.getArgument(0)).set(1080, 2400);
+            return null;
+        }).when(display).getRealSize(any(Point.class));
+
+        assertEquals(1080, deviceInfoImpl.getScreenWidth());
+        assertEquals(2400, deviceInfoImpl.getScreenHeight());
+        verify(mockContext, never()).getSystemService(Context.DISPLAY_SERVICE);
+    }
+
+    @Test
+    @Config(sdk = 30)
+    public void screenSize_withoutPrimaryDisplayReturnsZero() {
+        DisplayManager displayManager = mock(DisplayManager.class);
+        when(mockContext.getSystemService(Context.DISPLAY_SERVICE)).thenReturn(displayManager);
+
+        deviceInfoImpl = new DeviceInfoImpl(mockContext);
+
+        assertEquals(0, deviceInfoImpl.getScreenWidth());
+        assertEquals(0, deviceInfoImpl.getScreenHeight());
+        verify(mockContext, never()).getSystemService(Context.WINDOW_SERVICE);
     }
 
     @Test
