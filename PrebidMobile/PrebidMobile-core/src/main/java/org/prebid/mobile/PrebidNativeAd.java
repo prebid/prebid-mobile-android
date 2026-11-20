@@ -32,12 +32,18 @@ import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
  * Response native ad object for all assets.
  */
 public class PrebidNativeAd {
+
+    // OpenRTB Native 1.2, section 7.6 (event types) and 7.7 (tracking methods).
+    private static final int EVENT_IMPRESSION = 1;
+    private static final int EVENT_VIEWABLE_MRC50 = 2;
+    private static final int METHOD_IMAGE = 1;
 
     private static final String TAG = "PrebidNativeAd";
 
@@ -149,22 +155,7 @@ public class PrebidNativeAd {
                     }
                 }
 
-                if (nativeObj.has("eventtrackers")) {
-                    JSONArray eventtrackers = nativeObj.getJSONArray("eventtrackers");
-                    if (eventtrackers.length() > 0) {
-                        ad.imp_trackers = new ArrayList<>();
-                        for (int count = 0; count < eventtrackers.length(); count++) {
-                            JSONObject eventtracker = eventtrackers.getJSONObject(count);
-                            if (eventtracker.has("url")) {
-                                String impUrl = eventtracker.getString("url");
-                                if (impUrl.contains("{AUCTION_PRICE}") && details.has("price")) {
-                                    impUrl = impUrl.replace("{AUCTION_PRICE}", details.getString("price"));
-                                }
-                                ad.imp_trackers.add(impUrl);
-                            }
-                        }
-                    }
-                }
+                ad.imp_trackers = parseImpressionTrackers(nativeObj, details.optString("price", null));
 
                 if (nativeObj.has("privacy")) {
                     String url = nativeObj.getString("privacy");
@@ -177,6 +168,63 @@ public class PrebidNativeAd {
             }
         }
         return null;
+    }
+
+    /**
+     * Impression trackers this SDK can honour: image pixels for an impression (event 1) or a
+     * 50%-viewable impression (event 2, which is what {@link VisibilityDetector} measures:
+     * at least half the view on screen for {@link Util#NATIVE_AD_VISIBLE_PERIOD_MILLIS}),
+     * plus the legacy Native 1.1 {@code imptrackers} array.
+     * <p>
+     * Not fired: JavaScript trackers (method 2), which need a page to run in and would only
+     * be downloaded, never executed, if requested as a pixel; and events this SDK does not
+     * measure (100% viewable, video, custom), which would otherwise be reported as met at
+     * 50% visibility. A missing event or method is treated as an impression pixel, as before.
+     * The same URL sent in both {@code imptrackers} and {@code eventtrackers}, as Native 1.2
+     * recommends during migration, is fired once.
+     *
+     * @return the tracker URLs, or null if there are none.
+     */
+    @Nullable
+    static ArrayList<String> parseImpressionTrackers(@NonNull JSONObject nativeObj, @Nullable String price) {
+        LinkedHashSet<String> urls = new LinkedHashSet<>();
+
+        JSONArray eventTrackers = nativeObj.optJSONArray("eventtrackers");
+        if (eventTrackers != null) {
+            for (int i = 0; i < eventTrackers.length(); i++) {
+                JSONObject tracker = eventTrackers.optJSONObject(i);
+                if (tracker == null) {
+                    continue;
+                }
+                String url = tracker.optString("url", "");
+                int event = tracker.optInt("event", EVENT_IMPRESSION);
+                int method = tracker.optInt("method", METHOD_IMAGE);
+                if (url.isEmpty()) {
+                    continue;
+                }
+                if (method != METHOD_IMAGE || (event != EVENT_IMPRESSION && event != EVENT_VIEWABLE_MRC50)) {
+                    LogUtil.debug(TAG, "Skipping native event tracker (event " + event + ", method " + method + "): " + url);
+                    continue;
+                }
+                urls.add(withAuctionPrice(url, price));
+            }
+        }
+
+        JSONArray legacyImpTrackers = nativeObj.optJSONArray("imptrackers");
+        if (legacyImpTrackers != null) {
+            for (int i = 0; i < legacyImpTrackers.length(); i++) {
+                String url = legacyImpTrackers.optString(i, "");
+                if (!url.isEmpty()) {
+                    urls.add(withAuctionPrice(url, price));
+                }
+            }
+        }
+
+        return urls.isEmpty() ? null : new ArrayList<>(urls);
+    }
+
+    private static String withAuctionPrice(@NonNull String url, @Nullable String price) {
+        return price != null && url.contains("{AUCTION_PRICE}") ? url.replace("{AUCTION_PRICE}", price) : url;
     }
 
     private static void parseEvents(
