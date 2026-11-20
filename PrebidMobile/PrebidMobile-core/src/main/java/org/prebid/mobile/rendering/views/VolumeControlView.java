@@ -64,6 +64,15 @@ public class VolumeControlView extends ImageView {
         updateVolumeState(VolumeState.UN_MUTED);
     }
 
+    /**
+     * Shows a state that was set outside this control, without notifying the listener.
+     * The next tap then toggles from the real state.
+     */
+    public void setVolumeState(VolumeState volumeState) {
+        this.volumeState = volumeState;
+        updateIcon(volumeState);
+    }
+
     public void updateIcon(VolumeState volumeState) {
         if (volumeState == VolumeState.MUTED) {
             setImageResource(R.drawable.ic_volume_off);

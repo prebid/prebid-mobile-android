@@ -93,9 +93,13 @@ public class VideoCreative extends VideoCreativeProtocol
     @Override
     public void display() {
         if (videoCreativeView != null) {
-            videoCreativeView.start(model.getAdConfiguration().getVideoInitialVolume());
+            AdUnitConfiguration adConfiguration = model.getAdConfiguration();
+            boolean isMuted = adConfiguration.isMuted();
+            // Interstitial and rewarded video start at full volume, so a muted one starts silent instead.
+            // The start event then reports the volume the user hears, and the muted state is applied below.
+            videoCreativeView.start(isMuted ? 0 : adConfiguration.getVideoInitialVolume());
 
-            setStartIsMutedValue(model.getAdConfiguration().isMuted());
+            setStartIsMutedValue(isMuted);
 
             model.trackPlayerStateChange(InternalPlayerState.NORMAL);
             startViewabilityTracker();
@@ -213,6 +217,7 @@ public class VideoCreative extends VideoCreativeProtocol
     }
 
     private void setStartIsMutedValue(boolean isMuted) {
+        // A player that starts audible plays an unmuted video, which needs no change.
         if (videoCreativeView != null && videoCreativeView.getVolume() == 0) {
             videoCreativeView.setStartIsMutedProperty(isMuted);
         }

@@ -31,12 +31,17 @@ import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
 import org.prebid.mobile.rendering.models.AbstractCreative;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
+import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
+import org.prebid.mobile.rendering.views.VolumeControlView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -46,6 +51,9 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class VideoCreativeTest {
+
+    private static final ArrayList<String> MUTE_URLS = new ArrayList<>(Collections.singletonList("https://example.com/mute"));
+    private static final ArrayList<String> UNMUTE_URLS = new ArrayList<>(Collections.singletonList("https://example.com/unmute"));
 
     private Context context;
     @Mock private VideoCreativeModel mockModel;
@@ -319,6 +327,157 @@ public class VideoCreativeTest {
         verify(videoCreativeView).setStartIsMutedProperty(false);
         verify(videoCreative, never()).unmute();
         verify(videoCreative, never()).mute();
+    }
+
+    @Test
+    public void whenMutedAndPlayerStartsAtFullVolume_DisplayMutesPlayer() throws AdException {
+        // Interstitial and rewarded video keep the default initial volume
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsMuted(true);
+
+        VideoCreativeView realVideoCreativeView = displayWithRealCreativeView(configuration);
+
+        assertEquals(0f, realVideoCreativeView.getVolume(), 0f);
+        realVideoCreativeView.showVolumeControls();
+        assertVolumeControlState(realVideoCreativeView, VolumeControlView.VolumeState.MUTED);
+    }
+
+    @Test
+    public void whenMutedAndPlayerStartsAtFullVolume_StartPlayerSilent() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsMuted(true);
+        when(mockModel.getAdConfiguration()).thenReturn(configuration);
+        VideoCreative spyVideoCreative = spy(videoCreative);
+
+        spyVideoCreative.display();
+
+        verify(mockVideoCreativeView).start(0f);
+    }
+
+    @Test
+    public void whenNotMutedAndPlayerStartsAtFullVolume_DisplayKeepsVolumeWithoutVolumeChange() throws AdException {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsMuted(false);
+
+        VideoCreativeView realVideoCreativeView = displayWithRealCreativeView(configuration);
+
+        assertEquals(ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME, realVideoCreativeView.getVolume(), 0f);
+        verify(mockOmAdSessionManager, never()).trackVolumeChange(anyFloat());
+        realVideoCreativeView.showVolumeControls();
+        assertVolumeControlState(realVideoCreativeView, VolumeControlView.VolumeState.UN_MUTED);
+    }
+
+    @Test
+    public void whenMutedAndPlayerStartsSilent_DisplayKeepsPlayerMuted() throws AdException {
+        // Outstream and banner video start silent
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setVideoInitialVolume(0f);
+        configuration.setIsMuted(true);
+
+        VideoCreativeView realVideoCreativeView = displayWithRealCreativeView(configuration);
+
+        assertEquals(0f, realVideoCreativeView.getVolume(), 0f);
+        realVideoCreativeView.showVolumeControls();
+        assertVolumeControlState(realVideoCreativeView, VolumeControlView.VolumeState.MUTED);
+    }
+
+    @Test
+    public void whenNotMutedAndPlayerStartsSilent_DisplayUnMutesPlayer() throws AdException {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setVideoInitialVolume(0f);
+        configuration.setIsMuted(false);
+
+        VideoCreativeView realVideoCreativeView = displayWithRealCreativeView(configuration);
+
+        assertEquals(ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME, realVideoCreativeView.getVolume(), 0f);
+        realVideoCreativeView.showVolumeControls();
+        assertVolumeControlState(realVideoCreativeView, VolumeControlView.VolumeState.UN_MUTED);
+    }
+
+    @Test
+    public void mutedStartAndVolumeControlTaps_RequestVastMuteUrlsOncePerTap() throws AdException {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsMuted(true);
+        TrackingManager mockTrackingManager = mock(TrackingManager.class);
+        VideoCreative creative = createCreativeWithVastMuteUrls(configuration, mockTrackingManager);
+        VideoCreativeView realVideoCreativeView = creative.videoCreativeView;
+
+        try {
+            creative.display();
+            realVideoCreativeView.showVolumeControls();
+
+            verify(mockTrackingManager, never()).fireEventTrackingURLs(MUTE_URLS);
+            verify(mockTrackingManager, never()).fireEventTrackingURLs(UNMUTE_URLS);
+
+            realVideoCreativeView.getVolumeControlView().performClick();
+
+            assertEquals(ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME, realVideoCreativeView.getVolume(), 0f);
+            verify(mockTrackingManager, never()).fireEventTrackingURLs(MUTE_URLS);
+            verify(mockTrackingManager, times(1)).fireEventTrackingURLs(UNMUTE_URLS);
+
+            realVideoCreativeView.getVolumeControlView().performClick();
+
+            assertEquals(0f, realVideoCreativeView.getVolume(), 0f);
+            verify(mockTrackingManager, times(1)).fireEventTrackingURLs(MUTE_URLS);
+            verify(mockTrackingManager, times(1)).fireEventTrackingURLs(UNMUTE_URLS);
+        } finally {
+            creative.destroy();
+        }
+    }
+
+    @Test
+    public void programmaticMuteAndUnMute_ReportVolumeButRequestNoVastMuteUrls() throws AdException {
+        TrackingManager mockTrackingManager = mock(TrackingManager.class);
+        VideoCreative creative = createCreativeWithVastMuteUrls(new AdUnitConfiguration(), mockTrackingManager);
+
+        try {
+            creative.display();
+
+            creative.mute();
+            creative.unmute();
+
+            verify(mockOmAdSessionManager).trackVolumeChange(0f);
+            verify(mockOmAdSessionManager).trackVolumeChange(ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME);
+            verify(mockTrackingManager, never()).fireEventTrackingURLs(MUTE_URLS);
+            verify(mockTrackingManager, never()).fireEventTrackingURLs(UNMUTE_URLS);
+        } finally {
+            creative.destroy();
+        }
+    }
+
+    private VideoCreative createCreativeWithVastMuteUrls(
+        AdUnitConfiguration configuration,
+        TrackingManager trackingManager
+    ) throws AdException {
+        VideoCreativeModel model = new VideoCreativeModel(trackingManager, mock(OmEventTracker.class), configuration);
+        model.registerVideoEvent(VideoAdEvent.Event.AD_MUTE, MUTE_URLS);
+        model.registerVideoEvent(VideoAdEvent.Event.AD_UNMUTE, UNMUTE_URLS);
+        VideoCreative creative = new VideoCreative(context, model, mockOmAdSessionManager, mockInterstitialManager);
+        creative.setCreativeViewListener(mock(CreativeViewListener.class));
+        VideoCreativeView realVideoCreativeView = new VideoCreativeView(context, creative, configuration);
+        creative.setCreativeView(realVideoCreativeView);
+        creative.videoCreativeView = realVideoCreativeView;
+        return creative;
+    }
+
+    private VideoCreativeView displayWithRealCreativeView(AdUnitConfiguration configuration) throws AdException {
+        when(mockModel.getAdConfiguration()).thenReturn(configuration);
+        videoCreative.setCreativeViewListener(mock(CreativeViewListener.class));
+        VideoCreativeView realVideoCreativeView = new VideoCreativeView(context, videoCreative, configuration);
+        videoCreative.setCreativeView(realVideoCreativeView);
+        videoCreative.videoCreativeView = realVideoCreativeView;
+
+        videoCreative.display();
+
+        return realVideoCreativeView;
+    }
+
+    private static void assertVolumeControlState(
+        VideoCreativeView videoCreativeView,
+        VolumeControlView.VolumeState expectedState
+    ) {
+        VolumeControlView.VolumeState state = WhiteBox.getInternalState(videoCreativeView.getVolumeControlView(), "volumeState");
+        assertEquals(expectedState, state);
     }
 
 }

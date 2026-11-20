@@ -312,6 +312,12 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
         }
     }
 
+    public void trackVideoEvent(VideoAdEvent.Event event) {
+        if (currentCreative != null) {
+            currentCreative.trackVideoEvent(event);
+        }
+    }
+
     public long getMediaDuration() {
         return currentCreative != null ? currentCreative.getMediaDuration() : 0;
     }
