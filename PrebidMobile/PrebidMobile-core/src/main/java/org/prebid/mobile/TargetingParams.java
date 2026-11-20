@@ -220,9 +220,9 @@ public class TargetingParams {
      * Replaces all static external user IDs with the given list. Pass {@code null} to clear.
      * See: {@link ExternalUserId}.
      *
-     * @deprecated Replaces the whole list, so it can overwrite IDs set by other integrations. Use
-     * {@link #addExternalUserId(ExternalUserId)}, {@link #removeExternalUserId(String)} or
-     * {@link #clearExternalUserIds()} instead.
+     * @deprecated This method is deprecated and will be removed in 4.0. It replaces the whole list,
+     * so it can overwrite IDs set by other integrations. Use {@link #addExternalUserId(ExternalUserId)},
+     * {@link #removeExternalUserId(String)} or {@link #clearExternalUserIds()} instead.
      */
     @Deprecated
     public static void setExternalUserIds(@Nullable List<ExternalUserId> userIds) {
@@ -232,8 +232,8 @@ public class TargetingParams {
     /**
      * Returns the static external user IDs. Provider IDs and SharedID are not included.
      *
-     * @deprecated Returns only the static IDs. Use {@link #getExtendedIds()} to get the IDs the SDK
-     * adds to bid requests.
+     * @deprecated This method is deprecated and will be removed in 4.0. It returns only the static
+     * IDs. Use {@link #getExtendedIds()} to get the IDs the SDK adds to bid requests.
      */
     @Deprecated
     public static List<ExternalUserId> getExternalUserIds() {
