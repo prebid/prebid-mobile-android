@@ -50,6 +50,7 @@ public class BidLoader {
 
     private BidRequesterListener requestListener;
     private BidRefreshListener bidRefreshListener;
+    private boolean isRefreshStopped;
 
     private final ResponseHandler responseHandler = new ResponseHandler() {
         @Override
@@ -163,6 +164,9 @@ public class BidLoader {
             return;
         }
 
+        // The refresh timer never calls load() while refresh is stopped, so this is a load
+        // requested by the app. As before, it re-enables auto refresh.
+        isRefreshStopped = false;
         sendBidRequest(adConfiguration);
     }
 
@@ -171,6 +175,11 @@ public class BidLoader {
 
         boolean isRefreshAvailable = adConfiguration != null && adConfiguration.isAdType(AdFormat.BANNER);
         if (!isRefreshAvailable) {
+            return;
+        }
+
+        if (isRefreshStopped) {
+            LogUtil.debug(TAG, "setupRefreshTimer(): refresh is stopped. Skipping refresh timer initialization");
             return;
         }
 
@@ -193,6 +202,23 @@ public class BidLoader {
     public void cancelRefresh() {
         LogUtil.debug(TAG, "Cancel refresh timer");
         refreshTimerTask.cancelRefreshTimer();
+    }
+
+    /**
+     * Stops auto refresh until {@link #resumeRefresh()} or the next {@link #load()}.
+     * Unlike {@link #cancelRefresh()}, a response that is still in flight does not schedule a new refresh.
+     */
+    public void stopRefresh() {
+        isRefreshStopped = true;
+        cancelRefresh();
+    }
+
+    /**
+     * Resumes auto refresh stopped by {@link #stopRefresh()}.
+     */
+    public void resumeRefresh() {
+        isRefreshStopped = false;
+        setupRefreshTimer();
     }
 
     public void destroy() {

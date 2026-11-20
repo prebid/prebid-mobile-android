@@ -9,4 +9,8 @@ public class AdUnitReflection {
         Reflection.setVariableTo(adUnit, "bidLoader", bidLoader);
     }
 
+    public static BidLoader getBidLoader(AdUnit adUnit) {
+        return Reflection.getFieldOf(adUnit, "bidLoader");
+    }
+
 }
