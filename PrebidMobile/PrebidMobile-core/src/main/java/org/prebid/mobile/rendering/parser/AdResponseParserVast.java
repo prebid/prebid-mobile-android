@@ -38,6 +38,7 @@ import org.prebid.mobile.rendering.video.vast.Impression;
 import org.prebid.mobile.rendering.video.vast.InLine;
 import org.prebid.mobile.rendering.video.vast.MediaFile;
 import org.prebid.mobile.rendering.video.vast.VAST;
+import org.prebid.mobile.rendering.video.vast.Wrapper;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -200,6 +201,33 @@ public class AdResponseParserVast extends AdResponseParserBase {
         return result;
     }
 
+    public boolean hasNoAds() {
+        return vast.getAds() == null || vast.getAds().isEmpty();
+    }
+
+    /**
+     * Returns response-level no-ad Error URIs and the Error URIs of the wrappers actually followed.
+     */
+    public List<String> getNoAdsErrorUrls() {
+        List<String> urls = new ArrayList<>();
+        if (vast.getError() != null && Utils.isNotBlank(vast.getError().getValue())) {
+            urls.add(vast.getError().getValue());
+        }
+        if (wrappedVASTXml != null) {
+            Wrapper wrapper = getVastWrapper();
+            if (wrapper != null) {
+                for (org.prebid.mobile.rendering.video.vast.Error error : wrapper.getErrors()) {
+                    if (Utils.isNotBlank(error.getValue())) {
+                        urls.add(error.getValue());
+                    }
+                }
+            }
+            urls.addAll(wrappedVASTXml.getNoAdsErrorUrls());
+        }
+
+        return urls;
+    }
+
     public List<String> getImpressionTrackerUrl() {
         List<String> urls = new ArrayList<>();
         if (wrappedVASTXml != null && wrappedVASTXml.getImpressionTrackerUrl() != null) {
@@ -210,14 +238,19 @@ public class AdResponseParserVast extends AdResponseParserBase {
     }
 
     public String getVastUrl() {
-        if (vast.getAds() != null)
+        Wrapper wrapper = getVastWrapper();
+        return wrapper == null ? null : wrapper.getVastUrl().getValue();
+    }
+
+    @Nullable
+    private Wrapper getVastWrapper() {
+        if (vast.getAds() != null) {
             for (Ad ad : vast.getAds()) {
-
                 if (ad.getWrapper() != null && ad.getWrapper().getVastUrl() != null) {
-
-                    return ad.getWrapper().getVastUrl().getValue();
+                    return ad.getWrapper();
                 }
             }
+        }
         return null;
     }
 
